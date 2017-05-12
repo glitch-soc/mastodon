@@ -226,7 +226,7 @@
 }
 
 .compose-form__warning {
-  color: darken($ui-secondary-color, 33%);
+  color: darken($ui-secondary-color, 65%);
   margin-bottom: 15px;
   background: $ui-primary-color;
   box-shadow: 0 2px 6px rgba($base-shadow-color, 0.3);
@@ -236,7 +236,7 @@
   font-weight: 400;
 
   strong {
-    color: darken($primary-text-color, 33%);
+    color: darken($primary-text-color, 5%);
     font-weight: 500;
   }
 
