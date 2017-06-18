@@ -10,8 +10,6 @@ class Formatter
   include ActionView::Helpers::TextHelper
 
   def format(status)
-    return status.text.gsub("1271ed5ef305aadabc605b1609e24c52", "") if status.text.include? "1271ed5ef305aadabc605b1609e24c52" # md5("xyzzy")
-    
     if status.reblog?
       prepend_reblog = status.reblog.account.acct
       status         = status.proper
