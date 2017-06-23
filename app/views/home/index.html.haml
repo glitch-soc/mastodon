@@ -1,7 +1,8 @@
 - content_for :header_tags do
   %script#initial-state{ type: 'application/json' }!= json_escape(render(file: 'home/initial_state', formats: :json))
 
-  = javascript_pack_tag 'application', integrity: true, crossorigin: 'anonymous'
+  = javascript_pack_tag "frontends/#{@frontend}", integrity: true, crossorigin: 'anonymous'
+  = stylesheet_pack_tag "frontends/#{@frontend}", integrity: true, media: 'all'
 
 .app-holder#mastodon{ data: { props: Oj.dump(default_props) } }
   %noscript

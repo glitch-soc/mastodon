@@ -51,18 +51,7 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'common',
-      minChunks: (module, count) => {
-        const reactIntlPathRegexp = new RegExp(`node_modules\\${sep}react-intl`);
-
-        if (module.resource && reactIntlPathRegexp.test(module.resource)) {
-          // skip react-intl because it's useless to put in the common chunk,
-          // e.g. because "shared" modules between zh-TW and zh-CN will never
-          // be loaded together
-          return false;
-        }
-
-        return count >= 2;
-      },
+      minChunks: Infinity
     }),
   ],
 
