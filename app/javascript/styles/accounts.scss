@@ -1,41 +1,46 @@
 .card {
+  display: flex;
   background: $ui-base-color;
   background-size: cover;
   background-position: center;
-  padding: 60px 0;
-  padding-bottom: 0;
   border-radius: 4px 4px 0 0;
   box-shadow: 0 0 15px rgba($base-shadow-color, 0.2);
   overflow: hidden;
-  position: relative;
 
   @media screen and (max-width: 700px) {
     border-radius: 0;
     box-shadow: none;
   }
 
-  &::after {
-    background: linear-gradient(rgba($base-shadow-color, 0.5), rgba($base-shadow-color, 0.8));
-    display: block;
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
+  .details {
+    position: relative;
+    padding: 60px 0 0;
+    text-align: center;
+    flex: auto;
+
+    &::after {
+      background: linear-gradient(rgba($base-shadow-color, 0.5), rgba($base-shadow-color, 0.8));
+      display: block;
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
   }
 
   .name {
     display: block;
+    position: relative;
     font-size: 20px;
     line-height: 18px * 1.5;
     color: $primary-text-color;
     font-weight: 500;
     text-align: center;
-    position: relative;
-    z-index: 2;
     text-shadow: 0 0 2px $base-shadow-color;
+    z-index: 2;
 
     small {
       display: block;
@@ -46,10 +51,10 @@
   }
 
   .avatar {
+    position: relative;
     @include avatar-size(120px);
     margin: 0 auto;
     margin-bottom: 15px;
-    position: relative;
     z-index: 2;
 
     img {
@@ -66,57 +71,36 @@
     z-index: 2;
   }
 
-  .details {
-    display: flex;
-    margin-top: 30px;
-    position: relative;
-    z-index: 2;
-    flex-direction: row;
-  }
-
   .details-counters {
-    display: flex;
+    display: inline-flex;
+    position: relative;
     flex-direction: row;
-    order: 0;
+    margin: 15px 0;
+    z-index: 2;
   }
 
   .counter {
     width: 80px;
     color: $ui-primary-color;
     padding: 5px 10px 0;
-    margin-bottom: 10px;
-    border-right: 1px solid $ui-primary-color;
     cursor: default;
     position: relative;
 
+    & + .counter {
+      border-left: 1px solid $ui-primary-color;
+    }
+
+    & > * {
+      opacity: .7;
+      transition: opacity .3s ease;
+    }
+
+    &.active > *, &:hover > * {
+      opacity: 1;
+    }
+
     a {
       display: block;
-    }
-
-    &::after {
-      display: block;
-      content: "";
-      position: absolute;
-      bottom: -10px;
-      left: 0;
-      width: 100%;
-      border-bottom: 4px solid $ui-primary-color;
-      opacity: 0.5;
-      transition: all 0.8s ease;
-    }
-
-    &.active {
-      &::after {
-        border-bottom: 4px solid $ui-highlight-color;
-        opacity: 1;
-      }
-    }
-
-    &:hover {
-      &::after {
-        opacity: 1;
-        transition-duration: 0.2s;
-      }
     }
 
     a {
@@ -140,30 +124,73 @@
   }
 
   .bio {
-    flex: 1;
+    position: relative;
     font-size: 14px;
     line-height: 18px;
+    margin: 15px 0;
     padding: 5px 10px;
     color: $ui-secondary-color;
-    order: 1;
+    z-index: 2;
   }
 
-  @media screen and (max-width: 480px) {
-    .details {
-      display: block;
-    }
+  .metadata {
+    position: relative;
+    min-width: 180px;
+    max-width: 40%;
+    background: rgba($base-shadow-color, 0.8);
+    color: $primary-text-color;
+    text-align: left;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    z-index: 3;
 
-    .bio {
-      text-align: center;
-      margin-bottom: 20px;
-    }
+    .metadata-item {
+      border-bottom: 1px $ui-primary-color solid;
+      padding: 15px 10px;
+      font-size: 18px;
+      line-height: 24px;
+      overflow: hidden;
+      text-overflow: ellipsis;
 
-    .counter {
-      flex: 1 1 auto;
-    }
+      a {
+        color: $ui-highlight-color;
+        text-decoration: none;
 
-    .counter:last-child {
-      border-right: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      b {
+        display: block;
+        font-size: 12px;
+        line-height: 16px;
+        text-transform: uppercase;
+        color: $ui-primary-color;
+
+        a {
+          color: $ui-primary-color;
+        }
+      }
+    }
+  }
+}
+
+
+
+@media screen and (max-width: 500px) {
+
+  .card {
+    display: block;
+
+    .metadata {
+      max-width: none;
+      background: $base-shadow-color;
+      border-top: 1px $ui-primary-color solid;
+
+      .metadata-item {
+        padding: 15px 20px;
+      }
     }
   }
 }

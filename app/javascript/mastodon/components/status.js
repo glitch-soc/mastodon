@@ -9,7 +9,7 @@ import VideoPlayer from './video_player';
 import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
 import IconButton from './icon_button';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 import emojify from '../emoji';
 import escapeTextContentForBrowser from 'escape-html';
 import ImmutablePureComponent from 'react-immutable-pure-component';
@@ -20,7 +20,77 @@ const messages = defineMessages({
   uncollapse: { id: 'status.uncollapse', defaultMessage: 'Uncollapse' },
 });
 
-class StatusUnextended extends ImmutablePureComponent {
+export default class StatusOrReblog extends ImmutablePureComponent {
+
+  static propTypes = {
+    status: ImmutablePropTypes.map,
+    account: ImmutablePropTypes.map,
+    settings: ImmutablePropTypes.map,
+    wrapped: PropTypes.bool,
+    onReply: PropTypes.func,
+    onFavourite: PropTypes.func,
+    onReblog: PropTypes.func,
+    onDelete: PropTypes.func,
+    onOpenMedia: PropTypes.func,
+    onOpenVideo: PropTypes.func,
+    onBlock: PropTypes.func,
+    me: PropTypes.number,
+    boostModal: PropTypes.bool,
+    autoPlayGif: PropTypes.bool,
+    muted: PropTypes.bool,
+    collapse: PropTypes.bool,
+    intersectionObserverWrapper: PropTypes.object,
+    intl: PropTypes.object.isRequired,
+  };
+
+  // Avoid checking props that are functions (and whose equality will always
+  // evaluate to false. See react-immutable-pure-component for usage.
+  updateOnProps = [
+    'status',
+    'account',
+    'settings',
+    'wrapped',
+    'me',
+    'boostModal',
+    'autoPlayGif',
+    'muted',
+    'collapse',
+  ]
+
+  render () {
+    // Exclude intersectionObserverWrapper from `other` variable
+    // because intersection is managed in here.
+    const { status, account, ...other } = this.props;
+
+    if (status === null) {
+      return null;
+    }
+
+    if (status.get('reblog', null) !== null && typeof status.get('reblog') === 'object') {
+      let displayName = status.getIn(['account', 'display_name']);
+
+      if (displayName.length === 0) {
+        displayName = status.getIn(['account', 'username']);
+      }
+
+      const displayNameHTML = { __html: emojify(escapeTextContentForBrowser(displayName)) };
+
+      return (
+        <div className='status__wrapper' ref={this.handleRef} data-id={status.get('id')} >
+          <div className='status__prepend'>
+            <div className='status__prepend-icon-wrapper'><i className='fa fa-fw fa-retweet status__prepend-icon' /></div>
+            <FormattedMessage id='status.reblogged_by' defaultMessage='{name} boosted' values={{ name: <a onClick={this.handleAccountClick} data-id={status.getIn(['account', 'id'])} href={status.getIn(['account', 'url'])} className='status__display-name muted'><strong dangerouslySetInnerHTML={displayNameHTML} /></a> }} />
+          </div>
+
+          <Status {...other} status={status.get('reblog')} account={status.get('account')} wrapped />
+        </div>
+      );
+    } else return <Status {...this.props} />;
+  }
+
+}
+
+class Status extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
@@ -29,6 +99,7 @@ class StatusUnextended extends ImmutablePureComponent {
   static propTypes = {
     status: ImmutablePropTypes.map,
     account: ImmutablePropTypes.map,
+    settings: ImmutablePropTypes.map,
     wrapped: PropTypes.bool,
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
@@ -58,6 +129,7 @@ class StatusUnextended extends ImmutablePureComponent {
   updateOnProps = [
     'status',
     'account',
+    'settings',
     'wrapped',
     'me',
     'boostModal',
@@ -72,7 +144,8 @@ class StatusUnextended extends ImmutablePureComponent {
   ]
 
   componentWillReceiveProps (nextProps) {
-    if (nextProps.collapse !== this.props.collapse && nextProps.collapse !== undefined) this.setState({ isCollapsed: !!nextProps.collapse });
+    if (!nextProps.settings.getIn(['collapsed', 'enabled'])) this.collapse(false);
+    else if (nextProps.collapse !== this.props.collapse && nextProps.collapse !== undefined) this.collapse(this.props.collapse);
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -90,15 +163,20 @@ class StatusUnextended extends ImmutablePureComponent {
     return super.shouldComponentUpdate(nextProps, nextState);
   }
 
-  componentDidUpdate (prevProps, prevState) {
-    if (prevState.isCollapsed !== this.state.isCollapsed) this.saveHeight();
+  componentDidUpdate () {
+    if (this.state.isIntersecting || !this.state.isHidden) this.saveHeight();
   }
 
   componentDidMount () {
     const node = this.node;
 
-    if (this.props.collapse !== undefined) this.setState({ isCollapsed: !!this.props.collapse });
-    else if (node.clientHeight > 400 && !(this.props.status.get('reblog', null) !== null && typeof this.props.status.get('reblog') === 'object')) this.setState({ isCollapsed: true });
+    const { collapse, settings, status } = this.props;
+
+    if (collapse !== undefined) this.collapse(collapse);
+    else if (settings.getIn(['collapsed', 'auto', 'all'])) this.collapse();
+    else if (settings.getIn(['collapsed', 'auto', 'lengthy']) && node.clientHeight > (status.get('media_attachments').size > 0 && !this.props.muted ? 650 : 400)) this.collapse();
+    else if (settings.getIn(['collapsed', 'auto', 'replies']) && status.get('in_reply_to_id', null) !== null) this.collapse();
+    else if (settings.getIn(['collapsed', 'auto', 'media']) && !(status.get('spoiler_text').length > 0) && status.get('media_attachments').size > 0) this.collapse();
 
     if (!this.props.intersectionObserverWrapper) {
       // TODO: enable IntersectionObserver optimization for notification statuses.
@@ -118,12 +196,17 @@ class StatusUnextended extends ImmutablePureComponent {
     this.componentMounted = false;
   }
 
+  collapse = (collapsedOrNot) => {
+    if (collapsedOrNot === undefined) collapsedOrNot = true;
+    if (this.props.settings.getIn(['collapsed', 'enabled'])) this.setState({ isCollapsed: !!collapsedOrNot });
+  }
+
   handleIntersection = (entry) => {
     // Edge 15 doesn't support isIntersecting, but we can infer it
     // https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12156111/
     // https://github.com/WICG/IntersectionObserver/issues/211
     const isIntersecting = (typeof entry.isIntersecting === 'boolean') ?
-      entry.isIntersecting : entry.intersectionRect.height > 0;
+    entry.isIntersecting : entry.intersectionRect.height > 0;
     this.setState((prevState) => {
       if (prevState.isIntersecting && !isIntersecting) {
         scheduleIdleTask(this.hideIfNotIntersecting);
@@ -179,19 +262,22 @@ class StatusUnextended extends ImmutablePureComponent {
   };
 
   handleCollapsedClick = () => {
-    this.setState({ isCollapsed: !this.state.isCollapsed, isExpanded: false });
+    this.collapse(!this.state.isCollapsed);
+    this.setState({ isExpanded: false });
   }
 
   render () {
     let media = null;
-    let mediaType = null;
-    let thumb = null;
+    let mediaIcon = null;
     let statusAvatar;
 
     // Exclude intersectionObserverWrapper from `other` variable
     // because intersection is managed in here.
-    const { status, account, intersectionObserverWrapper, intl, ...other } = this.props;
+    const { status, account, settings, intersectionObserverWrapper, intl, ...other } = this.props;
     const { isExpanded, isIntersecting, isHidden, isCollapsed } = this.state;
+
+
+    let background = settings.getIn(['collapsed', 'backgrounds', 'user_backgrounds']) ? status.getIn(['account', 'header']) : null;
 
     if (status === null) {
       return null;
@@ -206,39 +292,35 @@ class StatusUnextended extends ImmutablePureComponent {
       );
     }
 
-    if (status.get('reblog', null) !== null && typeof status.get('reblog') === 'object') {
-      let displayName = status.getIn(['account', 'display_name']);
-
-      if (displayName.length === 0) {
-        displayName = status.getIn(['account', 'username']);
-      }
-
-      const displayNameHTML = { __html: emojify(escapeTextContentForBrowser(displayName)) };
-
-      return (
-        <div className='status__wrapper' ref={this.handleRef} data-id={status.get('id')} >
-          <div className='status__prepend'>
-            <div className='status__prepend-icon-wrapper'><i className='fa fa-fw fa-retweet status__prepend-icon' /></div>
-            <FormattedMessage id='status.reblogged_by' defaultMessage='{name} boosted' values={{ name: <a onClick={this.handleAccountClick} data-id={status.getIn(['account', 'id'])} href={status.getIn(['account', 'url'])} className='status__display-name muted'><strong dangerouslySetInnerHTML={displayNameHTML} /></a> }} />
-          </div>
-
-          <Status {...other} wrapped status={status.get('reblog')} account={status.get('account')} />
-        </div>
-      );
-    }
-
     if (status.get('media_attachments').size > 0 && !this.props.muted) {
       if (status.get('media_attachments').some(item => item.get('type') === 'unknown')) {
 
       } else if (status.getIn(['media_attachments', 0, 'type']) === 'video') {
-        media = <VideoPlayer media={status.getIn(['media_attachments', 0])} sensitive={status.get('sensitive')} onOpenVideo={this.props.onOpenVideo} />;
-        mediaType = <i className='fa fa-fw fa-video-camera' aria-hidden='true' />;
-        if (!status.get('sensitive') && !(status.get('spoiler_text').length > 0)) thumb = status.getIn(['media_attachments', 0]).get('preview_url');
+        media = (
+          <VideoPlayer
+            media={status.getIn(['media_attachments', 0])}
+            sensitive={status.get('sensitive')}
+            letterbox={settings.getIn(['media', 'letterbox'])}
+            height={250}
+            onOpenVideo={this.props.onOpenVideo}
+          />
+        );
+        mediaIcon = 'video-camera';
       } else {
-        media = <MediaGallery media={status.get('media_attachments')} sensitive={status.get('sensitive')} height={110} onOpenMedia={this.props.onOpenMedia} autoPlayGif={this.props.autoPlayGif} />;
-        mediaType = status.get('media_attachments').size > 1 ? <i className='fa fa-fw fa-th-large' aria-hidden='true' /> : <i className='fa fa-fw fa-picture-o' aria-hidden='true' />;
-        if (!status.get('sensitive') && !(status.get('spoiler_text').length > 0)) thumb = status.getIn(['media_attachments', 0]).get('preview_url');
+        media = (
+          <MediaGallery
+            media={status.get('media_attachments')}
+            sensitive={status.get('sensitive')}
+            letterbox={settings.getIn(['media', 'letterbox'])}
+            height={250}
+            onOpenMedia={this.props.onOpenMedia}
+            autoPlayGif={this.props.autoPlayGif}
+          />
+        );
+        mediaIcon = 'picture-o';
       }
+
+      if (!status.get('sensitive') && !(status.get('spoiler_text').length > 0) && settings.getIn(['collapsed', 'backgrounds', 'preview_images'])) background = status.getIn(['media_attachments', 0]).get('preview_url');
     }
 
     if (account === undefined || account === null) {
@@ -248,19 +330,19 @@ class StatusUnextended extends ImmutablePureComponent {
     }
 
     return (
-      <div className={`status ${this.props.muted ? 'muted' : ''} status-${status.get('visibility')} ${isCollapsed ? 'status-collapsed' : ''}`} data-id={status.get('id')} ref={this.handleRef} style={{ backgroundImage: thumb && isCollapsed ? 'url(' + thumb + ')' : 'none' }}>
+      <div className={`status ${this.props.muted ? 'muted' : ''} status-${status.get('visibility')} ${isCollapsed ? 'status-collapsed' : ''}`} data-id={status.get('id')} ref={this.handleRef} style={{ backgroundImage: background && isCollapsed ? 'url(' + background + ')' : 'none' }}>
         <div className='status__info'>
 
           <div className='status__info__icons'>
-            {mediaType}
-            <IconButton
+            {mediaIcon ? <i className={`fa fa-fw fa-${mediaIcon}`} aria-hidden='true' /> : null}
+            {settings.getIn(['collapsed', 'enabled']) ? <IconButton
               className='status__collapse-button'
               animate flip
               active={isCollapsed}
               title={isCollapsed ? intl.formatMessage(messages.uncollapse) : intl.formatMessage(messages.collapse)}
               icon='angle-double-up'
               onClick={this.handleCollapsedClick}
-            />
+            /> : null}
           </div>
 
           <a onClick={this.handleAccountClick} data-id={status.getIn(['account', 'id'])} href={status.getIn(['account', 'url'])} className='status__display-name'>
@@ -273,7 +355,7 @@ class StatusUnextended extends ImmutablePureComponent {
 
         </div>
 
-        <StatusContent status={status} onClick={this.handleClick} expanded={isExpanded} collapsed={isCollapsed} onExpandedToggle={this.handleExpandedToggle} onHeightUpdate={this.saveHeight}>
+        <StatusContent status={status} mediaIcon={mediaIcon} onClick={this.handleClick} expanded={isExpanded} collapsed={isCollapsed} onExpandedToggle={this.handleExpandedToggle} onHeightUpdate={this.saveHeight}>
 
           {isCollapsed ? null : media}
 
@@ -285,6 +367,3 @@ class StatusUnextended extends ImmutablePureComponent {
   }
 
 }
-
-const Status = injectIntl(StatusUnextended);
-export default Status;

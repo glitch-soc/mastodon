@@ -495,10 +495,19 @@
   cursor: pointer;
   vertical-align: bottom;
 
-    &:hover {
-      background: lighten($ui-base-color, 33%);
-      text-decoration: none;
-    }
+  &:hover {
+    background: lighten($ui-base-color, 33%);
+    text-decoration: none;
+  }
+
+  .status__content__spoiler-icon {
+    display: inline-block;
+    margin: 0 0 0 5px;
+    border-left: 1px solid currentColor;
+    padding: 0 0 0 4px;
+    font-size: 16px;
+    vertical-align: -2px;
+  }
 }
 
 .status__prepend-icon-wrapper {
@@ -582,6 +591,10 @@
       bottom: 0;
     	background-image: linear-gradient(to bottom, transparentize($ui-base-color, .15), transparentize($ui-base-color, .3) 24px, transparentize($ui-base-color, .35));
       content: "";
+    }
+
+    .status__display-name:hover strong {
+      text-decoration: none;
     }
 
     .status__content {
@@ -1367,6 +1380,12 @@
   flex-direction: column;
   overflow: hidden;
 
+  .wide & {
+    flex: auto;
+    min-width: 330px;
+    max-width: 400px;
+  }
+
   > .scrollable {
     background: $ui-base-color;
   }
@@ -1387,6 +1406,12 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+
+  .wide & {
+    flex: 1 1 200px;
+    min-width: 300px;
+    max-width: 400px;
+  }
 }
 
 .drawer__tab {
@@ -1399,11 +1424,12 @@
   text-align: center;
   font-size: 16px;
   border-bottom: 2px solid transparent;
+  outline: none;
+  cursor: pointer;
 }
 
 .column,
 .drawer {
-  flex: 1 1 100%;
   @supports(display: grid) { // hack to fix Chrome <57
     contain: strict;
   }
@@ -1419,20 +1445,25 @@
   }
 }
 
-@include single-column('screen and (max-width: 1024px)', $parent: null) {
-  .column,
-  .drawer {
-    width: 100%;
-    padding: 0;
-  }
+:root {  //  Overrides .wide stylings for mobile view
+  @include single-column('screen and (max-width: 1024px)', $parent: null) {
+    .column,
+    .drawer {
+      flex: auto;
+      width: 100%;
+      min-width: 0;
+      max-width: none;
+      padding: 0;
+    }
 
-  .columns-area {
-    flex-direction: column;
-  }
+    .columns-area {
+      flex-direction: column;
+    }
 
-  .search__input,
-  .autosuggest-textarea__textarea {
-    font-size: 16px;
+    .search__input,
+    .autosuggest-textarea__textarea {
+      font-size: 16px;
+    }
   }
 }
 
@@ -1443,7 +1474,6 @@
 
   .column,
   .drawer {
-    flex: 0 0 auto;
     padding: 10px;
     padding-left: 5px;
     padding-right: 5px;
@@ -1771,6 +1801,8 @@
   font-size: 16px;
   padding: 15px;
   text-decoration: none;
+  cursor: pointer;
+  outline: none;
 
   &:hover {
     background: lighten($ui-base-color, 11%);
@@ -2301,6 +2333,9 @@ button.icon-button.active i.fa-retweet {
   position: relative;
   text-align: center;
   z-index: 100;
+  margin-top: 15px;
+  margin-left:-68px;
+  width: calc(100% + 80px);
 }
 
 .media-spoiler__warning {
@@ -3030,6 +3065,10 @@ button.icon-button.active i.fa-retweet {
   font-weight: 500;
 }
 
+.search-results__section {
+  background: $ui-base-color;
+}
+
 .search-results__hashtag {
   display: block;
   padding: 10px;
@@ -3387,6 +3426,85 @@ button.icon-button.active i.fa-retweet {
   margin-bottom: 20px;
 }
 
+.settings-modal {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  background: $ui-secondary-color;
+  color: $ui-base-color;
+  border-radius: 8px;
+  height: 80vh;
+  width: 80vw;
+  max-width: 740px;
+  max-height: 450px;
+  overflow: hidden;
+
+  label {
+    display: block;
+  }
+
+  h1 {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 24px;
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
+}
+
+.settings-modal__navigation {
+  background: $primary-text-color;
+  color: $ui-base-color;
+  width: 200px;
+  font-size: 15px;
+  line-height: 20px;
+  overflow-y: auto;
+
+  .settings-modal__navigation-item, .settings-modal__navigation-close {
+    display: block;
+    padding: 15px 20px;
+    cursor: pointer;
+    outline: none;
+    text-decoration: none;
+  }
+
+  .settings-modal__navigation-item {
+    background: $primary-text-color;
+    color: inherit;
+    border-bottom: 1px $ui-primary-color solid;
+    transition: background .3s;
+
+    &:hover {
+      background: $ui-secondary-color;
+    }
+
+    &.active {
+      background: $ui-highlight-color;
+      color: $primary-text-color;
+    }
+  }
+
+  .settings-modal__navigation-close {
+    background: $error-value-color;
+    color: $primary-text-color;
+  }
+}
+
+.settings-modal__content {
+  display: block;
+  flex: auto;
+  padding: 15px 20px 15px 20px;
+  width: 360px;
+  overflow-y: auto;
+}
+
 .onboard-sliders {
   display: inline-block;
   max-width: 30px;
@@ -3604,10 +3722,17 @@ button.icon-button.active i.fa-retweet {
 /* Media Gallery */
 .media-gallery {
   box-sizing: border-box;
-  margin-top: 8px;
+  margin-top: 15px;
+  margin-left: -68px;
   overflow: hidden;
   position: relative;
-  width: 100%;
+  width: calc(100% + 80px);
+  background: $base-shadow-color;
+
+  .detailed-status & {
+    margin-left:-10px;
+    width: calc(100% + 22px);
+  }
 }
 
 .media-gallery__item {
@@ -3619,18 +3744,20 @@ button.icon-button.active i.fa-retweet {
 }
 
 .media-gallery__item-thumbnail {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
   cursor: zoom-in;
   display: flex;
   align-items: center;
   text-decoration: none;
+  width: 100%;
   height: 100%;
 
-  &,
   img {
     width: 100%;
+
+    &:not(.letterbox) {
+      height: 100%;
+      object-fit: cover;
+    }
   }
 }
 
@@ -3644,12 +3771,13 @@ button.icon-button.active i.fa-retweet {
 .media-gallery__item-gifv-thumbnail {
   cursor: zoom-in;
   height: 100%;
-  object-fit: cover;
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
   z-index: 1;
+
+  &:not(.letterbox) {
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .media-gallery__item-thumbnail-label {
@@ -3662,22 +3790,27 @@ button.icon-button.active i.fa-retweet {
 
 /* Status Video Player */
 .status__video-player {
-  background: $base-overlay-background;
+  display: flex;
+  align-items: center;
+  background: $base-shadow-color;
   box-sizing: border-box;
   cursor: default; /* May not be needed */
-  margin-top: 8px;
+  margin-top: 15px;
+  margin-left:-68px;
+  width: calc(100% + 80px);
   overflow: hidden;
   position: relative;
 }
 
 .status__video-player-video {
-  height: 100%;
-  object-fit: cover;
   position: relative;
-  top: 50%;
-  transform: translateY(-50%);
   width: 100%;
   z-index: 1;
+
+  &:not(.letterbox) {
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .status__video-player-expand,
@@ -3718,7 +3851,9 @@ button.icon-button.active i.fa-retweet {
   background-repeat: no-repeat;
   background-position: center;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 15px;
+  margin-left: -68px;
+  width: calc(100% + 80px);
   position: relative;
 }
 
