@@ -2323,6 +2323,11 @@ button.icon-button.active i.fa-retweet {
   .media-gallery & {
     margin-top: 0;
   }
+
+  &.full-width {
+    margin-left: -68px;
+    width: calc(100% + 80px);
+  }
 }
 
 .media-spoiler__warning {
