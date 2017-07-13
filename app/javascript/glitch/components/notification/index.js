@@ -44,6 +44,7 @@ export default class Notification extends ImmutablePureComponent {
     return (
       <StatusContainer
         id={notification.get('status')}
+        notificationId={notification.get('id')}
         withDismiss
       />
     );
@@ -56,6 +57,7 @@ export default class Notification extends ImmutablePureComponent {
         account={notification.get('account')}
         prepend='favourite'
         muted
+        notificationId={notification.get('id')}
         withDismiss
       />
     );
@@ -68,6 +70,7 @@ export default class Notification extends ImmutablePureComponent {
         account={notification.get('account')}
         prepend='reblog'
         muted
+        notificationId={notification.get('id')}
         withDismiss
       />
     );
