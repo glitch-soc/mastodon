@@ -451,6 +451,36 @@
   cursor: pointer;
 }
 
+.notification__dismiss-overlay {
+  position: absolute;
+  left: 0; top: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  backdrop-filter: blur(2px);
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+
+  .marked-for-delete & {
+    background: rgba(0, 0, 0, 0.6);
+    // TODO better style
+  }
+
+  &::before {
+    content: '×';
+    color: crimson;
+    font-size: 50px;
+    padding: 20px;
+    text-shadow: 0 0 5px black;
+  }
+
+  display: none;
+
+  .notif-clearing-mode & {
+    display: flex;
+  }
+}
+
 // --- Extra clickable area in the status gutter ---
 .ui.wide {
   @mixin xtraspaces-full {
@@ -625,6 +655,10 @@
 .status__prepend-icon-wrapper {
   left: -26px;
   position: absolute;
+}
+
+.notification-follow {
+  position: relative;
 }
 
 .status__prepend-dismiss-button {
@@ -2404,6 +2438,19 @@ button.icon-button.active i.fa-retweet {
     &:hover {
       color: $primary-text-color;
       background: lighten($ui-base-color, 8%);
+    }
+  }
+}
+
+.column-header__notif-cleaning-buttons {
+  display: flex;
+  align-items: stretch;
+
+  button {
+    @extend .column-header__button;
+
+    &:last-child:first-child {
+      padding-right: 10px;
     }
   }
 }

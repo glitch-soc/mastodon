@@ -7,6 +7,9 @@ import { defineMessages } from 'react-intl';
 export const NOTIFICATIONS_UPDATE = 'NOTIFICATIONS_UPDATE';
 
 export const NOTIFICATION_DELETE_SUCCESS = 'NOTIFICATION_DELETE_SUCCESS';
+export const NOTIFICATION_DELETE_MARKED_REQUEST = 'NOTIFICATION_DELETE_MARKED_REQUEST';
+export const NOTIFICATION_CLEARING_MODE_ENABLE = 'NOTIFICATION_CLEARING_MODE_ENABLE';
+export const NOTIFICATION_CLEARING_MODE_DISABLE = 'NOTIFICATION_CLEARING_MODE_DISABLE';
 
 export const NOTIFICATIONS_REFRESH_REQUEST = 'NOTIFICATIONS_REFRESH_REQUEST';
 export const NOTIFICATIONS_REFRESH_SUCCESS = 'NOTIFICATIONS_REFRESH_SUCCESS';
@@ -202,5 +205,17 @@ export function deleteNotificationSuccess(id) {
   return {
     type: NOTIFICATION_DELETE_SUCCESS,
     id: id,
+  };
+};
+
+export function enableNotificationClearingMode(yes) {
+  return {
+    type: yes ? NOTIFICATION_CLEARING_MODE_ENABLE : NOTIFICATION_CLEARING_MODE_DISABLE,
+  };
+};
+
+export function deleteMarkedNotificationsRequest() {
+  return {
+    type: NOTIFICATION_DELETE_MARKED_REQUEST,
   };
 };

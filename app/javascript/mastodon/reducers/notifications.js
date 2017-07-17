@@ -9,6 +9,9 @@ import {
   NOTIFICATIONS_CLEAR,
   NOTIFICATIONS_SCROLL_TOP,
   NOTIFICATION_DELETE_SUCCESS,
+  NOTIFICATION_CLEARING_MODE_ENABLE,
+  NOTIFICATION_CLEARING_MODE_DISABLE,
+  NOTIFICATION_DELETE_MARKED_REQUEST,
 } from '../actions/notifications';
 import { ACCOUNT_BLOCK_SUCCESS } from '../actions/accounts';
 import { TIMELINE_DELETE } from '../actions/timelines';
@@ -97,6 +100,13 @@ const deleteById = (state, notificationId) => {
   return state.update('items', list => list.filterNot(item => item.get('id') === notificationId));
 };
 
+const deleteMarkedNotifs = (state) => {
+  //return state.update('items', list => list.filterNot(item => item.get('markedForDelete')));
+  // TODO
+  console.log('Request to delete marked notifications');
+  return state;
+};
+
 export default function notifications(state = initialState, action) {
   switch(action.type) {
   case NOTIFICATIONS_REFRESH_REQUEST:
@@ -120,6 +130,12 @@ export default function notifications(state = initialState, action) {
     return deleteByStatus(state, action.id);
   case NOTIFICATION_DELETE_SUCCESS:
     return deleteById(state, action.id);
+//  case NOTIFICATION_CLEARING_MODE_ENABLE:
+//    return state.set('clearingMode', true);
+//  case NOTIFICATION_CLEARING_MODE_DISABLE:
+//    return state.set('clearingMode', false);
+  case NOTIFICATION_DELETE_MARKED_REQUEST:
+    return deleteMarkedNotifs(state);
   default:
     return state;
   }

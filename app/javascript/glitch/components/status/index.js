@@ -186,6 +186,7 @@ export default class Status extends ImmutablePureComponent {
     isExpanded                  : null,
     isIntersecting              : true,
     isHidden                    : false,
+    markedForDelete             : false,
   }
 
 /*
@@ -216,6 +217,7 @@ to remember to specify it here.
 
   updateOnStates = [
     'isExpanded',
+    'markedForDelete',
   ]
 
 /*
@@ -523,6 +525,10 @@ applicable.
     }
   }
 
+  markNotifForDelete = () => {
+    this.setState({ 'markedForDelete' : !this.state.markedForDelete });
+  }
+
 /*
 
 ####  `render()`.
@@ -678,6 +684,8 @@ collapsed.
             isExpanded === false ? ' collapsed' : ''
           }${
             isExpanded === false && background ? ' has-background' : ''
+          }${
+            this.state.markedForDelete ? ' marked-for-delete' : ''
           }`
         }
         style={{
@@ -689,6 +697,10 @@ collapsed.
         }}
         ref={handleRef}
       >
+        <div
+          className='notification__dismiss-overlay'
+          onClick={this.markNotifForDelete}
+        />
         {prepend && account ? (
           <StatusPrepend
             type={prepend}

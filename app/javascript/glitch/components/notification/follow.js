@@ -149,6 +149,7 @@ We can now render our component.
 
     return (
       <div className='notification notification-follow'>
+        <div className='notification__dismiss-overlay' />
         <div className='notification__message'>
           <div className='notification__favourite-icon-wrapper'>
             <i className='fa fa-fw fa-user-plus' />

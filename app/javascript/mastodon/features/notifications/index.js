@@ -4,7 +4,11 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
-import { expandNotifications, scrollTopNotifications } from '../../actions/notifications';
+import {
+  deleteMarkedNotificationsRequest,
+  expandNotifications,
+  scrollTopNotifications,
+} from '../../actions/notifications';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import NotificationContainer from '../../../glitch/components/notification/container';
 import { ScrollContainer } from 'react-router-scroll';
@@ -49,6 +53,10 @@ export default class Notifications extends React.PureComponent {
 
   static defaultProps = {
     trackScroll: true,
+  };
+
+  state = {
+    clearingModeActive: false,
   };
 
   dispatchExpandNotifications = debounce(() => {
@@ -113,6 +121,14 @@ export default class Notifications extends React.PureComponent {
     this.column = c;
   }
 
+  onDeleteMarkedNotifications = () => {
+    this.props.dispatch(deleteMarkedNotificationsRequest());
+  }
+
+  onNotificationClearingModeStateChange = (yes) => {
+    this.setState({ 'clearingModeActive': yes });
+  }
+
   render () {
     const { intl, notifications, shouldUpdateScroll, isLoading, isUnread, columnId, multiColumn, hasMore } = this.props;
     const pinned = !!columnId;
@@ -164,7 +180,10 @@ export default class Notifications extends React.PureComponent {
     this.scrollableArea = scrollableArea;
 
     return (
-      <Column ref={this.setColumnRef}>
+      <Column
+        ref={this.setColumnRef}
+        notifClearingModeActive={this.state.clearingModeActive}
+      >
         <ColumnHeader
           icon='bell'
           active={isUnread}
@@ -174,6 +193,10 @@ export default class Notifications extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
+          onDeleteMarkedNotifications={this.onDeleteMarkedNotifications}
+          onNotificationClearingModeStateChange={this.onNotificationClearingModeStateChange}
+          notificationClearingModeActive={this.state.clearingModeActive}
+          notifCleaning
         >
           <ColumnSettingsContainer />
         </ColumnHeader>
