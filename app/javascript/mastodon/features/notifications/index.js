@@ -30,6 +30,7 @@ const getNotifications = createSelector([
 
 const mapStateToProps = state => ({
   notifications: getNotifications(state),
+  localSettings:  state.get('local_settings'),
   isLoading: state.getIn(['notifications', 'isLoading'], true),
   isUnread: state.getIn(['notifications', 'unread']) > 0,
   hasMore: !!state.getIn(['notifications', 'next']),
@@ -49,6 +50,7 @@ export default class Notifications extends React.PureComponent {
     isUnread: PropTypes.bool,
     multiColumn: PropTypes.bool,
     hasMore: PropTypes.bool,
+    localSettings: ImmutablePropTypes.map,
   };
 
   static defaultProps = {
@@ -196,6 +198,7 @@ export default class Notifications extends React.PureComponent {
           onDeleteMarkedNotifications={this.onDeleteMarkedNotifications}
           onNotificationClearingModeStateChange={this.onNotificationClearingModeStateChange}
           notificationClearingModeActive={this.state.clearingModeActive}
+          localSettings={this.props.localSettings}
           notifCleaning
         >
           <ColumnSettingsContainer />

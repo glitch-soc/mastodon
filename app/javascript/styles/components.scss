@@ -462,11 +462,16 @@
   cursor: pointer;
 
   .marked-for-delete & {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.5);
     // TODO better style
+
+    &::before {
+      opacity: 1;
+    }
   }
 
   &::before {
+    opacity: 0.5;
     content: '×';
     color: crimson;
     font-size: 50px;
@@ -2448,10 +2453,8 @@ button.icon-button.active i.fa-retweet {
 
   button {
     @extend .column-header__button;
-
-    &:last-child:first-child {
-      padding-right: 10px;
-    }
+    padding-left: 12px;
+    padding-right: 12px;
   }
 }
 

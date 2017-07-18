@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import NotificationPurgeButtons from '../../glitch/components/column/notification_purge_buttons';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 
 const messages = defineMessages({
-  titleNotifClearing: { id: 'column.notifications_clearing', defaultMessage: 'Select notifications dismiss' },
+  titleNotifClearing: { id: 'column.notifications_clearing', defaultMessage: 'Dismiss selected notifications:' },
+  titleNotifClearingShort: { id: 'column.notifications_clearing_short', defaultMessage: 'Dismiss selected:' },
 });
 
 @injectIntl
@@ -19,6 +21,7 @@ export default class ColumnHeader extends React.PureComponent {
     title: PropTypes.node.isRequired,
     icon: PropTypes.string.isRequired,
     active: PropTypes.bool,
+    localSettings : ImmutablePropTypes.map,
     multiColumn: PropTypes.bool,
     showBackButton: PropTypes.bool,
     notifCleaning: PropTypes.bool, // true only for the notification column
@@ -69,12 +72,14 @@ export default class ColumnHeader extends React.PureComponent {
   }
 
   render () {
-    const { intl, icon, active, children, pinned, onPin, multiColumn, showBackButton, notifCleaning } = this.props;
+    const { intl, icon, active, children, pinned, onPin, multiColumn, showBackButton, notifCleaning, localSettings } = this.props;
     const { collapsed, animating } = this.state;
 
     let title = this.props.title;
-    if (this.props.notificationClearingModeActive) {
-      title = intl.formatMessage(messages.titleNotifClearing);
+    if (notifCleaning && this.props.notificationClearingModeActive) {
+      title = intl.formatMessage(localSettings.getIn(['stretch']) ?
+        messages.titleNotifClearing :
+        messages.titleNotifClearingShort);
     }
 
     const wrapperClassName = classNames('column-header__wrapper', {
