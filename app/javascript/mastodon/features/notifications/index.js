@@ -8,6 +8,7 @@ import {
   deleteMarkedNotificationsRequest,
   expandNotifications,
   scrollTopNotifications,
+  unmarkAllNotificationsForDelete,
 } from '../../actions/notifications';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import NotificationContainer from '../../../glitch/components/notification/container';
@@ -129,6 +130,7 @@ export default class Notifications extends React.PureComponent {
 
   onNotificationClearingModeStateChange = (yes) => {
     this.setState({ 'clearingModeActive': yes });
+    if (!yes) this.props.dispatch(unmarkAllNotificationsForDelete());
   }
 
   render () {

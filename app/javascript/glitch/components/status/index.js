@@ -213,6 +213,7 @@ to remember to specify it here.
     'autoPlayGif',
     'muted',
     'collapse',
+    'notification',
   ]
 
   updateOnStates = [

@@ -7,14 +7,9 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import escapeTextContentForBrowser from 'escape-html';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 //  Mastodon imports  //
-import emojify from '../../../../mastodon/emoji';
-import Permalink from '../../../../mastodon/components/permalink';
-import AccountContainer from '../../../../mastodon/containers/account_container';
 
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -26,21 +21,19 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   };
 
   onToggleMark = () => {
-    console.log('onToggleMark!');
-    this.props.onMarkForDelete(
-      this.props.notification.get('id'),
-      !this.props.notification.get('markedForDelete')
-    );
+    const mark = !this.props.notification.get('markedForDelete');
+    const id = this.props.notification.get('id');
+    this.props.onMarkForDelete(id, mark);
   }
 
   render () {
     const { notification } = this.props;
 
+    //tabIndex={0} - useful (maybe) but ugly
     return (
       <div
         aria-label='Dismiss notification'
         role='button'
-        tabIndex={0}
         className={`notification__dismiss-overlay ${notification.get('markedForDelete') ? 'active' : ''}`}
         onClick={this.onToggleMark}
       />

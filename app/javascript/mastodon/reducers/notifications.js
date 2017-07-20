@@ -9,10 +9,10 @@ import {
   NOTIFICATIONS_CLEAR,
   NOTIFICATIONS_SCROLL_TOP,
   NOTIFICATION_DELETE_SUCCESS,
-  NOTIFICATION_CLEARING_MODE_ENABLE,
-  NOTIFICATION_CLEARING_MODE_DISABLE,
-  NOTIFICATION_DELETE_MARKED_REQUEST, NOTIFICATIONS_UNMARK_ALL_FOR_DELETE, NOTIFICATIONS_DELETE_MARKED_REQUEST,
-  NOTIFICATIONS_DELETE_MARKED_SUCCESS, NOTIFICATION_MARK_FOR_DELETE,
+  NOTIFICATIONS_UNMARK_ALL_FOR_DELETE,
+  NOTIFICATIONS_DELETE_MARKED_REQUEST,
+  NOTIFICATIONS_DELETE_MARKED_SUCCESS,
+  NOTIFICATION_MARK_FOR_DELETE,
 } from '../actions/notifications';
 import { ACCOUNT_BLOCK_SUCCESS } from '../actions/accounts';
 import { TIMELINE_DELETE } from '../actions/timelines';
@@ -103,9 +103,9 @@ const deleteById = (state, notificationId) => {
 };
 
 const markForDelete = (state, notificationId, yes) => {
-  return state.update('items', list => list.update(item => {
-    if(item.id === notificationId) {
-      return item.withMutations({ markedForDelete: yes });
+  return state.update('items', list => list.map(item => {
+    if(item.get('id') === notificationId) {
+      return item.set('markedForDelete', yes);
     } else {
       return item;
     }
@@ -113,8 +113,8 @@ const markForDelete = (state, notificationId, yes) => {
 };
 
 const unmarkAllForDelete = (state) => {
-  return state.update('items', list => list.update(item => {
-    return item.withMutations({ markedForDelete: false });
+  return state.update('items', list => list.map(item => {
+    return item.set('markedForDelete', false);
   }));
 };
 
