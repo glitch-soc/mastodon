@@ -47,6 +47,7 @@ import StatusContent from './content';
 import StatusActionBar from './action_bar';
 import StatusGallery from './gallery';
 import StatusPlayer from './player';
+import NotificationOverlayContainer from '../notification/overlay/container';
 
                             /* * * * */
 
@@ -158,6 +159,7 @@ export default class Status extends ImmutablePureComponent {
     status                      : ImmutablePropTypes.map,
     account                     : ImmutablePropTypes.map,
     settings                    : ImmutablePropTypes.map,
+    notification                : ImmutablePropTypes.map,
     me                          : PropTypes.number,
     onFavourite                 : PropTypes.func,
     onReblog                    : PropTypes.func,
@@ -170,7 +172,6 @@ export default class Status extends ImmutablePureComponent {
     onReport                    : PropTypes.func,
     onOpenMedia                 : PropTypes.func,
     onOpenVideo                 : PropTypes.func,
-    onDeleteNotification        : PropTypes.func,
     reblogModal                 : PropTypes.bool,
     deleteModal                 : PropTypes.bool,
     autoPlayGif                 : PropTypes.bool,
@@ -178,7 +179,6 @@ export default class Status extends ImmutablePureComponent {
     collapse                    : PropTypes.bool,
     prepend                     : PropTypes.string,
     withDismiss                 : PropTypes.bool,
-    notificationId              : PropTypes.number,
     intersectionObserverWrapper : PropTypes.object,
   };
 
@@ -557,6 +557,7 @@ this operation are further explained in the code below.
       onOpenVideo,
       onOpenMedia,
       autoPlayGif,
+      notification,
       ...other
     } = this.props;
     const { isExpanded, isIntersecting, isHidden } = this.state;
@@ -697,10 +698,11 @@ collapsed.
         }}
         ref={handleRef}
       >
-        <div
-          className='notification__dismiss-overlay'
-          onClick={this.markNotifForDelete}
-        />
+        {notification ? (
+          <NotificationOverlayContainer
+            notification={notification}
+          />
+        ) : null}
         {prepend && account ? (
           <StatusPrepend
             type={prepend}

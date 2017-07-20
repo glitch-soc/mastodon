@@ -11,7 +11,8 @@ import {
   NOTIFICATION_DELETE_SUCCESS,
   NOTIFICATION_CLEARING_MODE_ENABLE,
   NOTIFICATION_CLEARING_MODE_DISABLE,
-  NOTIFICATION_DELETE_MARKED_REQUEST,
+  NOTIFICATION_DELETE_MARKED_REQUEST, NOTIFICATIONS_UNMARK_ALL_FOR_DELETE, NOTIFICATIONS_DELETE_MARKED_REQUEST,
+  NOTIFICATIONS_DELETE_MARKED_SUCCESS, NOTIFICATION_MARK_FOR_DELETE,
 } from '../actions/notifications';
 import { ACCOUNT_BLOCK_SUCCESS } from '../actions/accounts';
 import { TIMELINE_DELETE } from '../actions/timelines';
@@ -30,6 +31,7 @@ const notificationToMap = notification => ImmutableMap({
   id: notification.id,
   type: notification.type,
   account: notification.account.id,
+  markedForDelete: false,
   status: notification.status ? notification.status.id : null,
 });
 
@@ -100,11 +102,26 @@ const deleteById = (state, notificationId) => {
   return state.update('items', list => list.filterNot(item => item.get('id') === notificationId));
 };
 
+const markForDelete = (state, notificationId, yes) => {
+  return state.update('items', list => list.update(item => {
+    if(item.id === notificationId) {
+      return item.withMutations({ markedForDelete: yes });
+    } else {
+      return item;
+    }
+  }));
+};
+
+const unmarkAllForDelete = (state) => {
+  return state.update('items', list => list.update(item => {
+    return item.withMutations({ markedForDelete: false });
+  }));
+};
+
 const deleteMarkedNotifs = (state) => {
-  //return state.update('items', list => list.filterNot(item => item.get('markedForDelete')));
-  // TODO
-  console.log('Request to delete marked notifications');
-  return state;
+  // TODO send a request and do this in response only
+  // TODo now we do it only client-side = bad
+  return state.update('items', list => list.filterNot(item => item.get('markedForDelete')));
 };
 
 export default function notifications(state = initialState, action) {
@@ -128,13 +145,15 @@ export default function notifications(state = initialState, action) {
     return state.set('items', ImmutableList()).set('next', null);
   case TIMELINE_DELETE:
     return deleteByStatus(state, action.id);
+  case NOTIFICATION_MARK_FOR_DELETE:
+    return markForDelete(state, action.id, action.yes);
   case NOTIFICATION_DELETE_SUCCESS:
     return deleteById(state, action.id);
-//  case NOTIFICATION_CLEARING_MODE_ENABLE:
-//    return state.set('clearingMode', true);
-//  case NOTIFICATION_CLEARING_MODE_DISABLE:
-//    return state.set('clearingMode', false);
-  case NOTIFICATION_DELETE_MARKED_REQUEST:
+  case NOTIFICATIONS_UNMARK_ALL_FOR_DELETE:
+    return unmarkAllForDelete(state);
+  case NOTIFICATIONS_DELETE_MARKED_REQUEST:
+    return deleteMarkedNotifs(state); // TODO only send the request now
+  case NOTIFICATIONS_DELETE_MARKED_SUCCESS:
     return deleteMarkedNotifs(state);
   default:
     return state;

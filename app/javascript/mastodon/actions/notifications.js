@@ -6,10 +6,20 @@ import { defineMessages } from 'react-intl';
 
 export const NOTIFICATIONS_UPDATE = 'NOTIFICATIONS_UPDATE';
 
+// Individual notification was deleted
 export const NOTIFICATION_DELETE_SUCCESS = 'NOTIFICATION_DELETE_SUCCESS';
-export const NOTIFICATION_DELETE_MARKED_REQUEST = 'NOTIFICATION_DELETE_MARKED_REQUEST';
-export const NOTIFICATION_CLEARING_MODE_ENABLE = 'NOTIFICATION_CLEARING_MODE_ENABLE';
-export const NOTIFICATION_CLEARING_MODE_DISABLE = 'NOTIFICATION_CLEARING_MODE_DISABLE';
+
+// Ask for marked notifs to be removed from DB
+export const NOTIFICATIONS_DELETE_MARKED_REQUEST = 'NOTIFICATIONS_DELETE_MARKED_REQUEST';
+
+// Now they were removed and should be wiped from the timeline (marks are still in place)
+export const NOTIFICATIONS_DELETE_MARKED_SUCCESS = 'NOTIFICATIONS_DELETE_MARKED_SUCCESS';
+
+// Unmark notifications (clearing mode disabled)
+export const NOTIFICATIONS_UNMARK_ALL_FOR_DELETE = 'NOTIFICATIONS_UNMARK_ALL_FOR_DELETE';
+
+// Mark one for delete
+export const NOTIFICATION_MARK_FOR_DELETE = 'NOTIFICATION_MARK_FOR_DELETE';
 
 export const NOTIFICATIONS_REFRESH_REQUEST = 'NOTIFICATIONS_REFRESH_REQUEST';
 export const NOTIFICATIONS_REFRESH_SUCCESS = 'NOTIFICATIONS_REFRESH_SUCCESS';
@@ -208,14 +218,28 @@ export function deleteNotificationSuccess(id) {
   };
 };
 
-export function enableNotificationClearingMode(yes) {
+export function deleteMarkedNotificationsRequest() {
   return {
-    type: yes ? NOTIFICATION_CLEARING_MODE_ENABLE : NOTIFICATION_CLEARING_MODE_DISABLE,
+    type: NOTIFICATIONS_DELETE_MARKED_REQUEST,
   };
 };
 
-export function deleteMarkedNotificationsRequest() {
+export function unmarkAllNotificationsForDelete() {
   return {
-    type: NOTIFICATION_DELETE_MARKED_REQUEST,
+    type: NOTIFICATIONS_UNMARK_ALL_FOR_DELETE,
+  };
+};
+
+export function markNotificationForDelete(id, yes) {
+  return {
+    type: NOTIFICATION_MARK_FOR_DELETE,
+    id: id,
+    yes: yes,
+  };
+};
+
+export function deleteMarkedNotificationsSuccess() {
+  return {
+    type: NOTIFICATIONS_DELETE_MARKED_SUCCESS,
   };
 };

@@ -15,7 +15,6 @@ export default class Notification extends ImmutablePureComponent {
   static propTypes = {
     notification: ImmutablePropTypes.map.isRequired,
     settings: ImmutablePropTypes.map.isRequired,
-    onDeleteNotification: PropTypes.func.isRequired,
   };
 
   renderFollow (notification) {
@@ -23,7 +22,7 @@ export default class Notification extends ImmutablePureComponent {
       <NotificationFollow
         id={notification.get('id')}
         account={notification.get('account')}
-        onDeleteNotification={this.props.onDeleteNotification}
+        notification={notification}
       />
     );
   }
@@ -32,7 +31,7 @@ export default class Notification extends ImmutablePureComponent {
     return (
       <StatusContainer
         id={notification.get('status')}
-        notificationId={notification.get('id')}
+        notification={notification}
         withDismiss
       />
     );
@@ -45,7 +44,7 @@ export default class Notification extends ImmutablePureComponent {
         account={notification.get('account')}
         prepend='favourite'
         muted
-        notificationId={notification.get('id')}
+        notification={notification}
         withDismiss
       />
     );
@@ -58,7 +57,7 @@ export default class Notification extends ImmutablePureComponent {
         account={notification.get('account')}
         prepend='reblog'
         muted
-        notificationId={notification.get('id')}
+        notification={notification}
         withDismiss
       />
     );
