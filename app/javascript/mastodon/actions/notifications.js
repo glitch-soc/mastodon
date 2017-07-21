@@ -210,12 +210,13 @@ export function deleteMarkedNotifications() {
     });
 
     if (ids.length === 0) {
-      dispatch(deleteMarkedNotificationsSuccess());
+      dispatch(enterNotificationClearingMode(false));
       return;
     }
 
     api(getState).delete(`/api/v1/notifications/destroy_multiple?ids[]=${ids.join('&ids[]=')}`).then(() => {
       dispatch(deleteMarkedNotificationsSuccess());
+      dispatch(expandNotifications()); // Load more (to fill the empty space)
     }).catch(error => {
       console.error(error);
       dispatch(deleteMarkedNotificationsFail(error));
