@@ -8,17 +8,24 @@ import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+import {defineMessages, injectIntl} from "react-intl";
 
 //  Mastodon imports  //
 
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
+const messages = defineMessages({
+  markForDeletion: { id: 'notification.markForDeletion', defaultMessage: 'Mark for deletion' },
+});
+
+@injectIntl
 export default class NotificationOverlay extends ImmutablePureComponent {
 
   static propTypes = {
-    notification: ImmutablePropTypes.map.isRequired,
-    onMarkForDelete: PropTypes.func.isRequired,
-    revealed: PropTypes.bool.isRequired,
+    notification    : ImmutablePropTypes.map.isRequired,
+    onMarkForDelete : PropTypes.func.isRequired,
+    revealed        : PropTypes.bool.isRequired,
+    intl            : PropTypes.object.isRequired,
   };
 
   onToggleMark = () => {
@@ -28,15 +35,17 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   }
 
   render () {
-    const { notification, revealed } = this.props;
+    const { notification, revealed, intl } = this.props;
 
-   
+    const active = notification.get('markedForDelete');
+
     return (
       <div
-        aria-label='Mark for deletion'
-        role='button'
+        aria-label={intl.formatMessage(messages.markForDeletion)}
+        role='checkbox'
+        aria-checked={active}
         tabIndex={0}
-        className={`notification__dismiss-overlay ${notification.get('markedForDelete') ? 'active' : ''} ${revealed ? 'show' : ''}`}
+        className={`notification__dismiss-overlay ${active ? 'active' : ''} ${revealed ? 'show' : ''}`}
         onClick={this.onToggleMark}
       />
     );
