@@ -8,7 +8,7 @@ import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import {defineMessages, injectIntl} from "react-intl";
+import { defineMessages, injectIntl } from 'react-intl';
 
 //  Mastodon imports  //
 
