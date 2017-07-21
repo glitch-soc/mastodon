@@ -30,11 +30,12 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   render () {
     const { notification, revealed } = this.props;
 
-    //tabIndex={0} - useful (maybe) but ugly
+   
     return (
       <div
         aria-label='Dismiss notification'
         role='button'
+        tabIndex={0}
         className={`notification__dismiss-overlay ${notification.get('markedForDelete') ? 'active' : ''} ${revealed ? 'show' : ''}`}
         onClick={this.onToggleMark}
       />
