@@ -455,11 +455,13 @@
   position: absolute;
   left: 0; top: 0; right: 0; bottom: 0;
 
+  $c1: #00000A;
+  $c2: #222228;
   background: linear-gradient(to right,
-    rgba(0, 0, 10, 0.3),
-    rgba(0, 0, 10, 0.3) 60%,
-    rgba(35,35, 40, 1) 90%,
-    rgba(35,35, 40, 1));
+    rgba($c1, 0.1),
+    rgba($c1, 0.2) 60%,
+    rgba($c2, 1) 90%,
+    rgba($c2, 1));
 
   z-index: 999;
   align-items: center;
@@ -472,12 +474,14 @@
     display: flex;
   }
 
+  // make it brighter
   &.active {
+    $c: #222931;
     background: linear-gradient(to right,
-      rgba(#222931, 0.3),
-      rgba(#222931, 0.3) 60%,
-      rgba(#222931, 1) 90%,
-      rgba(#222931, 1));
+      rgba($c, 0.1),
+      rgba($c, 0.2) 60%,
+      rgba($c, 1) 90%,
+      rgba($c, 1));
   }
 
   &:focus {
@@ -486,13 +490,13 @@
 }
 
 .notification__dismiss-overlay__ckbox {
-  border: 2px solid #949dbd;
+  border: 2px solid #9baec8;
   border-radius: 2px;
   width: 30px;
   height: 30px;
   margin-right: 20px;
   font-size: 20px;
-  color: #29d155;
+  color: #c3dcfd;
   text-shadow: 0 0 5px black;
   display: flex;
   justify-content: center;
