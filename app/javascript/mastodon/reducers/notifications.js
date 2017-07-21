@@ -8,11 +8,12 @@ import {
   NOTIFICATIONS_EXPAND_FAIL,
   NOTIFICATIONS_CLEAR,
   NOTIFICATIONS_SCROLL_TOP,
-  NOTIFICATION_DELETE_SUCCESS,
   NOTIFICATIONS_UNMARK_ALL_FOR_DELETE,
   NOTIFICATIONS_DELETE_MARKED_REQUEST,
   NOTIFICATIONS_DELETE_MARKED_SUCCESS,
   NOTIFICATION_MARK_FOR_DELETE,
+  NOTIFICATIONS_DELETE_MARKED_FAIL,
+  NOTIFICATIONS_ENTER_CLEARING_MODE,
 } from '../actions/notifications';
 import { ACCOUNT_BLOCK_SUCCESS } from '../actions/accounts';
 import { TIMELINE_DELETE } from '../actions/timelines';
@@ -25,6 +26,7 @@ const initialState = ImmutableMap({
   unread: 0,
   loaded: false,
   isLoading: true,
+  cleaningMode: false,
 });
 
 const notificationToMap = notification => ImmutableMap({
@@ -98,10 +100,6 @@ const deleteByStatus = (state, statusId) => {
   return state.update('items', list => list.filterNot(item => item.get('status') === statusId));
 };
 
-const deleteById = (state, notificationId) => {
-  return state.update('items', list => list.filterNot(item => item.get('id') === notificationId));
-};
-
 const markForDelete = (state, notificationId, yes) => {
   return state.update('items', list => list.map(item => {
     if(item.get('id') === notificationId) {
@@ -113,14 +111,10 @@ const markForDelete = (state, notificationId, yes) => {
 };
 
 const unmarkAllForDelete = (state) => {
-  return state.update('items', list => list.map(item => {
-    return item.set('markedForDelete', false);
-  }));
+  return state.update('items', list => list.map(item => item.set('markedForDelete', false)));
 };
 
 const deleteMarkedNotifs = (state) => {
-  // TODO send a request and do this in response only
-  // TODo now we do it only client-side = bad
   return state.update('items', list => list.filterNot(item => item.get('markedForDelete')));
 };
 
@@ -128,9 +122,12 @@ export default function notifications(state = initialState, action) {
   switch(action.type) {
   case NOTIFICATIONS_REFRESH_REQUEST:
   case NOTIFICATIONS_EXPAND_REQUEST:
+  case NOTIFICATIONS_DELETE_MARKED_REQUEST:
+    return state.set('isLoading', true);
+  case NOTIFICATIONS_DELETE_MARKED_FAIL:
   case NOTIFICATIONS_REFRESH_FAIL:
   case NOTIFICATIONS_EXPAND_FAIL:
-    return state.set('isLoading', true);
+    return state.set('isLoading', false);
   case NOTIFICATIONS_SCROLL_TOP:
     return updateTop(state, action.top);
   case NOTIFICATIONS_UPDATE:
@@ -147,14 +144,13 @@ export default function notifications(state = initialState, action) {
     return deleteByStatus(state, action.id);
   case NOTIFICATION_MARK_FOR_DELETE:
     return markForDelete(state, action.id, action.yes);
-  case NOTIFICATION_DELETE_SUCCESS:
-    return deleteById(state, action.id);
-  case NOTIFICATIONS_UNMARK_ALL_FOR_DELETE:
-    return unmarkAllForDelete(state);
-  case NOTIFICATIONS_DELETE_MARKED_REQUEST:
-    return deleteMarkedNotifs(state); // TODO only send the request now
   case NOTIFICATIONS_DELETE_MARKED_SUCCESS:
-    return deleteMarkedNotifs(state);
+    return deleteMarkedNotifs(state).set('isLoading', false).set('cleaningMode', false);
+  case NOTIFICATIONS_ENTER_CLEARING_MODE:
+    const st = state.set('cleaningMode', action.yes);
+    if (!action.yes)
+      return unmarkAllForDelete(st);
+    else return st;
   default:
     return state;
   }

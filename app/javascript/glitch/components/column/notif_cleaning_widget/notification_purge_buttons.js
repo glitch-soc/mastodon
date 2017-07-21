@@ -7,16 +7,11 @@
 
 //  Package imports  //
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import escapeTextContentForBrowser from 'escape-html';
+import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 //  Mastodon imports  //
-import emojify from '../../../mastodon/emoji';
-import Permalink from '../../../mastodon/components/permalink';
-import AccountContainer from '../../../mastodon/containers/account_container';
 
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -34,22 +29,23 @@ export default class NotificationPurgeButtons extends ImmutablePureComponent {
     onDeleteMarkedNotifications : PropTypes.func.isRequired,
     // Enables or disables the mode
     // and also clears the marked status of all notifications
-    onStateChange : PropTypes.func.isRequired,
+    onEnterCleaningMode : PropTypes.func.isRequired,
     // Active state, changed via onStateChange()
     active: PropTypes.bool.isRequired,
+    // i18n
+    intl: PropTypes.object.isRequired,
   };
 
   onEnterBtnClick = () => {
-    this.props.onStateChange(true);
+    this.props.onEnterCleaningMode(true);
   }
 
   onAcceptBtnClick = () => {
     this.props.onDeleteMarkedNotifications();
-    this.props.onStateChange(false);
   }
 
   onAbortBtnClick = () => {
-    this.props.onStateChange(false);
+    this.props.onEnterCleaningMode(false);
   }
 
   render () {

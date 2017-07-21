@@ -18,6 +18,7 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   static propTypes = {
     notification: ImmutablePropTypes.map.isRequired,
     onMarkForDelete: PropTypes.func.isRequired,
+    revealed: PropTypes.bool.isRequired,
   };
 
   onToggleMark = () => {
@@ -27,14 +28,14 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   }
 
   render () {
-    const { notification } = this.props;
+    const { notification, revealed } = this.props;
 
     //tabIndex={0} - useful (maybe) but ugly
     return (
       <div
         aria-label='Dismiss notification'
         role='button'
-        className={`notification__dismiss-overlay ${notification.get('markedForDelete') ? 'active' : ''}`}
+        className={`notification__dismiss-overlay ${notification.get('markedForDelete') ? 'active' : ''} ${revealed ? 'show' : ''}`}
         onClick={this.onToggleMark}
       />
     );

@@ -456,20 +456,26 @@
   left: 0; top: 0; right: 0; bottom: 0;
   background: rgba(0, 0, 0, 0.3);
   z-index: 999;
-  backdrop-filter: blur(2px);
+  backdrop-filter: blur(1px);
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
 
+  display: none;
+
+  &.show {
+    display: flex;
+  }
+
   &.active {
     background: rgba(0, 0, 0, 0.5);
-    // TODO better style
 
     &::before {
       opacity: 1;
     }
   }
 
+  // the X button
   &::before {
     opacity: 0.5;
     content: '×';
@@ -477,12 +483,6 @@
     font-size: 50px;
     padding: 20px;
     text-shadow: 0 0 5px black;
-  }
-
-  display: none;
-
-  .notif-clearing-mode & {
-    display: flex;
   }
 }
 

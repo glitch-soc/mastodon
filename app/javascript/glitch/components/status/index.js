@@ -710,7 +710,6 @@ collapsed.
             account={account}
             parseClick={parseClick}
             notificationId={this.props.notificationId}
-            onDeleteNotification={this.props.onDeleteNotification}
           />
         ) : null}
         <StatusHeader

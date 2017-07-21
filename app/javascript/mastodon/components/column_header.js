@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import NotificationPurgeButtons from '../../glitch/components/column/notification_purge_buttons';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+
+// Glitch imports
+import NotificationPurgeButtonsContainer from '../../glitch/components/column/notif_cleaning_widget/container';
 
 const messages = defineMessages({
   titleNotifClearing: { id: 'column.notifications_clearing', defaultMessage: 'Dismiss selected notifications:' },
@@ -25,14 +27,12 @@ export default class ColumnHeader extends React.PureComponent {
     multiColumn: PropTypes.bool,
     showBackButton: PropTypes.bool,
     notifCleaning: PropTypes.bool, // true only for the notification column
+    notifCleaningActive: PropTypes.bool,
     children: PropTypes.node,
     pinned: PropTypes.bool,
     onPin: PropTypes.func,
     onMove: PropTypes.func,
     onClick: PropTypes.func,
-    onDeleteMarkedNotifications: PropTypes.func,
-    onNotificationClearingModeStateChange: PropTypes.func,
-    notificationClearingModeActive: PropTypes.bool,
     intl: PropTypes.object.isRequired,
   };
 
@@ -76,7 +76,7 @@ export default class ColumnHeader extends React.PureComponent {
     const { collapsed, animating } = this.state;
 
     let title = this.props.title;
-    if (notifCleaning && this.props.notificationClearingModeActive) {
+    if (notifCleaning && this.props.notifCleaningActive) {
       title = intl.formatMessage(localSettings.getIn(['stretch']) ?
         messages.titleNotifClearing :
         messages.titleNotifClearingShort);
@@ -99,7 +99,7 @@ export default class ColumnHeader extends React.PureComponent {
       'active': !collapsed,
     });
 
-    let extraContent, pinButton, moveButtons, backButton, collapseButton, notifCleaningButtons;
+    let extraContent, pinButton, moveButtons, backButton, collapseButton;
 
     if (children) {
       extraContent = (
@@ -144,16 +144,6 @@ export default class ColumnHeader extends React.PureComponent {
       collapseButton = <button className={collapsibleButtonClassName} onClick={this.handleToggleClick}><i className='fa fa-sliders' /></button>;
     }
 
-    if (notifCleaning) {
-      notifCleaningButtons = (
-        <NotificationPurgeButtons
-          onDeleteMarkedNotifications={this.props.onDeleteMarkedNotifications}
-          onStateChange={this.props.onNotificationClearingModeStateChange}
-          active={this.props.notificationClearingModeActive}
-        />
-      );
-    }
-
     return (
       <div className={wrapperClassName}>
         <div role='button heading' tabIndex='0' className={buttonClassName} onClick={this.handleTitleClick}>
@@ -161,7 +151,7 @@ export default class ColumnHeader extends React.PureComponent {
           {title}
 
           <div className='column-header__buttons'>
-            {notifCleaningButtons}
+            {notifCleaning ? (<NotificationPurgeButtonsContainer />) : null}
             {backButton}
             {collapseButton}
           </div>

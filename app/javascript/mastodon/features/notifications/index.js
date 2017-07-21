@@ -5,10 +5,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
 import {
-  deleteMarkedNotificationsRequest,
   expandNotifications,
   scrollTopNotifications,
-  unmarkAllNotificationsForDelete,
 } from '../../actions/notifications';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import NotificationContainer from '../../../glitch/components/notification/container';
@@ -35,6 +33,7 @@ const mapStateToProps = state => ({
   isLoading: state.getIn(['notifications', 'isLoading'], true),
   isUnread: state.getIn(['notifications', 'unread']) > 0,
   hasMore: !!state.getIn(['notifications', 'next']),
+  notifCleaningActive: state.getIn(['notifications', 'cleaningMode']),
 });
 
 @connect(mapStateToProps)
@@ -52,14 +51,11 @@ export default class Notifications extends React.PureComponent {
     multiColumn: PropTypes.bool,
     hasMore: PropTypes.bool,
     localSettings: ImmutablePropTypes.map,
+    notifCleaningActive: PropTypes.bool,
   };
 
   static defaultProps = {
     trackScroll: true,
-  };
-
-  state = {
-    clearingModeActive: false,
   };
 
   dispatchExpandNotifications = debounce(() => {
@@ -124,15 +120,6 @@ export default class Notifications extends React.PureComponent {
     this.column = c;
   }
 
-  onDeleteMarkedNotifications = () => {
-    this.props.dispatch(deleteMarkedNotificationsRequest());
-  }
-
-  onNotificationClearingModeStateChange = (yes) => {
-    this.setState({ 'clearingModeActive': yes });
-    if (!yes) this.props.dispatch(unmarkAllNotificationsForDelete());
-  }
-
   render () {
     const { intl, notifications, shouldUpdateScroll, isLoading, isUnread, columnId, multiColumn, hasMore } = this.props;
     const pinned = !!columnId;
@@ -186,7 +173,6 @@ export default class Notifications extends React.PureComponent {
     return (
       <Column
         ref={this.setColumnRef}
-        notifClearingModeActive={this.state.clearingModeActive}
       >
         <ColumnHeader
           icon='bell'
@@ -197,11 +183,9 @@ export default class Notifications extends React.PureComponent {
           onClick={this.handleHeaderClick}
           pinned={pinned}
           multiColumn={multiColumn}
-          onDeleteMarkedNotifications={this.onDeleteMarkedNotifications}
-          onNotificationClearingModeStateChange={this.onNotificationClearingModeStateChange}
-          notificationClearingModeActive={this.state.clearingModeActive}
           localSettings={this.props.localSettings}
           notifCleaning
+          notifCleaningActive={this.props.notifCleaningActive} // this is used to toggle the header text
         >
           <ColumnSettingsContainer />
         </ColumnHeader>

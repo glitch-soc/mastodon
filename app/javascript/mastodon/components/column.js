@@ -6,7 +6,6 @@ export default class Column extends React.PureComponent {
 
   static propTypes = {
     children: PropTypes.node,
-    notifClearingModeActive: PropTypes.bool,
   };
 
   scrollTop () {
@@ -32,12 +31,12 @@ export default class Column extends React.PureComponent {
   }
 
   render () {
-    const { children, notifClearingModeActive } = this.props;
+    const { children } = this.props;
 
     return (
       <div
         role='region'
-        className={`column ${notifClearingModeActive ? 'notif-clearing-mode' : ''}`}
+        className='column'
         ref={this.setRef}
         onWheel={this.handleWheel}
       >
