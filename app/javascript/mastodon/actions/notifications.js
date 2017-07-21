@@ -214,7 +214,7 @@ export function deleteMarkedNotifications() {
       return;
     }
 
-    api(getState).delete(`/api/v1/notifications?ids[]=${ids.join('&ids[]=')}`).then(() => {
+    api(getState).delete(`/api/v1/notifications/destroy_multiple?ids[]=${ids.join('&ids[]=')}`).then(() => {
       dispatch(deleteMarkedNotificationsSuccess());
     }).catch(error => {
       console.error(error);
