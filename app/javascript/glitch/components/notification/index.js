@@ -2,7 +2,6 @@
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import PropTypes from 'prop-types';
 
 //  Mastodon imports  //
 
