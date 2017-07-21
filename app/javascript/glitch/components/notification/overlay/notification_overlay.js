@@ -33,7 +33,7 @@ export default class NotificationOverlay extends ImmutablePureComponent {
    
     return (
       <div
-        aria-label='Dismiss notification'
+        aria-label='Mark for deletion'
         role='button'
         tabIndex={0}
         className={`notification__dismiss-overlay ${notification.get('markedForDelete') ? 'active' : ''} ${revealed ? 'show' : ''}`}
