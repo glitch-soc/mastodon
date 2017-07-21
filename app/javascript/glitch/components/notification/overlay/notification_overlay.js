@@ -38,16 +38,21 @@ export default class NotificationOverlay extends ImmutablePureComponent {
     const { notification, revealed, intl } = this.props;
 
     const active = notification.get('markedForDelete');
+    const label = intl.formatMessage(messages.markForDeletion);
 
     return (
       <div
-        aria-label={intl.formatMessage(messages.markForDeletion)}
+        aria-label={label}
         role='checkbox'
         aria-checked={active}
         tabIndex={0}
         className={`notification__dismiss-overlay ${active ? 'active' : ''} ${revealed ? 'show' : ''}`}
         onClick={this.onToggleMark}
-      />
+      >
+        <div className='notification__dismiss-overlay__ckbox' aria-hidden='true' title={label}>
+          {active ? (<i className='fa fa-check' />) : ''}
+        </div>
+      </div>
     );
   }
 

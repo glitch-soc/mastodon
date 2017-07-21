@@ -454,9 +454,14 @@
 .notification__dismiss-overlay {
   position: absolute;
   left: 0; top: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+
+  background: linear-gradient(to right,
+    rgba(0, 0, 0, 0.3),
+    rgba(0, 0, 0, 0.3) 60%,
+    rgba(30,30, 30, 1) 80%,
+    rgba(30,30, 30, 1));
+
   z-index: 999;
-  backdrop-filter: blur(1px);
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
@@ -468,21 +473,34 @@
   }
 
   &.active {
-    background: rgba(0, 0, 0, 0.5);
-
-    &::before {
-      opacity: 1;
-    }
+    background: linear-gradient(to right,
+      rgba(43, 43, 43, 0.3),
+      rgba(43, 43, 43, 0.3) 60%,
+      rgba(43, 43, 43, 0.8) 80%,
+      rgba(43, 43, 43, 0.8));
   }
 
-  // the X button
-  &::before {
-    opacity: 0.5;
-    content: '×';
-    color: crimson;
-    font-size: 50px;
-    padding: 20px;
-    text-shadow: 0 0 5px black;
+  &:focus {
+    outline: 0 !important;
+  }
+}
+
+.notification__dismiss-overlay__ckbox {
+  border: 2px solid #949dbd;
+  border-radius: 2px;
+  width: 30px;
+  height: 30px;
+  margin-right: 20px;
+  font-size: 20px;
+  color: #29d155;
+  text-shadow: 0 0 5px black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  :focus & {
+    outline: rgb(77, 144, 254) auto 10px;
+    outline: -webkit-focus-ring-color auto 10px;
   }
 }
 
@@ -664,6 +682,13 @@
 
 .notification-follow {
   position: relative;
+
+  // same like Status
+  border-bottom: 1px solid lighten($ui-base-color, 8%);
+
+  .account {
+    border-bottom: 0 none;
+  }
 }
 
 .status {
