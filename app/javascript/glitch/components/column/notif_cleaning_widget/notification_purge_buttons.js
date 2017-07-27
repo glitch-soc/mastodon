@@ -51,48 +51,35 @@ export default class NotificationPurgeButtons extends ImmutablePureComponent {
   render () {
     const { intl, active } = this.props;
 
-    const msgEnter = intl.formatMessage(messages.enter);
     const msgAccept = intl.formatMessage(messages.accept);
     const msgAbort = intl.formatMessage(messages.abort);
 
-    let enterButton, acceptButton, abortButton;
+    let acceptButton, abortButton;
 
-    if (active) {
-      acceptButton = (
-        <button
-          className='active'
-          aria-label={msgAccept}
-          title={msgAccept}
-          onClick={this.onAcceptBtnClick}
-        >
-          <i className='fa fa-check' />
-        </button>
-      );
-      abortButton = (
-        <button
-          className='active'
-          aria-label={msgAbort}
-          title={msgAbort}
-          onClick={this.onAbortBtnClick}
-        >
-          <i className='fa fa-times' />
-        </button>
-      );
-    } else {
-      enterButton = (
-        <button
-          aria-label={msgEnter}
-          title={msgEnter}
-          onClick={this.onEnterBtnClick}
-        >
-          <i className='fa fa-eraser' />
-        </button>
-      );
-    }
+    acceptButton = (
+      <button
+        className='active'
+        aria-label={msgAccept}
+        title={msgAccept}
+        onClick={this.onAcceptBtnClick}
+      >
+        <i className='fa fa-check' />
+      </button>
+    );
+    abortButton = (
+      <button
+        className='active'
+        aria-label={msgAbort}
+        title={msgAbort}
+        onClick={this.onAbortBtnClick}
+      >
+        <i className='fa fa-times' />
+      </button>
+    );
 
     return (
       <div className='column-header__notif-cleaning-buttons'>
-        {acceptButton}{abortButton}{enterButton}
+        {acceptButton}{abortButton}
       </div>
     );
   }

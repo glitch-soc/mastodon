@@ -5,6 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import Column from '../../components/column';
 import ColumnHeader from '../../components/column_header';
 import {
+  enterNotificationClearingMode,
   expandNotifications,
   scrollTopNotifications,
 } from '../../actions/notifications';
@@ -36,7 +37,14 @@ const mapStateToProps = state => ({
   notifCleaningActive: state.getIn(['notifications', 'cleaningMode']),
 });
 
-@connect(mapStateToProps)
+/* glitch */
+const mapDispatchToProps = dispatch => ({
+  onEnterCleaningMode(yes) {
+    dispatch(enterNotificationClearingMode(yes));
+  },
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 @injectIntl
 export default class Notifications extends React.PureComponent {
 
@@ -52,6 +60,7 @@ export default class Notifications extends React.PureComponent {
     hasMore: PropTypes.bool,
     localSettings: ImmutablePropTypes.map,
     notifCleaningActive: PropTypes.bool,
+    onEnterCleaningMode: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -186,6 +195,7 @@ export default class Notifications extends React.PureComponent {
           localSettings={this.props.localSettings}
           notifCleaning
           notifCleaningActive={this.props.notifCleaningActive} // this is used to toggle the header text
+          onEnterCleaningMode={this.props.onEnterCleaningMode}
         >
           <ColumnSettingsContainer />
         </ColumnHeader>
