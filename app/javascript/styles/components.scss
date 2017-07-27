@@ -2511,7 +2511,7 @@ button.icon-button.active i.fa-retweet {
 
   // notif cleaning drawer
   &.ncd {
-    transition: max-height 100ms ease-in-out, opacity 100ms linear;
+    transition: none;
     &.collapsed {
       max-height: 0;
       opacity: 0.7;

@@ -79,6 +79,7 @@ export default class NotificationPurgeButtons extends ImmutablePureComponent {
 
     return (
       <div className='column-header__notif-cleaning-buttons'>
+        (TODO) Delete selected:
         {acceptButton}{abortButton}
       </div>
     );

@@ -42,6 +42,7 @@ const mapDispatchToProps = dispatch => ({
   onEnterCleaningMode(yes) {
     dispatch(enterNotificationClearingMode(yes));
   },
+  dispatch,
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -60,7 +61,7 @@ export default class Notifications extends React.PureComponent {
     hasMore: PropTypes.bool,
     localSettings: ImmutablePropTypes.map,
     notifCleaningActive: PropTypes.bool,
-    onEnterCleaningMode: PropTypes.bool,
+    onEnterCleaningMode: PropTypes.func,
   };
 
   static defaultProps = {
