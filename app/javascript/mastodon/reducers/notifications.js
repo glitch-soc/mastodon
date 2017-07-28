@@ -174,8 +174,8 @@ export default function notifications(state = initialState, action) {
   case NOTIFICATIONS_MARK_ALL_FOR_DELETE:
     st = state;
     if (action.yes === null) {
-      // Toggle
-      st = st.set('markNewForDelete', !st.get('markNewForDelete'));
+      // Toggle - this is a bit confusing, as it toggles the all-none mode
+      //st = st.set('markNewForDelete', !st.get('markNewForDelete'));
     } else {
       st = st.set('markNewForDelete', action.yes);
     }

@@ -19,7 +19,7 @@ const messages = defineMessages({
   btnAll : { id: 'notification_purge.btn_all', defaultMessage: 'Select\nall' },
   btnNone : { id: 'notification_purge.btn_none', defaultMessage: 'Select\nnone' },
   btnInvert : { id: 'notification_purge.btn_invert', defaultMessage: 'Invert\nselection' },
-  btnApply : { id: 'notification_purge.btn_apply', defaultMessage: 'Delete\nselected' },
+  btnApply : { id: 'notification_purge.btn_apply', defaultMessage: 'Clear\nselected' },
 });
 
 @injectIntl
