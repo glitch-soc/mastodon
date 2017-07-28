@@ -24,6 +24,7 @@ import NotificationPurgeButtons from './notification_purge_buttons';
 import {
   deleteMarkedNotifications,
   enterNotificationClearingMode,
+  markAllNotifications,
 } from '../../../../mastodon/actions/notifications';
 
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -44,13 +45,25 @@ const mapDispatchToProps = dispatch => ({
     dispatch(enterNotificationClearingMode(yes));
   },
 
-  onDeleteMarkedNotifications() {
+  onDeleteMarked() {
     dispatch(deleteMarkedNotifications());
+  },
+
+  onMarkAll() {
+    dispatch(markAllNotifications(true));
+  },
+
+  onMarkNone() {
+    dispatch(markAllNotifications(false));
+  },
+
+  onInvert() {
+    dispatch(markAllNotifications(null));
   },
 });
 
 const mapStateToProps = state => ({
-  active: state.getIn(['notifications', 'cleaningMode']),
+  markNewForDelete: state.getIn(['notifications', 'markNewForDelete']),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(NotificationPurgeButtons);

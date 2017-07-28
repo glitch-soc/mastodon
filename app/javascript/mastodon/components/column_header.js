@@ -185,7 +185,7 @@ export default class ColumnHeader extends React.PureComponent {
 
         { notifCleaning ? (
           <div className={notifCleaningDrawerClassName} onTransitionEnd={this.handleTransitionEndNCD}>
-            <div className='column-header__collapsible-inner'>
+            <div className='column-header__collapsible-inner nopad-drawer'>
               {(notifCleaningActive || animatingNCD) ? (<NotificationPurgeButtonsContainer />) : null }
             </div>
           </div>

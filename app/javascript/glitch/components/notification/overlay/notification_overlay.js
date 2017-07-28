@@ -49,8 +49,10 @@ export default class NotificationOverlay extends ImmutablePureComponent {
         className={`notification__dismiss-overlay ${active ? 'active' : ''} ${revealed ? 'show' : ''}`}
         onClick={this.onToggleMark}
       >
-        <div className='notification__dismiss-overlay__ckbox' aria-hidden='true' title={label}>
-          {active ? (<i className='fa fa-check' />) : ''}
+        <div className='wrappy'>
+          <div className='ckbox' aria-hidden='true' title={label}>
+            {active ? (<i className='fa fa-check' />) : ''}
+          </div>
         </div>
       </div>
     );
