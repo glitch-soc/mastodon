@@ -2,7 +2,7 @@
 
 const { existsSync } = require('fs');
 const webpack = require('webpack');
-const { basename, dirname, join, relative, resolve, sep } = require('path');
+const { basename, dirname, join, relative, resolve } = require('path');
 const { sync } = require('glob');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
