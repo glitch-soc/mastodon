@@ -24,7 +24,7 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   static propTypes = {
     notification    : ImmutablePropTypes.map.isRequired,
     onMarkForDelete : PropTypes.func.isRequired,
-    revealed        : PropTypes.bool.isRequired,
+    show            : PropTypes.bool.isRequired,
     intl            : PropTypes.object.isRequired,
   };
 
@@ -35,18 +35,18 @@ export default class NotificationOverlay extends ImmutablePureComponent {
   }
 
   render () {
-    const { notification, revealed, intl } = this.props;
+    const { notification, show, intl } = this.props;
 
     const active = notification.get('markedForDelete');
     const label = intl.formatMessage(messages.markForDeletion);
 
-    return (
+    return show ? (
       <div
         aria-label={label}
         role='checkbox'
         aria-checked={active}
         tabIndex={0}
-        className={`notification__dismiss-overlay ${active ? 'active' : ''} ${revealed ? 'show' : ''}`}
+        className={`notification__dismiss-overlay ${active ? 'active' : ''}`}
         onClick={this.onToggleMark}
       >
         <div className='wrappy'>
@@ -55,7 +55,7 @@ export default class NotificationOverlay extends ImmutablePureComponent {
           </div>
         </div>
       </div>
-    );
+    ) : null;
   }
 
 }

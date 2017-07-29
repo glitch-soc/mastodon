@@ -1,4 +1,5 @@
 @import 'variables';
+@import 'variables-glitch';
 
 .app-body {
   -webkit-overflow-scrolling: touch;
@@ -625,6 +626,12 @@
 .status__prepend-icon-wrapper {
   left: -26px;
   position: absolute;
+}
+
+.notif-cleaning {
+  .status, .notification-follow {
+    padding-right: ($dismiss-overlay-width + 0.5rem);
+  }
 }
 
 .notification-follow {
@@ -2423,81 +2430,58 @@ button.icon-button.active i.fa-retweet {
       background: lighten($ui-base-color, 8%);
     }
   }
+
+  // glitch - added focus ring for keyboard navigation
+  &:focus {
+    text-shadow: 0 0 4px darken($ui-highlight-color, 5%);
+  }
 }
 
 .notification__dismiss-overlay {
   overflow: hidden;
   position: absolute;
-  //left: 0;
   top: 0;
   right: 0;
   bottom: 0;
-
-  $c1: #00000A;
-  $c2: #222228;
-  //background: linear-gradient(to right,
-  //  rgba($c1, 0.1),
-  //  rgba($c1, 0.2) 60%,
-  //  rgba($c2, 1) 90%,
-  //  rgba($c2, 1));
 
   z-index: 999;
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
 
-  display: none;
-
-  &.show {
-    display: flex;
-  }
-
-  // make it brighter
-  &.active {
-    $c: #222931;
-    //background: linear-gradient(to right,
-    //  rgba($c, 0.1),
-    //  rgba($c, 0.2) 60%,
-    //  rgba($c, 1) 90%,
-    //  rgba($c, 1));
-  }
-
-  $c-ndoverlay: #393F4F;
+  display: flex;
 
   .wrappy {
-    padding: 0 0.8rem;
+    width: $dismiss-overlay-width;
     align-self: stretch;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: $c-ndoverlay;
-    //background: rgba(29, 32, 41, 0.82);
-    border-left: 1px solid #474f63;
+    background: lighten($ui-base-color, 8%);//#393F4F;
+    border-left: 1px solid lighten($ui-base-color, 22%);
     box-shadow: 0 0 5px black;
-    border-top: 1px solid #2a2e3c;
+    border-top: 1px solid $ui-base-color;
   }
 
   .ckbox {
-    border: 2px solid #9baec8;
+    border: 2px solid $ui-primary-color;
     border-radius: 2px;
     width: 30px;
     height: 30px;
     font-size: 20px;
-    color: #c3dcfd;
+    color: $ui-primary-color;
     text-shadow: 0 0 5px black;
     display: flex;
     justify-content: center;
     align-items: center;
-    //background: $c-ndoverlay;
-    //background: #1E222B;
   }
 
   &:focus {
     outline: 0 !important;
 
     .ckbox {
-      box-shadow: 0 0 2px 2px #3e6fc1;
+      box-shadow: 0 0 1px 1px $ui-highlight-color;
     }
   }
 }
@@ -2512,7 +2496,6 @@ button.icon-button.active i.fa-retweet {
     background: transparent;
     text-align: center;
     padding: 10px 0;
-    //flex: 0 0 25%;
     white-space: pre-wrap;
   }
 
