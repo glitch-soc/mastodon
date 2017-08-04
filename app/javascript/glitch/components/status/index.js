@@ -671,14 +671,18 @@ Users can use those for theming, hiding avatars etc via UserStyle
 
 */
 
-    let selectorAttribs = {
+    const selectorAttribs = {
       'data-status-by': '@' + status.getIn(['account', 'acct']),
     };
 
     if (prepend && account) {
-      selectorAttribs['data-'+prepend+'-by'] = '@' + account.get('acct');
-    }
+      const notifKind = {
+        favourite: 'favourited',
+        reblog: 'boosted',
+      }[prepend];
 
+      selectorAttribs[`data-${notifKind}-by`] = '@' + account.get('acct');
+    }
 
 /*
 
