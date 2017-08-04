@@ -664,6 +664,21 @@ backgrounds for collapsed statuses are enabled.
       ) background = attachments.getIn([0, 'preview_url']);
     }
 
+/*
+
+Here we prepare extra data-* attributes for CSS selectors.
+Users can use those for theming, hiding avatars etc via UserStyle
+
+*/
+
+    let selectorAttribs = {
+      'data-status-by': '@' + status.getIn(['account', 'acct']),
+    };
+
+    if (prepend && account) {
+      selectorAttribs['data-'+prepend+'-by'] = '@' + account.get('acct');
+    }
+
 
 /*
 
@@ -694,6 +709,7 @@ collapsed.
           ),
         }}
         ref={handleRef}
+        {...selectorAttribs}
       >
         {prepend && account ? (
           <StatusPrepend
