@@ -672,7 +672,7 @@ Users can use those for theming, hiding avatars etc via UserStyle
 */
 
     const selectorAttribs = {
-      'data-status-by': '@' + status.getIn(['account', 'acct']),
+      'data-status-by': `@${status.getIn(['account', 'acct'])}`,
     };
 
     if (prepend && account) {
@@ -681,7 +681,7 @@ Users can use those for theming, hiding avatars etc via UserStyle
         reblog: 'boosted',
       }[prepend];
 
-      selectorAttribs[`data-${notifKind}-by`] = '@' + account.get('acct');
+      selectorAttribs[`data-${notifKind}-by`] = `@${account.get('acct')}`;
     }
 
 /*
