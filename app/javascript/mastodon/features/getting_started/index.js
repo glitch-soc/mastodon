@@ -48,6 +48,11 @@ export default class GettingStarted extends ImmutablePureComponent {
     this.props.dispatch(openModal('SETTINGS', {}));
   }
 
+  openOnboardingModal = (e) => {
+    e.preventDefault();
+    this.props.dispatch(openModal('ONBOARDING'));
+  }
+
   render () {
     const { intl, me, columns, multiColumn } = this.props;
 
@@ -100,13 +105,27 @@ export default class GettingStarted extends ImmutablePureComponent {
           <div className='getting-started__footer'>
             <div className='static-content getting-started'>
               <p>
-                <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/FAQ.md' rel='noopener' target='_blank'><FormattedMessage id='getting_started.faq' defaultMessage='FAQ' /></a> • <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/User-guide.md' rel='noopener' target='_blank'><FormattedMessage id='getting_started.userguide' defaultMessage='User Guide' /></a> • <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md' rel='noopener' target='_blank'><FormattedMessage id='getting_started.appsshort' defaultMessage='Apps' /></a>
+                <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/FAQ.md' rel='noopener' target='_blank'>
+                  <FormattedMessage id='getting_started.faq' defaultMessage='FAQ' />
+                </a>&nbsp;•&nbsp;
+                <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/User-guide.md' rel='noopener' target='_blank'>
+                  <FormattedMessage id='getting_started.userguide' defaultMessage='User Guide' />
+                </a>&nbsp;•&nbsp;
+                <a href='#' role='button' onClick={this.openOnboardingModal}>
+                  <FormattedMessage id='getting_started.onboarding' defaultMessage='Apps' />
+                </a>&nbsp;•&nbsp;
+                <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md' rel='noopener' target='_blank'>
+                  <FormattedMessage id='getting_started.appsshort' defaultMessage='Apps' />
+                </a>
               </p>
               <p>
                 <FormattedMessage
                   id='getting_started.open_source_notice'
                   defaultMessage='Glitchsoc is open source software, a friendly fork of {Mastodon}. You can contribute or report issues on GitHub at {github}.'
-                  values={{ github: <a href='https://github.com/glitch-soc/mastodon' rel='noopener' target='_blank'>glitch-soc/mastodon</a>, Mastodon: <a href='https://github.com/tootsuite/mastodon' rel='noopener' target='_blank'>Mastodon</a> }}
+                  values={{
+                    github: <a href='https://github.com/glitch-soc/mastodon' rel='noopener' target='_blank'>glitch-soc/mastodon</a>,
+                    Mastodon: <a href='https://github.com/tootsuite/mastodon' rel='noopener' target='_blank'>Mastodon</a>,
+                  }}
                 />
               </p>
             </div>
