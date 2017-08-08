@@ -25,6 +25,7 @@ const messages = defineMessages({
   blocks: { id: 'navigation_bar.blocks', defaultMessage: 'Blocked users' },
   mutes: { id: 'navigation_bar.mutes', defaultMessage: 'Muted users' },
   info: { id: 'navigation_bar.info', defaultMessage: 'Extended information' },
+  show_me_around: { id: 'getting_started.onboarding', defaultMessage: 'Show me around' },
 });
 
 const mapStateToProps = state => ({
@@ -97,6 +98,7 @@ export default class GettingStarted extends ImmutablePureComponent {
             {navItems}
             <ColumnSubheading text={intl.formatMessage(messages.settings_subheading)} />
             <ColumnLink icon='book' text={intl.formatMessage(messages.info)} href='/about/more' />
+            <ColumnLink icon='hand-o-right' text={intl.formatMessage(messages.show_me_around)} onClick={this.openOnboardingModal} />
             <ColumnLink icon='cog' text={intl.formatMessage(messages.preferences)} href='/settings/preferences' />
             <ColumnLink icon='cogs' text={intl.formatMessage(messages.settings)} onClick={this.openSettings} />
             <ColumnLink icon='sign-out' text={intl.formatMessage(messages.sign_out)} href='/auth/sign_out' method='delete' />
@@ -110,9 +112,6 @@ export default class GettingStarted extends ImmutablePureComponent {
                 </a>&nbsp;•&nbsp;
                 <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/User-guide.md' rel='noopener' target='_blank'>
                   <FormattedMessage id='getting_started.userguide' defaultMessage='User Guide' />
-                </a>&nbsp;•&nbsp;
-                <a href='#' role='button' onClick={this.openOnboardingModal}>
-                  <FormattedMessage id='getting_started.onboarding' defaultMessage='Apps' />
                 </a>&nbsp;•&nbsp;
                 <a href='https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md' rel='noopener' target='_blank'>
                   <FormattedMessage id='getting_started.appsshort' defaultMessage='Apps' />
