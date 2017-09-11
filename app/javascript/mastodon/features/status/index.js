@@ -1,12 +1,17 @@
 import React from 'react';
+/*
 import { connect } from 'react-redux';
+*/
 import PropTypes from 'prop-types';
+/*
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { fetchStatus } from '../../actions/statuses';
 import MissingIndicator from '../../components/missing_indicator';
 import DetailedStatus from './components/detailed_status';
 import ActionBar from './components/action_bar';
+*/
 import Column from '../ui/components/column';
+/*
 import {
   favourite,
   unfavourite,
@@ -23,12 +28,16 @@ import { deleteStatus } from '../../actions/statuses';
 import { initReport } from '../../actions/reports';
 import { makeGetStatus } from '../../selectors';
 import { ScrollContainer } from 'react-router-scroll';
+*/
 import ColumnBackButton from '../../components/column_back_button';
-import StatusContainer from '../../../glitch/components/status/container';
+import ListConversationContainer from 'glitch/components/list/conversation/container';
+/*
 import { openModal } from '../../actions/modal';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+*/
 
+/*
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
   deleteMessage: { id: 'confirmations.delete.message', defaultMessage: 'Are you sure you want to delete this status?' },
@@ -53,14 +62,18 @@ const makeMapStateToProps = () => {
 
 @injectIntl
 @connect(makeMapStateToProps)
-export default class Status extends ImmutablePureComponent {
+*/
+export default class Status extends React.PureComponent {
 
+  /*
   static contextTypes = {
     router: PropTypes.object,
   };
+  */
 
   static propTypes = {
     params: PropTypes.object.isRequired,
+    /*
     dispatch: PropTypes.func.isRequired,
     status: ImmutablePropTypes.map,
     settings: ImmutablePropTypes.map.isRequired,
@@ -71,8 +84,10 @@ export default class Status extends ImmutablePureComponent {
     deleteModal: PropTypes.bool,
     autoPlayGif: PropTypes.bool,
     intl: PropTypes.object.isRequired,
+    */
   };
 
+  /*
   componentWillMount () {
     this.props.dispatch(fetchStatus(Number(this.props.params.statusId)));
   }
@@ -156,8 +171,10 @@ export default class Status extends ImmutablePureComponent {
   renderChildren (list) {
     return list.map(id => <StatusContainer key={id} id={id} />);
   }
+  */
 
   render () {
+    /*
     let ancestors, descendants;
     const { status, settings, ancestorsIds, descendantsIds, me, autoPlayGif } = this.props;
 
@@ -177,11 +194,14 @@ export default class Status extends ImmutablePureComponent {
     if (descendantsIds && descendantsIds.size > 0) {
       descendants = <div>{this.renderChildren(descendantsIds)}</div>;
     }
+    */
 
     return (
       <Column>
         <ColumnBackButton />
 
+        <ListConversationContainer id={this.props.params.id} />
+        {/*}
         <ScrollContainer scrollKey='thread'>
           <div className='scrollable detailed-status__wrapper'>
             {ancestors}
@@ -211,6 +231,7 @@ export default class Status extends ImmutablePureComponent {
             {descendants}
           </div>
         </ScrollContainer>
+        {*/}
       </Column>
     );
   }

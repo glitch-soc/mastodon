@@ -1,0 +1,45 @@
+@import 'variables';
+
+.glitch.glitch__status__header {
+  display: block;
+  height: 3.35em;
+
+  /*
+  Note that the computed value of `em` changes for `.account`, since it
+  has a different font-size.
+  */
+  .header\\account,
+  .header\\display-name {
+    display: block;
+    border: none;  //  masto compat.
+    padding: 0;  //  masto compat.
+    max-width: none;  //  masto compat.
+    height: 1.35em;
+    overflow: hidden;
+    font-size: inherit;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /*
+  This means that the heights of the account and display name together
+  are 2.6em.
+  */
+  .header\\account {
+    font-size: (1.25em / 1.35);  //  approx. .925em
+  }
+
+  .header\\avatar {
+    float: left;
+    margin-right: .75em;
+    width: 3.35em;
+    height: 3.35em;
+  }
+
+  .header\\display-name {
+    padding-top: .75em;
+  }
+}

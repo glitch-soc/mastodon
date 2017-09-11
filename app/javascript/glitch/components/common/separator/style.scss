@@ -1,0 +1,15 @@
+@import 'variables';
+
+/*
+The default contents for a separator is an interpunct, surrounded by
+spaces. However, this can be changed using CSS selectors.
+*/
+.glitch.glitch__common__separator {
+  display: inline-block;
+
+  &::after {
+    display: inline-block;
+    padding: 0 .3em;
+    content: "·";
+  }
+}

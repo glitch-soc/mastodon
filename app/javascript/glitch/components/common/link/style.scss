@@ -1,0 +1,11 @@
+@import 'variables';
+
+/*
+Most link styling happens elsewhere but we disable text-decoration
+here.
+*/
+.glitch.glitch__common__link {
+  display: inline;
+  color: $ui-secondary-color;
+  text-decoration: none;
+}

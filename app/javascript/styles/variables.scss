@@ -28,5 +28,48 @@ $ui-primary-color: $classic-primary-color !default;            // Lighter
 $ui-secondary-color: $classic-secondary-color !default;        // Lightest
 $ui-highlight-color: $classic-highlight-color !default;        // Vibrant
 
-// Avatar border size (8% default, 100% for rounded avatars)
+// Avatar border radius
+// If you use this to mandate circular avatars for everybody, your
+// users will probably hate you. It's gonna be a user setting.
 $ui-avatar-border-size: 8%;
+
+//  * * * * * * *  //
+
+//  Glitch shit
+//  -----------
+
+$glitch-animation-speed: 1;        //  Multiplier for glitch CSS
+                                   //  animations and transitions. A
+                                   //  value of 0 disables animations;
+                                   //  the default value provides slow
+                                   //  animations that last .9s and
+                                   //  fast ones that last .3s.
+
+$glitch-aside-color:               //  This is used for the background
+  darken($white, 8%);              //  of aside content in eg preview
+                                   //  cards. Counterpoint to
+                                   //  $glitch-texture-color for use
+                                   //  with white backgrounds.
+
+$glitch-darker-color:              //  This is used for things which
+  darken($ui-base-color, 7%);      //  need a darker color than the
+                                   //  "darkest" base color and matches
+                                   //  the default UI color.
+                                   //  Counterpoint to
+                                   //  $glitch-lighter-color for use
+                                   //  with dark elements.
+
+$glitch-disabled-opacity: .35;     //  For disabled buttons
+
+$glitch-texture-color:             //  This is used for shit that is
+  lighten($ui-base-color, 8%);     //  purely presentational and
+                                   //  conveys no real information,
+                                   //  like the borders at the bottom
+                                   //  of statuses. It's also used as
+                                   //  the background for direct toots.
+
+$glitch-lighter-color:             //  This is used for hovered
+  lighten($ui-primary-color, 7%);  //  buttons and the like where we
+                                   //  need something lighter than
+                                   //  $ui-primary-color but darker
+                                   //  than $ui-secondary-color.

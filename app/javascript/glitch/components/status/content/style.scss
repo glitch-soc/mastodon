@@ -1,0 +1,101 @@
+@import 'variables';
+
+.glitch.glitch__status__content {
+  position: relative;
+  padding: (.75em * 1.35) .75em;
+  color: $primary-text-color;
+  direction: ltr;  //  but see `&.rtl` below
+  word-wrap: break-word;
+  overflow: visible;
+  white-space: pre-wrap;
+
+  .content\\contents {
+    .content\\attachments {
+      .content\\text + & {
+        margin-top: (.75em * 1.35);
+      }
+    }
+
+    &[hidden] {
+      display: none;
+    }
+
+    .content\\spoiler + & {
+      margin-top: (.75em * 1.35);
+    }
+  }
+
+  .content\\emojione {
+    width: 1.2em;
+    height: 1.2em;
+  }
+
+  .content\\spoiler,
+  .content\\text {  //  text-containing elements
+    p {
+      margin-bottom: (.75em * 1.35);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .content\\link {
+      color: $ui-secondary-color;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+
+      /*
+      For mentions, we only underline the username and instance (not
+      the @'s).
+      */
+      &.content\\mention {
+        .content\\at {
+          color: $glitch-lighter-color;
+        }
+
+        &:hover {
+          text-decoration: none;
+
+          .content\\instance,
+          .content\\username {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      /*
+      Similarly, for tags, we only underline the tag name (not the
+      hash).
+      */
+      &.content\\tag {
+        .content\\hash {
+          color: $glitch-lighter-color;
+        }
+
+        &:hover {
+          text-decoration: none;
+
+          .content\\tagname {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+  }
+
+  &._actionable {
+    .content\\text,
+    .content\\spoiler {
+      cursor: pointer;
+    }
+  }
+
+  &._rtl {
+    direction: rtl;
+  }
+}

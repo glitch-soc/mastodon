@@ -1,0 +1,74 @@
+@import 'variables';
+
+.glitch.glitch__status__content__gallery {
+  display: block;
+  position: relative;
+  color: $ui-primary-color;
+  background: $base-shadow-color;
+
+  .gallery\\button {
+    position: absolute;
+    margin: .35em;
+    border-radius: .35em;
+    padding: .1625em;
+    height: 1em;  // 1 + 2*.35 + 2*.1625 = 1.5*1.35
+    color: $primary-text-color;
+    background: $base-overlay-background;
+    font-size: 1em;
+    line-height: 1;
+    opacity: .7;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &.gallery\\sensitive {
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .gallery\\curtain.gallery\\sensitive {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    padding: 0;
+    color: $ui-secondary-color;
+    background: $base-overlay-background;
+    font-size: (1.25em / 1.35);  //  approx. .925em
+    line-height: 1.35;
+    text-align: center;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color ($glitch-animation-speed * .15s) ease-in;
+
+    .gallery\\message {
+      display: block;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2.6em;
+      margin: auto;
+
+      .gallery\\warning {
+        display: block;
+        font-size: (1.35em / 1.25);
+        line-height: 1.35;
+      }
+    }
+
+    &:active,
+    &:focus,
+    &:hover {
+      color: $primary-text-color;
+      background: $base-overlay-background;  //  No change
+      transition: color ($glitch-animation-speed * .3s) ease-out;
+    }
+  }
+}

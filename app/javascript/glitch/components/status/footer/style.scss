@@ -1,0 +1,18 @@
+@import 'variables';
+
+.glitch.glitch__status__footer {
+  display: block;
+  height: 1.25em;
+  font-size: (1.25em / 1.35);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  .footer\\link {
+    color: inherit;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

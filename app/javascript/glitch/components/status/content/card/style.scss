@@ -1,0 +1,123 @@
+@import 'variables';
+
+.glitch.glitch__content__card {
+  display: block;
+  border: thin $glitch-texture-color solid;
+  border-radius: .35em;
+  background: $glitch-darker-color;
+
+  .card\\caption {
+    color: $ui-primary-color;
+    background: $glitch-texture-color;
+    font-size: (1.25em / 1.35);  //  approx. .925em
+
+    .card\\link {  //  caption links
+      color: inherit;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .card\\media {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 13.5em;
+
+    /*
+    Our fallback styles letterbox the media, but we'll expand it to
+    fill the container if supported. This won't do anything for
+    `<iframe>`s, but we'll just have to trust them to manage their
+    own content.
+    */
+    & > * {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      margin: auto;
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height: 100%;
+
+      @supports (object-fit: cover) {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .card\\description {
+    color: $ui-secondary-color;
+    background: $ui-base-color;
+
+    .card\\thumbnail {
+      position: relative;
+      float: left;
+      width: 6.75em;
+      height: 100%;
+      background: $glitch-darker-color;
+
+      & > img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 100%;
+
+        @supports (object-fit: cover) {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+
+    /*
+    We have to divide the bottom margin of titles by their font-size to
+    get them to match what we use elsewhere.
+    */
+    .card\\title {
+      margin-bottom: (.75em * 1.35 / 1.5);
+      font-size: 1.5em;
+      line-height: 1.125;  //  = 1.35 * (1.25 / 1.5)
+    }
+  }
+
+  &._fullwidth {
+    margin-left: -.75em;
+    width: calc(100% + 1.5em);
+  }
+
+  /*
+  If `letterbox` is specified, then we don't need object-fit (since
+  we essentially just do a scale-down).
+  */
+  &._letterbox {
+    .card\\description .card\\thumbnail {
+      & > img {
+        width: auto;
+        height: auto;
+        object-fit: fill;
+      }
+    }
+
+    .card\\media {
+      & > * {
+        width: auto;
+        height: auto;
+        object-fit: fill;
+      }
+    }
+  }
+}

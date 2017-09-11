@@ -1,0 +1,28 @@
+@import 'variables';
+
+.glitch.glitch__status__action-bar {
+  display: block;
+  height: 1.25em;
+  font-size: 1.25em;
+  line-height: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+
+  // Dropdown style override for centering on the icon
+  .dropdown--active {
+    position: relative;
+
+    .dropdown__content.dropdown__right {
+      left: calc(50% + 3px);
+      right: initial;
+      transform: translate(-50%, 0);
+      top: 22px;
+    }
+
+    &::after {
+      right: 1px;
+      bottom: -2px;
+    }
+  }
+}

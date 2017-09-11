@@ -6,7 +6,7 @@ import { fetchFavouritedStatuses, expandFavouritedStatuses } from '../../actions
 import Column from '../ui/components/column';
 import ColumnHeader from '../../components/column_header';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
-import StatusList from '../../components/status_list';
+import ListStatuses from 'glitch/components/list/statuses';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
@@ -80,7 +80,7 @@ export default class Favourites extends ImmutablePureComponent {
           showBackButton
         />
 
-        <StatusList
+        <ListStatuses
           trackScroll={!pinned}
           statusIds={statusIds}
           scrollKey={`favourited_statuses-${columnId}`}

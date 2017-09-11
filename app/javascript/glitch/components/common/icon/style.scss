@@ -1,0 +1,14 @@
+@import 'variables';
+
+.glitch.glitch__common__icon {
+  display: inline-block;
+
+  ._for-screenreader {
+    position: absolute;
+    margin: -1px -1px;
+    width: 1px;
+    height: 1px;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+  }
+}

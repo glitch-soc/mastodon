@@ -1,0 +1,88 @@
+@import 'variables';
+
+.glitch.glitch__status__content__gallery__item {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: zoom-in;
+
+  .item\\image,
+  .item\\gifv {
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 100%;
+
+    @supports (object-fit: cover) {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &.letterbox {
+    .item\\image,
+    .item\\gifv {
+      width: auto;
+      height: auto;
+      object-fit: fill;
+    }
+  }
+
+  &[data-gallery-size="2"] {
+    width: calc(50% - .5625em);
+    height: calc(100% - .75em);
+    margin: .375em .1875em .375em .375em;
+
+    &:last-child {
+      margin: .375em .375em .375em .1875em;
+    }
+  }
+
+  &[data-gallery-size="3"] {
+    width: calc(50% - .5625em);
+    height: calc(100% - .75em);
+    margin: .375em .1875em .375em .375em;
+
+    &:nth-last-child(2) {
+      float: right;
+      height: calc(50% - .5625em);
+      margin: .375em .375em .1875em .1875em;
+    }
+
+    &:last-child {
+      float: right;
+      height: calc(50% - .5625em);
+      margin: .1875em .375em .1875em .375em;
+    }
+  }
+
+  &[data-gallery-size="4"] {
+    width: calc(50% - .5625em);
+    height: calc(50% - .5625em);
+    margin: .375em .1875em .1875em .375em;
+
+    &:nth-last-child(3) {
+      margin: .375em .375em .1875em .1875em;
+    }
+
+    &:nth-last-child(2) {
+      margin: .1875em .1875em .375em .375em;
+    }
+
+    &:last-child {
+      margin: .1875em .375em .375em .1875em;
+    }
+  }
+}
+
+
+//  add GIF label in CSS

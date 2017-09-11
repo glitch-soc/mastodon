@@ -1,0 +1,33 @@
+@import 'variables';
+
+.glitch.glitch__status__prepend {
+  display: block;
+  position: relative;
+  margin: 0 0 1em;
+  color: $ui-base-lighter-color;
+  padding: 0 0 0 (3.35em * .7);
+
+  .prepend\\icon {
+    display: block;
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    width: (3.35em * .7);
+    height: 1.35em;
+    text-align: center;
+
+    &.prepend\\reblog,
+    &.prepend\\reblogged {
+      color: $ui-highlight-color;
+    }
+
+    &.prepend\\favourite {
+      color: $gold-star;
+    }
+  }
+
+  .prepend\\comrade {
+    color: $glitch-lighter-color;
+  }
+}

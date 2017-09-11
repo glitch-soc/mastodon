@@ -1,0 +1,34 @@
+@import 'variables';
+
+.glitch.glitch__status {
+  display: block;
+  border-bottom: 1px solid $glitch-texture-color;
+  padding: (.75em * 1.35) .75em;
+  color: $ui-secondary-color;
+  font-size: medium;
+  line-height: 1.35;
+  cursor: default;
+  animation: fade 150ms linear;
+
+  @keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  /*
+  The detail button is styled to line up with the textual content of
+  status headers. See the `<StatusHeader>` CSS for more details on
+  their specific layout.
+  */
+  .status\\detail.status\\button {
+    float: right;
+    width: 1.35em;  //  2.6em of parent
+    height: 1.35em;  //  2.6em of parent
+    font-size: (2.6em / 1.35);  //  approx. 1.925em
+    text-align: center;
+  }
+
+  &._direct:not(._muted) {
+    background: $glitch-texture-color;
+  }
+}

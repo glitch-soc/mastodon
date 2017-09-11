@@ -1,339 +1,128 @@
-/*
+//  <Status>
+//  ========
 
-`<Status>`
-==========
+//  For code documentation, please see:
+//  https://glitch-soc.github.io/docs/javascript/glitch/status
 
-Original file by @gargron@mastodon.social et al as part of
-tootsuite/mastodon. *Heavily* rewritten (and documented!) by
-@kibi@glitch.social as a part of glitch-soc/mastodon. The following
-features have been added:
+//  For more information, please contact:
+//  @kibi@glitch.social
 
- -  Better separating the "guts" of statuses from their wrapper(s)
- -  Collapsing statuses
- -  Moving images inside of CWs
+//  * * * * * * *  //
 
-A number of aspects of this original file have been split off into
-their own components for better maintainance; for these, see:
+//  Imports
+//  -------
 
- -  <StatusHeader>
- -  <StatusPrepend>
-
-…And, of course, the other <Status>-related components as well.
-
-*/
-
-                            /* * * * */
-
-/*
-
-Imports:
---------
-
-*/
-
-//  Package imports  //
-import React from 'react';
+//  Package imports.
+import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import React from 'react';
+import { defineMessages } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-//  Mastodon imports  //
-import scheduleIdleTask from '../../../mastodon/features/ui/util/schedule_idle_task';
+//  Mastodon imports.
+import scheduleIdleTask from 'mastodon/features/ui/util/schedule_idle_task';
 
-//  Our imports  //
-import StatusPrepend from './prepend';
-import StatusHeader from './header';
-import StatusContent from './content';
+//  Our imports.
 import StatusActionBar from './action_bar';
-import StatusGallery from './gallery';
-import StatusPlayer from './player';
-import NotificationOverlayContainer from '../notification/overlay/container';
+import StatusContent from './content';
+import StatusFooter from './footer';
+import StatusHeader from './header';
+import StatusMissing from './missing';
+import StatusNav from './nav';
+import StatusPrepend from './prepend';
+import CommonButton from 'glitch/components/common/button';
 
-                            /* * * * */
+//  Stylesheet imports.
+import './style';
 
-/*
+//  * * * * * * *  //
 
-The `<Status>` component:
--------------------------
+//  Initial setup
+//  -------------
 
-The `<Status>` component is a container for statuses. It consists of a
-few parts:
+//  Holds our localization messages.
+const messages = defineMessages({
+  detailed:
+    { id: 'status.detailed', defaultMessage: 'Detailed view' },
+});
 
- -  The `<StatusPrepend>`, which contains tangential information about
-    the status, such as who reblogged it.
- -  The `<StatusHeader>`, which contains the avatar and username of the
-    status author, as well as a media icon and the "collapse" toggle.
- -  The `<StatusContent>`, which contains the content of the status.
- -  The `<StatusActionBar>`, which provides actions to be performed
-    on statuses, like reblogging or sending a reply.
+//  * * * * * * * //
 
-###  Context
-
- -  __`router` (`PropTypes.object`) :__
-    We need to get our router from the surrounding React context.
-
-###  Props
-
- -  __`id` (`PropTypes.number`) :__
-    The id of the status.
-
- -  __`status` (`ImmutablePropTypes.map`) :__
-    The status object, straight from the store.
-
- -  __`account` (`ImmutablePropTypes.map`) :__
-    Don't be confused by this one! This is **not** the account which
-    posted the status, but the associated account with any further
-    action (eg, a reblog or a favourite).
-
- -  __`settings` (`ImmutablePropTypes.map`) :__
-    These are our local settings, fetched from our store. We need this
-    to determine how best to collapse our statuses, among other things.
-
- -  __`me` (`PropTypes.number`) :__
-    This is the id of the currently-signed-in user.
-
- -  __`onFavourite`, `onReblog`, `onModalReblog`, `onDelete`,
-    `onMention`, `onMute`, `onMuteConversation`, onBlock`, `onReport`,
-    `onOpenMedia`, `onOpenVideo` (`PropTypes.func`) :__
-    These are all functions passed through from the
-    `<StatusContainer>`. We don't deal with them directly here.
-
- -  __`reblogModal`, `deleteModal` (`PropTypes.bool`) :__
-    These tell whether or not the user has modals activated for
-    reblogging and deleting statuses. They are used by the `onReblog`
-    and `onDelete` functions, but we don't deal with them here.
-
- -  __`autoPlayGif` (`PropTypes.bool`) :__
-    This tells the frontend whether or not to autoplay gifs!
-
- -  __`muted` (`PropTypes.bool`) :__
-    This has nothing to do with a user or conversation mute! "Muted" is
-    what Mastodon internally calls the subdued look of statuses in the
-    notifications column. This should be `true` for notifications, and
-    `false` otherwise.
-
- -  __`collapse` (`PropTypes.bool`) :__
-    This prop signals a directive from a higher power to (un)collapse
-    a status. Most of the time it should be `undefined`, in which case
-    we do nothing.
-
- -  __`prepend` (`PropTypes.string`) :__
-    The type of prepend: `'reblogged_by'`, `'reblog'`, or
-    `'favourite'`.
-
- -  __`withDismiss` (`PropTypes.bool`) :__
-    Whether or not the status can be dismissed. Used for notifications.
-
- -  __`intersectionObserverWrapper` (`PropTypes.object`) :__
-    This holds our intersection observer. In Mastodon parlance,
-    an "intersection" is just when the status is viewable onscreen.
-
-###  State
-
- -  __`isExpanded` :__
-    Should be either `true`, `false`, or `null`. The meanings of
-    these values are as follows:
-
-     -  __`true` :__ The status contains a CW and the CW is expanded.
-     -  __`false` :__ The status is collapsed.
-     -  __`null` :__ The status is not collapsed or expanded.
-
- -  __`isIntersecting` :__
-    This boolean tells us whether or not the status is currently
-    onscreen.
-
- -  __`isHidden` :__
-    This boolean tells us if the status has been unrendered to save
-    CPUs.
-
-*/
+//  The component
+//  -------------
 
 export default class Status extends ImmutablePureComponent {
 
-  static contextTypes = {
-    router                      : PropTypes.object,
-  };
-
+  //  Props, and state.
   static propTypes = {
-    id                          : PropTypes.number,
-    status                      : ImmutablePropTypes.map,
-    account                     : ImmutablePropTypes.map,
-    settings                    : ImmutablePropTypes.map,
-    notification                : ImmutablePropTypes.map,
-    me                          : PropTypes.number,
-    onFavourite                 : PropTypes.func,
-    onReblog                    : PropTypes.func,
-    onModalReblog               : PropTypes.func,
-    onDelete                    : PropTypes.func,
-    onMention                   : PropTypes.func,
-    onMute                      : PropTypes.func,
-    onMuteConversation          : PropTypes.func,
-    onBlock                     : PropTypes.func,
-    onReport                    : PropTypes.func,
-    onOpenMedia                 : PropTypes.func,
-    onOpenVideo                 : PropTypes.func,
-    reblogModal                 : PropTypes.bool,
-    deleteModal                 : PropTypes.bool,
-    autoPlayGif                 : PropTypes.bool,
-    muted                       : PropTypes.bool,
-    collapse                    : PropTypes.bool,
-    prepend                     : PropTypes.string,
-    withDismiss                 : PropTypes.bool,
-    intersectionObserverWrapper : PropTypes.object,
-  };
-
+    autoPlayGif: PropTypes.bool,
+    comrade: ImmutablePropTypes.map,
+    deleteModal: PropTypes.bool,
+    detailed: PropTypes.bool,
+    handler: PropTypes.objectOf(PropTypes.func).isRequired,
+    history: PropTypes.object,
+    index: PropTypes.number,
+    id: PropTypes.number,
+    listLength: PropTypes.number,
+    me: PropTypes.number,
+    muted: PropTypes.bool,
+    prepend: PropTypes.string,
+    reblogModal: PropTypes.bool,
+    setDetail: PropTypes.func,
+    settings: ImmutablePropTypes.map,
+    status: ImmutablePropTypes.map,
+    intersectionObserverWrapper: PropTypes.object,
+    intl : PropTypes.object,
+  }
   state = {
-    isExpanded                  : null,
-    isIntersecting              : true,
-    isHidden                    : false,
-    markedForDelete             : false,
+    isExpanded: null,
+    isIntersecting: true,
+    isHidden: false,
   }
 
-/*
+  //  Instance variables.
+  componentMounted = false;
 
-###  Implementation
-
-####  `updateOnProps` and `updateOnStates`.
-
-`updateOnProps` and `updateOnStates` tell the component when to update.
-We specify them explicitly because some of our props are dynamically=
-generated functions, which would otherwise always trigger an update.
-Of course, this means that if we add an important prop, we will need
-to remember to specify it here.
-
-*/
-
-  updateOnProps = [
-    'status',
-    'account',
-    'settings',
-    'prepend',
-    'me',
-    'boostModal',
-    'autoPlayGif',
-    'muted',
-    'collapse',
-    'notification',
-  ]
-
-  updateOnStates = [
-    'isExpanded',
-    'markedForDelete',
-  ]
-
-/*
-
-####  `componentWillReceiveProps()`.
-
-If our settings have changed to disable collapsed statuses, then we
-need to make sure that we uncollapse every one. We do that by watching
-for changes to `settings.collapsed.enabled` in
-`componentWillReceiveProps()`.
-
-We also need to watch for changes on the `collapse` prop---if this
-changes to anything other than `undefined`, then we need to collapse or
-uncollapse our status accordingly.
-
-*/
-
-  componentWillReceiveProps (nextProps) {
-    if (!nextProps.settings.getIn(['collapsed', 'enabled'])) {
-      if (this.state.isExpanded === false) {
-        this.setExpansion(null);
-      }
-    } else if (
-      nextProps.collapse !== this.props.collapse &&
-      nextProps.collapse !== undefined
-    ) this.setExpansion(nextProps.collapse ? false : null);
+  //  Prior to mounting, we fetch the status's card if this is a
+  //  detailed status and we don't already have it.
+  componentWillMount () {
+    const { detailed, handler, status } = this.props;
+    if (!status.get('card') && detailed) handler.fetchCard(status);
   }
 
-/*
-
-####  `componentDidMount()`.
-
-When mounting, we just check to see if our status should be collapsed,
-and collapse it if so. We don't need to worry about whether collapsing
-is enabled here, because `setExpansion()` already takes that into
-account.
-
-The cases where a status should be collapsed are:
-
- -  The `collapse` prop has been set to `true`
- -  The user has decided in local settings to collapse all statuses.
- -  The user has decided to collapse all notifications ('muted'
-    statuses).
- -  The user has decided to collapse long statuses and the status is
-    over 400px (without media, or 650px with).
- -  The status is a reply and the user has decided to collapse all
-    replies.
- -  The status contains media and the user has decided to collapse all
-    statuses with media.
-
-We also start up our intersection observer to monitor our statuses.
-`componentMounted` lets us know that everything has been set up
-properly and our intersection observer is good to go.
-
-*/
-
+  //  On mounting, we start up our intersection observer.
+  //  `componentMounted` tells us everything worked out OK.
   componentDidMount () {
-    const { node, handleIntersection } = this;
-    const {
-      status,
-      settings,
-      collapse,
-      muted,
-      id,
-      intersectionObserverWrapper,
-    } = this.props;
-    const autoCollapseSettings = settings.getIn(['collapsed', 'auto']);
-
-    if (
-      collapse ||
-      autoCollapseSettings.get('all') || (
-        autoCollapseSettings.get('notifications') && muted
-      ) || (
-        autoCollapseSettings.get('lengthy') &&
-        node.clientHeight > (
-          status.get('media_attachments').size && !muted ? 650 : 400
-        )
-      ) || (
-        autoCollapseSettings.get('replies') &&
-        status.get('in_reply_to_id', null) !== null
-      ) || (
-        autoCollapseSettings.get('media') &&
-        !(status.get('spoiler_text').length) &&
-        status.get('media_attachments').size
-      )
-    ) this.setExpansion(false);
-
+    const { handleIntersection, node } = this;
+    const { id, intersectionObserverWrapper } = this.props;
     if (!intersectionObserverWrapper) return;
     else intersectionObserverWrapper.observe(
       id,
       node,
       handleIntersection
     );
-
     this.componentMounted = true;
   }
 
-/*
-
-####  `shouldComponentUpdate()`.
-
-If the status is about to be both offscreen (not intersecting) and
-hidden, then we only need to update it if it's not that way currently.
-If the status is moving from offscreen to onscreen, then we *have* to
-re-render, so that we can unhide the element if necessary.
-
-If neither of these cases are true, we can leave it up to our
-`updateOnProps` and `updateOnStates` arrays.
-
-*/
-
+  //  If the status is about to be both offscreen (not intersecting)
+  //  and hidden, then we don't bother updating unless it's not already
+  //  that way currently. Alternatively, if we're moving from offscreen
+  //  to onscreen, we *have* to re-render. As a default case we just
+  //  rely on `updateOnProps` and `updateOnStates` via the
+  //  built-in `shouldComponentUpdate()` function.
   shouldComponentUpdate (nextProps, nextState) {
     switch (true) {
     case !nextState.isIntersecting && nextState.isHidden:
-      return this.state.isIntersecting || !this.state.isHidden;
+      switch (true) {
+      case this.state.isIntersecting:
+      case !this.state.isHidden:
+      case nextProps.listLength !== this.props.listLength:
+      case nextProps.index !== this.props.index:
+        return true;
+      default:
+        return false;
+      }
     case nextState.isIntersecting && !this.state.isIntersecting:
       return true;
     default:
@@ -341,419 +130,259 @@ If neither of these cases are true, we can leave it up to our
     }
   }
 
-/*
-
-####  `componentDidUpdate()`.
-
-If our component is being rendered for any reason and an update has
-triggered, this will save its height.
-
-This is, frankly, a bit overkill, as the only instance when we
-actually *need* to update the height right now should be when the
-value of `isExpanded` has changed. But it makes for more readable
-code and prevents bugs in the future where the height isn't set
-properly after some change.
-
-*/
-
-  componentDidUpdate () {
-    if (
-      this.state.isIntersecting || !this.state.isHidden
-    ) this.saveHeight();
+  //  If our component is about to update and is detailed, we request
+  //  its card if we don't have it.
+  componentWillUpdate (nextProps) {
+    const { detailed, handler, status } = this.props;
+    if (!status.get('card') && nextProps.detailed && !detailed) {
+      handler.fetchCard(status);
+    }
   }
 
-/*
+  //  If the component is updated for any reason we save the height.
+  componentDidUpdate () {
+    const { isHidden, isIntersecting } = this.state;
+    if (isIntersecting || !isHidden) this.saveHeight();
+  }
 
-####  `componentWillUnmount()`.
-
-If our component is about to unmount, then we'd better unset
-`this.componentMounted`.
-
-*/
-
+  //  If our component is about to unmount, we'd better unset
+  //  `componentMounted` lol.
   componentWillUnmount () {
+    const { node } = this;
+    const { id, intersectionObserverWrapper } = this.props;
+    intersectionObserverWrapper.unobserve(id, node);
     this.componentMounted = false;
   }
 
-/*
-
-####  `handleIntersection()`.
-
-`handleIntersection()` either hides the status (if it is offscreen) or
-unhides it (if it is onscreen). It's called by
-`intersectionObserverWrapper.observe()`.
-
-If our status isn't intersecting, we schedule an idle task (using the
-aptly-named `scheduleIdleTask()`) to hide the status at the next
-available opportunity.
-
-tootsuite/mastodon left us with the following enlightening comment
-regarding this function:
-
->   Edge 15 doesn't support isIntersecting, but we can infer it
-
-It then implements a polyfill (intersectionRect.height > 0) which isn't
-actually sufficient. The short answer is, this behaviour isn't really
-supported on Edge but we can get kinda close.
-
-*/
-
+  //  Doesn't quite work on Edge 15 but it gets close. This tells us if
+  //  our status is onscreen, and if not we hide it at the next
+  //  available opportunity. This isn't a huge deal (but it saves some
+  //  rendering cycles if we don't have as much DOM) so we schedule
+  //  it using `scheduleIdleTask`.
   handleIntersection = (entry) => {
     const isIntersecting = (
       typeof entry.isIntersecting === 'boolean' ?
       entry.isIntersecting :
       entry.intersectionRect.height > 0
     );
-    this.setState(
-      (prevState) => {
-        if (prevState.isIntersecting && !isIntersecting) {
-          scheduleIdleTask(this.hideIfNotIntersecting);
-        }
-        return {
-          isIntersecting : isIntersecting,
-          isHidden       : false,
-        };
+    this.setState((prevState) => {
+      if (prevState.isIntersecting && !isIntersecting) {
+        scheduleIdleTask(this.hideIfNotIntersecting);
       }
-    );
+      return {
+        isIntersecting,
+        isHidden: false,
+      };
+    });
   }
 
-/*
-
-####  `hideIfNotIntersecting()`.
-
-This function will hide the status if we're still not intersecting.
-Hiding the status means that it will just render an empty div instead
-of actual content, which saves RAMS and CPUs or some such.
-
-*/
-
+  //  Because we scheduled toot-hiding as an idle task (see above), we
+  //  *do* need to ensure that it's still not intersecting before we
+  //  hide it lol.
   hideIfNotIntersecting = () => {
     if (!this.componentMounted) return;
-    this.setState(
-      (prevState) => ({ isHidden: !prevState.isIntersecting })
-    );
+    this.setState((prevState) => ({
+      isHidden: !prevState.isIntersecting,
+    }));
   }
 
-/*
-
-####  `saveHeight()`.
-
-`saveHeight()` saves the height of our status so that when whe hide it
-we preserve its dimensions. We only want to store our height, though,
-if our status has content (otherwise, it would imply that it is
-already hidden).
-
-*/
-
+  //  `saveHeight()` saves the status height so that we preserve its
+  //  dimensions when it's being hidden.
   saveHeight = () => {
     if (this.node && this.node.children.length) {
       this.height = this.node.getBoundingClientRect().height;
     }
   }
 
-/*
-
-####  `setExpansion()`.
-
-`setExpansion()` sets the value of `isExpanded` in our state. It takes
-one argument, `value`, which gives the desired value for `isExpanded`.
-The default for this argument is `null`.
-
-`setExpansion()` automatically checks for us whether toot collapsing
-is enabled, so we don't have to.
-
-We use a `switch` statement to simplify our code.
-
-*/
-
+  //  `setExpansion` handles expanding and collapsing statuses. Note
+  //  that `isExpanded` is a *trinary* value:
   setExpansion = (value) => {
+    const { detailed } = this.props;
     switch (true) {
+
+    //  A value of `null` or `undefined` means the status should be
+    //  neither expanded or collapsed.
     case value === undefined || value === null:
       this.setState({ isExpanded: null });
       break;
-    case !value && this.props.settings.getIn(['collapsed', 'enabled']):
-      this.setState({ isExpanded: false });
+
+    //  A value of `false` means that the status should be collapsed.
+    case !value:
+      if (!detailed) this.setState({ isExpanded: false });
+      else this.setState({ isExpanded: null });  //  fallback
       break;
+
+    //  A value of `true` means that the status should be expanded.
     case !!value:
       this.setState({ isExpanded: true });
       break;
     }
   }
 
-/*
-
-####  `handleRef()`.
-
-`handleRef()` just saves a reference to our status node to `this.node`.
-It also saves our height, in case the height of our node has changed.
-
-*/
-
+  //  Stores our node and saves its height.
   handleRef = (node) => {
     this.node = node;
     this.saveHeight();
   }
 
-/*
-
-####  `parseClick()`.
-
-`parseClick()` takes a click event and responds appropriately.
-If our status is collapsed, then clicking on it should uncollapse it.
-If `Shift` is held, then clicking on it should collapse it.
-Otherwise, we open the url handed to us in `destination`, if
-applicable.
-
-*/
-
-  parseClick = (e, destination) => {
-    const { router } = this.context;
-    const { status } = this.props;
-    const { isExpanded } = this.state;
-    if (!router) return;
-    if (destination === undefined) {
-      destination = `/statuses/${
-        status.getIn(['reblog', 'id'], status.get('id'))
-      }`;
-    }
-    if (e.button === 0) {
-      if (isExpanded === false) this.setExpansion(null);
-      else if (e.shiftKey) {
-        this.setExpansion(false);
-        document.getSelection().removeAllRanges();
-      } else router.history.push(destination);
-      e.preventDefault();
-    }
+  //  `handleClick()` handles all clicking stuff. We route links and
+  //  make our status detailed if it isn't already.
+  handleClick = (e) => {
+    const { detailed, history, id, setDetail, status } = this.props;
+    if (!history || e.button || e.ctrlKey || e.shiftKey || e.altKey || e.metaKey) return;
+    if (setDetail) setDetail(detailed ? null : id);
+    else history.push(`/statuses/${status.get('id')}`);
+    e.preventDefault();
   }
 
-/*
-
-####  `render()`.
-
-`render()` actually puts our element on the screen. The particulars of
-this operation are further explained in the code below.
-
-*/
-
+  //  Puts our element on the screen.
   render () {
     const {
-      parseClick,
-      setExpansion,
-      saveHeight,
       handleRef,
+      handleClick,
+      saveHeight,
+      setExpansion,
     } = this;
-    const { router } = this.context;
     const {
-      status,
-      account,
-      settings,
-      collapsed,
+      autoPlayGif,
+      comrade,
+      detailed,
+      handler,
+      history,
+      index,
+      intl,
+      listLength,
+      me,
       muted,
       prepend,
-      intersectionObserverWrapper,
-      onOpenVideo,
-      onOpenMedia,
-      autoPlayGif,
-      notification,
-      ...other
+      setDetail,
+      settings,
+      status,
     } = this.props;
-    const { isExpanded, isIntersecting, isHidden } = this.state;
-    let background = null;
-    let attachments = null;
-    let media = null;
-    let mediaIcon = null;
+    const {
+      isExpanded,
+      isHidden,
+      isIntersecting,
+    } = this.state;
+    let account = status.get('account');
+    let computedClass = 'glitch glitch__status';
+    let conditionalProps = {};
+    let selectorAttribs = {};
 
-/*
-
-If we don't have a status, then we don't render anything.
-
-*/
-
+    //  If there's no status, we can't render lol.
     if (status === null) {
-      return null;
+      return <StatusMissing />;
     }
 
-/*
+    //  Here are extra data-* attributes for use with CSS selectors.
+    //  We don't use these but users can via UserStyles.
+    selectorAttribs = {
+      'data-status-by': `@${account.get('acct')}`,
+    };
+    if (prepend && comrade) {
+      selectorAttribs[`data-${prepend === 'favourite' ? 'favourited' : 'boosted'}-by`] = `@${comrade.get('acct')}`;
+    }
 
-If our status is offscreen and hidden, then we render an empty <div> in
-its place. We fill it with "content" but note that opacity is set to 0.
+    //  If our index and list length have been set, we can set the
+    //  corresponding ARIA attributes.
+    if (isFinite(index) && isFinite(listLength)) conditionalProps = {
+      'aria-posinset': index,
+      'aria-setsize': listLength,
+    };
 
-*/
+    //  This sets our class names.
+    computedClass = classNames('glitch', 'glitch__status', {
+      _detailed: detailed,
+      _muted: muted,
+    }, `_${status.get('visibility')}`);
 
+    //  If our status is offscreen and hidden, we render an empty div.
     if (!isIntersecting && isHidden) {
       return (
-        <div
-          ref={this.handleRef}
+        <article
+          {...conditionalProps}
           data-id={status.get('id')}
+          ref={handleRef}
           style={{
-            height   : `${this.height}px`,
-            opacity  : 0,
-            overflow : 'hidden',
+            height: `${this.height}px`,
+            opacity: 0,
+            overflow: 'hidden',
+            visibility: 'hidden',
           }}
+          tabIndex='0'
         >
-          {
-            status.getIn(['account', 'display_name']) ||
-            status.getIn(['account', 'username'])
-          }
-          {status.get('content')}
-        </div>
+          <div hidden>
+            {account.get('display_name') || account.get('username')}
+            {' '}
+            {status.get('content')}
+          </div>
+        </article>
       );
     }
 
-/*
-
-If user backgrounds for collapsed statuses are enabled, then we
-initialize our background accordingly. This will only be rendered if
-the status is collapsed.
-
-*/
-
-    if (
-      settings.getIn(['collapsed', 'backgrounds', 'user_backgrounds'])
-    ) background = status.getIn(['account', 'header']);
-
-/*
-
-This handles our media attachments. Note that we don't show media on
-muted (notification) statuses. If the media type is unknown, then we
-simply ignore it.
-
-After we have generated our appropriate media element and stored it in
-`media`, we snatch the thumbnail to use as our `background` if media
-backgrounds for collapsed statuses are enabled.
-
-*/
-
-    attachments = status.get('media_attachments');
-    if (attachments.size && !muted) {
-      if (attachments.some((item) => item.get('type') === 'unknown')) {
-
-      } else if (
-        attachments.getIn([0, 'type']) === 'video'
-      ) {
-        media = (  //  Media type is 'video'
-          <StatusPlayer
-            media={attachments.get(0)}
-            sensitive={status.get('sensitive')}
-            letterbox={settings.getIn(['media', 'letterbox'])}
-            fullwidth={settings.getIn(['media', 'fullwidth'])}
-            height={250}
-            onOpenVideo={onOpenVideo}
-          />
-        );
-        mediaIcon = 'video-camera';
-      } else {  //  Media type is 'image' or 'gifv'
-        media = (
-          <StatusGallery
-            media={attachments}
-            sensitive={status.get('sensitive')}
-            letterbox={settings.getIn(['media', 'letterbox'])}
-            fullwidth={settings.getIn(['media', 'fullwidth'])}
-            height={250}
-            onOpenMedia={onOpenMedia}
-            autoPlayGif={autoPlayGif}
-          />
-        );
-        mediaIcon = 'picture-o';
-      }
-
-      if (
-        !status.get('sensitive') &&
-        !(status.get('spoiler_text').length > 0) &&
-        settings.getIn(['collapsed', 'backgrounds', 'preview_images'])
-      ) background = attachments.getIn([0, 'preview_url']);
-    }
-
-/*
-
-Here we prepare extra data-* attributes for CSS selectors.
-Users can use those for theming, hiding avatars etc via UserStyle
-
-*/
-
-    const selectorAttribs = {
-      'data-status-by': `@${status.getIn(['account', 'acct'])}`,
-    };
-
-    if (prepend && account) {
-      const notifKind = {
-        favourite: 'favourited',
-        reblog: 'boosted',
-        reblogged_by: 'boosted',
-      }[prepend];
-
-      selectorAttribs[`data-${notifKind}-by`] = `@${account.get('acct')}`;
-    }
-
-/*
-
-Finally, we can render our status. We just put the pieces together
-from above. We only render the action bar if the status isn't
-collapsed.
-
-*/
-
+    //  Otherwise, we can render our status!
     return (
       <article
-        className={
-          `status${
-            muted ? ' muted' : ''
-          } status-${status.get('visibility')}${
-            isExpanded === false ? ' collapsed' : ''
-          }${
-            isExpanded === false && background ? ' has-background' : ''
-          }${
-            this.state.markedForDelete ? ' marked-for-delete' : ''
-          }`
-        }
-        style={{
-          backgroundImage: (
-            isExpanded === false && background ?
-            `url(${background})` :
-            'none'
-          ),
-        }}
+        className={computedClass}
+        {...conditionalProps}
+        data-id={status.get('id')}
         ref={handleRef}
         {...selectorAttribs}
+        tabIndex='0'
       >
-        {prepend && account ? (
+        {prepend && comrade ? (
           <StatusPrepend
+            comrade={comrade}
+            history={history}
             type={prepend}
-            account={account}
-            parseClick={parseClick}
-            notificationId={this.props.notificationId}
+          />
+        ) : null}
+        {setDetail ? (
+          <CommonButton
+            active={detailed}
+            className='status\detail status\button'
+            icon={detailed ? 'minus' : 'plus'}
+            onClick={handleClick}
+            title={intl.formatMessage(messages.detailed)}
           />
         ) : null}
         <StatusHeader
-          status={status}
-          friend={account}
-          mediaIcon={mediaIcon}
-          collapsible={settings.getIn(['collapsed', 'enabled'])}
-          collapsed={isExpanded === false}
-          parseClick={parseClick}
-          setExpansion={setExpansion}
+          account={account}
+          comrade={comrade}
+          history={history}
         />
         <StatusContent
-          status={status}
-          media={media}
-          mediaIcon={mediaIcon}
+          autoPlayGif={autoPlayGif}
+          detailed={detailed}
           expanded={isExpanded}
-          setExpansion={setExpansion}
+          handler={handler}
+          hideMedia={muted}
+          history={history}
+          intl={intl}
+          letterbox={settings.getIn(['media', 'letterbox'])}
+          onClick={handleClick}
           onHeightUpdate={saveHeight}
-          parseClick={parseClick}
-          disabled={!router}
+          setExpansion={setExpansion}
+          status={status}
         />
-        {isExpanded !== false ? (
-          <StatusActionBar
-            {...other}
-            status={status}
-            account={status.get('account')}
-          />
-        ) : null}
-        {notification ? (
-          <NotificationOverlayContainer
-            notification={notification}
-          />
+        <StatusFooter
+          application={status.get('application')}
+          datetime={status.get('created_at')}
+          detailed={detailed}
+          href={status.get('url')}
+          intl={intl}
+          visibility={status.get('visibility')}
+        />
+        <StatusActionBar
+          detailed={detailed}
+          handler={handler}
+          history={history}
+          intl={intl}
+          me={me}
+          status={status}
+        />
+        {detailed ? (
+          <StatusNav id={status.get('id')} intl={intl} />
         ) : null}
       </article>
     );

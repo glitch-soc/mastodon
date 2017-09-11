@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 // Glitch imports
-import NotificationPurgeButtonsContainer from '../../glitch/components/column/notif_cleaning_widget/container';
+import NotificationPurgeButtonsContainer from 'glitch/components/list/notif_cleaning_widget/container';
 
 const messages = defineMessages({
   show: { id: 'column_header.show_settings', defaultMessage: 'Show settings' },

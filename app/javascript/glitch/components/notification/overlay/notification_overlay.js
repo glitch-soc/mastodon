@@ -10,10 +10,6 @@ import PropTypes from 'prop-types';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { defineMessages, injectIntl } from 'react-intl';
 
-//  Mastodon imports  //
-
-//  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-
 const messages = defineMessages({
   markForDeletion: { id: 'notification.markForDeletion', defaultMessage: 'Mark for deletion' },
 });

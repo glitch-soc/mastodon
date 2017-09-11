@@ -1,73 +1,64 @@
-/*
+//  <StatusContainer>
+//  =================
 
-`<StatusContainer>`
-===================
+//  For code documentation, please see:
+//  https://glitch-soc.github.io/docs/javascript/glitch/status/container
 
-Original file by @gargron@mastodon.social et al as part of
-tootsuite/mastodon. Documentation by @kibi@glitch.social. The code
-detecting reblogs has been moved here from <Status>.
+//  For more information, please contact:
+//  @kibi@glitch.social
 
-*/
+//  * * * * * * *  //
 
-                            /* * * * */
+//  Imports
+//  -------
 
-/*
-
-Imports:
---------
-
-*/
-
-//  Package imports  //
+//  Package imports.
 import React from 'react';
-import { connect } from 'react-redux';
 import {
   defineMessages,
   injectIntl,
   FormattedMessage,
 } from 'react-intl';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { createStructuredSelector } from 'reselect';
 
-//  Mastodon imports  //
-import { makeGetStatus } from '../../../mastodon/selectors';
+//  Mastodon imports.
+import { blockAccount, muteAccount } from 'mastodon/actions/accounts';
 import {
   replyCompose,
   mentionCompose,
-} from '../../../mastodon/actions/compose';
+} from 'mastodon/actions/compose';
 import {
   reblog,
   favourite,
   unreblog,
   unfavourite,
-} from '../../../mastodon/actions/interactions';
-import {
-  blockAccount,
-  muteAccount,
-} from '../../../mastodon/actions/accounts';
+} from 'mastodon/actions/interactions';
+import { openModal } from 'mastodon/actions/modal';
+import { initReport } from 'mastodon/actions/reports';
 import {
   muteStatus,
   unmuteStatus,
   deleteStatus,
-} from '../../../mastodon/actions/statuses';
-import { initReport } from '../../../mastodon/actions/reports';
-import { openModal } from '../../../mastodon/actions/modal';
+} from 'mastodon/actions/statuses';
+import { fetchStatusCard } from 'mastodon/actions/cards';
 
-//  Our imports  //
+//  Our imports.
 import Status from '.';
+import makeStatusSelector from 'glitch/selectors/status';
 
-                            /* * * * */
+//  * * * * * * *  //
 
-/*
+//  Initial setup
+//  -------------
 
-Inital setup:
--------------
-
-The `messages` constant is used to define any messages that we will
-need in our component. In our case, these are the various confirmation
-messages used with statuses.
-
-*/
-
+//  Localization messages.
 const messages = defineMessages({
+  blockConfirm  : {
+    id             : 'confirmations.block.confirm',
+    defaultMessage : 'Block',
+  },
   deleteConfirm : {
     id             : 'confirmations.delete.confirm',
     defaultMessage : 'Delete',
@@ -76,176 +67,146 @@ const messages = defineMessages({
     id             : 'confirmations.delete.message',
     defaultMessage : 'Are you sure you want to delete this status?',
   },
-  blockConfirm  : {
-    id             : 'confirmations.block.confirm',
-    defaultMessage : 'Block',
-  },
   muteConfirm : {
     id             : 'confirmations.mute.confirm',
     defaultMessage : 'Mute',
   },
 });
 
-                            /* * * * */
+//  * * * * * * *  //
 
-/*
+//  State mapping
+//  -------------
 
-State mapping:
---------------
-
-The `mapStateToProps()` function maps various state properties to the
-props of our component. We wrap this in a `makeMapStateToProps()`
-function to give us closure and preserve `getStatus()` across function
-calls.
-
-*/
-
+//  We wrap our `mapStateToProps()` function in a
+//  `makeMapStateToProps()` to give us a closure and preserve
+//  `makeGetStatus()`'s value.
 const makeMapStateToProps = () => {
-  const getStatus = makeGetStatus();
+  const statusSelector = makeStatusSelector();
 
-  const mapStateToProps = (state, ownProps) => {
-
-    let status = getStatus(state, ownProps.id);
+  //  State mapping.
+  return (state, ownProps) => {
+    let status = statusSelector(state, ownProps.id);
     let reblogStatus = status.get('reblog', null);
-    let account = undefined;
+    let comrade = undefined;
     let prepend = undefined;
 
-/*
-
-Here we process reblogs. If our status is a reblog, then we create a
-`prependMessage` to pass along to our `<Status>` along with the
-reblogger's `account`, and set `coreStatus` (the one we will actually
-render) to the status which has been reblogged.
-
-*/
-
+    //  Processes reblogs and generates their prepend.
     if (reblogStatus !== null && typeof reblogStatus === 'object') {
-      account = status.get('account');
+      comrade = status.get('account');
       status = reblogStatus;
-      prepend = 'reblogged_by';
+      prepend = 'reblogged';
     }
 
-/*
-
-Here are the props we pass to `<Status>`.
-
-*/
-
+    //  This is what we pass to <Status>.
     return {
-      status      : status,
-      account     : account || ownProps.account,
-      me          : state.getIn(['meta', 'me']),
-      settings    : state.get('local_settings'),
-      prepend     : prepend || ownProps.prepend,
-      reblogModal : state.getIn(['meta', 'boost_modal']),
-      deleteModal : state.getIn(['meta', 'delete_modal']),
-      autoPlayGif : state.getIn(['meta', 'auto_play_gif']),
+      autoPlayGif: state.getIn(['meta', 'auto_play_gif']),
+      comrade: comrade || ownProps.comrade,
+      deleteModal: state.getIn(['meta', 'delete_modal']),
+      me: state.getIn(['meta', 'me']),
+      prepend: prepend || ownProps.prepend,
+      reblogModal: state.getIn(['meta', 'boost_modal']),
+      settings: state.get('local_settings'),
+      status: status,
     };
   };
-
-  return mapStateToProps;
 };
 
-                            /* * * * */
+//  * * * * * * *  //
 
-/*
+//  Dispatch mapping
+//  ----------------
 
-Dispatch mapping:
------------------
+const makeMapDispatchToProps = (dispatch) => {
+  const dispatchSelector = createStructuredSelector({
+    handler: ({ intl }) => ({
+      block (account) {
+        dispatch(openModal('CONFIRM', {
+          message: <FormattedMessage id='confirmations.block.message' defaultMessage='Are you sure you want to block {name}?' values={{ name: <strong>@{account.get('acct')}</strong> }} />,
+          confirm: intl.formatMessage(messages.blockConfirm),
+          onConfirm: () => dispatch(blockAccount(account.get('id'))),
+        }));
+      },
+      delete (status) {
+        if (!this.deleteModal) {  //  TODO: THIS IS BORKN (this refers to handler)
+          dispatch(deleteStatus(status.get('id')));
+        } else {
+          dispatch(openModal('CONFIRM', {
+            message: intl.formatMessage(messages.deleteMessage),
+            confirm: intl.formatMessage(messages.deleteConfirm),
+            onConfirm: () => dispatch(deleteStatus(status.get('id'))),
+          }));
+        }
+      },
+      favourite (status) {
+        if (status.get('favourited')) {
+          dispatch(unfavourite(status));
+        } else {
+          dispatch(favourite(status));
+        }
+      },
+      fetchCard (status) {
+        dispatch(fetchStatusCard(status.get('id')));
+      },
+      mention (account, router) {
+        dispatch(mentionCompose(account, router));
+      },
+      modalReblog (status) {
+        dispatch(reblog(status));
+      },
+      mute (account) {
+        dispatch(openModal('CONFIRM', {
+          message: <FormattedMessage id='confirmations.mute.message' defaultMessage='Are you sure you want to mute {name}?' values={{ name: <strong>@{account.get('acct')}</strong> }} />,
+          confirm: intl.formatMessage(messages.muteConfirm),
+          onConfirm: () => dispatch(muteAccount(account.get('id'))),
+        }));
+      },
+      muteConversation (status) {
+        if (status.get('muted')) {
+          dispatch(unmuteStatus(status.get('id')));
+        } else {
+          dispatch(muteStatus(status.get('id')));
+        }
+      },
+      openMedia (media, index) {
+        dispatch(openModal('MEDIA', { media, index }));
+      },
+      openVideo (media, time) {
+        dispatch(openModal('VIDEO', { media, time }));
+      },
+      reblog (status, withShift) {
+        if (status.get('reblogged')) {
+          dispatch(unreblog(status));
+        } else {
+          if (withShift || !this.reblogModal) {  //  TODO: THIS IS BORKN (this refers to handler)
+            this.modalReblog(status);
+          } else {
+            dispatch(openModal('BOOST', { status, onReblog: this.modalReblog }));
+          }
+        }
+      },
+      reply (status, router) {
+        dispatch(replyCompose(status, router));
+      },
+      report (status) {
+        dispatch(initReport(status.get('account'), status));
+      },
+    }),
+  });
+  return (_, ownProps) => dispatchSelector(ownProps);
+};
 
-The `mapDispatchToProps()` function maps dispatches to our store to the
-various props of our component. We need to provide dispatches for all
-of the things you can do with a status: reply, reblog, favourite, et
-cetera.
+//  * * * * * * *  //
 
-For a few of these dispatches, we open up confirmation modals; the rest
-just immediately execute their corresponding actions.
+//  Connecting
+//  ----------
 
-*/
-
-const mapDispatchToProps = (dispatch, { intl }) => ({
-
-  onReply (status, router) {
-    dispatch(replyCompose(status, router));
-  },
-
-  onModalReblog (status) {
-    dispatch(reblog(status));
-  },
-
-  onReblog (status, e) {
-    if (status.get('reblogged')) {
-      dispatch(unreblog(status));
-    } else {
-      if (e.shiftKey || !this.reblogModal) {
-        this.onModalReblog(status);
-      } else {
-        dispatch(openModal('BOOST', { status, onReblog: this.onModalReblog }));
-      }
-    }
-  },
-
-  onFavourite (status) {
-    if (status.get('favourited')) {
-      dispatch(unfavourite(status));
-    } else {
-      dispatch(favourite(status));
-    }
-  },
-
-  onDelete (status) {
-    if (!this.deleteModal) {
-      dispatch(deleteStatus(status.get('id')));
-    } else {
-      dispatch(openModal('CONFIRM', {
-        message: intl.formatMessage(messages.deleteMessage),
-        confirm: intl.formatMessage(messages.deleteConfirm),
-        onConfirm: () => dispatch(deleteStatus(status.get('id'))),
-      }));
-    }
-  },
-
-  onMention (account, router) {
-    dispatch(mentionCompose(account, router));
-  },
-
-  onOpenMedia (media, index) {
-    dispatch(openModal('MEDIA', { media, index }));
-  },
-
-  onOpenVideo (media, time) {
-    dispatch(openModal('VIDEO', { media, time }));
-  },
-
-  onBlock (account) {
-    dispatch(openModal('CONFIRM', {
-      message: <FormattedMessage id='confirmations.block.message' defaultMessage='Are you sure you want to block {name}?' values={{ name: <strong>@{account.get('acct')}</strong> }} />,
-      confirm: intl.formatMessage(messages.blockConfirm),
-      onConfirm: () => dispatch(blockAccount(account.get('id'))),
-    }));
-  },
-
-  onReport (status) {
-    dispatch(initReport(status.get('account'), status));
-  },
-
-  onMute (account) {
-    dispatch(openModal('CONFIRM', {
-      message: <FormattedMessage id='confirmations.mute.message' defaultMessage='Are you sure you want to mute {name}?' values={{ name: <strong>@{account.get('acct')}</strong> }} />,
-      confirm: intl.formatMessage(messages.muteConfirm),
-      onConfirm: () => dispatch(muteAccount(account.get('id'))),
-    }));
-  },
-
-  onMuteConversation (status) {
-    if (status.get('muted')) {
-      dispatch(unmuteStatus(status.get('id')));
-    } else {
-      dispatch(muteStatus(status.get('id')));
-    }
-  },
-});
-
+//  `connect` will only update when its resultant props change. So
+//  `withRouter` won't get called unless an update is already planned.
+//  This is intended behaviour because we only care about the (mutable)
+//  `history` object.
 export default injectIntl(
-  connect(makeMapStateToProps, mapDispatchToProps)(Status)
+  connect(makeMapStateToProps, makeMapDispatchToProps)(
+    withRouter(Status)
+  )
 );

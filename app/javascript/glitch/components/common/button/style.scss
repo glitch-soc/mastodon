@@ -1,0 +1,134 @@
+@import 'variables';
+
+.glitch.glitch__common__button {
+  display: inline-block;
+  border: none;
+  padding: 0;
+  color: $ui-base-lighter-color;
+  background: transparent;
+  outline: thin transparent dotted;
+  font-size: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color ($glitch-animation-speed * .15s) ease-in, outline-color ($glitch-animation-speed * .3s) ease-in-out;
+
+  &._animated .button\\icon {
+    animation-name: glitch__common__button__deactivate;
+    animation-duration: .9s;
+    animation-timing-function: ease-in-out;
+
+    @keyframes glitch__common__button__deactivate {
+      from {
+        transform: rotate(360deg);
+      }
+      57% {
+        transform: rotate(-60deg);
+      }
+      86% {
+        transform: rotate(30deg);
+      }
+      to {
+        transform: rotate(0deg);
+      }
+    }
+  }
+
+  &._active {
+    .button\\icon {
+      color: $ui-highlight-color;
+    }
+
+    &._animated .button\\icon {
+      animation-name: glitch__common__button__activate;
+
+      @keyframes glitch__common__button__activate {
+        from {
+          transform: rotate(0deg);
+        }
+        57% {
+          transform: rotate(420deg);  //  Blazin' 😎
+        }
+        86% {
+          transform: rotate(330deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    }
+
+    /*
+    The special `._star` class is given to buttons which have a star
+    icon (see JS). When they are active, we give them a gold star ⭐️.
+    */
+    &._star .button\\icon {
+      color: $gold-star;
+    }
+  }
+
+  /*
+  For links, we consider them disabled if they don't have an `href`
+  attribute (see JS).
+  */
+  &._disabled {
+    opacity: $glitch-disabled-opacity;
+    cursor: default;
+  }
+
+  /*
+  This is confusing becuase of the names, but the `color .3 ease-out`
+  transition is actually used when easing *in* to a hovering/active/
+  focusing state, and the default transition is used when leaving. Our
+  buttons are a little slower to glow than they are to fade.
+  */
+  &:active,
+  &:focus,
+  &:hover {
+    color: $glitch-lighter-color;
+    transition: color ($glitch-animation-speed * .3s) ease-out, outline-color ($glitch-animation-speed * .15s) ease-in-out;
+  }
+
+  &:focus {
+    outline-color: currentColor;
+  }
+
+  /*
+  Buttons with text have a number of different styling rules and an
+  overall different appearance.
+  */
+  &._with-text {
+    display: inline-block;
+    border: none;
+    border-radius: .35em;
+    padding: 0 .5em;
+    color: $glitch-texture-color;
+    background: $ui-base-lighter-color;
+    font-size: .75em;
+    font-weight: inherit;
+    text-transform: uppercase;
+    line-height: 1.6;
+    cursor: pointer;
+    vertical-align: baseline;
+    transition: background-color ($glitch-animation-speed * .15s) ease-in, outline-color ($glitch-animation-speed * .3s) ease-in-out;
+
+    .button\\icon {
+      display: inline-block;
+      font-size: 1.25em;
+      vertical-align: -.1em;
+    }
+
+    & > *:not(:first-child) {
+      margin: 0 0 0 .4em;
+      border-left: 1px solid currentColor;
+      padding: 0 0 0 .3em;
+    }
+
+    &:active,
+    &:hover,
+    &:focus {
+      color: $glitch-texture-color;
+      background: $glitch-lighter-color;
+      transition: background-color ($glitch-animation-speed * .3s) ease-out, outline-color ($glitch-animation-speed * .15s) ease-in-out;
+    }
+  }
+}

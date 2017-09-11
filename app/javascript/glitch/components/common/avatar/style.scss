@@ -1,0 +1,41 @@
+@import 'variables';
+
+.glitch.glitch__common__avatar {
+  display: inline-block;
+  position: relative;
+
+  & > img {
+    display: block;
+    position: static;
+    margin: 0;
+    border-radius: $ui-avatar-border-size;
+    width: 100%;
+    height: 100%;
+
+    &.avatar\\comrade {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 50%;
+      height: 50%;
+    }
+
+    &.avatar\\main {
+      margin: 0 30% 30% 0;
+      width: 70%;
+      height: 70%;
+    }
+  }
+
+  &._circular {
+    & > img {
+      transition: border-radius ($glitch-animation-speed * .3s);
+    }
+
+    &:not(:hover) {
+      & > img {
+        border-radius: 50%;
+      }
+    }
+  }
+}

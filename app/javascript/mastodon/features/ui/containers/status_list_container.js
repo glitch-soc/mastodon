@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import StatusList from '../../../components/status_list';
+import ListStatuses from 'glitch/components/list/statuses';
 import { scrollTopTimeline } from '../../../actions/timelines';
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
 import { createSelector } from 'reselect';
@@ -70,4 +70,4 @@ const mapDispatchToProps = (dispatch, { timelineId, loadMore }) => ({
 
 });
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(StatusList);
+export default connect(makeMapStateToProps, mapDispatchToProps)(ListStatuses);

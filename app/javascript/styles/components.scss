@@ -465,78 +465,6 @@
   cursor: pointer;
 }
 
-// --- Extra clickable area in the status gutter ---
-.ui.wide {
-  @mixin xtraspaces-full {
-    height: calc(100% + 10px);
-    bottom: -40px;
-  }
-  @mixin xtraspaces-short {
-    height: calc(100% - 35px);
-    bottom: 0;
-  }
-
-  // Avi must go on top if the toot is too short
-  .status__avatar {
-    z-index: 10;
-  }
-
-  // Base styles
-  .status__content--with-action > div::after {
-    content: '';
-    display: block;
-    width: 64px;
-    position: absolute;
-    left: -68px;
-
-    // more than 4 never fit on FullHD, short
-    @include xtraspaces-short;
-  }
-
-  @media screen and (min-width: 1800px) {
-    // 4, very wide screen
-    .column:nth-child(2):nth-last-child(4) {
-      &, & ~ .column {
-        .status__content--with-action > div::after {
-          @include xtraspaces-full;
-        }
-      }
-    }
-  }
-
-  // 1 or 2, always fit
-  .column:nth-child(2):nth-last-child(1),
-  .column:nth-child(2):nth-last-child(2),
-  .column:nth-child(2):nth-last-child(3) {
-    &, & ~ .column {
-      .status__content--with-action > div::after {
-        @include xtraspaces-full;
-      }
-    }
-  }
-
-  @media screen and (max-width: 1440px) {
-    // 3, small screen
-    .column:nth-child(2):nth-last-child(3) {
-      &, & ~ .column {
-        .status__content--with-action > div::after {
-          @include xtraspaces-short;
-        }
-      }
-    }
-  }
-
-  // Phone or iPad
-  @media screen and (max-width: 1060px) {
-    .status__content--with-action > div::after {
-      display: none;
-    }
-  }
-
-  // I am very sorry
-}
-// --- end extra clickable spaces ---
-
 .status-check-box {
   .status__content,
   .reply-indicator__content {
@@ -549,13 +477,11 @@
 
 .status__content,
 .reply-indicator__content {
-  position: relative;
   font-size: 15px;
   line-height: 20px;
-  color: $primary-text-color;
   word-wrap: break-word;
   font-weight: 400;
-  overflow: visible;
+  overflow: hidden;
   white-space: pre-wrap;
 
   .emojione {
@@ -598,10 +524,19 @@
     }
   }
 
-  .status__content__spoiler {
+  .status__content__spoiler-link {
+    background: lighten($ui-base-color, 30%);
+
+    &:hover {
+      background: lighten($ui-base-color, 33%);
+      text-decoration: none;
+    }
+  }
+
+  .status__content__text {
     display: none;
 
-    &.status__content__spoiler--visible {
+    &.status__content__text--visible {
       display: block;
     }
   }
@@ -610,30 +545,15 @@
 .status__content__spoiler-link {
   display: inline-block;
   border-radius: 2px;
-  background: lighten($ui-base-color, 30%);
-  border: none;
+  background: transparent;
+  border: 0;
   color: lighten($ui-base-color, 8%);
   font-weight: 500;
   font-size: 11px;
-  padding: 0 5px;
+  padding: 0 6px;
   text-transform: uppercase;
   line-height: inherit;
   cursor: pointer;
-  vertical-align: bottom;
-
-  &:hover {
-    background: lighten($ui-base-color, 33%);
-    text-decoration: none;
-  }
-
-  .status__content__spoiler-icon {
-    display: inline-block;
-    margin: 0 0 0 5px;
-    border-left: 1px solid currentColor;
-    padding: 0 0 0 4px;
-    font-size: 16px;
-    vertical-align: -2px;
-  }
 }
 
 .status__prepend-icon-wrapper {
@@ -718,41 +638,6 @@
         }
       }
     }
-  }
-
-  &.collapsed {
-    background-position: center;
-    background-size: cover;
-    user-select: none;
-
-    &.has-background::before {
-      display: block;
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
-    	background-image: linear-gradient(to bottom, rgba($base-shadow-color, .75), rgba($base-shadow-color, .65) 24px, rgba($base-shadow-color, .8));
-      content: "";
-    }
-
-    .status__display-name:hover strong {
-      text-decoration: none;
-    }
-
-    .status__content {
-      height: 20px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      a:hover {
-        text-decoration: none;
-      }
-    }
-  }
-
-  .notification__message {
-    margin: -10px 0 10px;
   }
 }
 

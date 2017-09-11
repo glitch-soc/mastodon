@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import { fetchAccount } from '../../actions/accounts';
 import { refreshAccountTimeline, expandAccountTimeline } from '../../actions/timelines';
-import StatusList from '../../components/status_list';
+import ListStatuses from 'glitch/components/list/statuses';
 import LoadingIndicator from '../../components/loading_indicator';
 import Column from '../ui/components/column';
 import HeaderContainer from './containers/header_container';
@@ -64,7 +64,7 @@ export default class AccountTimeline extends ImmutablePureComponent {
       <Column>
         <ColumnBackButton />
 
-        <StatusList
+        <ListStatuses
           prepend={<HeaderContainer accountId={this.props.params.accountId} />}
           scrollKey='account_timeline'
           statusIds={statusIds}

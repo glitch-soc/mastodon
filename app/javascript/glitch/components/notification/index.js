@@ -8,6 +8,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 //  Our imports  //
 import StatusContainer from '../status/container';
 import NotificationFollow from './follow';
+import NotificationOverlayContainer from './overlay/container';
 
 export default class Notification extends ImmutablePureComponent {
 
@@ -65,18 +66,25 @@ export default class Notification extends ImmutablePureComponent {
   render () {
     const { notification } = this.props;
 
-    switch(notification.get('type')) {
-    case 'follow':
-      return this.renderFollow(notification);
-    case 'mention':
-      return this.renderMention(notification);
-    case 'favourite':
-      return this.renderFavourite(notification);
-    case 'reblog':
-      return this.renderReblog(notification);
-    }
-
-    return null;
+    return (
+      <div class='status'>
+        {(() => {
+          switch (notification.get('type')) {
+          case 'follow':
+            return this.renderFollow(notification);
+          case 'mention':
+            return this.renderMention(notification);
+          case 'favourite':
+            return this.renderFavourite(notification);
+          case 'reblog':
+            return this.renderReblog(notification);
+          default:
+            return null;
+          }
+        })()}
+        <NotificationOverlayContainer notification={notification} />
+      </div>
+    );
   }
 
 }
