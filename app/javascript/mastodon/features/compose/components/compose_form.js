@@ -181,7 +181,10 @@ export default class ComposeForm extends ImmutablePureComponent {
       <span>
         {
           (this.props.settings.get('stretch') || !showSideArm) ?
-            <i className={`fa fa-${privacyIcons[this.props.privacy]}`} style={{ paddingRight: '5px' }} /> :
+            <i
+              className={`fa fa-${privacyIcons[this.props.privacy]}`}
+              style={{ paddingRight: '5px' }}
+            /> :
             ''
         }
         {intl.formatMessage(messages.publish)}
@@ -189,7 +192,14 @@ export default class ComposeForm extends ImmutablePureComponent {
     );
 
     // side-arm
-    let publishText2 = <span><i className={`fa fa-${privacyIcons[this.props.settings.get('side_arm')]}`} /></span>;
+    let publishText2 = (
+      <span>
+        <i
+          className={`fa fa-${privacyIcons[sideArmVisibility]}`}
+          aria-label={`${intl.formatMessage(messages.publish)}: ${intl.formatMessage({ id: `privacy.${sideArmVisibility}.short` })}`}
+        />
+      </span>
+    );
 
     const submitDisabled = disabled || this.props.is_uploading || length(text) > 500 || (text.length !== 0 && text.trim().length === 0);
 
