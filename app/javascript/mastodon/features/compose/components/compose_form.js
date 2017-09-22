@@ -193,12 +193,10 @@ export default class ComposeForm extends ImmutablePureComponent {
 
     // side-arm
     let publishText2 = (
-      <span>
-        <i
-          className={`fa fa-${privacyIcons[sideArmVisibility]}`}
-          aria-label={`${intl.formatMessage(messages.publish)}: ${intl.formatMessage({ id: `privacy.${sideArmVisibility}.short` })}`}
-        />
-      </span>
+      <i
+        className={`fa fa-${privacyIcons[sideArmVisibility]}`}
+        aria-label={`${intl.formatMessage(messages.publish)}: ${intl.formatMessage({ id: `privacy.${sideArmVisibility}.short` })}`}
+      />
     );
 
     const submitDisabled = disabled || this.props.is_uploading || length(text) > 500 || (text.length !== 0 && text.trim().length === 0);
