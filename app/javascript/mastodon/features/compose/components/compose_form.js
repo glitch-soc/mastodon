@@ -165,7 +165,7 @@ export default class ComposeForm extends ImmutablePureComponent {
     const text     = [this.props.spoiler_text, countableText(this.props.text), maybeEye].join('');
 
     const sideArmVisibility = this.props.settings.get('side_arm');
-    let showSideArm = sideArmVisibility !== 'none' && sideArmVisibility !== this.props.privacy;
+    let showSideArm = sideArmVisibility !== 'none';
 
     let publishText = '';
 
