@@ -196,7 +196,7 @@ export default class DoodleModal extends ImmutablePureComponent {
       this.clearScreen();
     }
 
-    if (e.key === 'z' && e.ctrlKey) {
+    if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       this.undo();
     }
@@ -207,7 +207,7 @@ export default class DoodleModal extends ImmutablePureComponent {
   };
 
   componentWillUnmount () {
-    window.removeEventListener('keyup', this.handleKeyUp);
+    window.removeEventListener('keyup', this.handleKeyUp, false);
   }
 
   clearScreen = () => {
@@ -216,7 +216,7 @@ export default class DoodleModal extends ImmutablePureComponent {
     this.undos = [];
 
     this.doSaveUndo();
-  }
+  };
 
   handleDone = () => {
     const dataUrl = this.sketcher.toImage();
