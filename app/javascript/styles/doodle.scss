@@ -22,6 +22,24 @@
     flex-direction: column;
     flex-grow: 0;
     justify-content: space-around;
+
+    &.with-inputs {
+      label {
+        display: inline-block;
+        width: 70px;
+        text-align: right;
+        margin-right: 2px;
+      }
+
+      input[type="number"],input[type="text"] {
+        width: 40px;
+      }
+      span.val {
+        display: inline-block;
+        text-align: left;
+        width: 50px;
+      }
+    }
   }
 
   .doodle-palette {

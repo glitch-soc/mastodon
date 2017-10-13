@@ -280,6 +280,20 @@ export default class DoodleModal extends ImmutablePureComponent {
     e.target.blur();
   };
 
+  tglSmooth = (e) => {
+    this.smoothing = !this.smoothing;
+    e.target.blur();
+  };
+
+  tglAdaptive = (e) => {
+    this.adaptiveStroke = !this.adaptiveStroke;
+    e.target.blur();
+  };
+
+  setWeight = (e) => {
+    this.weight = +e.target.value || 1;
+  };
+
   undo = () => {
     if (this.undos.length > 1) {
       this.undos.pop();
@@ -311,6 +325,26 @@ export default class DoodleModal extends ImmutablePureComponent {
         <div className='doodle-modal__action-bar'>
           <Button text='Done' onClick={this.handleDone} />
           <div className='filler' />
+          <div className='doodle-toolbar with-inputs'>
+            <div>
+              <label htmlFor='dd_smoothing'>Smoothing</label>
+              <span className='val'>
+                <input type='checkbox' id='dd_smoothing' onChange={this.tglSmooth} checked={this.smoothing} />
+              </span>
+            </div>
+            <div>
+              <label htmlFor='dd_adaptive'>Adaptive</label>
+              <span className='val'>
+                <input type='checkbox' id='dd_adaptive' onChange={this.tglAdaptive} checked={this.adaptiveStroke} />
+              </span>
+            </div>
+            <div>
+              <label htmlFor='dd_weight'>Weight</label>
+              <span className='val'>
+                <input type='number' min={1} id='dd_weight' value={this.weight} onChange={this.setWeight} />
+              </span>
+            </div>
+          </div>
           <div className='doodle-toolbar'>
             <IconButton icon='pencil' label='Draw' onClick={this.setModeDraw} size={18} active={this.mode === 'draw'} inverted />
             <IconButton icon='bath' label='Fill' onClick={this.setModeFill} size={18} active={this.mode === 'fill'} inverted />
