@@ -300,9 +300,7 @@ export default function compose(state = initialState, action) {
       }));
     case COMPOSE_DOODLE_SET:
     console.log('doodle set ', action.options);
-    const ns = state.mergeIn(['doodle'], action.options);
-    console.log(ns.get('doodle').toJSON())
-    return ns;
+    return state.mergeIn(['doodle'], action.options);
   default:
     return state;
   }
