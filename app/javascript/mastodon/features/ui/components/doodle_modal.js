@@ -210,10 +210,12 @@ export default class DoodleModal extends ImmutablePureComponent {
     window.removeEventListener('keyup', this.handleKeyUp);
   }
 
-  clearScreen () {
+  clearScreen = () => {
     this.sketcher.context.fillStyle = this.bg;
     this.sketcher.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
     this.undos = [];
+
+    this.doSaveUndo();
   }
 
   handleDone = () => {
@@ -239,10 +241,10 @@ export default class DoodleModal extends ImmutablePureComponent {
   initSketcher (elem) {
     this.sketcher = new Atrament(elem, 500, 500);
 
-    this.clearScreen();
-    this.updateSketcherSettings();
+    this.mode = 'draw'; // Reset mode - it's confusing if left at 'fill'
 
-    this.doSaveUndo();
+    this.updateSketcherSettings();
+    this.clearScreen();
   }
 
   setCanvasRef = (elem) => {
@@ -310,9 +312,10 @@ export default class DoodleModal extends ImmutablePureComponent {
           <Button text='Done' onClick={this.handleDone} />
           <div className='filler' />
           <div className='doodle-toolbar'>
-            <IconButton icon='pencil' title='Draw' onClick={this.setModeDraw} size={18} active={this.mode === 'draw'} inverted />
-            <IconButton icon='bath' title='Fill' onClick={this.setModeFill} size={18} active={this.mode === 'fill'} inverted />
-            <IconButton icon='undo' title='Undo' onClick={this.undo} size={18} inverted />
+            <IconButton icon='pencil' label='Draw' onClick={this.setModeDraw} size={18} active={this.mode === 'draw'} inverted />
+            <IconButton icon='bath' label='Fill' onClick={this.setModeFill} size={18} active={this.mode === 'fill'} inverted />
+            <IconButton icon='undo' label='Undo' onClick={this.undo} size={18} inverted />
+            <IconButton icon='trash' label='Clear' onClick={this.clearScreen} size={18} inverted />
           </div>
           <div className='doodle-palette'>
             {
