@@ -120,6 +120,7 @@ class FeedManager
     #reggie = Regexp.new(filter_string)
     #return true if reggie === status.content || reggie === status.spoiler_text
     # extremely violent filtering code END
+    return true if KeywordMute.where(account_id: receiver_id).matches?(status.text)
 
     return true if status.reply? && (status.in_reply_to_id.nil? || status.in_reply_to_account_id.nil?)
 
