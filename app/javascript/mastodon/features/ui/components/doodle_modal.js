@@ -573,9 +573,9 @@ export default class DoodleModal extends ImmutablePureComponent {
               </span>
             </div>
             <div>
-              <select aria-label='Canvas size' onInput={this.changeSize}>
+              <select aria-label='Canvas size' onInput={this.changeSize} defaultValue={this.size}>
                 { Object.values(mapValues(DOODLE_SIZES, (val, k) =>
-                  <option key={k} value={k} selected={k === this.size}>{val[2]}</option>
+                  <option key={k} value={k}>{val[2]}</option>
                 )) }
               </select>
             </div>
