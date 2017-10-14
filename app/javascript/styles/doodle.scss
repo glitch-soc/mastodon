@@ -1,12 +1,15 @@
+$doodleBg: #d9e1e8;
 .doodle-modal {
   @extend .boost-modal;
   width: unset;
 }
 
 .doodle-modal__container {
+  background: $doodleBg;
+  text-align: center;
   line-height: 0; // remove weird gap under canvas
   canvas {
-    border: 5px solid #d9e1e8;
+    border: 5px solid $doodleBg;
   }
 }
 
@@ -15,9 +18,13 @@
 
   .filler {
     flex-grow: 1;
+    margin: 0;
+    padding: 0;
   }
 
   .doodle-toolbar {
+    line-height: 1;
+
     display: flex;
     flex-direction: column;
     flex-grow: 0;

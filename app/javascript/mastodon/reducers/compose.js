@@ -67,6 +67,7 @@ const initialState = ImmutableMap({
     bg: 'rgb(255,  255,  255)',
     swapped: false,
     mode: 'draw',
+    size: 'normal',
     weight: 2,
     opacity: 1,
     adaptiveStroke: true,

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { doodleSet, uploadCompose } from '../../../actions/compose';
 import IconButton from '../../../components/icon_button';
-import { debounce } from 'lodash';
+import { debounce, mapValues } from 'lodash';
 import classNames from 'classnames';
 
 // palette nicked from MyPaint, CC0
@@ -111,6 +111,14 @@ function dataURLtoFile(dataurl, filename) {
   return new File([u8arr], filename, { type: mime });
 }
 
+const DOODLE_SIZES = {
+  normal: [500, 500, 'Square 500'],
+  tootbanner: [702, 330, 'Tootbanner'],
+  s640x480: [640, 480, '640×480 - 480p'],
+  s800x600: [800, 600, '800×600 - SVGA'],
+  s720x480: [720, 405, '720x405 - 16:9'],
+};
+
 
 const mapStateToProps = state => ({
   options: state.getIn(['compose', 'doodle']),
@@ -213,6 +221,14 @@ export default class DoodleModal extends ImmutablePureComponent {
     this.props.setOpt({ smoothing: value });
   }
 
+  /** Size preset */
+  get size () {
+    return this.props.options.get('size');
+  }
+  set size (value) {
+    this.props.setOpt({ size: value });
+  }
+
   //endregion
 
   /** Key up handler */
@@ -221,7 +237,7 @@ export default class DoodleModal extends ImmutablePureComponent {
 
     if (e.key === 'Delete') {
       e.preventDefault();
-      this.clearScreen();
+      this.handleClearBtn();
       return;
     }
 
@@ -295,22 +311,44 @@ export default class DoodleModal extends ImmutablePureComponent {
         }
       });
 
+      // prevent context menu
+      elem.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+      });
+
+      elem.addEventListener('mousedown', (e) => {
+        if (e.button === 2) {
+          this.swapped = true;
+        }
+      });
+
+      elem.addEventListener('mouseup', (e) => {
+        if (e.button === 2) {
+          this.swapped = this.controlHeld;
+        }
+      });
+
       this.initSketcher(elem);
+      this.mode = 'draw'; // Reset mode - it's confusing if left at 'fill'
     }
   };
 
   /**
    * Set up the sketcher instance
    *
-   * @param canvas - canvas element
+   * @param canvas - canvas element. Null if we're just resizing
    */
-  initSketcher (canvas) {
-    this.sketcher = new Atrament(canvas, 500, 500);
-    this.ctx = this.sketcher.context;
+  initSketcher (canvas = null) {
+    const sizepreset = DOODLE_SIZES[this.size];
 
-    this.mode = 'draw'; // Reset mode - it's confusing if left at 'fill'
+    if (this.sketcher) this.sketcher.destroy();
+    this.sketcher = new Atrament(canvas || this.canvas, sizepreset[0], sizepreset[1]);
 
-    this.updateSketcherSettings();
+    if (canvas) {
+      this.ctx = this.sketcher.context;
+      this.updateSketcherSettings();
+    }
+
     this.clearScreen();
   }
 
@@ -325,10 +363,23 @@ export default class DoodleModal extends ImmutablePureComponent {
   };
 
   /**
+   * Cancel button handler
+   */
+  onCancelButton = () => {
+    if (this.undos.length > 1 && !confirm('Discard doodle? All changes will be lost!')) {
+      return;
+    }
+
+    this.props.onClose(); // close dialog
+  };
+
+  /**
    * Update sketcher options based on state
    */
   updateSketcherSettings () {
     if (!this.sketcher) return;
+
+    if (this.oldSize !== this.size) this.initSketcher();
 
     this.sketcher.color = (this.swapped ? this.bg : this.fg);
     this.sketcher.opacity = this.opacity;
@@ -336,6 +387,8 @@ export default class DoodleModal extends ImmutablePureComponent {
     this.sketcher.mode = this.mode;
     this.sketcher.smoothing = this.smoothing;
     this.sketcher.adaptiveStroke = this.adaptiveStroke;
+
+    this.oldSize = this.size;
   }
 
   /**
@@ -459,6 +512,30 @@ export default class DoodleModal extends ImmutablePureComponent {
   };
 
   /**
+   * Set size - clalback from the select box
+   *
+   * @param e - event
+   */
+  changeSize = (e) => {
+    let newSize = e.target.value;
+    if (newSize === this.oldSize) return;
+
+    if (this.undos.length > 1 && !confirm('Change size? This will erase your drawing!')) {
+      return;
+    }
+
+    this.size = newSize;
+  };
+
+  handleClearBtn = () => {
+    if (this.undos.length > 1 && !confirm('Clear screen? This will erase your drawing!')) {
+      return;
+    }
+
+    this.clearScreen();
+  };
+
+  /**
    * Render the component
    */
   render () {
@@ -471,7 +548,10 @@ export default class DoodleModal extends ImmutablePureComponent {
         </div>
 
         <div className='doodle-modal__action-bar'>
-          <Button text='Done' onClick={this.onDoneButton} />
+          <div className='doodle-toolbar'>
+            <Button text='Done' onClick={this.onDoneButton} />
+            <Button text='Cancel' onClick={this.onCancelButton} />
+          </div>
           <div className='filler' />
           <div className='doodle-toolbar with-inputs'>
             <div>
@@ -492,12 +572,19 @@ export default class DoodleModal extends ImmutablePureComponent {
                 <input type='number' min={1} id='dd_weight' value={this.weight} onChange={this.setWeight} />
               </span>
             </div>
+            <div>
+              <select aria-label='Canvas size' onInput={this.changeSize}>
+                { Object.values(mapValues(DOODLE_SIZES, (val, k) =>
+                  <option key={k} value={k} selected={k === this.size}>{val[2]}</option>
+                )) }
+              </select>
+            </div>
           </div>
           <div className='doodle-toolbar'>
             <IconButton icon='pencil' title='Draw' label='Draw' onClick={this.setModeDraw} size={18} active={this.mode === 'draw'} inverted />
             <IconButton icon='bath' title='Fill' label='Fill' onClick={this.setModeFill} size={18} active={this.mode === 'fill'} inverted />
             <IconButton icon='undo' title='Undo' label='Undo' onClick={this.undo} size={18} inverted />
-            <IconButton icon='trash' title='Clear' label='Clear' onClick={this.clearScreen} size={18} inverted />
+            <IconButton icon='trash' title='Clear' label='Clear' onClick={this.handleClearBtn} size={18} inverted />
           </div>
           <div className='doodle-palette'>
             {
