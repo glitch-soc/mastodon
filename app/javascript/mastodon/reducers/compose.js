@@ -65,6 +65,7 @@ const initialState = ImmutableMap({
   doodle: ImmutableMap({
     fg: 'rgb(  0,    0,    0)',
     bg: 'rgb(255,  255,  255)',
+    swapped: false,
     mode: 'draw',
     weight: 2,
     opacity: 1,
