@@ -10,17 +10,19 @@ import { hydrateStore } from '../actions/store';
 import { connectUserStream } from '../actions/streaming';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import { getLocale } from '../locales';
+import initialState from '../initial_state';
 
 const { localeData, messages } = getLocale();
 addLocaleData(localeData);
 
 export const store = configureStore();
-const initialState = JSON.parse(document.getElementById('initial-state').textContent);
+
 try {
   initialState.local_settings = JSON.parse(localStorage.getItem('mastodon-settings'));
 } catch (e) {
   initialState.local_settings = {};
 }
+
 const hydrateAction = hydrateStore(initialState);
 store.dispatch(hydrateAction);
 

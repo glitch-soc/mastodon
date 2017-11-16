@@ -58,7 +58,7 @@ module.exports = {
       }
     ),
     new ExtractTextPlugin({
-      filename: env.NODE_ENV === 'production' ? '[name]-[hash].css' : '[name].css',
+      filename: env.NODE_ENV === 'production' ? '[name]-[contenthash].css' : '[name].css',
       allChunks: true,
     }),
     new ManifestPlugin({
