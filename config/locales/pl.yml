@@ -49,6 +49,7 @@ pl:
     reserved_username: Ta nazwa użytkownika jest zarezerwowana.
     roles:
       admin: Administrator
+      moderator: Moderator
     unfollow: Przestań śledzić
   admin:
     account_moderation_notes:
@@ -148,6 +149,7 @@ pl:
       listed: Widoczne
       new:
         title: Dodaj nowe niestandardowe emoji
+      overwrite: Zastąp
       shortcode: Shortcode
       shortcode_hint: Co najmniej 2 znaki, tylko znaki alfanumeryczne i podkreślniki
       title: Niestandardowe emoji
@@ -397,6 +399,14 @@ pl:
       muting: Lista wyciszonych
     upload: Załaduj
   in_memoriam_html: Ku pamięci.
+  keyword_mutes:
+    add_keyword: Dodaj słowo kluczowe
+    edit: Edytuj
+    edit_keyword: Edytuj słowo kluczowe
+    keyword: Słowo kluczowe
+    match_whole_word: Uwzględniaj całe słowo
+    remove: Usuń
+    remove_all: Usuń wszystkie
   landing_strip_html: "<strong>%{name}</strong> ma konto na %{link_to_root_path}. Możesz je śledzić i wejść z nim w interakcję jeśli masz konto gdziekolwiek w Fediwersum."
   landing_strip_signup_html: Jeśli jeszcze go nie masz, możesz <a href="%{sign_up_path}">stworzyć konto</a>.
   media_attachments:
@@ -519,6 +529,7 @@ pl:
     export: Eksportowanie danych
     followers: Autoryzowani śledzący
     import: Importowanie danych
+    keyword_mutes: Wyciszone słowa kluczowe
     notifications: Powiadomienia
     preferences: Preferencje
     settings: Ustawienia
@@ -615,6 +626,8 @@ pl:
 
       <p>Tekst bazuje na <a href="https://github.com/discourse/discourse">polityce prywatności Discourse</a>.</p>
     title: Zasady korzystania i polityka prywatności %{instance}
+  themes:
+    default: Mastodon
   time:
     formats:
       default: "%b %d, %Y, %H:%M"

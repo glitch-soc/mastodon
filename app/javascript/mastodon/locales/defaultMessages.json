@@ -29,6 +29,14 @@
       {
         "defaultMessage": "Unmute @{name}",
         "id": "account.unmute"
+      },
+      {
+        "defaultMessage": "Mute notifications from @{name}",
+        "id": "account.mute_notifications"
+      },
+      {
+        "defaultMessage": "Unmute notifications from @{name}",
+        "id": "account.unmute_notifications"
       }
     ],
     "path": "app/javascript/mastodon/components/account.json"
@@ -284,16 +292,8 @@
         "id": "confirmations.block.confirm"
       },
       {
-        "defaultMessage": "Mute",
-        "id": "confirmations.mute.confirm"
-      },
-      {
         "defaultMessage": "Are you sure you want to block {name}?",
         "id": "confirmations.block.message"
-      },
-      {
-        "defaultMessage": "Are you sure you want to mute {name}?",
-        "id": "confirmations.mute.message"
       }
     ],
     "path": "app/javascript/mastodon/containers/status_container.json"
@@ -310,16 +310,21 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "{name} has moved to:",
+        "id": "account.moved_to"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/account_timeline/components/moved_note.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Unfollow",
         "id": "confirmations.unfollow.confirm"
       },
       {
         "defaultMessage": "Block",
         "id": "confirmations.block.confirm"
-      },
-      {
-        "defaultMessage": "Mute",
-        "id": "confirmations.mute.confirm"
       },
       {
         "defaultMessage": "Hide entire domain",
@@ -332,10 +337,6 @@
       {
         "defaultMessage": "Are you sure you want to block {name}?",
         "id": "confirmations.block.message"
-      },
-      {
-        "defaultMessage": "Are you sure you want to mute {name}?",
-        "id": "confirmations.mute.message"
       },
       {
         "defaultMessage": "Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable.",
@@ -1049,15 +1050,6 @@
   {
     "descriptors": [
       {
-        "defaultMessage": "A look inside...",
-        "id": "standalone.public_title"
-      }
-    ],
-    "path": "app/javascript/mastodon/features/standalone/public_timeline/index.json"
-  },
-  {
-    "descriptors": [
-      {
         "defaultMessage": "Delete",
         "id": "status.delete"
       },
@@ -1206,6 +1198,27 @@
       }
     ],
     "path": "app/javascript/mastodon/features/ui/components/media_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Are you sure you want to mute {name}?",
+        "id": "confirmations.mute.message"
+      },
+      {
+        "defaultMessage": "Hide notifications from this user?",
+        "id": "mute_modal.hide_notifications"
+      },
+      {
+        "defaultMessage": "Cancel",
+        "id": "confirmation_modal.cancel"
+      },
+      {
+        "defaultMessage": "Mute",
+        "id": "confirmations.mute.confirm"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/ui/components/mute_modal.json"
   },
   {
     "descriptors": [
@@ -1362,6 +1375,15 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "Your draft will be lost if you leave Mastodon.",
+        "id": "ui.beforeunload"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/ui/index.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Play",
         "id": "video.play"
       },
@@ -1407,5 +1429,1721 @@
       }
     ],
     "path": "app/javascript/mastodon/features/video/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "{name} mentioned you",
+        "id": "notification.mention"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/actions/notifications.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Follow",
+        "id": "account.follow"
+      },
+      {
+        "defaultMessage": "Unfollow",
+        "id": "account.unfollow"
+      },
+      {
+        "defaultMessage": "Awaiting approval",
+        "id": "account.requested"
+      },
+      {
+        "defaultMessage": "Unblock @{name}",
+        "id": "account.unblock"
+      },
+      {
+        "defaultMessage": "Unmute @{name}",
+        "id": "account.unmute"
+      },
+      {
+        "defaultMessage": "You are not currently muting notifications from @{name}. Click to mute notifications",
+        "id": "account.mute_notifications"
+      },
+      {
+        "defaultMessage": "You are currently muting notifications from @{name}. Click to unmute notifications",
+        "id": "account.unmute_notifications"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/account.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Back",
+        "id": "column_back_button.label"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/column_back_button_slim.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Back",
+        "id": "column_back_button.label"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/column_back_button.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Show settings",
+        "id": "column_header.show_settings"
+      },
+      {
+        "defaultMessage": "Hide settings",
+        "id": "column_header.hide_settings"
+      },
+      {
+        "defaultMessage": "Move column to the left",
+        "id": "column_header.moveLeft_settings"
+      },
+      {
+        "defaultMessage": "Move column to the right",
+        "id": "column_header.moveRight_settings"
+      },
+      {
+        "defaultMessage": "Enter notification cleaning mode",
+        "id": "notification_purge.start"
+      },
+      {
+        "defaultMessage": "Unpin",
+        "id": "column_header.unpin"
+      },
+      {
+        "defaultMessage": "Pin",
+        "id": "column_header.pin"
+      },
+      {
+        "defaultMessage": "Back",
+        "id": "column_back_button.label"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/column_header.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Load more",
+        "id": "status.load_more"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/load_more.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Loading...",
+        "id": "loading_indicator.label"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/loading_indicator.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Toggle visibility",
+        "id": "media_gallery.toggle_visible"
+      },
+      {
+        "defaultMessage": "Sensitive content",
+        "id": "status.sensitive_warning"
+      },
+      {
+        "defaultMessage": "Media hidden",
+        "id": "status.media_hidden"
+      },
+      {
+        "defaultMessage": "Click to view",
+        "id": "status.sensitive_toggle"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/media_gallery.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Not found",
+        "id": "missing_indicator.label"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/missing_indicator.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Select\nall",
+        "id": "notification_purge.btn_all"
+      },
+      {
+        "defaultMessage": "Select\nnone",
+        "id": "notification_purge.btn_none"
+      },
+      {
+        "defaultMessage": "Invert\nselection",
+        "id": "notification_purge.btn_invert"
+      },
+      {
+        "defaultMessage": "Clear\nselected",
+        "id": "notification_purge.btn_apply"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/notification_purge_buttons.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "now",
+        "id": "relative_time.just_now"
+      },
+      {
+        "defaultMessage": "{number}s",
+        "id": "relative_time.seconds"
+      },
+      {
+        "defaultMessage": "{number}m",
+        "id": "relative_time.minutes"
+      },
+      {
+        "defaultMessage": "{number}h",
+        "id": "relative_time.hours"
+      },
+      {
+        "defaultMessage": "{number}d",
+        "id": "relative_time.days"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/relative_timestamp.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Delete",
+        "id": "status.delete"
+      },
+      {
+        "defaultMessage": "Mention @{name}",
+        "id": "status.mention"
+      },
+      {
+        "defaultMessage": "Mute @{name}",
+        "id": "account.mute"
+      },
+      {
+        "defaultMessage": "Block @{name}",
+        "id": "account.block"
+      },
+      {
+        "defaultMessage": "Reply",
+        "id": "status.reply"
+      },
+      {
+        "defaultMessage": "Share",
+        "id": "status.share"
+      },
+      {
+        "defaultMessage": "More",
+        "id": "status.more"
+      },
+      {
+        "defaultMessage": "Reply to thread",
+        "id": "status.replyAll"
+      },
+      {
+        "defaultMessage": "Boost",
+        "id": "status.reblog"
+      },
+      {
+        "defaultMessage": "This post cannot be boosted",
+        "id": "status.cannot_reblog"
+      },
+      {
+        "defaultMessage": "Favourite",
+        "id": "status.favourite"
+      },
+      {
+        "defaultMessage": "Expand this status",
+        "id": "status.open"
+      },
+      {
+        "defaultMessage": "Report @{name}",
+        "id": "status.report"
+      },
+      {
+        "defaultMessage": "Mute conversation",
+        "id": "status.mute_conversation"
+      },
+      {
+        "defaultMessage": "Unmute conversation",
+        "id": "status.unmute_conversation"
+      },
+      {
+        "defaultMessage": "Pin on profile",
+        "id": "status.pin"
+      },
+      {
+        "defaultMessage": "Unpin from profile",
+        "id": "status.unpin"
+      },
+      {
+        "defaultMessage": "Embed",
+        "id": "status.embed"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/status_action_bar.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Show more",
+        "id": "status.show_more"
+      },
+      {
+        "defaultMessage": "Show less",
+        "id": "status.show_less"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/status_content.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Collapse",
+        "id": "status.collapse"
+      },
+      {
+        "defaultMessage": "Uncollapse",
+        "id": "status.uncollapse"
+      },
+      {
+        "defaultMessage": "Public",
+        "id": "privacy.public.short"
+      },
+      {
+        "defaultMessage": "Unlisted",
+        "id": "privacy.unlisted.short"
+      },
+      {
+        "defaultMessage": "Followers-only",
+        "id": "privacy.private.short"
+      },
+      {
+        "defaultMessage": "Direct",
+        "id": "privacy.direct.short"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/status_header.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "{name} boosted",
+        "id": "status.reblogged_by"
+      },
+      {
+        "defaultMessage": "{name} favourited your status",
+        "id": "notification.favourite"
+      },
+      {
+        "defaultMessage": "{name} boosted your status",
+        "id": "notification.reblog"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/status_prepend.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Public",
+        "id": "privacy.public.short"
+      },
+      {
+        "defaultMessage": "Unlisted",
+        "id": "privacy.unlisted.short"
+      },
+      {
+        "defaultMessage": "Followers-only",
+        "id": "privacy.private.short"
+      },
+      {
+        "defaultMessage": "Direct",
+        "id": "privacy.direct.short"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/components/status_visibility_icon.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Unfollow",
+        "id": "confirmations.unfollow.confirm"
+      },
+      {
+        "defaultMessage": "Are you sure you want to unfollow {name}?",
+        "id": "confirmations.unfollow.message"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/containers/account_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Are you sure you want to permanently clear all selected notifications?",
+        "id": "notifications.marked_clear_confirmation"
+      },
+      {
+        "defaultMessage": "Clear selected notifications",
+        "id": "notifications.marked_clear"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/containers/notification_purge_buttons_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Delete",
+        "id": "confirmations.delete.confirm"
+      },
+      {
+        "defaultMessage": "Are you sure you want to delete this status?",
+        "id": "confirmations.delete.message"
+      },
+      {
+        "defaultMessage": "Block",
+        "id": "confirmations.block.confirm"
+      },
+      {
+        "defaultMessage": "Are you sure you want to block {name}?",
+        "id": "confirmations.block.message"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/containers/status_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Media",
+        "id": "account.media"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/account_gallery/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Unfollow",
+        "id": "confirmations.unfollow.confirm"
+      },
+      {
+        "defaultMessage": "Block",
+        "id": "confirmations.block.confirm"
+      },
+      {
+        "defaultMessage": "Hide entire domain",
+        "id": "confirmations.domain_block.confirm"
+      },
+      {
+        "defaultMessage": "Are you sure you want to unfollow {name}?",
+        "id": "confirmations.unfollow.message"
+      },
+      {
+        "defaultMessage": "Are you sure you want to block {name}?",
+        "id": "confirmations.block.message"
+      },
+      {
+        "defaultMessage": "Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable.",
+        "id": "confirmations.domain_block.message"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/account_timeline/containers/header_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Mention @{name}",
+        "id": "account.mention"
+      },
+      {
+        "defaultMessage": "Edit profile",
+        "id": "account.edit_profile"
+      },
+      {
+        "defaultMessage": "Unblock @{name}",
+        "id": "account.unblock"
+      },
+      {
+        "defaultMessage": "Unfollow",
+        "id": "account.unfollow"
+      },
+      {
+        "defaultMessage": "Unmute @{name}",
+        "id": "account.unmute"
+      },
+      {
+        "defaultMessage": "Block @{name}",
+        "id": "account.block"
+      },
+      {
+        "defaultMessage": "Mute @{name}",
+        "id": "account.mute"
+      },
+      {
+        "defaultMessage": "Follow",
+        "id": "account.follow"
+      },
+      {
+        "defaultMessage": "Report @{name}",
+        "id": "account.report"
+      },
+      {
+        "defaultMessage": "Share @{name}'s profile",
+        "id": "account.share"
+      },
+      {
+        "defaultMessage": "Media",
+        "id": "account.media"
+      },
+      {
+        "defaultMessage": "Hide everything from {domain}",
+        "id": "account.block_domain"
+      },
+      {
+        "defaultMessage": "Unhide {domain}",
+        "id": "account.unblock_domain"
+      },
+      {
+        "defaultMessage": "Hide boosts from @{name}",
+        "id": "account.hide_reblogs"
+      },
+      {
+        "defaultMessage": "Show boosts from @{name}",
+        "id": "account.show_reblogs"
+      },
+      {
+        "defaultMessage": "Information below may reflect the user's profile incompletely.",
+        "id": "account.disclaimer_full"
+      },
+      {
+        "defaultMessage": "View full profile",
+        "id": "account.view_full_profile"
+      },
+      {
+        "defaultMessage": "Posts",
+        "id": "account.posts"
+      },
+      {
+        "defaultMessage": "Follows",
+        "id": "account.follows"
+      },
+      {
+        "defaultMessage": "Followers",
+        "id": "account.followers"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/account/components/action_bar.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Unfollow",
+        "id": "account.unfollow"
+      },
+      {
+        "defaultMessage": "Follow",
+        "id": "account.follow"
+      },
+      {
+        "defaultMessage": "Awaiting approval. Click to cancel follow request",
+        "id": "account.requested"
+      },
+      {
+        "defaultMessage": "Follows you",
+        "id": "account.follows_you"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/account/components/header.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Blocked users",
+        "id": "column.blocks"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/blocks/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Filter out by regular expressions",
+        "id": "home.column_settings.filter_regex"
+      },
+      {
+        "defaultMessage": "Column settings",
+        "id": "home.settings"
+      },
+      {
+        "defaultMessage": "Advanced",
+        "id": "home.column_settings.advanced"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/community_timeline/components/column_settings.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Local timeline",
+        "id": "column.community"
+      },
+      {
+        "defaultMessage": "The local timeline is empty. Write something publicly to get the ball rolling!",
+        "id": "empty_column.community"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/community_timeline/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Local-only",
+        "id": "advanced-options.local-only.short"
+      },
+      {
+        "defaultMessage": "Do not post to other instances",
+        "id": "advanced-options.local-only.long"
+      },
+      {
+        "defaultMessage": "Advanced options",
+        "id": "advanced_options.icon_title"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/advanced_options.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Upload a file",
+        "id": "compose.attach.upload"
+      },
+      {
+        "defaultMessage": "Draw something",
+        "id": "compose.attach.doodle"
+      },
+      {
+        "defaultMessage": "Attach...",
+        "id": "compose.attach"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/attach_options.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "What is on your mind?",
+        "id": "compose_form.placeholder"
+      },
+      {
+        "defaultMessage": "Write your warning here",
+        "id": "compose_form.spoiler_placeholder"
+      },
+      {
+        "defaultMessage": "Toot",
+        "id": "compose_form.publish"
+      },
+      {
+        "defaultMessage": "{publish}!",
+        "id": "compose_form.publish_loud"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/compose_form.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Insert emoji",
+        "id": "emoji_button.label"
+      },
+      {
+        "defaultMessage": "Search...",
+        "id": "emoji_button.search"
+      },
+      {
+        "defaultMessage": "No emojos!! (╯°□°）╯︵ ┻━┻",
+        "id": "emoji_button.not_found"
+      },
+      {
+        "defaultMessage": "Custom",
+        "id": "emoji_button.custom"
+      },
+      {
+        "defaultMessage": "Frequently used",
+        "id": "emoji_button.recent"
+      },
+      {
+        "defaultMessage": "Search results",
+        "id": "emoji_button.search_results"
+      },
+      {
+        "defaultMessage": "People",
+        "id": "emoji_button.people"
+      },
+      {
+        "defaultMessage": "Nature",
+        "id": "emoji_button.nature"
+      },
+      {
+        "defaultMessage": "Food & Drink",
+        "id": "emoji_button.food"
+      },
+      {
+        "defaultMessage": "Activity",
+        "id": "emoji_button.activity"
+      },
+      {
+        "defaultMessage": "Travel & Places",
+        "id": "emoji_button.travel"
+      },
+      {
+        "defaultMessage": "Objects",
+        "id": "emoji_button.objects"
+      },
+      {
+        "defaultMessage": "Symbols",
+        "id": "emoji_button.symbols"
+      },
+      {
+        "defaultMessage": "Flags",
+        "id": "emoji_button.flags"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/emoji_picker_dropdown.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Edit profile",
+        "id": "navigation_bar.edit_profile"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/navigation_bar.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Public",
+        "id": "privacy.public.short"
+      },
+      {
+        "defaultMessage": "Post to public timelines",
+        "id": "privacy.public.long"
+      },
+      {
+        "defaultMessage": "Unlisted",
+        "id": "privacy.unlisted.short"
+      },
+      {
+        "defaultMessage": "Do not show in public timelines",
+        "id": "privacy.unlisted.long"
+      },
+      {
+        "defaultMessage": "Followers-only",
+        "id": "privacy.private.short"
+      },
+      {
+        "defaultMessage": "Post to followers only",
+        "id": "privacy.private.long"
+      },
+      {
+        "defaultMessage": "Direct",
+        "id": "privacy.direct.short"
+      },
+      {
+        "defaultMessage": "Post to mentioned users only",
+        "id": "privacy.direct.long"
+      },
+      {
+        "defaultMessage": "Adjust status privacy",
+        "id": "privacy.change"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/privacy_dropdown.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Cancel",
+        "id": "reply_indicator.cancel"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/reply_indicator.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "{count, number} {count, plural, one {result} other {results}}",
+        "id": "search_results.total"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/search_results.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Search",
+        "id": "search.placeholder"
+      },
+      {
+        "defaultMessage": "Advanced search format",
+        "id": "search_popout.search_format"
+      },
+      {
+        "defaultMessage": "hashtag",
+        "id": "search_popout.tips.hashtag"
+      },
+      {
+        "defaultMessage": "user",
+        "id": "search_popout.tips.user"
+      },
+      {
+        "defaultMessage": "status",
+        "id": "search_popout.tips.status"
+      },
+      {
+        "defaultMessage": "Simple text returns matching display names, usernames and hashtags",
+        "id": "search_popout.tips.text"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/search.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Uploading...",
+        "id": "upload_progress.label"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/upload_progress.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Undo",
+        "id": "upload_form.undo"
+      },
+      {
+        "defaultMessage": "Describe for the visually impaired",
+        "id": "upload_form.description"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/components/upload.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Mark media as sensitive",
+        "id": "compose_form.sensitive"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/containers/sensitive_button_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Hide text behind warning",
+        "id": "compose_form.spoiler"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/containers/spoiler_button_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Your account is not {locked}. Anyone can follow you to view your follower-only posts.",
+        "id": "compose_form.lock_disclaimer"
+      },
+      {
+        "defaultMessage": "locked",
+        "id": "compose_form.lock_disclaimer.lock"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/containers/warning_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Getting started",
+        "id": "getting_started.heading"
+      },
+      {
+        "defaultMessage": "Home",
+        "id": "tabs_bar.home"
+      },
+      {
+        "defaultMessage": "Notifications",
+        "id": "tabs_bar.notifications"
+      },
+      {
+        "defaultMessage": "Federated timeline",
+        "id": "navigation_bar.public_timeline"
+      },
+      {
+        "defaultMessage": "Local timeline",
+        "id": "navigation_bar.community_timeline"
+      },
+      {
+        "defaultMessage": "App settings",
+        "id": "navigation_bar.app_settings"
+      },
+      {
+        "defaultMessage": "Logout",
+        "id": "navigation_bar.logout"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/compose/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Direct messages",
+        "id": "column.direct"
+      },
+      {
+        "defaultMessage": "You don't have any direct messages yet. When you send or receive one, it will show up here.",
+        "id": "empty_column.direct"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/direct_timeline/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Favourites",
+        "id": "column.favourites"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/favourited_statuses/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Authorize",
+        "id": "follow_request.authorize"
+      },
+      {
+        "defaultMessage": "Reject",
+        "id": "follow_request.reject"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/follow_requests/components/account_authorize.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Follow requests",
+        "id": "column.follow_requests"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/follow_requests/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Getting started",
+        "id": "getting_started.heading"
+      },
+      {
+        "defaultMessage": "Home",
+        "id": "tabs_bar.home"
+      },
+      {
+        "defaultMessage": "Notifications",
+        "id": "tabs_bar.notifications"
+      },
+      {
+        "defaultMessage": "Federated timeline",
+        "id": "navigation_bar.public_timeline"
+      },
+      {
+        "defaultMessage": "Navigation",
+        "id": "column_subheading.navigation"
+      },
+      {
+        "defaultMessage": "Settings",
+        "id": "column_subheading.settings"
+      },
+      {
+        "defaultMessage": "Local timeline",
+        "id": "navigation_bar.community_timeline"
+      },
+      {
+        "defaultMessage": "Direct messages",
+        "id": "navigation_bar.direct"
+      },
+      {
+        "defaultMessage": "Preferences",
+        "id": "navigation_bar.preferences"
+      },
+      {
+        "defaultMessage": "App settings",
+        "id": "navigation_bar.app_settings"
+      },
+      {
+        "defaultMessage": "Follow requests",
+        "id": "navigation_bar.follow_requests"
+      },
+      {
+        "defaultMessage": "Logout",
+        "id": "navigation_bar.logout"
+      },
+      {
+        "defaultMessage": "Favourites",
+        "id": "navigation_bar.favourites"
+      },
+      {
+        "defaultMessage": "Blocked users",
+        "id": "navigation_bar.blocks"
+      },
+      {
+        "defaultMessage": "Muted users",
+        "id": "navigation_bar.mutes"
+      },
+      {
+        "defaultMessage": "Extended information",
+        "id": "navigation_bar.info"
+      },
+      {
+        "defaultMessage": "Show me around",
+        "id": "getting_started.onboarding"
+      },
+      {
+        "defaultMessage": "Pinned toots",
+        "id": "navigation_bar.pins"
+      },
+      {
+        "defaultMessage": "FAQ",
+        "id": "getting_started.faq"
+      },
+      {
+        "defaultMessage": "User Guide",
+        "id": "getting_started.userguide"
+      },
+      {
+        "defaultMessage": "Apps",
+        "id": "getting_started.appsshort"
+      },
+      {
+        "defaultMessage": "Glitchsoc is open source software, a friendly fork of {Mastodon}. You can contribute or report issues on GitHub at {github}.",
+        "id": "getting_started.open_source_notice"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/getting_started/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "There is nothing in this hashtag yet.",
+        "id": "empty_column.hashtag"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/hashtag_timeline/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Filter out by regular expressions",
+        "id": "home.column_settings.filter_regex"
+      },
+      {
+        "defaultMessage": "Column settings",
+        "id": "home.settings"
+      },
+      {
+        "defaultMessage": "Basic",
+        "id": "home.column_settings.basic"
+      },
+      {
+        "defaultMessage": "Show boosts",
+        "id": "home.column_settings.show_reblogs"
+      },
+      {
+        "defaultMessage": "Show replies",
+        "id": "home.column_settings.show_replies"
+      },
+      {
+        "defaultMessage": "Advanced",
+        "id": "home.column_settings.advanced"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/home_timeline/components/column_settings.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Home",
+        "id": "column.home"
+      },
+      {
+        "defaultMessage": "Your home timeline is empty! Visit {public} or use search to get started and meet other users.",
+        "id": "empty_column.home"
+      },
+      {
+        "defaultMessage": "the public timeline",
+        "id": "empty_column.home.public_timeline"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/home_timeline/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "General",
+        "id": "settings.general"
+      },
+      {
+        "defaultMessage": "Collapsed toots",
+        "id": "settings.collapsed_statuses"
+      },
+      {
+        "defaultMessage": "Media",
+        "id": "settings.media"
+      },
+      {
+        "defaultMessage": "Preferences",
+        "id": "settings.preferences"
+      },
+      {
+        "defaultMessage": "Close",
+        "id": "settings.close"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/local_settings/navigation/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Auto",
+        "id": "layout.auto"
+      },
+      {
+        "defaultMessage": "Desktop",
+        "id": "layout.desktop"
+      },
+      {
+        "defaultMessage": "Mobile",
+        "id": "layout.single"
+      },
+      {
+        "defaultMessage": "None",
+        "id": "settings.side_arm.none"
+      },
+      {
+        "defaultMessage": "General",
+        "id": "settings.general"
+      },
+      {
+        "defaultMessage": "Layout:",
+        "id": "settings.layout"
+      },
+      {
+        "defaultMessage": "Wide view (Desktop mode only)",
+        "id": "settings.wide_view"
+      },
+      {
+        "defaultMessage": "Navbar at the bottom (Mobile only)",
+        "id": "settings.navbar_under"
+      },
+      {
+        "defaultMessage": "Compose box options",
+        "id": "settings.compose_box_opts"
+      },
+      {
+        "defaultMessage": "Secondary toot button:",
+        "id": "settings.side_arm"
+      },
+      {
+        "defaultMessage": "Collapsed toots",
+        "id": "settings.collapsed_statuses"
+      },
+      {
+        "defaultMessage": "Enable collapsed toots",
+        "id": "settings.enable_collapsed"
+      },
+      {
+        "defaultMessage": "Automatic collapsing",
+        "id": "settings.auto_collapse"
+      },
+      {
+        "defaultMessage": "Everything",
+        "id": "settings.auto_collapse_all"
+      },
+      {
+        "defaultMessage": "Notifications",
+        "id": "settings.auto_collapse_notifications"
+      },
+      {
+        "defaultMessage": "Lengthy toots",
+        "id": "settings.auto_collapse_lengthy"
+      },
+      {
+        "defaultMessage": "Boosts",
+        "id": "settings.auto_collapse_reblogs"
+      },
+      {
+        "defaultMessage": "Replies",
+        "id": "settings.auto_collapse_replies"
+      },
+      {
+        "defaultMessage": "Toots with media",
+        "id": "settings.auto_collapse_media"
+      },
+      {
+        "defaultMessage": "Image backgrounds",
+        "id": "settings.image_backgrounds"
+      },
+      {
+        "defaultMessage": "Give collapsed toots an image background",
+        "id": "settings.image_backgrounds_users"
+      },
+      {
+        "defaultMessage": "Preview collapsed toot media",
+        "id": "settings.image_backgrounds_media"
+      },
+      {
+        "defaultMessage": "Media",
+        "id": "settings.media"
+      },
+      {
+        "defaultMessage": "Letterbox media",
+        "id": "settings.media_letterbox"
+      },
+      {
+        "defaultMessage": "Full-width media previews",
+        "id": "settings.media_fullwidth"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/local_settings/page/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Muted users",
+        "id": "column.mutes"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/mutes/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Clear notifications",
+        "id": "notifications.clear"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/notifications/components/clear_column_button.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Desktop notifications",
+        "id": "notifications.column_settings.alert"
+      },
+      {
+        "defaultMessage": "Show in column",
+        "id": "notifications.column_settings.show"
+      },
+      {
+        "defaultMessage": "Play sound",
+        "id": "notifications.column_settings.sound"
+      },
+      {
+        "defaultMessage": "Push notifications",
+        "id": "notifications.column_settings.push"
+      },
+      {
+        "defaultMessage": "This device",
+        "id": "notifications.column_settings.push_meta"
+      },
+      {
+        "defaultMessage": "New followers:",
+        "id": "notifications.column_settings.follow"
+      },
+      {
+        "defaultMessage": "Favourites:",
+        "id": "notifications.column_settings.favourite"
+      },
+      {
+        "defaultMessage": "Mentions:",
+        "id": "notifications.column_settings.mention"
+      },
+      {
+        "defaultMessage": "Boosts:",
+        "id": "notifications.column_settings.reblog"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/notifications/components/column_settings.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "{name} followed you",
+        "id": "notification.follow"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/notifications/components/follow.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Mark for deletion",
+        "id": "notification.markForDeletion"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/notifications/components/overlay.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Are you sure you want to permanently clear all your notifications?",
+        "id": "notifications.clear_confirmation"
+      },
+      {
+        "defaultMessage": "Clear notifications",
+        "id": "notifications.clear"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/notifications/containers/column_settings_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Notifications",
+        "id": "column.notifications"
+      },
+      {
+        "defaultMessage": "You don't have any notifications yet. Interact with others to start the conversation.",
+        "id": "empty_column.notifications"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/notifications/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Pinned toot",
+        "id": "column.pins"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/pinned_statuses/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Federated timeline",
+        "id": "column.public"
+      },
+      {
+        "defaultMessage": "There is nothing here! Write something publicly, or manually follow users from other instances to fill it up",
+        "id": "empty_column.public"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/public_timeline/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "A look inside...",
+        "id": "standalone.public_title"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/standalone/public_timeline/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Delete",
+        "id": "status.delete"
+      },
+      {
+        "defaultMessage": "Mention @{name}",
+        "id": "status.mention"
+      },
+      {
+        "defaultMessage": "Reply",
+        "id": "status.reply"
+      },
+      {
+        "defaultMessage": "Boost",
+        "id": "status.reblog"
+      },
+      {
+        "defaultMessage": "This post cannot be boosted",
+        "id": "status.cannot_reblog"
+      },
+      {
+        "defaultMessage": "Favourite",
+        "id": "status.favourite"
+      },
+      {
+        "defaultMessage": "Report @{name}",
+        "id": "status.report"
+      },
+      {
+        "defaultMessage": "Share",
+        "id": "status.share"
+      },
+      {
+        "defaultMessage": "Pin on profile",
+        "id": "status.pin"
+      },
+      {
+        "defaultMessage": "Unpin from profile",
+        "id": "status.unpin"
+      },
+      {
+        "defaultMessage": "Embed",
+        "id": "status.embed"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/status/components/action_bar.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Delete",
+        "id": "confirmations.delete.confirm"
+      },
+      {
+        "defaultMessage": "Are you sure you want to delete this status?",
+        "id": "confirmations.delete.message"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/status/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Boost",
+        "id": "status.reblog"
+      },
+      {
+        "defaultMessage": "You can press {combo} to skip this next time",
+        "id": "boost_modal.combo"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/boost_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Network error",
+        "id": "bundle_column_error.title"
+      },
+      {
+        "defaultMessage": "Something went wrong while loading this component.",
+        "id": "bundle_column_error.body"
+      },
+      {
+        "defaultMessage": "Try again",
+        "id": "bundle_column_error.retry"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/bundle_column_error.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Something went wrong while loading this component.",
+        "id": "bundle_modal_error.message"
+      },
+      {
+        "defaultMessage": "Try again",
+        "id": "bundle_modal_error.retry"
+      },
+      {
+        "defaultMessage": "Close",
+        "id": "bundle_modal_error.close"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/bundle_modal_error.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Cancel",
+        "id": "confirmation_modal.cancel"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/confirmation_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Embed",
+        "id": "status.embed"
+      },
+      {
+        "defaultMessage": "Embed this status on your website by copying the code below.",
+        "id": "embed.instructions"
+      },
+      {
+        "defaultMessage": "Here is what it will look like:",
+        "id": "embed.preview"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/embed_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Close",
+        "id": "lightbox.close"
+      },
+      {
+        "defaultMessage": "Previous",
+        "id": "lightbox.previous"
+      },
+      {
+        "defaultMessage": "Next",
+        "id": "lightbox.next"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/media_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Are you sure you want to mute {name}?",
+        "id": "confirmations.mute.message"
+      },
+      {
+        "defaultMessage": "Hide notifications from this user?",
+        "id": "mute_modal.hide_notifications"
+      },
+      {
+        "defaultMessage": "Cancel",
+        "id": "confirmation_modal.cancel"
+      },
+      {
+        "defaultMessage": "Mute",
+        "id": "confirmations.mute.confirm"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/mute_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Home",
+        "id": "column.home"
+      },
+      {
+        "defaultMessage": "Notifications",
+        "id": "column.notifications"
+      },
+      {
+        "defaultMessage": "Local timeline",
+        "id": "column.community"
+      },
+      {
+        "defaultMessage": "Federated timeline",
+        "id": "column.public"
+      },
+      {
+        "defaultMessage": "Welcome to {domain}!",
+        "id": "onboarding.page_one.welcome"
+      },
+      {
+        "defaultMessage": "{domain} is an \"instance\" of Mastodon. Mastodon is a network of independent servers joining up to make one larger social network. We call these servers instances.",
+        "id": "onboarding.page_one.federation"
+      },
+      {
+        "defaultMessage": "You are on {domain}, so your full handle is {handle}",
+        "id": "onboarding.page_one.handle"
+      },
+      {
+        "defaultMessage": "Write posts from the compose column. You can upload images, change privacy settings, and add content warnings with the icons below.",
+        "id": "onboarding.page_two.compose"
+      },
+      {
+        "defaultMessage": "Use the search bar to find people and look at hashtags, such as {illustration} and {introductions}. To look for a person who is not on this instance, use their full handle.",
+        "id": "onboarding.page_three.search"
+      },
+      {
+        "defaultMessage": "Edit your profile to change your avatar, bio, and display name. There, you will also find other preferences.",
+        "id": "onboarding.page_three.profile"
+      },
+      {
+        "defaultMessage": "The home timeline shows posts from people you follow.",
+        "id": "onboarding.page_four.home"
+      },
+      {
+        "defaultMessage": "The notifications column shows when someone interacts with you.",
+        "id": "onboarding.page_four.notifications"
+      },
+      {
+        "defaultMessage": "The local timeline shows public posts from everyone on {domain}. The federated timeline shows public posts from everyone who people on {domain} follow. These are the Public Timelines, a great way to discover new people.",
+        "id": "onboarding.page_five.public_timelines"
+      },
+      {
+        "defaultMessage": "Your instance's admin is {admin}.",
+        "id": "onboarding.page_six.admin"
+      },
+      {
+        "defaultMessage": "Please read {domain}'s {guidelines}!",
+        "id": "onboarding.page_six.read_guidelines"
+      },
+      {
+        "defaultMessage": "community guidelines",
+        "id": "onboarding.page_six.guidelines"
+      },
+      {
+        "defaultMessage": "Almost done...",
+        "id": "onboarding.page_six.almost_done"
+      },
+      {
+        "defaultMessage": "{domain} runs on Glitchsoc. Glitchsoc is a friendly {fork} of {Mastodon}. Glitchsoc is fully compatible with all Mastodon apps and instances. Glitchsoc is free open-source software. You can report bugs, request features, or contribute to the code on {github}.",
+        "id": "onboarding.page_six.github"
+      },
+      {
+        "defaultMessage": "There are {apps} available for iOS, Android and other platforms.",
+        "id": "onboarding.page_six.apps_available"
+      },
+      {
+        "defaultMessage": "mobile apps",
+        "id": "onboarding.page_six.various_app"
+      },
+      {
+        "defaultMessage": "Bon Appetoot!",
+        "id": "onboarding.page_six.appetoot"
+      },
+      {
+        "defaultMessage": "Next",
+        "id": "onboarding.next"
+      },
+      {
+        "defaultMessage": "Done",
+        "id": "onboarding.done"
+      },
+      {
+        "defaultMessage": "Skip",
+        "id": "onboarding.skip"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/onboarding_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Additional comments",
+        "id": "report.placeholder"
+      },
+      {
+        "defaultMessage": "Submit",
+        "id": "report.submit"
+      },
+      {
+        "defaultMessage": "Report {target}",
+        "id": "report.target"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/report_modal.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Compose",
+        "id": "tabs_bar.compose"
+      },
+      {
+        "defaultMessage": "Home",
+        "id": "tabs_bar.home"
+      },
+      {
+        "defaultMessage": "Notifications",
+        "id": "tabs_bar.notifications"
+      },
+      {
+        "defaultMessage": "Local",
+        "id": "tabs_bar.local_timeline"
+      },
+      {
+        "defaultMessage": "Federated",
+        "id": "tabs_bar.federated_timeline"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/tabs_bar.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Drag & drop to upload",
+        "id": "upload_area.title"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/components/upload_area.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Your draft will be lost if you leave Mastodon.",
+        "id": "ui.beforeunload"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/ui/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Play",
+        "id": "video.play"
+      },
+      {
+        "defaultMessage": "Pause",
+        "id": "video.pause"
+      },
+      {
+        "defaultMessage": "Mute sound",
+        "id": "video.mute"
+      },
+      {
+        "defaultMessage": "Unmute sound",
+        "id": "video.unmute"
+      },
+      {
+        "defaultMessage": "Hide video",
+        "id": "video.hide"
+      },
+      {
+        "defaultMessage": "Expand video",
+        "id": "video.expand"
+      },
+      {
+        "defaultMessage": "Close video",
+        "id": "video.close"
+      },
+      {
+        "defaultMessage": "Full screen",
+        "id": "video.fullscreen"
+      },
+      {
+        "defaultMessage": "Exit full screen",
+        "id": "video.exit_fullscreen"
+      },
+      {
+        "defaultMessage": "Sensitive content",
+        "id": "status.sensitive_warning"
+      },
+      {
+        "defaultMessage": "Click to view",
+        "id": "status.sensitive_toggle"
+      }
+    ],
+    "path": "app/javascript/themes/glitch/features/video/index.json"
   }
 ]
