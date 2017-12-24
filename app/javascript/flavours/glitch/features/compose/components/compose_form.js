@@ -212,6 +212,8 @@ export default class ComposeForm extends ImmutablePureComponent {
 
     return (
       <div className='compose-form'>
+        <WarningContainer />
+
         <Collapsable isVisible={this.props.spoiler} fullHeight={50}>
           <div className='spoiler-input'>
             <label>
@@ -220,8 +222,6 @@ export default class ComposeForm extends ImmutablePureComponent {
             </label>
           </div>
         </Collapsable>
-
-        <WarningContainer />
 
         <ReplyIndicatorContainer />
 
@@ -248,39 +248,41 @@ export default class ComposeForm extends ImmutablePureComponent {
           <UploadFormContainer />
         </div>
 
-        <div className='compose-form__buttons'>
-          <ComposeAttachOptions />
-          <SensitiveButtonContainer />
-          <div className='compose-form__buttons-separator' />
-          <PrivacyDropdownContainer />
-          <SpoilerButtonContainer />
-          <ComposeAdvancedOptionsContainer />
+        <div className='compose-form__buttons-wrapper'>
+          <div className='compose-form__buttons'>
+            <ComposeAttachOptions />
+            <SensitiveButtonContainer />
+            <div className='compose-form__buttons-separator' />
+            <PrivacyDropdownContainer />
+            <SpoilerButtonContainer />
+            <ComposeAdvancedOptionsContainer />
+          </div>
+          <div className='character-counter__wrapper'><CharacterCounter max={maxChars} text={text} /></div>
         </div>
 
-        <div className='compose-form__publish'>
-          <div className='character-counter__wrapper'><CharacterCounter max={maxChars} text={text} /></div>
-          <div className='compose-form__publish-button-wrapper'>
-            {
-              showSideArm ?
-                <Button
-                  className='compose-form__publish__side-arm'
-                  text={publishText2}
-                  title={title2}
-                  onClick={this.handleSubmit2}
-                  disabled={submitDisabled}
-                /> : ''
-            }
-            <Button
-              className='compose-form__publish__primary'
-              text={publishText}
-              title={title}
-              onClick={this.handleSubmit}
-              disabled={submitDisabled}
-            />
-          </div>
+      <div className='compose-form__publish'>
+        <div className='compose-form__publish-button-wrapper'>
+          {
+            showSideArm ?
+              <Button
+                className='compose-form__publish__side-arm'
+                text={publishText2}
+                title={title2}
+                onClick={this.handleSubmit2}
+                disabled={submitDisabled}
+              /> : ''
+          }
+          <Button
+            className='compose-form__publish__primary'
+            text={publishText}
+            title={title}
+            onClick={this.handleSubmit}
+            disabled={submitDisabled}
+          />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
 }
