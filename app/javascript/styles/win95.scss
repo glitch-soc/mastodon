@@ -1054,23 +1054,23 @@ body.admin {
   }
 }
 
-.column-link[href="/web/timelines/public"] {
+.column-link[href="/$vanilla/timelines/public"] {
   background-image: url("~images/icon_public.png");
   &:hover { background-image: url("~images/icon_public.png"); }
 }
-.column-link[href="/web/timelines/public/local"] {
+.column-link[href="/$vanilla/timelines/public/local"] {
   background-image: url("~images/icon_local.png");
   &:hover { background-image: url("~images/icon_local.png"); }
 }
-.column-link[href="/web/pinned"] {
+.column-link[href="/$vanilla/pinned"] {
   background-image: url("~images/icon_pin.png");
   &:hover { background-image: url("~images/icon_pin.png"); }
 }
-.column-link[href="/web/favourites"] {
+.column-link[href="/$vanilla/favourites"] {
   background-image: url("~images/icon_likes.png");
   &:hover { background-image: url("~images/icon_likes.png"); }
 }
-.column-link[href="/web/blocks"] {
+.column-link[href="/$vanilla/blocks"] {
   background-image: url("~images/icon_blocks.png");
   &:hover { background-image: url("~images/icon_blocks.png"); }
 }

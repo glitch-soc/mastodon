@@ -102,16 +102,16 @@ const findBestClient = clients => {
 const openUrl = url =>
   self.clients.matchAll({ type: 'window' }).then(clientList => {
     if (clientList.length !== 0) {
-      const webClients = clientList.filter(client => /\/web\//.test(client.url));
+      const webClients = clientList.filter(client => /\/\$vanilla\//.test(client.url));
 
       if (webClients.length !== 0) {
         const client       = findBestClient(webClients);
         const { pathname } = new URL(url);
 
-        if (pathname.startsWith('/web/')) {
+        if (pathname.startsWith('/$vanilla/')) {
           return client.focus().then(client => client.postMessage({
             type: 'navigate',
-            path: pathname.slice('/web/'.length - 1),
+            path: pathname.slice('/$vanilla/'.length - 1),
           }));
         }
       } else if ('navigate' in clientList[0]) { // Chrome 42-48 does not support navigate

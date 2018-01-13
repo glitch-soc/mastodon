@@ -81,6 +81,7 @@ class ApplicationController < ActionController::Base
   end
 
   def pack?(data, pack_name)
+    return false unless data
     if data['pack'].is_a?(Hash) && data['pack'].key?(pack_name)
       return true if data['pack'][pack_name].is_a?(String) || data['pack'][pack_name].is_a?(Hash)
     end
@@ -89,16 +90,17 @@ class ApplicationController < ActionController::Base
 
   def nil_pack(data, pack_name, skin = 'default')
     {
-      common: pack_name == 'common' ? nil : resolve_pack(data['name'] ? Themes.instance.flavour(current_flavour) : Themes.instance.core, 'common', skin),
-      flavour: data['name'],
+      common: pack_name == 'common' ? nil : resolve_pack(!data || data['name'] ? Themes.instance.flavour(current_flavour) : Themes.instance.core, 'common', skin),
+      flavour: data ? data['name'] : nil,
       pack: nil,
       preload: nil,
       skin: nil,
-      supported_locales: data['locales'],
+      supported_locales: data ? data['locales'] : nil,
     }
   end
 
   def resolve_pack(data, pack_name, skin = 'default')
+    return nil_pack(data, pack_name, skin) unless data
     result = pack(data, pack_name, skin)
     unless result
       if data['name'] && data.key?('fallback')
@@ -154,13 +156,14 @@ class ApplicationController < ActionController::Base
   end
 
   def current_flavour
-    return Setting.default_settings['flavour'] unless Themes.instance.flavours.include? current_user&.setting_flavour
-    current_user.setting_flavour
+    return params[:use_flavour].to_s if Themes.instance.flavours.include? params[:use_flavour].to_s
+    return current_user.setting_flavour if Themes.instance.flavours.include? current_user&.setting_flavour
+    Setting.default_settings['flavour']
   end
 
   def current_skin
-    return 'default' unless Themes.instance.skins_for(current_flavour).include? current_user&.setting_skin
-    current_user.setting_skin
+    return current_user.setting_skin if Themes.instance.skins_for(current_flavour).include? current_user&.setting_skin
+    'default'
   end
 
   def cache_collection(raw, klass)

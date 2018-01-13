@@ -7,6 +7,7 @@ class HomeController < ApplicationController
 
   def index
     @body_classes = 'app-body'
+    redirect_to "/$#{current_flavour}/#{params[:glob] || ''}" unless Themes.instance.flavours.include?(params[:use_flavour].to_s) or request.path.start_with?("/$#{current_flavour}")
   end
 
   private
@@ -58,7 +59,7 @@ class HomeController < ApplicationController
   end
 
   def default_redirect_path
-    if request.path.start_with?('/web')
+    if request.path.start_with?('/web') || request.path.match?(/\A\$[\w-]+/)
       new_user_session_path
     elsif single_user_mode?
       short_account_path(Account.first)

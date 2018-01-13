@@ -17,7 +17,7 @@ const notify = options =>
         icon: '/android-chrome-192x192.png',
         tag: GROUP_TAG,
         data: {
-          url: (new URL('/web/notifications', self.location)).href,
+          url: (new URL('/$glitch/notifications', self.location)).href,
           count: notifications.length + 1,
           message: options.data.message,
         },

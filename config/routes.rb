@@ -316,7 +316,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/web/(*any)', to: 'home#index', as: :web
+  get '/web/(*glob)', to: 'home#index', as: :web
+  get "/$:use_flavour/(*glob)", to: 'home#index'
 
   get '/about',      to: 'about#show'
   get '/about/more', to: 'about#more'

@@ -57,7 +57,7 @@ export default class Mastodon extends React.PureComponent {
     return (
       <IntlProvider locale={locale} messages={messages}>
         <Provider store={store}>
-          <BrowserRouter basename='/web'>
+          <BrowserRouter basename='/$glitch'>
             <ScrollContext>
               <Route path='/' component={UI} />
             </ScrollContext>
