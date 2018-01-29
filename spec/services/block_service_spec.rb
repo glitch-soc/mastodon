@@ -15,6 +15,23 @@ RSpec.describe BlockService do
     it 'creates a blocking relation' do
       expect(sender.blocking?(bob)).to be true
     end
+
+    describe 'if a note is present' do
+      let(:note) { 'Too many oats' }
+
+      it 'adds a note to the block' do
+        block = subject.call(sender, bob, note: note)
+        note = block.note
+
+        expect(note.text).to eq('Too many oats')
+      end
+
+      it 'does not add blank notes' do
+        block = subject.call(sender, bob, note: ' ')
+
+        expect(block.note).to be nil
+      end
+    end
   end
 
   describe 'remote OStatus' do

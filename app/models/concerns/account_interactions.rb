@@ -82,18 +82,37 @@ module AccountInteractions
     rel
   end
 
-  def block!(other_account)
-    block_relationships.find_or_create_by!(target_account: other_account)
-  end
-
-  def mute!(other_account, notifications: nil)
-    notifications = true if notifications.nil?
-    mute = mute_relationships.create_with(hide_notifications: notifications).find_or_create_by!(target_account: other_account)
-    # When toggling a mute between hiding and allowing notifications, the mute will already exist, so the find_or_create_by! call will return the existing Mute without updating the hide_notifications attribute. Therefore, we check that hide_notifications? is what we want and set it if it isn't.
-    if mute.hide_notifications? != notifications
-      mute.update!(hide_notifications: notifications)
+  def block!(other_account, note: nil)
+    transaction do
+      block = block_relationships.find_or_create_by!(target_account: other_account)
+      attach_note(block, note)
+      block
     end
   end
+
+  def mute!(other_account, notifications: nil, note: nil)
+    notifications = true if notifications.nil?
+
+    transaction do
+      mute = mute_relationships.create_with(hide_notifications: notifications).find_or_create_by!(target_account: other_account)
+      attach_note(mute, note)
+
+      # When toggling a mute between hiding and allowing notifications, the mute will already exist, so the find_or_create_by! call will return the existing Mute without updating the hide_notifications attribute. Therefore, we check that hide_notifications? is what we want and set it if it isn't.
+      if mute.hide_notifications? != notifications
+        mute.update!(hide_notifications: notifications)
+      end
+
+      mute
+    end
+  end
+
+  def attach_note(object, note)
+    return if note.blank?
+
+    object.create_note!(note: note)
+  end
+
+  private :attach_note
 
   def mute_conversation!(conversation)
     conversation_mutes.find_or_create_by!(conversation: conversation)

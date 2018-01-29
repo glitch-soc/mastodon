@@ -119,9 +119,9 @@ describe AccountInteractions do
       context 'arg :notifications is nil' do
         let(:arg_notifications) { nil }
 
-        it 'creates Mute, and returns nil' do
+        it 'creates and returns a Mute' do
           expect do
-            expect(account.mute!(target_account, notifications: arg_notifications)).to be nil
+            expect(account.mute!(target_account, notifications: arg_notifications)).to be_instance_of(Mute)
           end.to change { account.mute_relationships.count }.by 1
         end
       end
@@ -129,9 +129,9 @@ describe AccountInteractions do
       context 'arg :notifications is false' do
         let(:arg_notifications) { false }
 
-        it 'creates Mute, and returns nil' do
+        it 'creates and returns a Mute' do
           expect do
-            expect(account.mute!(target_account, notifications: arg_notifications)).to be nil
+            expect(account.mute!(target_account, notifications: arg_notifications)).to be_instance_of(Mute)
           end.to change { account.mute_relationships.count }.by 1
         end
       end
@@ -139,9 +139,9 @@ describe AccountInteractions do
       context 'arg :notifications is true' do
         let(:arg_notifications) { true }
 
-        it 'creates Mute, and returns nil' do
+        it 'creates and returns a Mute' do
           expect do
-            expect(account.mute!(target_account, notifications: arg_notifications)).to be nil
+            expect(account.mute!(target_account, notifications: arg_notifications)).to be_instance_of(Mute)
           end.to change { account.mute_relationships.count }.by 1
         end
       end

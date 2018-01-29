@@ -44,4 +44,12 @@ RSpec.describe Block, type: :model do
     expect(Rails.cache.exist?("exclude_account_ids_for:#{account.id}")).to eq false
     expect(Rails.cache.exist?("exclude_account_ids_for:#{target_account.id}")).to eq false
   end
+
+  it 'removes associated note after destruction' do
+    block = Fabricate(:block)
+    block.create_note!(note: 'Too many oats')
+    block.destroy!
+
+    expect(Glitch::Note.count).to eq(0)
+  end
 end

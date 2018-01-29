@@ -3,13 +3,13 @@
 class BlockService < BaseService
   include StreamEntryRenderer
 
-  def call(account, target_account)
+  def call(account, target_account, note: nil)
     return if account.id == target_account.id
 
     UnfollowService.new.call(account, target_account) if account.following?(target_account)
     UnfollowService.new.call(target_account, account) if target_account.following?(account)
 
-    block = account.block!(target_account)
+    block = account.block!(target_account, note: note)
 
     BlockWorker.perform_async(account.id, target_account.id)
     create_notification(block) unless target_account.local?

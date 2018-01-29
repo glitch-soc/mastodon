@@ -64,4 +64,18 @@ RSpec.describe MuteService do
       }.from(false)
     end
   end
+
+  context 'with a note string' do
+    it 'adds a note to the mute' do
+      mute = described_class.new.call(account, target_account, note: 'Too many jorts')
+      note = mute.note
+      expect(note.text).to eq('Too many jorts')
+    end
+
+    it 'does not add a note if the note is blank' do
+      mute = described_class.new.call(account, target_account, note: ' ')
+      note = mute.note
+      expect(note).to be_nil
+    end
+  end
 end
