@@ -68,10 +68,6 @@
 
       & > .mastodon {
         background: url("~flavours/glitch/images/mbstobon-ui-#{$i}.png") no-repeat left bottom / contain;
-
-        @if $i != 3 {
-          filter: contrast(50%) brightness(50%);
-        }
       }
     }
   }
