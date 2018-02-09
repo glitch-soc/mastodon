@@ -58,6 +58,7 @@ pl:
         severity: Priorytet
         type: Typ importu
         username: Nazwa użytkownika
+        username_or_email: Nazwa użytkownika lub adres e-mail
       interactions:
         must_be_follower: Nie wyświetlaj powiadomień od osób, które Cię nie śledzą
         must_be_following: Nie wyświetlaj powiadomień od osób, których nie śledzisz
