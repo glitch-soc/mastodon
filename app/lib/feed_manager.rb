@@ -178,22 +178,7 @@ class FeedManager
   end
 
   def keyword_filter?(status, receiver_id)
-    text_matcher = Glitch::KeywordMute.text_matcher_for(receiver_id)
-    tag_matcher  = Glitch::KeywordMute.tag_matcher_for(receiver_id)
-
-    should_filter   = text_matcher.matches?(status.text)
-    should_filter ||= text_matcher.matches?(status.spoiler_text)
-    should_filter ||= tag_matcher.matches?(status.tags)
-
-    if status.reblog?
-      reblog = status.reblog
-
-      should_filter ||= text_matcher.matches?(reblog.text)
-      should_filter ||= text_matcher.matches?(reblog.spoiler_text)
-      should_filter ||= tag_matcher.matches?(status.tags)
-    end
-
-    should_filter
+    Glitch::KeywordMuteHelper.new(receiver_id).matches?(status)
   end
 
   def filter_from_mentions?(status, receiver_id)
@@ -243,6 +228,14 @@ class FeedManager
         return false
       end
     else
+      # A reblog may reach earlier than the original status because of the
+      # delay of the worker deliverying the original status, the late addition
+      # by merging timelines, and other reasons.
+      # If such a reblog already exists, just do not re-insert it into the feed.
+      rank = redis.zrevrank(reblog_key, status.id)
+
+      return false unless rank.nil?
+
       redis.zadd(timeline_key, status.id, status.id)
     end
 
