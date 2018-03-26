@@ -1,15 +1,13 @@
 import api from '../api';
+import { CancelToken } from 'axios';
 import { throttle } from 'lodash';
 import { search as emojiSearch } from '../features/emoji/emoji_mart_search_light';
 import { tagHistory } from '../settings';
 import { useEmoji } from './emojis';
+import { importFetchedAccounts } from './importer';
+import { updateTimeline } from './timelines';
 
-import {
-  updateTimeline,
-  refreshHomeTimeline,
-  refreshCommunityTimeline,
-  refreshPublicTimeline,
-} from './timelines';
+let cancelFetchComposeSuggestionsAccounts;
 
 export const COMPOSE_CHANGE          = 'COMPOSE_CHANGE';
 export const COMPOSE_SUBMIT_REQUEST  = 'COMPOSE_SUBMIT_REQUEST';
@@ -121,19 +119,17 @@ export function submitCompose() {
 
       // To make the app more responsive, immediately get the status into the columns
 
-      const insertOrRefresh = (timelineId, refreshAction) => {
-        if (getState().getIn(['timelines', timelineId, 'online'])) {
+      const insertIfOnline = (timelineId) => {
+        if (getState().getIn(['timelines', timelineId, 'items', 0]) !== null) {
           dispatch(updateTimeline(timelineId, { ...response.data }));
-        } else if (getState().getIn(['timelines', timelineId, 'loaded'])) {
-          dispatch(refreshAction());
         }
       };
 
-      insertOrRefresh('home', refreshHomeTimeline);
+      insertIfOnline('home');
 
       if (response.data.in_reply_to_id === null && response.data.visibility === 'public') {
-        insertOrRefresh('community', refreshCommunityTimeline);
-        insertOrRefresh('public', refreshPublicTimeline);
+        insertIfOnline('community');
+        insertIfOnline('public');
       }
     }).catch(function (error) {
       dispatch(submitComposeFail(error));
@@ -257,19 +253,29 @@ export function undoUploadCompose(media_id) {
 };
 
 export function clearComposeSuggestions() {
+  if (cancelFetchComposeSuggestionsAccounts) {
+    cancelFetchComposeSuggestionsAccounts();
+  }
   return {
     type: COMPOSE_SUGGESTIONS_CLEAR,
   };
 };
 
 const fetchComposeSuggestionsAccounts = throttle((dispatch, getState, token) => {
+  if (cancelFetchComposeSuggestionsAccounts) {
+    cancelFetchComposeSuggestionsAccounts();
+  }
   api(getState).get('/api/v1/accounts/search', {
+    cancelToken: new CancelToken(cancel => {
+      cancelFetchComposeSuggestionsAccounts = cancel;
+    }),
     params: {
       q: token.slice(1),
       resolve: false,
       limit: 4,
     },
   }).then(response => {
+    dispatch(importFetchedAccounts(response.data));
     dispatch(readyComposeSuggestionsAccounts(token, response.data));
   });
 }, 200, { leading: true, trailing: true });

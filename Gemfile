@@ -13,11 +13,11 @@ gem 'pg', '~> 0.20'
 gem 'pghero', '~> 1.7'
 gem 'dotenv-rails', '~> 2.2'
 
-gem 'aws-sdk', '~> 2.10', require: false
+gem 'aws-sdk-s3', '~> 1.8', require: false
 gem 'fog-core', '~> 1.45'
 gem 'fog-local', '~> 0.4', require: false
 gem 'fog-openstack', '~> 0.1', require: false
-gem 'paperclip', '~> 5.1'
+gem 'paperclip', '~> 6.0'
 gem 'paperclip-av-transcoder', '~> 0.6'
 gem 'posix-spawn'
 gem 'streamio-ffmpeg', '~> 3.0'
@@ -33,7 +33,9 @@ gem 'cld3', '~> 3.2.0'
 gem 'devise', '~> 4.4'
 gem 'devise-two-factor', '~> 3.0'
 
-gem 'devise_pam_authenticatable2', '~> 8.0', install_if: -> { ENV['PAM_ENABLED'] == 'true' }
+group :pam_authentication, optional: true do
+  gem 'devise_pam_authenticatable2', '~> 9.0'
+end
 gem 'net-ldap', '~> 0.10'
 gem 'omniauth-cas', '~> 1.1'
 gem 'omniauth-saml', '~> 1.10'
@@ -71,7 +73,7 @@ gem 'mario-redis-lock', '~> 1.2', require: 'redis_lock'
 gem 'rqrcode', '~> 0.10'
 gem 'ruby-oembed', '~> 0.12', require: 'oembed'
 gem 'ruby-progressbar', '~> 1.4'
-gem 'sanitize', '~> 4.4'
+gem 'sanitize', '~> 4.6.4'
 gem 'sidekiq', '~> 5.0'
 gem 'sidekiq-scheduler', '~> 2.1'
 gem 'sidekiq-unique-jobs', '~> 5.0'

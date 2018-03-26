@@ -472,7 +472,7 @@ namespace :mastodon do
 
         if user.save
           prompt.ok 'User created and confirmation mail sent to the user\'s email address.'
-          prompt.ok "Here is the random password generated for the user: #{password}"
+          prompt.ok "Here is the random password generated for the user: #{user.password}"
         else
           prompt.warn 'User was not created because of the following errors:'
 
@@ -777,7 +777,7 @@ namespace :mastodon do
         progress_bar.increment
 
         begin
-          res = Request.new(:head, account.uri).perform
+          code = Request.new(:head, account.uri).perform(&:code)
         rescue StandardError
           # This could happen due to network timeout, DNS timeout, wrong SSL cert, etc,
           # which should probably not lead to perceiving the account as deleted, so
@@ -785,7 +785,7 @@ namespace :mastodon do
           next
         end
 
-        if [404, 410].include?(res.code)
+        if [404, 410].include?(code)
           if options[:force]
             SuspendAccountService.new.call(account)
             account.destroy

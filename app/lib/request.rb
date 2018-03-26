@@ -33,9 +33,17 @@ class Request
   end
 
   def perform
-    http_client.headers(headers).public_send(@verb, @url.to_s, @options)
-  rescue => e
-    raise e.class, "#{e.message} on #{@url}", e.backtrace[0]
+    begin
+      response = http_client.headers(headers).public_send(@verb, @url.to_s, @options)
+    rescue => e
+      raise e.class, "#{e.message} on #{@url}", e.backtrace[0]
+    end
+
+    begin
+      yield response
+    ensure
+      http_client.close
+    end
   end
 
   def headers
@@ -88,15 +96,22 @@ class Request
   end
 
   def http_client
-    HTTP.timeout(:per_operation, timeout).follow(max_hops: 2)
+    @http_client ||= HTTP.timeout(:per_operation, timeout).follow(max_hops: 2)
   end
 
   class Socket < TCPSocket
     class << self
       def open(host, *args)
-        address = IPSocket.getaddress(host)
-        raise Mastodon::HostValidationError if PrivateAddressCheck.private_address? IPAddr.new(address)
-        super address, *args
+        outer_e = nil
+        Addrinfo.foreach(host, nil, nil, :SOCK_STREAM) do |address|
+          begin
+            raise Mastodon::HostValidationError if PrivateAddressCheck.private_address? IPAddr.new(address.ip_address)
+            return super address.ip_address, *args
+          rescue => e
+            outer_e = e
+          end
+        end
+        raise outer_e if outer_e
       end
 
       alias new open
