@@ -1,4 +1,4 @@
-import { putAccounts, putStatuses } from '../../db/modifier';
+import { putAccounts, putStatuses } from '../../storage/modifier';
 import { normalizeAccount, normalizeStatus } from './normalizer';
 
 export const ACCOUNT_IMPORT = 'ACCOUNT_IMPORT';
@@ -39,7 +39,7 @@ export function importFetchedAccounts(accounts) {
     pushUnique(normalAccounts, normalizeAccount(account));
 
     if (account.moved) {
-      processAccount(account);
+      processAccount(account.moved);
     }
   }
 

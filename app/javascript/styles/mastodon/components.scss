@@ -1001,6 +1001,30 @@
   }
 }
 
+.domain {
+  padding: 10px;
+  border-bottom: 1px solid lighten($ui-base-color, 8%);
+
+  .domain__domain-name {
+    flex: 1 1 auto;
+    display: block;
+    color: $primary-text-color;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+  }
+}
+
+.domain__wrapper {
+  display: flex;
+}
+
+.domain_buttons {
+  height: 18px;
+  padding: 10px;
+  white-space: nowrap;
+}
+
 .account {
   padding: 10px;
   border-bottom: 1px solid lighten($ui-base-color, 8%);
@@ -1435,14 +1459,19 @@
   position: relative;
   width: 100%;
   height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &.image-loader--loading {
-    display: flex;
-    align-content: center;
+  .image-loader__preview-canvas {
+    max-width: $media-modal-media-max-width;
+    max-height: $media-modal-media-max-height;
+    background: url('~images/void.png') repeat;
+    object-fit: contain;
+  }
 
-    .image-loader__preview-canvas {
-      filter: blur(2px);
-    }
+  &.image-loader--loading .image-loader__preview-canvas {
+    filter: blur(2px);
   }
 
   &.image-loader--amorphous .image-loader__preview-canvas {
@@ -1454,8 +1483,14 @@
   position: relative;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-content: center;
+
+  img {
+    max-width: $media-modal-media-max-width;
+    max-height: $media-modal-media-max-height;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
 }
 
 .navigation-bar {
@@ -3423,25 +3458,17 @@ a.status-card {
   height: 100%;
   position: relative;
 
-  img,
-  canvas,
-  video {
-    max-width: 100%;
-    /*
-    put margins on top and bottom of image to avoid the screen coverd by
-    image.
-     */
-    max-height: 80%;
-    width: auto;
-    height: auto;
-    margin: auto;
-  }
+  .extended-video-player {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  img,
-  canvas {
-    display: block;
-    background: url('~images/void.png') repeat;
-    object-fit: contain;
+    video {
+      max-width: $media-modal-media-max-width;
+      max-height: $media-modal-media-max-height;
+    }
   }
 }
 
@@ -4418,8 +4445,8 @@ a.status-card {
   border-radius: 4px;
 
   video {
-    height: 100%;
-    width: 100%;
+    max-width: 100vw;
+    max-height: 80vh;
     z-index: 1;
   }
 

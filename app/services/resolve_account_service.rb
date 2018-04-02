@@ -181,7 +181,7 @@ class ResolveAccountService < BaseService
 
     @atom_body = Request.new(:get, atom_url).perform do |response|
       raise Mastodon::UnexpectedResponseError, response unless response.code == 200
-      response.to_s
+      response.body_with_limit
     end
   end
 
@@ -189,7 +189,7 @@ class ResolveAccountService < BaseService
     return @actor_json if defined?(@actor_json)
 
     json        = fetch_resource(actor_url, false)
-    @actor_json = supported_context?(json) && json['type'] == 'Person' ? json : nil
+    @actor_json = supported_context?(json) && ActivityPub::FetchRemoteAccountService::SUPPORTED_TYPES.include?(json['type']) ? json : nil
   end
 
   def atom

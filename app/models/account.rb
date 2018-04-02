@@ -55,7 +55,6 @@ class Account < ApplicationRecord
   include AccountHeader
   include AccountInteractions
   include Attachmentable
-  include Remotable
   include Paginable
 
   MAX_NOTE_LENGTH = 500
@@ -351,6 +350,10 @@ class Account < ApplicationRecord
 
       [textsearch, query]
     end
+  end
+
+  def emojis
+    CustomEmoji.from_text(note, domain)
   end
 
   before_create :generate_keys
