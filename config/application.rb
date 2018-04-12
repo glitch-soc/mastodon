@@ -86,17 +86,12 @@ module Mastodon
 
     config.active_job.queue_adapter = :sidekiq
 
-    #config.middleware.insert_before 0, Rack::Cors, debug: true, logger: (-> { Rails.logger }) do
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins  '*'
         resource '/@:username',  headers: :any, methods: [:get], credentials: false
         resource '/api/*',       headers: :any, methods: [:post, :put, :delete, :get, :patch, :options], credentials: false, expose: ['Link', 'X-RateLimit-Reset', 'X-RateLimit-Limit', 'X-RateLimit-Remaining', 'X-Request-Id']
         resource '/oauth/token', headers: :any, methods: [:post], credentials: false
-        resource '/assets/*', headers: :any, methods: [:get, :head, :options]
-        resource '/stylesheets/*', headers: :any, methods: [:get, :head, :options]
-        resource '/javascripts/*', headers: :any, methods: [:get, :head, :options]
-        resource '/packs/*', headers: :any, methods: [:get, :head, :options]
       end
     end
 
