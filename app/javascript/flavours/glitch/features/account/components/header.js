@@ -81,6 +81,7 @@ export default class Header extends ImmutablePureComponent {
     }
 
     const { text, metadata } = processBio(account.get('note'));
+    const fields = account.get('fields');
 
     return (
       <div className='account__header__wrapper'>
@@ -99,6 +100,19 @@ export default class Header extends ImmutablePureComponent {
             <span className='account__header__display-name' dangerouslySetInnerHTML={{ __html: displayName }} />
             <span className='account__header__username'>@{account.get('acct')} {account.get('locked') ? <i className='fa fa-lock' /> : null}</span>
             <div className='account__header__content' dangerouslySetInnerHTML={{ __html: emojify(text) }} />
+
+            {fields.size > 0 && (
+              <table className='account__header__fields'>
+                <tbody>
+                  {fields.map((pair, i) => (
+                    <tr key={i}>
+                      <th dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} />
+                      <td dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} />
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
 
             {info}
             {mutingInfo}
