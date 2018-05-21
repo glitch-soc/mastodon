@@ -146,9 +146,6 @@ export function submitCompose(routerHistory) {
     }
 
     dispatch(submitComposeRequest());
-    if (getState().getIn(['compose', 'advanced_options', 'do_not_federate'])) {
-      status = status + ' 👁️';
-    }
     api(getState).post('/api/v1/statuses', {
       status,
       content_type: getState().getIn(['compose', 'content_type']),
@@ -158,6 +155,7 @@ export function submitCompose(routerHistory) {
       spoiler_text: spoilerText,
       visibility: getState().getIn(['compose', 'privacy']),
       poll: getState().getIn(['compose', 'poll'], null),
+      local_only: getState().getIn(['compose', 'advanced_options', 'do_not_federate']),
     }, {
       headers: {
         'Idempotency-Key': getState().getIn(['compose', 'idempotencyKey']),
