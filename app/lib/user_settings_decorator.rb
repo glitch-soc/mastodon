@@ -30,6 +30,7 @@ class UserSettingsDecorator
     user.settings['noindex']                 = noindex_preference if change?('setting_noindex')
     user.settings['flavour']                 = flavour_preference if change?('setting_flavour')
     user.settings['skin']                    = skin_preference if change?('setting_skin')
+    user.settings['hide_network']            = hide_network_preference if change?('setting_hide_network')
   end
 
   def merged_notification_emails
@@ -92,8 +93,12 @@ class UserSettingsDecorator
     settings['setting_skin']
   end
 
+  def hide_network_preference
+    boolean_cast_setting 'setting_hide_network'
+  end
+
   def boolean_cast_setting(key)
-    settings[key] == '1'
+    ActiveModel::Type::Boolean.new.cast(settings[key])
   end
 
   def coerced_settings(key)
@@ -101,7 +106,7 @@ class UserSettingsDecorator
   end
 
   def coerce_values(params_hash)
-    params_hash.transform_values { |x| x == '1' }
+    params_hash.transform_values { |x| ActiveModel::Type::Boolean.new.cast(x) }
   end
 
   def change?(key)

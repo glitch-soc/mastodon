@@ -4,7 +4,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import Avatar from 'flavours/glitch/components/avatar';
 import DisplayName from 'flavours/glitch/components/display_name';
 import StatusContent from 'flavours/glitch/components/status_content';
-import StatusGallery from 'flavours/glitch/components/media_gallery';
+import MediaGallery from 'flavours/glitch/components/media_gallery';
 import AttachmentList from 'flavours/glitch/components/attachment_list';
 import { Link } from 'react-router-dom';
 import { FormattedDate, FormattedNumber } from 'react-intl';
@@ -24,6 +24,8 @@ export default class DetailedStatus extends ImmutablePureComponent {
     settings: ImmutablePropTypes.map.isRequired,
     onOpenMedia: PropTypes.func.isRequired,
     onOpenVideo: PropTypes.func.isRequired,
+    onToggleHidden: PropTypes.func.isRequired,
+    expanded: PropTypes.bool,
   };
 
   handleAccountClick = (e) => {
@@ -35,13 +37,13 @@ export default class DetailedStatus extends ImmutablePureComponent {
     e.stopPropagation();
   }
 
-  // handleOpenVideo = startTime => {
-  //   this.props.onOpenVideo(this.props.status.getIn(['media_attachments', 0]), startTime);
-  // }
+  handleOpenVideo = (media, startTime) => {
+    this.props.onOpenVideo(media, startTime);
+  }
 
   render () {
     const status = this.props.status.get('reblog') ? this.props.status.get('reblog') : this.props.status;
-    const { expanded, setExpansion, settings } = this.props;
+    const { expanded, onToggleHidden, settings } = this.props;
 
     let media           = '';
     let mediaIcon       = null;
@@ -53,20 +55,24 @@ export default class DetailedStatus extends ImmutablePureComponent {
       if (status.get('media_attachments').some(item => item.get('type') === 'unknown')) {
         media = <AttachmentList media={status.get('media_attachments')} />;
       } else if (status.getIn(['media_attachments', 0, 'type']) === 'video') {
+        const video = status.getIn(['media_attachments', 0]);
         media = (
           <Video
+            preview={video.get('preview_url')}
+            src={video.get('url')}
+            inline
             sensitive={status.get('sensitive')}
-            media={status.getIn(['media_attachments', 0])}
             letterbox={settings.getIn(['media', 'letterbox'])}
             fullwidth={settings.getIn(['media', 'fullwidth'])}
-            onOpenVideo={this.props.onOpenVideo}
+            onOpenVideo={this.handleOpenVideo}
             autoplay
           />
         );
         mediaIcon = 'video-camera';
       } else {
         media = (
-          <StatusGallery
+          <MediaGallery
+            standalone
             sensitive={status.get('sensitive')}
             media={status.get('media_attachments')}
             letterbox={settings.getIn(['media', 'letterbox'])}
@@ -75,7 +81,7 @@ export default class DetailedStatus extends ImmutablePureComponent {
         );
         mediaIcon = 'picture-o';
       }
-    } else media = <CardContainer statusId={status.get('id')} />;
+    } else media = <CardContainer onOpenMedia={this.props.onOpenMedia} statusId={status.get('id')} />;
 
     if (status.get('application')) {
       applicationLink = <span> · <a className='detailed-status__application' href={status.getIn(['application', 'website'])} target='_blank' rel='noopener'>{status.getIn(['application', 'name'])}</a></span>;
@@ -110,7 +116,8 @@ export default class DetailedStatus extends ImmutablePureComponent {
           media={media}
           mediaIcon={mediaIcon}
           expanded={expanded}
-          setExpansion={setExpansion}
+          collapsed={false}
+          onExpandedToggle={onToggleHidden}
         />
 
         <div className='detailed-status__meta'>

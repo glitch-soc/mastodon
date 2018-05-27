@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -19,6 +20,7 @@ import {
 import {
   replyCompose,
   mentionCompose,
+  directCompose,
 } from '../../actions/compose';
 import { blockAccount } from '../../actions/accounts';
 import {
@@ -53,11 +55,47 @@ const messages = defineMessages({
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
 
-  const mapStateToProps = (state, props) => ({
-    status: getStatus(state, props.params.statusId),
-    ancestorsIds: state.getIn(['contexts', 'ancestors', props.params.statusId]),
-    descendantsIds: state.getIn(['contexts', 'descendants', props.params.statusId]),
-  });
+  const mapStateToProps = (state, props) => {
+    const status = getStatus(state, props.params.statusId);
+    let ancestorsIds = Immutable.List();
+    let descendantsIds = Immutable.List();
+
+    if (status) {
+      ancestorsIds = ancestorsIds.withMutations(mutable => {
+        function addAncestor(id) {
+          if (id) {
+            const inReplyTo = state.getIn(['contexts', 'inReplyTos', id]);
+
+            mutable.unshift(id);
+            addAncestor(inReplyTo);
+          }
+        }
+
+        addAncestor(status.get('in_reply_to_id'));
+      });
+
+      descendantsIds = descendantsIds.withMutations(mutable => {
+        function addDescendantOf(id) {
+          const replies = state.getIn(['contexts', 'replies', id]);
+
+          if (replies) {
+            replies.forEach(reply => {
+              mutable.push(reply);
+              addDescendantOf(reply);
+            });
+          }
+        }
+
+        addDescendantOf(status.get('id'));
+      });
+    }
+
+    return {
+      status,
+      ancestorsIds,
+      descendantsIds,
+    };
+  };
 
   return mapStateToProps;
 };
@@ -146,6 +184,10 @@ export default class Status extends ImmutablePureComponent {
         onConfirm: () => dispatch(deleteStatus(status.get('id'))),
       }));
     }
+  }
+
+  handleDirectClick = (account, router) => {
+    this.props.dispatch(directCompose(account, router));
   }
 
   handleMentionClick = (account, router) => {
@@ -237,6 +279,10 @@ export default class Status extends ImmutablePureComponent {
 
   handleHotkeyOpenProfile = () => {
     this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`);
+  }
+
+  handleHotkeyToggleHidden = () => {
+    this.handleToggleHidden(this.props.status);
   }
 
   handleMoveUp = id => {
@@ -349,6 +395,7 @@ export default class Status extends ImmutablePureComponent {
       boost: this.handleHotkeyBoost,
       mention: this.handleHotkeyMention,
       openProfile: this.handleHotkeyOpenProfile,
+      toggleHidden: this.handleHotkeyToggleHidden,
     };
 
     return (
@@ -379,6 +426,7 @@ export default class Status extends ImmutablePureComponent {
                   onFavourite={this.handleFavouriteClick}
                   onReblog={this.handleReblogClick}
                   onDelete={this.handleDeleteClick}
+                  onDirect={this.handleDirectClick}
                   onMention={this.handleMentionClick}
                   onMute={this.handleMuteClick}
                   onMuteConversation={this.handleConversationMuteClick}

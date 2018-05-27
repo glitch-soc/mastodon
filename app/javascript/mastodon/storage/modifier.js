@@ -1,16 +1,28 @@
-import asyncDB from './db';
-import { autoPlayGif } from '../initial_state';
+import openDB from './db';
 
 const accountAssetKeys = ['avatar', 'avatar_static', 'header', 'header_static'];
-const avatarKey = autoPlayGif ? 'avatar' : 'avatar_static';
-const limit = 1024;
+const storageMargin = 8388608;
+const storeLimit = 1024;
 
-// ServiceWorker and Cache API is not available on iOS 11
-// https://webkit.org/status/#specification-service-workers
-const asyncCache = window.caches ? caches.open('mastodon-system') : Promise.reject();
+// navigator.storage is not present on:
+// Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.100 Safari/537.36 Edge/16.16299
+// estimate method is not present on Chrome 57.0.2987.98 on Linux.
+export const storageFreeable = 'storage' in navigator && 'estimate' in navigator.storage;
+
+function openCache() {
+  // ServiceWorker and Cache API is not available on iOS 11
+  // https://webkit.org/status/#specification-service-workers
+  return self.caches ? caches.open('mastodon-system') : Promise.reject();
+}
+
+function printErrorIfAvailable(error) {
+  if (error) {
+    console.warn(error);
+  }
+}
 
 function put(name, objects, onupdate, oncreate) {
-  return asyncDB.then(db => new Promise((resolve, reject) => {
+  return openDB().then(db => (new Promise((resolve, reject) => {
     const putTransaction = db.transaction(name, 'readwrite');
     const putStore = putTransaction.objectStore(name);
     const putIndex = putStore.index('id');
@@ -47,7 +59,7 @@ function put(name, objects, onupdate, oncreate) {
       const count = readStore.count();
 
       count.onsuccess = () => {
-        const excess = count.result - limit;
+        const excess = count.result - storeLimit;
 
         if (excess > 0) {
           const retrieval = readStore.getAll(null, excess);
@@ -63,11 +75,17 @@ function put(name, objects, onupdate, oncreate) {
     };
 
     putTransaction.onerror = reject;
+  })).then(resolved => {
+    db.close();
+    return resolved;
+  }, error => {
+    db.close();
+    throw error;
   }));
 }
 
 function evictAccountsByRecords(records) {
-  asyncDB.then(db => {
+  return openDB().then(db => {
     const transaction = db.transaction(['accounts', 'statuses'], 'readwrite');
     const accounts = transaction.objectStore('accounts');
     const accountsIdIndex = accounts.index('id');
@@ -77,7 +95,9 @@ function evictAccountsByRecords(records) {
 
     function evict(toEvict) {
       toEvict.forEach(record => {
-        asyncCache.then(cache => accountAssetKeys.forEach(key => cache.delete(records[key])));
+        openCache()
+          .then(cache => accountAssetKeys.forEach(key => cache.delete(records[key])))
+          .catch(printErrorIfAvailable);
 
         accountsMovedIndex.getAll(record.id).onsuccess = ({ target }) => evict(target.result);
 
@@ -90,16 +110,19 @@ function evictAccountsByRecords(records) {
     }
 
     evict(records);
-  });
+
+    db.close();
+  }).catch(printErrorIfAvailable);
 }
 
 export function evictStatus(id) {
-  return evictStatuses([id]);
+  evictStatuses([id]);
 }
 
 export function evictStatuses(ids) {
-  asyncDB.then(db => {
-    const store = db.transaction('statuses', 'readwrite').objectStore('statuses');
+  return openDB().then(db => {
+    const transaction = db.transaction('statuses', 'readwrite');
+    const store = transaction.objectStore('statuses');
     const idIndex = store.index('id');
     const reblogIndex = store.index('reblog');
 
@@ -110,14 +133,17 @@ export function evictStatuses(ids) {
       idIndex.getKey(id).onsuccess =
         ({ target }) => target.result && store.delete(target.result);
     });
-  });
+
+    db.close();
+  }).catch(printErrorIfAvailable);
 }
 
 function evictStatusesByRecords(records) {
-  evictStatuses(records.map(({ id }) => id));
+  return evictStatuses(records.map(({ id }) => id));
 }
 
-export function putAccounts(records) {
+export function putAccounts(records, avatarStatic) {
+  const avatarKey = avatarStatic ? 'avatar_static' : 'avatar';
   const newURLs = [];
 
   put('accounts', records, (newRecord, oldKey, store, oncomplete) => {
@@ -127,7 +153,9 @@ export function putAccounts(records) {
         const oldURL = target.result[key];
 
         if (newURL !== oldURL) {
-          asyncCache.then(cache => cache.delete(oldURL));
+          openCache()
+            .then(cache => cache.delete(oldURL))
+            .catch(printErrorIfAvailable);
         }
       });
 
@@ -143,12 +171,41 @@ export function putAccounts(records) {
   }, (newRecord, oncomplete) => {
     newURLs.push(newRecord[avatarKey]);
     oncomplete();
-  }).then(records => {
-    evictAccountsByRecords(records);
-    asyncCache.then(cache => cache.addAll(newURLs));
-  });
+  }).then(records => Promise.all([
+    evictAccountsByRecords(records),
+    openCache().then(cache => cache.addAll(newURLs)),
+  ])).then(freeStorage, error => {
+    freeStorage();
+    throw error;
+  }).catch(printErrorIfAvailable);
 }
 
 export function putStatuses(records) {
-  put('statuses', records).then(evictStatusesByRecords);
+  put('statuses', records)
+    .then(evictStatusesByRecords)
+    .catch(printErrorIfAvailable);
+}
+
+export function freeStorage() {
+  return storageFreeable && navigator.storage.estimate().then(({ quota, usage }) => {
+    if (usage + storageMargin < quota) {
+      return null;
+    }
+
+    return openDB().then(db => new Promise((resolve, reject) => {
+      const retrieval = db.transaction('accounts', 'readonly').objectStore('accounts').getAll(null, 1);
+
+      retrieval.onsuccess = () => {
+        if (retrieval.result.length > 0) {
+          resolve(evictAccountsByRecords(retrieval.result).then(freeStorage));
+        } else {
+          resolve(caches.delete('mastodon-system'));
+        }
+      };
+
+      retrieval.onerror = reject;
+
+      db.close();
+    }));
+  });
 }

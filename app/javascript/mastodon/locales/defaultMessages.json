@@ -2,8 +2,25 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "Oops!",
+        "id": "alert.unexpected.title"
+      },
+      {
+        "defaultMessage": "An unexpected error occurred.",
+        "id": "alert.unexpected.message"
+      }
+    ],
+    "path": "app/javascript/mastodon/actions/alerts.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "{name} mentioned you",
         "id": "notification.mention"
+      },
+      {
+        "defaultMessage": "{count} notifications",
+        "id": "notifications.group"
       }
     ],
     "path": "app/javascript/mastodon/actions/notifications.json"
@@ -108,6 +125,15 @@
         "id": "status.load_more"
       }
     ],
+    "path": "app/javascript/mastodon/components/load_gap.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Load more",
+        "id": "status.load_more"
+      }
+    ],
     "path": "app/javascript/mastodon/components/load_more.json"
   },
   {
@@ -185,6 +211,10 @@
         "id": "status.delete"
       },
       {
+        "defaultMessage": "Direct message @{name}",
+        "id": "status.direct"
+      },
+      {
         "defaultMessage": "Mention @{name}",
         "id": "status.mention"
       },
@@ -215,6 +245,14 @@
       {
         "defaultMessage": "Boost",
         "id": "status.reblog"
+      },
+      {
+        "defaultMessage": "Boost to original audience",
+        "id": "status.reblog_private"
+      },
+      {
+        "defaultMessage": "Unboost",
+        "id": "status.cancel_reblog_private"
       },
       {
         "defaultMessage": "This post cannot be boosted",
@@ -518,6 +556,10 @@
       {
         "defaultMessage": "Domain hidden",
         "id": "account.domain_blocked"
+      },
+      {
+        "defaultMessage": "Bot",
+        "id": "account.badges.bot"
       }
     ],
     "path": "app/javascript/mastodon/features/account/components/header.json"
@@ -547,6 +589,19 @@
       }
     ],
     "path": "app/javascript/mastodon/features/community_timeline/components/column_settings.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Toots",
+        "id": "timeline.posts"
+      },
+      {
+        "defaultMessage": "Media",
+        "id": "timeline.media"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/community_timeline/components/section_headline.json"
   },
   {
     "descriptors": [
@@ -781,7 +836,7 @@
         "id": "upload_form.description"
       },
       {
-        "defaultMessage": "Undo",
+        "defaultMessage": "Delete",
         "id": "upload_form.undo"
       },
       {
@@ -832,8 +887,12 @@
         "id": "compose_form.hashtag_warning"
       },
       {
-        "defaultMessage": "This toot will only be visible to all the mentioned users.",
+        "defaultMessage": "This toot will only be sent to all the mentioned users.",
         "id": "compose_form.direct_message_warning"
+      },
+      {
+        "defaultMessage": "Learn more",
+        "id": "compose_form.direct_message_warning_learn_more"
       }
     ],
     "path": "app/javascript/mastodon/features/compose/containers/warning_container.json"
@@ -870,6 +929,19 @@
       }
     ],
     "path": "app/javascript/mastodon/features/compose/index.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Direct messages",
+        "id": "column.direct"
+      },
+      {
+        "defaultMessage": "You don't have any direct messages yet. When you send or receive one, it will show up here.",
+        "id": "empty_column.direct"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/direct_timeline/index.json"
   },
   {
     "descriptors": [
@@ -944,6 +1016,10 @@
       {
         "defaultMessage": "Local timeline",
         "id": "navigation_bar.community_timeline"
+      },
+      {
+        "defaultMessage": "Direct messages",
+        "id": "navigation_bar.direct"
       },
       {
         "defaultMessage": "Preferences",
@@ -1096,6 +1172,10 @@
       {
         "defaultMessage": "to open status",
         "id": "keyboard_shortcuts.enter"
+      },
+      {
+        "defaultMessage": "to show/hide text behind CW",
+        "id": "keyboard_shortcuts.toggle_hidden"
       },
       {
         "defaultMessage": "to move up in the list",
@@ -1358,6 +1438,10 @@
         "id": "status.delete"
       },
       {
+        "defaultMessage": "Direct message @{name}",
+        "id": "status.direct"
+      },
+      {
         "defaultMessage": "Mention @{name}",
         "id": "status.mention"
       },
@@ -1368,6 +1452,14 @@
       {
         "defaultMessage": "Boost",
         "id": "status.reblog"
+      },
+      {
+        "defaultMessage": "Boost to original audience",
+        "id": "status.reblog_private"
+      },
+      {
+        "defaultMessage": "Unboost",
+        "id": "status.cancel_reblog_private"
       },
       {
         "defaultMessage": "This post cannot be boosted",
@@ -1718,6 +1810,10 @@
         "id": "tabs_bar.notifications"
       },
       {
+        "defaultMessage": "Search",
+        "id": "tabs_bar.search"
+      },
+      {
         "defaultMessage": "Local",
         "id": "tabs_bar.local_timeline"
       },
@@ -1794,18 +1890,5 @@
       }
     ],
     "path": "app/javascript/mastodon/features/video/index.json"
-  },
-  {
-    "descriptors": [
-      {
-        "defaultMessage": "Oops!",
-        "id": "alert.unexpected.title"
-      },
-      {
-        "defaultMessage": "An unexpected error occurred.",
-        "id": "alert.unexpected.message"
-      }
-    ],
-    "path": "app/javascript/mastodon/middleware/errors.json"
   }
 ]

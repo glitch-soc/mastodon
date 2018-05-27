@@ -7,7 +7,7 @@
   .account__display-name {
     flex: 1 1 auto;
     display: block;
-    color: $ui-primary-color;
+    color: $darker-text-color;
     overflow: hidden;
     text-decoration: none;
     font-size: 14px;
@@ -32,7 +32,8 @@
 
 .account__avatar-wrapper {
   float: left;
-  margin: 6px 16px 6px 6px;
+  margin-left: 12px;
+  margin-right: 12px;
 }
 
 .account__avatar {
@@ -102,7 +103,7 @@
     }
 
     .account__header__username {
-      color: $ui-primary-color;
+      color: $secondary-text-color;
     }
   }
 
@@ -112,7 +113,7 @@
   }
 
   .account__header__content {
-    color: $ui-secondary-color;
+    color: $secondary-text-color;
   }
 
   .account__header__display-name {
@@ -127,7 +128,7 @@
   }
 
   .account__header__username {
-    color: $ui-highlight-color;
+    color: $highlight-text-color;
     font-size: 14px;
     font-weight: 400;
     display: block;
@@ -140,7 +141,7 @@
 .account__disclaimer {
   padding: 10px;
   border-top: 1px solid lighten($ui-base-color, 8%);
-  color: $ui-base-lighter-color;
+  color: $dark-text-color;
 
   strong {
     font-weight: 500;
@@ -166,7 +167,7 @@
 }
 
 .account__header__content {
-  color: $ui-primary-color;
+  color: $darker-text-color;
   font-size: 14px;
   font-weight: 400;
   overflow: hidden;
@@ -243,7 +244,7 @@
     display: block;
     text-transform: uppercase;
     font-size: 11px;
-    color: $ui-primary-color;
+    color: $darker-text-color;
   }
 
   strong {
@@ -260,7 +261,7 @@
   }
 
   abbr {
-    color: $ui-base-lighter-color;
+    color: $highlight-text-color;
   }
 }
 
@@ -292,12 +293,12 @@
   margin-left: 42px;
   padding: 8px 0 0 26px;
   cursor: default;
-  color: $ui-primary-color;
+  color: $darker-text-color;
   font-size: 15px;
   position: relative;
 
   .fa {
-    color: $ui-highlight-color;
+    color: $highlight-text-color;
   }
 
   > span {
@@ -328,7 +329,7 @@
 }
 
 .column-settings__section {
-  color: $ui-primary-color;
+  color: $darker-text-color;
   cursor: default;
   display: block;
   font-weight: 500;
@@ -439,7 +440,7 @@
   a {
     display: block;
     flex: 1 1 auto;
-    color: $ui-primary-color;
+    color: $darker-text-color;
     padding: 15px 0;
     font-size: 14px;
     font-weight: 500;
@@ -448,7 +449,7 @@
     position: relative;
 
     &.active {
-      color: $ui-secondary-color;
+      color: $secondary-text-color;
 
       &::before,
       &::after {
@@ -483,7 +484,7 @@
   &__message {
     position: relative;
     margin-left: 58px;
-    color: $ui-base-lighter-color;
+    color: $dark-text-color;
     padding: 8px 0;
     padding-top: 0;
     padding-bottom: 4px;
@@ -508,4 +509,10 @@
   .detailed-status__display-name {
     margin-bottom: 0;
   }
+}
+
+.account__header .roles {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0 15px;
 }

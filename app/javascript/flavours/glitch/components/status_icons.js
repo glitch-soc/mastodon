@@ -12,10 +12,6 @@ import VisibilityIcon from './status_visibility_icon';
 const messages = defineMessages({
   collapse: { id: 'status.collapse', defaultMessage: 'Collapse' },
   uncollapse: { id: 'status.uncollapse', defaultMessage: 'Uncollapse' },
-  public: { id: 'privacy.public.short', defaultMessage: 'Public' },
-  unlisted: { id: 'privacy.unlisted.short', defaultMessage: 'Unlisted' },
-  private: { id: 'privacy.private.short', defaultMessage: 'Followers-only' },
-  direct: { id: 'privacy.direct.short', defaultMessage: 'Direct' },
 });
 
 @injectIntl
@@ -26,15 +22,15 @@ export default class StatusIcons extends React.PureComponent {
     mediaIcon: PropTypes.string,
     collapsible: PropTypes.bool,
     collapsed: PropTypes.bool,
-    setExpansion: PropTypes.func.isRequired,
+    setCollapsed: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
   //  Handles clicks on collapsed button
   handleCollapsedClick = (e) => {
-    const { collapsed, setExpansion } = this.props;
+    const { collapsed, setCollapsed } = this.props;
     if (e.button === 0) {
-      setExpansion(collapsed ? null : false);
+      setCollapsed(!collapsed);
       e.preventDefault();
     }
   }

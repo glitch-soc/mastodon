@@ -36,8 +36,6 @@ import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrde
 import uuid from '../uuid';
 import { me } from '../initial_state';
 
-const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
-
 const initialState = ImmutableMap({
   mounted: 0,
   sensitive: false,
@@ -46,6 +44,7 @@ const initialState = ImmutableMap({
   privacy: null,
   text: '',
   focusDate: null,
+  caretPosition: null,
   preselectDate: null,
   in_reply_to: null,
   is_composing: false,
@@ -93,7 +92,6 @@ function appendMedia(state, media) {
     map.update('media_attachments', list => list.push(media));
     map.set('is_uploading', false);
     map.set('resetFileKey', Math.floor((Math.random() * 0x10000)));
-    map.set('focusDate', new Date());
     map.set('idempotencyKey', uuid());
 
     if (prevSize === 0 && (state.get('default_sensitive') || state.get('spoiler'))) {
@@ -121,6 +119,7 @@ const insertSuggestion = (state, position, token, completion) => {
     map.set('suggestion_token', null);
     map.update('suggestions', ImmutableList(), list => list.clear());
     map.set('focusDate', new Date());
+    map.set('caretPosition', position + completion.length + 1);
     map.set('idempotencyKey', uuid());
   });
 };
@@ -137,14 +136,14 @@ const updateSuggestionTags = (state, token) => {
   });
 };
 
-const insertEmoji = (state, position, emojiData) => {
+const insertEmoji = (state, position, emojiData, needsSpace) => {
   const oldText = state.get('text');
-  const needsSpace = emojiData.custom && position > 0 && !allowedAroundShortCode.includes(oldText[position - 1]);
   const emoji = needsSpace ? ' ' + emojiData.native : emojiData.native;
 
   return state.merge({
     text: `${oldText.slice(0, position)}${emoji} ${oldText.slice(position)}`,
     focusDate: new Date(),
+    caretPosition: position + emoji.length + 1,
     idempotencyKey: uuid(),
   });
 };
@@ -219,6 +218,7 @@ export default function compose(state = initialState, action) {
       map.set('text', statusToTextMentions(state, action.status));
       map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
       map.set('focusDate', new Date());
+      map.set('caretPosition', null);
       map.set('preselectDate', new Date());
       map.set('idempotencyKey', uuid());
 
@@ -259,16 +259,20 @@ export default function compose(state = initialState, action) {
   case COMPOSE_UPLOAD_PROGRESS:
     return state.set('progress', Math.round((action.loaded / action.total) * 100));
   case COMPOSE_MENTION:
-    return state
-      .update('text', text => `${text}@${action.account.get('acct')} `)
-      .set('focusDate', new Date())
-      .set('idempotencyKey', uuid());
+    return state.withMutations(map => {
+      map.update('text', text => [text.trim(), `@${action.account.get('acct')} `].filter((str) => str.length !== 0).join(' '));
+      map.set('focusDate', new Date());
+      map.set('caretPosition', null);
+      map.set('idempotencyKey', uuid());
+    });
   case COMPOSE_DIRECT:
-    return state
-      .update('text', text => `${text}@${action.account.get('acct')} `)
-      .set('privacy', 'direct')
-      .set('focusDate', new Date())
-      .set('idempotencyKey', uuid());
+    return state.withMutations(map => {
+      map.update('text', text => [text.trim(), `@${action.account.get('acct')} `].filter((str) => str.length !== 0).join(' '));
+      map.set('privacy', 'direct');
+      map.set('focusDate', new Date());
+      map.set('caretPosition', null);
+      map.set('idempotencyKey', uuid());
+    });
   case COMPOSE_SUGGESTIONS_CLEAR:
     return state.update('suggestions', ImmutableList(), list => list.clear()).set('suggestion_token', null);
   case COMPOSE_SUGGESTIONS_READY:
@@ -286,7 +290,7 @@ export default function compose(state = initialState, action) {
       return state;
     }
   case COMPOSE_EMOJI_INSERT:
-    return insertEmoji(state, action.position, action.emoji);
+    return insertEmoji(state, action.position, action.emoji, action.needsSpace);
   case COMPOSE_UPLOAD_CHANGE_SUCCESS:
     return state
       .set('is_submitting', false)

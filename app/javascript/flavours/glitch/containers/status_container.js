@@ -5,12 +5,15 @@ import { makeGetStatus } from 'flavours/glitch/selectors';
 import {
   replyCompose,
   mentionCompose,
+  directCompose,
 } from 'flavours/glitch/actions/compose';
 import {
   reblog,
   favourite,
+  bookmark,
   unreblog,
   unfavourite,
+  unbookmark,
   pin,
   unpin,
 } from 'flavours/glitch/actions/interactions';
@@ -81,6 +84,14 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     }
   },
 
+  onBookmark (status) {
+    if (status.get('bookmarked')) {
+      dispatch(unbookmark(status));
+    } else {
+      dispatch(bookmark(status));
+    }
+  },
+
   onModalFavourite (status) {
     dispatch(favourite(status));
   },
@@ -119,6 +130,10 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
         onConfirm: () => dispatch(deleteStatus(status.get('id'))),
       }));
     }
+  },
+
+  onDirect (account, router) {
+    dispatch(directCompose(account, router));
   },
 
   onMention (account, router) {

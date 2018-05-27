@@ -37,6 +37,9 @@ export default class Header extends ImmutablePureComponent {
     }
 
     let displayName = account.get('display_name_html');
+    let fields      = account.get('fields');
+    let badge       = account.get('bot') ? (<div className='roles'><div className='account-role bot'><FormattedMessage id='account.badges.bot' defaultMessage='Bot' /></div></div>) : null;
+
     let info        = '';
     let mutingInfo  = '';
     let actionBtn   = '';
@@ -98,32 +101,38 @@ export default class Header extends ImmutablePureComponent {
 
             <span className='account__header__display-name' dangerouslySetInnerHTML={{ __html: displayName }} />
             <span className='account__header__username'>@{account.get('acct')} {account.get('locked') ? <i className='fa fa-lock' /> : null}</span>
+
+            {badge}
+
             <div className='account__header__content' dangerouslySetInnerHTML={{ __html: emojify(text) }} />
+
+            {fields.size > 0 && (
+              <div className='account__header__fields'>
+                {fields.map((pair, i) => (
+                  <dl key={i}>
+                    <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} />
+                    <dd dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} title={pair.get('value_plain')} />
+                 </dl>
+                ))}
+              </div>
+            )}
+
+            {fields.size == 0 && metadata.length && (
+              <div className='account__header__fields'>
+                {metadata.map((pair, i) => (
+                  <dl key={i}>
+                    <dt dangerouslySetInnerHTML={{ __html: emojify(pair[0]) }} title={pair[0]} />
+                    <dd dangerouslySetInnerHTML={{ __html: emojify(pair[1]) }} title={pair[1]} />
+                  </dl>
+                ))}
+              </div>
+            ) || null}
 
             {info}
             {mutingInfo}
             {actionBtn}
           </div>
         </div>
-
-        {metadata.length && (
-          <table className='account__metadata'>
-            <tbody>
-              {(() => {
-                let data = [];
-                for (let i = 0; i < metadata.length; i++) {
-                  data.push(
-                    <tr key={i}>
-                      <th scope='row'><div dangerouslySetInnerHTML={{ __html: emojify(metadata[i][0]) }} /></th>
-                      <td><div dangerouslySetInnerHTML={{ __html: emojify(metadata[i][1]) }} /></td>
-                    </tr>
-                  );
-                }
-                return data;
-              })()}
-            </tbody>
-          </table>
-        ) || null}
       </div>
     );
   }
