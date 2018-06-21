@@ -80,9 +80,11 @@ COPY . /mastodon
 
 RUN chown -R mastodon:mastodon /mastodon
 
-VOLUME /mastodon/public/system /mastodon/public/assets /mastodon/public/packs
+VOLUME /mastodon/public/system
 
 USER mastodon
+
+RUN SECRET_KEY_BASE=_ OTP_SECRET=_ bin/rails assets:precompile
 
 ENV LD_PRELOAD=/lib/stack-fix.so
 ENTRYPOINT ["/sbin/tini", "--"]
