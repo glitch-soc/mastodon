@@ -4,7 +4,7 @@ import Trie from 'substring-trie';
 
 const trie = new Trie(Object.keys(unicodeMapping));
 
-const assetHost = process.env.CDN_HOST || '';
+const assetHost = document.querySelector('[name="cdnHost"]').getAttribute('content');
 
 const emojify = (str, customEmojis = {}) => {
   const tagCharsWithoutEmojis = '<&';

@@ -25,7 +25,7 @@ const messages = defineMessages({
   flags: { id: 'emoji_button.flags', defaultMessage: 'Flags' },
 });
 
-const assetHost = process.env.CDN_HOST || '';
+const assetHost = document.querySelector('[name="cdnHost"]').getAttribute('content');
 let EmojiPicker, Emoji; // load asynchronously
 
 const backgroundImageFn = () => `${assetHost}/emoji/sheet_10.png`;
