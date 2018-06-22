@@ -10,6 +10,7 @@ import RelativeTimestamp from './relative_timestamp';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
+  redraft: { id: 'status.redraft', defaultMessage: 'Delete & re-draft' },
   direct: { id: 'status.direct', defaultMessage: 'Direct message @{name}' },
   mention: { id: 'status.mention', defaultMessage: 'Mention @{name}' },
   mute: { id: 'account.mute', defaultMessage: 'Mute @{name}' },
@@ -92,6 +93,10 @@ export default class StatusActionBar extends ImmutablePureComponent {
     this.props.onDelete(this.props.status);
   }
 
+  handleRedraftClick = () => {
+    this.props.onDelete(this.props.status, true);
+  }
+
   handlePinClick = () => {
     this.props.onPin(this.props.status);
   }
@@ -161,6 +166,7 @@ export default class StatusActionBar extends ImmutablePureComponent {
       }
 
       menu.push({ text: intl.formatMessage(messages.delete), action: this.handleDeleteClick });
+      menu.push({ text: intl.formatMessage(messages.redraft), action: this.handleRedraftClick });
     } else {
       menu.push({ text: intl.formatMessage(messages.mention, { name: status.getIn(['account', 'username']) }), action: this.handleMentionClick });
       menu.push({ text: intl.formatMessage(messages.direct, { name: status.getIn(['account', 'username']) }), action: this.handleDirectClick });
@@ -188,7 +194,7 @@ export default class StatusActionBar extends ImmutablePureComponent {
         <IconButton className='status__action-bar-button' disabled={reblogDisabled} active={status.get('reblogged')} pressed={status.get('reblogged')} title={reblogDisabled ? intl.formatMessage(messages.cannot_reblog) : intl.formatMessage(reblogMessage)} icon={reblogIcon} onClick={this.handleReblogClick} />
         <IconButton className='status__action-bar-button star-icon' disabled={anonymousAccess} animate active={status.get('favourited')} pressed={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} />
         {shareButton}
-        <IconButton className='status__action-bar-button' disabled={anonymousAccess} active={status.get('bookmarked')} pressed={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' onClick={this.handleBookmarkClick} />
+        <IconButton className='status__action-bar-button bookmark-icon' disabled={anonymousAccess} active={status.get('bookmarked')} pressed={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' onClick={this.handleBookmarkClick} />
 
         <div className='status__action-bar-dropdown'>
           <DropdownMenuContainer disabled={anonymousAccess} status={status} items={menu} icon='ellipsis-h' size={18} direction='right' ariaLabel={intl.formatMessage(messages.more)} />

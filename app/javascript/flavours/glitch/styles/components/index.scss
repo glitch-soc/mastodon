@@ -248,6 +248,10 @@
   color: $gold-star;
 }
 
+.bookmark-icon.active {
+  color: $red-bookmark;
+}
+
 .notification__display-name {
   color: inherit;
   font-weight: 500;
@@ -846,6 +850,10 @@
   &:hover {
     background: lighten($ui-base-color, 2%);
   }
+}
+
+.load-gap {
+  border-bottom: 1px solid lighten($ui-base-color, 8%);
 }
 
 .missing-indicator {

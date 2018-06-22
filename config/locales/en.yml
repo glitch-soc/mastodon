@@ -424,7 +424,7 @@ en:
     following: 'Success! You are now following:'
     post_follow:
       close: Or, you can just close this window.
-      return: Return to the user's profile
+      return: Show the user's profile
       web: Go to web
     title: Follow %{acct}
   datetime:
@@ -515,6 +515,7 @@ en:
       '86400': 1 day
     expires_in_prompt: Never
     generate: Generate
+    invited_by: 'You were invited by:'
     max_uses:
       one: 1 use
       other: "%{count} uses"
@@ -526,6 +527,7 @@ en:
     title: Invite people
   keyword_mutes:
     add_keyword: Add keyword
+    apply_to_mentions: Apply to mentions
     edit: Edit
     edit_keyword: Edit keyword
     keyword: Keyword
@@ -685,6 +687,7 @@ en:
     disallowed_hashtags:
       one: 'contained a disallowed hashtag: %{tags}'
       other: 'contained the disallowed hashtags: %{tags}'
+    language_detection: Automatically detect language
     open_in_web: Open in web
     over_character_limit: character limit of %{max} exceeded
     pin_errors:
