@@ -35,11 +35,13 @@ class Publisher extends ImmutablePureComponent {
     onSecondarySubmit: PropTypes.func,
     onSubmit: PropTypes.func,
     privacy: PropTypes.oneOf(['direct', 'private', 'unlisted', 'public']),
+    privacyWarning: PropTypes.bool,
     sideArm: PropTypes.oneOf(['none', 'direct', 'private', 'unlisted', 'public']),
+    sideArmWarning: PropTypes.bool,
   };
 
   render () {
-    const { countText, disabled, intl, onSecondarySubmit, onSubmit, privacy, sideArm } = this.props;
+    const { countText, disabled, intl, onSecondarySubmit, onSubmit, privacy, privacyWarning, sideArm, sideArmWarning } = this.props;
 
     const diff = maxChars - length(countText || '');
     const computedClass = classNames('composer--publisher', {
@@ -52,7 +54,7 @@ class Publisher extends ImmutablePureComponent {
         <span className='count'>{diff}</span>
         {sideArm && sideArm !== 'none' ? (
           <Button
-            className='side_arm'
+            className={classNames('side_arm', {privacy_warning: sideArmWarning})}
             disabled={disabled || diff < 0}
             onClick={onSecondarySubmit}
             style={{ padding: null }}
@@ -72,7 +74,7 @@ class Publisher extends ImmutablePureComponent {
           />
         ) : null}
         <Button
-          className='primary'
+          className={classNames('primary', {privacy_warning: privacyWarning})}
           text={function () {
             switch (true) {
             case !!sideArm && sideArm !== 'none':
