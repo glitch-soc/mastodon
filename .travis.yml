@@ -52,7 +52,7 @@ before_install:
   - gem install bundler
 
 before_script:
-  - travis_wait ./bin/rails parallel:create parallel:load_schema parallel:prepare assets:precompile
+  - travis_wait 30 ./bin/rails parallel:create parallel:load_schema parallel:prepare assets:precompile
   - yarn install --no-progress
 
 script:
