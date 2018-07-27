@@ -71,19 +71,23 @@ export default class MediaModal extends ImmutablePureComponent {
 
   componentDidMount () {
     window.addEventListener('keydown', this.handleKeyDown, false);
-    const history = this.context.router.history;
-    history.push(history.location.pathname, previewState);
-    this.unlistenHistory = history.listen(() => {
-      this.props.onClose();
-    });
+    if (this.context.router) {
+      const history = this.context.router.history;
+      history.push(history.location.pathname, previewState);
+      this.unlistenHistory = history.listen(() => {
+        this.props.onClose();
+      });
+    }
   }
 
   componentWillUnmount () {
     window.removeEventListener('keydown', this.handleKeyDown);
-    this.unlistenHistory();
+    if (this.context.router) {
+      this.unlistenHistory();
 
-    if (this.context.router.history.location.state === previewState) {
-      this.context.router.history.goBack();
+      if (this.context.router.history.location.state === previewState) {
+        this.context.router.history.goBack();
+      }
     }
   }
 
