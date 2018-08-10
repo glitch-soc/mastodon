@@ -46,7 +46,6 @@ pl:
     people_who_follow: Osoby, które śledzą konto %{name}
     posts: Wpisy
     posts_with_replies: Wpisy z odpowiedziami
-    remote_follow: Śledź zdalnie
     reserved_username: Ta nazwa użytkownika jest zarezerwowana
     roles:
       admin: Administrator
@@ -206,6 +205,27 @@ pl:
       update_failed_msg: Nie udało się zaktualizować emoji
       updated_msg: Pomyślnie zaktualizowano emoji!
       upload: Dodaj
+    dashboard:
+      backlog: zaległe zadania
+      config: Konfiguracja
+      feature_deletions: Usuwanie kont
+      feature_invites: Zaproszenia
+      feature_registrations: Rejestracja
+      feature_relay: Przekazywanie federacji
+      features: Możliwości
+      hidden_service: Federowanie z ukrytymi usługami
+      open_reports: otwarte zgłoszenia
+      recent_users: Ostatni użytkownicy
+      search: Wyszukiwanie pełnego tekstu
+      single_user_mode: Tryb jednego użytkownika
+      software: Oprogramowanie
+      space: Używana powierzchnia
+      title: Panel administracyjny
+      total_users: łącznie użytkowników
+      trends: Na czasie
+      week_interactions: interakcje w tym tygodniu
+      week_users_active: aktywni w tym tygodniu
+      week_users_new: rejestracje w tym tygodniu
     domain_blocks:
       add_new: Dodaj nową
       created_msg: Blokada domen jest przetwarzana
@@ -262,6 +282,14 @@ pl:
         expired: Wygasłe
         title: Filtruj
       title: Zaproszenia
+    relays:
+      add_new: Dodaj nowy
+      description_html: "<strong>Przekaźnik federacji</strong> jest pośredniczącym serwerem wymieniającym duże ilości publicznych wpisów pomiędzy serwerami które subskrybują je i publikują na nich. <strong>Pomaga to małym i średnim instancją poznawać nową zawartość z Fediwersum</strong>, co w innym przypadku wymagałoby od użytkowników ręcznego śledzenia osób z innych serwerów."
+      enable_hint: Jeżeli włączone, Twój serwer zasubskrybuje wszystkie publiczne wpisy z tego przekaźnika i zacznie wysyłać tam publiczne wpisy z tego serwera.
+      inbox_url: Adres przekaźnika
+      setup: Skonfiguruj połączenie z przekaźnikiem
+      status: Stan
+      title: Przekaźniki
     report_notes:
       created_msg: Pomyslnie utworzono notatkę moderacyjną.
       destroyed_msg: Pomyślnie usunięto notatkę moderacyjną.
@@ -317,6 +345,9 @@ pl:
       peers_api_enabled:
         desc_html: Nazwy domen, z którymi ta instancja wchodziła w interakcje
         title: Publikuj listę znanych instancji
+      preview_sensitive_media:
+        desc_html: Podgląd odnośników na innych instancjach będzie wyświetlał miniaturę nawet jeśli zawartość multimedialna zostanie oznaczona jako wrażliwa
+        title: Wyświetlaj zawartość wrażliwą w podglądzie OpenGraph
       registrations:
         closed_message:
           desc_html: Wyświetlana na stronie głównej, gdy możliwość otwarej rejestracji nie jest dostępna. Możesz korzystać z tagów HTML
@@ -475,6 +506,22 @@ pl:
     follows: Śledzeni
     mutes: Wyciszeni
     storage: Urządzenie przechowujące dane
+  filters:
+    contexts:
+      home: Strona główna
+      notifications: Powiadomienia
+      public: Publiczne osie czasu
+      thread: Konwersacje
+    edit:
+      title: Edytuj filtr
+    errors:
+      invalid_context: Nie podano lub podano nieprawidłową treść
+      invalid_irreversible: Nieodwracalne filtrowanie działa tylko na stronie głównej i w powiadomieniach
+    index:
+      delete: Usuń
+      title: Filtry
+    new:
+      title: Dodaj nowy filtr
   followers:
     domain: Domena
     explanation_html: Jeżeli chcesz mieć pewność, kto może przeczytać Twoje wpisy, musisz kontrolować, kto śledzi Twój profil. <strong>Twoje prywatne wpisy są dostarczane na te instancje, na których jesteś śledzony</strong>. Możesz sprawdzać, kto Cię śledzi i blokować ich, jeśli nie ufasz właścicielom lub oprogramowaniu danej instancji.
@@ -489,7 +536,6 @@ pl:
     unlocked_warning_title: Twoje konto nie jest zablokowane
   generic:
     changes_saved_msg: Ustawienia zapisane!
-    powered_by: uruchomione na %{link}
     save_changes: Zapisz zmiany
     use_this: Użyj tego
     validation_errors:
@@ -530,16 +576,6 @@ pl:
       expires_at: Wygaśnie po
       uses: Użycia
     title: Zaproś użytkowników
-  keyword_mutes:
-    add_keyword: Dodaj słowo kluczowe
-    edit: Edytuj
-    edit_keyword: Edytuj słowo kluczowe
-    keyword: Słowo kluczowe
-    match_whole_word: Uwzględniaj całe słowo
-    remove: Usuń
-    remove_all: Usuń wszystkie
-  landing_strip_html: "<strong>%{name}</strong> ma konto na %{link_to_root_path}. Możesz je śledzić i wejść z nim w interakcję jeśli masz konto gdziekolwiek w Fediwersum."
-  landing_strip_signup_html: Jeśli jeszcze go nie masz, możesz <a href="%{sign_up_path}">stworzyć konto</a>.
   lists:
     errors:
       limit: Przekroczyłeś maksymalną liczbę utworzonych list
@@ -617,6 +653,7 @@ pl:
   remote_follow:
     acct: Podaj swój adres (nazwa@domena), z którego chcesz śledzić
     missing_resource: Nie udało się znaleźć adresu przekierowania z Twojej domeny
+    no_account_html: Nie masz konta? Możesz <a href='%{sign_up_path}' target='_blank'>zarejestrować się tutaj</a>
     proceed: Śledź
     prompt: 'Zamierzasz śledzić:'
   remote_unfollow:
@@ -674,7 +711,6 @@ pl:
     flavours: Odmiany
     followers: Autoryzowani śledzący
     import: Importowanie danych
-    keyword_mutes: Wyciszone słowa
     migrate: Migracja konta
     notifications: Powiadomienia
     preferences: Preferencje
@@ -717,7 +753,6 @@ pl:
       unlisted: Niewypisane
       unlisted_long: Widoczne dla wszystkich, ale nie wyświetlane na publicznych osiach czasu
   stream_entries:
-    click_to_show: Naciśnij aby wyświetlić
     pinned: Przypięty wpis
     reblogged: podbił
     sensitive_content: Wrażliwa zawartość

@@ -35,6 +35,7 @@ import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
 import { REDRAFT } from 'flavours/glitch/actions/statuses';
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
 import uuid from 'flavours/glitch/util/uuid';
+import { privacyPreference } from 'flavours/glitch/util/privacy_preference';
 import { me } from 'flavours/glitch/util/initial_state';
 import { overwrite } from 'flavours/glitch/util/js_helpers';
 import { unescapeHTML } from 'flavours/glitch/util/html';
@@ -112,6 +113,12 @@ function apiStatusToTextMentions (state, status) {
   )).join('');
 }
 
+function apiStatusToTextHashtags (state, status) {
+  return ImmutableOrderedSet([]).union(status.tags.map(
+    ({ name }) => `#${name} `
+  )).join('');
+}
+
 function clearAll(state) {
   return state.withMutations(map => {
     map.set('text', '');
@@ -132,7 +139,9 @@ function clearAll(state) {
 
 function continueThread (state, status) {
   return state.withMutations(function (map) {
-    map.set('text', apiStatusToTextMentions(state, status));
+    let text = apiStatusToTextMentions(state, status);
+    text = text + apiStatusToTextHashtags(state, status);
+    map.set('text', text);
     if (status.spoiler_text) {
       map.set('spoiler', true);
       map.set('spoiler_text', status.spoiler_text);
@@ -204,18 +213,6 @@ const insertEmoji = (state, position, emojiData) => {
     map.set('caretPosition', position + emoji.length + 1);
     map.set('idempotencyKey', uuid());
   });
-};
-
-const privacyPreference = (a, b) => {
-  if (a === 'direct' || b === 'direct') {
-    return 'direct';
-  } else if (a === 'private' || b === 'private') {
-    return 'private';
-  } else if (a === 'unlisted' || b === 'unlisted') {
-    return 'unlisted';
-  } else {
-    return 'public';
-  }
 };
 
 const hydrate = (state, hydratedState) => {
@@ -308,6 +305,7 @@ export default function compose(state = initialState, action) {
       }
     });
   case COMPOSE_REPLY_CANCEL:
+    state = state.setIn(['advanced_options', 'threaded_mode'], false);
   case COMPOSE_RESET:
     return state.withMutations(map => {
       map.set('in_reply_to', null);

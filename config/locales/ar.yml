@@ -46,7 +46,6 @@ ar:
     people_who_follow: الأشخاص الذين يتبعون %{name}
     posts: منشورات
     posts_with_replies: التبويقات و الردود
-    remote_follow: إتبع عن بعد
     reserved_username: إسم المستخدم محجوز
     roles:
       admin: المدير
@@ -206,6 +205,18 @@ ar:
       update_failed_msg: تعذرت عملية تحذيث ذاك الإيموجي
       updated_msg: تم تحديث الإيموجي بنجاح !
       upload: رفع
+    dashboard:
+      feature_invites: روابط الدعوات
+      feature_registrations: التسجيلات
+      feature_relay: المُرحّل الفديرالي
+      features: الميّزات
+      hidden_service: الفيديرالية مع الخدمات الخفية
+      search: البحث النصي الكامل
+      software: البرنامج
+      space: المساحة المستخدَمة
+      title: لوح المراقبة
+      week_users_active: نشط هذا الأسبوع
+      week_users_new: مستخدِمين هذا الأسبوع
     domain_blocks:
       add_new: إضافة نطاق جديد
       created_msg: إنّ حجب النطاق حيز التشغيل
@@ -261,6 +272,12 @@ ar:
         expired: المنتهي صلاحيتها
         title: التصفية
       title: الدعوات
+    relays:
+      add_new: إضافة مُرحّل جديد
+      inbox_url: رابط المُرحّل
+      setup: إعداد اتصال بمُرحّل
+      status: الحالة
+      title: المُرحّلات
     report_notes:
       created_msg: |-
         41/5000
@@ -448,6 +465,7 @@ ar:
     confirm_password: قم بإدخال كلمتك السرية الحالية للتحقق من هويتك
     proceed: حذف حساب
     success_msg: تم حذف حسابك بنجاح
+    warning_title: توافر المحتوى المنشور و المبعثَر
   errors:
     '403': ليس لك الصلاحيات الكافية لعرض هذه الصفحة.
     '404': إنّ الصفحة التي تبحث عنها لا وجود لها أصلا.
@@ -459,6 +477,7 @@ ar:
     '500':
       content: نحن متأسفون، لقد حدث خطأ ما مِن جانبنا.
       title: هذه الصفحة خاطئة
+    noscript_html: يرجى تفعيل الجافا سكريبت لاستخدام تطبيق الويب لماستدون، أو عِوض ذلك قوموا بتجريب إحدى <a href="https://github.com/tootsuite/documentation/blob/master/Using-Mastodon/Apps.md">التطبيقات الأصلية</a> الدّاعمة لماستدون على منصّتكم.
   exports:
     archive_takeout:
       date: التاريخ
@@ -472,6 +491,19 @@ ar:
     follows: أنت تتبع
     mutes: قُمتَ بكتم
     storage: ذاكرة التخزين
+  filters:
+    contexts:
+      home: الخيط الزمني الرئيسي
+      notifications: الإخطارات
+      public: الخيوط الزمنية العامة
+      thread: المحادثات
+    edit:
+      title: تعديل عامل التصفية
+    index:
+      delete: إزالة
+      title: عوامل التصفية
+    new:
+      title: إضافة عامل تصفية جديد
   followers:
     domain: النطاق
     followers_count: عدد المتابِعين
@@ -483,7 +515,6 @@ ar:
     unlocked_warning_title: إنّ حسابك غير مقفل
   generic:
     changes_saved_msg: تم حفظ التعديلات بنجاح !
-    powered_by: مدعوم بـ %{link}
     save_changes: حفظ التغييرات
     validation_errors:
       one: لا يزال هناك خلل ما إلى حد الآن. يُرجى إعادة النظر في الخطأ أسفله
@@ -518,8 +549,6 @@ ar:
       expires_at: تنتهي مدة صلاحيتها في
       uses: يستخدِم
     title: دعوة أشخاص
-  landing_strip_html: "<strong>%{name}</strong> هو أحد مُستخدِمي %{link_to_root_path}. بإمكانك متابعته أو التواصل معه إن كنت تملك حسابًا أيا كان على البيئة الموحَّدة فيديفرس."
-  landing_strip_signup_html: إن كنت لا تملك واحدا، يمكنك <a href="%{sign_up_path}">التسجيل مِن هنا</a>.
   lists:
     errors:
       limit: لقد بلغت الحد الأقصى للقوائم
@@ -531,6 +560,7 @@ ar:
     acct: username@domain للحساب الجديد
     currently_redirecting: 'تم تحويل رابط ملفك الشخصي إلى :'
     proceed: حفظ
+    updated_msg: تم تحديث إعدادات ترحيل حسابك بنجاح !
   moderation:
     title: الإشراف
   notification_mailer:
@@ -548,6 +578,7 @@ ar:
     favourite:
       body: 'أُعجب %{name} بمنشورك :'
       subject: أُعجِب %{name} بمنشورك
+      title: مفضّلة جديدة
     follow:
       body: "%{name} من متتبعيك الآن !"
       subject: "%{name} من متتبعيك الآن"
@@ -561,6 +592,7 @@ ar:
       action: الرد
       body: 'أشار إليك %{name} في :'
       subject: لقد قام %{name} بذِكرك
+      title: إشارة جديدة
     reblog:
       body: 'قام %{name} بترقية منشورك :'
       subject: قام %{name} بترقية منشورك
@@ -590,6 +622,7 @@ ar:
   remote_follow:
     acct: قم بإدخال عنوان حسابك username@domain الذي من خلاله تود المتابعة
     missing_resource: تعذر العثور على رابط التحويل المطلوب الخاص بحسابك
+    no_account_html: أليس عندك حساب بعدُ ؟ يُمْكنك <a href='%{sign_up_path}' target='_blank'>التسجيل مِن هنا</a>
     proceed: أكمل المتابعة
     prompt: 'إنك  بصدد متابعة :'
   remote_unfollow:
@@ -683,7 +716,6 @@ ar:
       unlisted: غير مُدرَج
       unlisted_long: يُمكن لأيٍ كان رُؤيتَه و لكن لن يُعرَض على الخيوط العامة
   stream_entries:
-    click_to_show: إضغط للعرض
     pinned: تبويق مثبّت
     reblogged: رقى
     sensitive_content: محتوى حساس

@@ -7,6 +7,7 @@ import StatusIcons from './status_icons';
 import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
 import AttachmentList from './attachment_list';
+import { FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { MediaGallery, Video } from 'flavours/glitch/util/async-components';
 import { HotKeys } from 'react-hotkeys';
@@ -365,6 +366,21 @@ export default class Status extends ImmutablePureComponent {
       );
     }
 
+    if (status.get('filtered') || status.getIn(['reblog', 'filtered'])) {
+      const minHandlers = this.props.muted ? {} : {
+        moveUp: this.handleHotkeyMoveUp,
+        moveDown: this.handleHotkeyMoveDown,
+      };
+
+      return (
+        <HotKeys handlers={minHandlers}>
+          <div className='status__wrapper status__wrapper--filtered focusable' tabIndex='0'>
+            <FormattedMessage id='status.filtered' defaultMessage='Filtered' />
+          </div>
+        </HotKeys>
+      );
+    }
+
     //  If user backgrounds for collapsed statuses are enabled, then we
     //  initialize our background accordingly. This will only be rendered if
     //  the status is collapsed.
@@ -407,7 +423,7 @@ export default class Status extends ImmutablePureComponent {
         mediaIcon = 'video-camera';
       } else {  //  Media type is 'image' or 'gifv'
         media = (
-          <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery} >
+          <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery}>
             {Component => (
               <Component
                 media={attachments}

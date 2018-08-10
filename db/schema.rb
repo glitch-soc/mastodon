@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_17_162849) do
+ActiveRecord::Schema.define(version: 2018_07_11_152640) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,18 @@ ActiveRecord::Schema.define(version: 2018_06_17_162849) do
     t.index ["shortcode", "domain"], name: "index_custom_emojis_on_shortcode_and_domain", unique: true
   end
 
+  create_table "custom_filters", force: :cascade do |t|
+    t.bigint "account_id"
+    t.datetime "expires_at"
+    t.text "phrase", default: "", null: false
+    t.string "context", default: [], null: false, array: true
+    t.boolean "irreversible", default: false, null: false
+    t.boolean "whole_word", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_custom_filters_on_account_id"
+  end
+
   create_table "domain_blocks", force: :cascade do |t|
     t.string "domain", default: "", null: false
     t.datetime "created_at", null: false
@@ -197,16 +209,6 @@ ActiveRecord::Schema.define(version: 2018_06_17_162849) do
     t.boolean "show_reblogs", default: true, null: false
     t.string "uri"
     t.index ["account_id", "target_account_id"], name: "index_follows_on_account_id_and_target_account_id", unique: true
-  end
-
-  create_table "glitch_keyword_mutes", force: :cascade do |t|
-    t.bigint "account_id", null: false
-    t.string "keyword", null: false
-    t.boolean "whole_word", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "apply_to_mentions", default: true, null: false
-    t.index ["account_id"], name: "index_glitch_keyword_mutes_on_account_id"
   end
 
   create_table "identities", id: :serial, force: :cascade do |t|
@@ -377,6 +379,15 @@ ActiveRecord::Schema.define(version: 2018_06_17_162849) do
     t.bigint "preview_card_id", null: false
     t.bigint "status_id", null: false
     t.index ["status_id", "preview_card_id"], name: "index_preview_cards_statuses_on_status_id_and_preview_card_id"
+  end
+
+  create_table "relays", force: :cascade do |t|
+    t.string "inbox_url", default: "", null: false
+    t.boolean "enabled", default: false, null: false
+    t.string "follow_activity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["enabled"], name: "index_relays_on_enabled"
   end
 
   create_table "report_notes", force: :cascade do |t|
@@ -584,13 +595,13 @@ ActiveRecord::Schema.define(version: 2018_06_17_162849) do
   add_foreign_key "bookmarks", "statuses", on_delete: :cascade
   add_foreign_key "conversation_mutes", "accounts", name: "fk_225b4212bb", on_delete: :cascade
   add_foreign_key "conversation_mutes", "conversations", on_delete: :cascade
+  add_foreign_key "custom_filters", "accounts", on_delete: :cascade
   add_foreign_key "favourites", "accounts", name: "fk_5eb6c2b873", on_delete: :cascade
   add_foreign_key "favourites", "statuses", name: "fk_b0e856845e", on_delete: :cascade
   add_foreign_key "follow_requests", "accounts", column: "target_account_id", name: "fk_9291ec025d", on_delete: :cascade
   add_foreign_key "follow_requests", "accounts", name: "fk_76d644b0e7", on_delete: :cascade
   add_foreign_key "follows", "accounts", column: "target_account_id", name: "fk_745ca29eac", on_delete: :cascade
   add_foreign_key "follows", "accounts", name: "fk_32ed1b5560", on_delete: :cascade
-  add_foreign_key "glitch_keyword_mutes", "accounts", on_delete: :cascade
   add_foreign_key "identities", "users", on_delete: :cascade
   add_foreign_key "imports", "accounts", name: "fk_6db1b6e408", on_delete: :cascade
   add_foreign_key "invites", "users", on_delete: :cascade

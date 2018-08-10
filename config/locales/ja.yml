@@ -46,7 +46,6 @@ ja:
     people_who_follow: "%{name} さんをフォロー中のアカウント"
     posts: トゥート
     posts_with_replies: トゥートと返信
-    remote_follow: リモートフォロー
     reserved_username: このユーザー名は予約されています
     roles:
       admin: Admin
@@ -206,6 +205,27 @@ ja:
       update_failed_msg: 絵文字を更新できませんでした
       updated_msg: 絵文字の更新に成功しました！
       upload: アップロード
+    dashboard:
+      backlog: 未処理のジョブ
+      config: 構成
+      feature_deletions: アカウント削除
+      feature_invites: 招待リンク
+      feature_registrations: 新規登録
+      feature_relay: 連合リレー
+      features: 機能
+      hidden_service: 秘匿サービスとの連合
+      open_reports: 未解決のレポート
+      recent_users: 最近登録したユーザー
+      search: 全文検索
+      single_user_mode: シングルユーザーモード
+      software: ソフトウェア
+      space: ディスク使用量
+      title: ダッシュボード
+      total_users: 全ユーザー
+      trends: トレンドタグ
+      week_interactions: 今週の交流数
+      week_users_active: 今週活動した人数
+      week_users_new: 今週登録した人数
     domain_blocks:
       add_new: 新規追加
       created_msg: ドメインブロック処理を完了しました
@@ -261,6 +281,14 @@ ja:
         expired: 期限切れ
         title: フィルター
       title: 招待
+    relays:
+      add_new: リレーを追加
+      description_html: "<strong>連合リレー</strong>とは、登録しているサーバー間の公開トゥートを仲介するサーバーです。<strong>中小規模のサーバーが連合のコンテンツを見つけるのを助けます。</strong>これを使用しない場合、ローカルユーザーがリモートユーザーを手動でフォローする必要があります。"
+      enable_hint: 有効にすると、リレーから全ての公開トゥートを受信するようになり、またこのサーバーの全ての公開トゥートをリレーに送信するようになります。
+      inbox_url: Relay URL
+      setup: リレー接続を設定する
+      status: ステータス
+      title: リレー
     report_notes:
       created_msg: レポートメモを書き込みました！
       destroyed_msg: レポートメモを削除しました！
@@ -316,6 +344,9 @@ ja:
       peers_api_enabled:
         desc_html: 連合内でこのインスタンスが遭遇したドメインの名前
         title: 接続しているインスタンスのリストを公開する
+      preview_sensitive_media:
+        desc_html: 他のウェブサイトにリンクを貼った際、メディアが閲覧注意としてマークされていてもサムネイルが表示されます
+        title: OpenGraphによるプレビューで閲覧注意のメディアも表示する
       registrations:
         closed_message:
           desc_html: 新規登録を停止しているときにフロントページに表示されます。HTMLタグが使えます
@@ -474,6 +505,22 @@ ja:
     follows: フォロー
     mutes: ミュート
     storage: メディア
+  filters:
+    contexts:
+      home: ホームタイムライン
+      notifications: 通知
+      public: 公開タイムライン
+      thread: 会話
+    edit:
+      title: フィルターを編集
+    errors:
+      invalid_context: 対象がないか無効です
+      invalid_irreversible: この機能はホームタイムラインまたは通知と一緒に指定する場合のみ機能します
+    index:
+      delete: 削除
+      title: フィルター
+    new:
+      title: 新規フィルターを追加
   followers:
     domain: ドメイン
     explanation_html: あなたの投稿のプライバシーを確保したい場合、誰があなたをフォローしているのかを把握している必要があります。 <strong>プライベート投稿は、あなたのフォロワーがいる全てのインスタンスに配信されます</strong>。 フォロワーのインスタンスの管理者やソフトウェアがあなたのプライバシーを尊重してくれるかどうか怪しい場合は、そのフォロワーを削除した方がよいかもしれません。
@@ -488,7 +535,6 @@ ja:
     unlocked_warning_title: このアカウントは承認制アカウントに設定されていません
   generic:
     changes_saved_msg: 正常に変更されました！
-    powered_by: powered by %{link}
     save_changes: 変更を保存
     use_this: これを使う
     validation_errors:
@@ -525,16 +571,6 @@ ja:
       expires_at: 有効期限
       uses: 使用
     title: 新規ユーザーの招待
-  keyword_mutes:
-    add_keyword: キーワードを追加
-    edit: 編集
-    edit_keyword: キーワードを編集
-    keyword: キーワード
-    match_whole_word: 単語全体が一致
-    remove: 削除
-    remove_all: すべて削除
-  landing_strip_html: "<strong>%{name}</strong> さんはインスタンス %{link_to_root_path} のユーザーです。アカウントさえ持っていればフォローしたり会話したりできます。"
-  landing_strip_signup_html: もしお持ちでないなら <a href="%{sign_up_path}">こちら</a> からサインアップできます。
   lists:
     errors:
       limit: リストの上限に達しました
@@ -608,6 +644,7 @@ ja:
   remote_follow:
     acct: あなたの ユーザー名@ドメイン を入力してください
     missing_resource: リダイレクト先が見つかりませんでした
+    no_account_html: アカウントをお持ちではないですか？<a href='%{sign_up_path}' target='_blank'>こちら</a>からサインアップできます
     proceed: フォローする
     prompt: 'フォローしようとしています:'
   remote_unfollow:
@@ -665,7 +702,6 @@ ja:
     flavours: フレーバー
     followers: 信頼済みのインスタンス
     import: データのインポート
-    keyword_mutes: ミュートされたキーワード
     migrate: アカウントの引っ越し
     notifications: 通知
     preferences: ユーザー設定
@@ -686,7 +722,7 @@ ja:
     disallowed_hashtags:
       one: '許可されていないハッシュタグが含まれています: %{tags}'
       other: '許可されていないハッシュタグが含まれています: %{tags}'
-    language_detection: 自動的に言語を検出する
+    language_detection: 自動検出
     open_in_web: Webで開く
     over_character_limit: 上限は %{max}文字までです
     pin_errors:
@@ -704,7 +740,6 @@ ja:
       unlisted: 未収載
       unlisted_long: 誰でも見ることができますが、公開タイムラインには表示されません
   stream_entries:
-    click_to_show: クリックして表示
     pinned: 固定されたトゥート
     reblogged: さんがブースト
     sensitive_content: 閲覧注意
