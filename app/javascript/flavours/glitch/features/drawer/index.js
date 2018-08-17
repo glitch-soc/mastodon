@@ -111,7 +111,7 @@ class Drawer extends React.Component {
         <div className='contents'>
           <DrawerAccount account={account} />
           <Composer />
-          {multiColumn && <button className='mastodon' onClick={onClickElefriend} />}
+          {multiColumn && <div className='mastodon' />}
           <DrawerResults
             results={results}
             visible={submitted && !searchHidden}
