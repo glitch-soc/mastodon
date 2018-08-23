@@ -19,6 +19,10 @@ class StatusesController < ApplicationController
   before_action :set_referrer_policy_header, only: [:show]
   before_action :set_cache_headers
 
+  content_security_policy only: :embed do |p|
+    p.frame_ancestors(false)
+  end
+
   def show
     respond_to do |format|
       format.html do
@@ -34,7 +38,7 @@ class StatusesController < ApplicationController
       format.json do
         skip_session! unless @stream_entry.hidden?
 
-        render_cached_json(['activitypub', 'note', @status.cache_key], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
+        render_cached_json(['activitypub', 'note', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
           ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::NoteSerializer, adapter: ActivityPub::Adapter)
         end
       end
@@ -44,7 +48,7 @@ class StatusesController < ApplicationController
   def activity
     skip_session!
 
-    render_cached_json(['activitypub', 'activity', @status.cache_key], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
+    render_cached_json(['activitypub', 'activity', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
       ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::ActivitySerializer, adapter: ActivityPub::Adapter)
     end
   end

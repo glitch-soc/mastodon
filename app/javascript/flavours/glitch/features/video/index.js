@@ -160,6 +160,9 @@ export default class Video extends React.PureComponent {
     this.setState({ dragging: true });
     this.video.pause();
     this.handleMouseMove(e);
+
+    e.preventDefault();
+    e.stopPropagation();
   }
 
   handleMouseUp = () => {
@@ -176,8 +179,10 @@ export default class Video extends React.PureComponent {
     const { x } = getPointerPosition(this.seek, e);
     const currentTime = Math.floor(this.video.duration * x);
 
-    this.video.currentTime = currentTime;
-    this.setState({ currentTime });
+    if (!isNaN(currentTime)) {
+      this.video.currentTime = currentTime;
+      this.setState({ currentTime });
+    }
   }, 60);
 
   togglePlay = () => {
@@ -290,6 +295,15 @@ export default class Video extends React.PureComponent {
       warning = <FormattedMessage id='status.media_hidden' defaultMessage='Media hidden' />;
     }
 
+    let preload;
+    if (startTime || fullscreen || dragging) {
+      preload = 'auto';
+    } else if (detailed) {
+      preload = 'metadata';
+    } else {
+      preload = 'none';
+    }
+
     return (
       <div
         className={classNames('video-player', { inactive: !revealed, detailed, inline: inline && !fullscreen, fullscreen, letterbox, 'full-width': fullwidth })}
@@ -304,7 +318,7 @@ export default class Video extends React.PureComponent {
           ref={this.setVideoRef}
           src={src}
           poster={preview}
-          preload={startTime ? 'auto' : 'none'}
+          preload={preload}
           loop
           role='button'
           tabIndex='0'

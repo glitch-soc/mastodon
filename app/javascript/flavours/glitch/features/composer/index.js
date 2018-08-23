@@ -95,28 +95,71 @@ function mapStateToProps (state) {
 };
 
 //  Dispatch mapping.
-const mapDispatchToProps = {
-  onCancelReply: cancelReplyCompose,
-  onChangeAdvancedOption: changeComposeAdvancedOption,
-  onChangeDescription: changeUploadCompose,
-  onChangeSensitivity: changeComposeSensitivity,
-  onChangeSpoilerText: changeComposeSpoilerText,
-  onChangeSpoilerness: changeComposeSpoilerness,
-  onChangeText: changeCompose,
-  onChangeVisibility: changeComposeVisibility,
-  onClearSuggestions: clearComposeSuggestions,
-  onCloseModal: closeModal,
-  onFetchSuggestions: fetchComposeSuggestions,
-  onInsertEmoji: insertEmojiCompose,
-  onMount: mountCompose,
-  onOpenActionsModal: openModal.bind(null, 'ACTIONS'),
-  onOpenDoodleModal: openModal.bind(null, 'DOODLE', { noEsc: true }),
-  onSelectSuggestion: selectComposeSuggestion,
-  onSubmit: submitCompose,
-  onUndoUpload: undoUploadCompose,
-  onUnmount: unmountCompose,
-  onUpload: uploadCompose,
-};
+const mapDispatchToProps = (dispatch) => ({
+  onCancelReply() {
+    dispatch(cancelReplyCompose());
+  },
+  onChangeAdvancedOption(option, value) {
+    dispatch(changeComposeAdvancedOption(option, value));
+  },
+  onChangeDescription(id, description) {
+    dispatch(changeUploadCompose(id, { description }));
+  },
+  onChangeSensitivity() {
+    dispatch(changeComposeSensitivity());
+  },
+  onChangeSpoilerText(text) {
+    dispatch(changeComposeSpoilerText(text));
+  },
+  onChangeSpoilerness() {
+    dispatch(changeComposeSpoilerness());
+  },
+  onChangeText(text) {
+    dispatch(changeCompose(text));
+  },
+  onChangeVisibility(value) {
+    dispatch(changeComposeVisibility(value));
+  },
+  onClearSuggestions() {
+    dispatch(clearComposeSuggestions());
+  },
+  onCloseModal() {
+    dispatch(closeModal());
+  },
+  onFetchSuggestions(token) {
+    dispatch(fetchComposeSuggestions(token));
+  },
+  onInsertEmoji(position, emoji) {
+    dispatch(insertEmojiCompose(position, emoji));
+  },
+  onMount() {
+    dispatch(mountCompose());
+  },
+  onOpenActionModal(props) {
+    dispatch(openModal('ACTIONS', props));
+  },
+  onOpenDoodleModal() {
+    dispatch(openModal('DOODLE', { noEsc: true }));
+  },
+  onOpenFocalPointModal(id) {
+    dispatch(openModal('FOCAL_POINT', { id }));
+  },
+  onSelectSuggestion(position, token, suggestion) {
+    dispatch(selectComposeSuggestion(position, token, suggestion));
+  },
+  onSubmit() {
+    dispatch(submitCompose());
+  },
+  onUndoUpload(id) {
+    dispatch(undoUploadCompose(id));
+  },
+  onUnmount() {
+    dispatch(unmountCompose());
+  },
+  onUpload(files) {
+    dispatch(uploadCompose(files));
+  },
+});
 
 //  Handlers.
 const handlers = {
@@ -194,6 +237,13 @@ const handlers = {
       this.textarea = textareaComponent.textarea;
     }
   },
+
+  //  Sets a reference to the CW field.
+  handleRefSpoilerText (spoilerComponent) {
+    if (spoilerComponent) {
+      this.spoilerText = spoilerComponent.spoilerText;
+    }
+  }
 };
 
 //  The component.
@@ -206,6 +256,7 @@ class Composer extends React.Component {
 
     //  Instance variables.
     this.textarea = null;
+    this.spoilerText = null;
   }
 
   //  Tells our state the composer has been mounted.
@@ -234,6 +285,7 @@ class Composer extends React.Component {
   componentDidUpdate (prevProps) {
     const {
       textarea,
+      spoilerText,
     } = this;
     const {
       focusDate,
@@ -265,6 +317,16 @@ class Composer extends React.Component {
     //  Refocuses the textarea after submitting.
     } else if (textarea && prevProps.isSubmitting && !isSubmitting) {
       textarea.focus();
+    } else if (this.props.spoiler !== prevProps.spoiler) {
+      if (this.props.spoiler) {
+        if (spoilerText) {
+          spoilerText.focus();
+        }
+      } else {
+        if (textarea) {
+          textarea.focus();
+        }
+      }
     }
   }
 
@@ -276,6 +338,7 @@ class Composer extends React.Component {
       handleSelect,
       handleSubmit,
       handleRefTextarea,
+      handleRefSpoilerText,
     } = this.handlers;
     const {
       acceptContentTypes,
@@ -299,6 +362,7 @@ class Composer extends React.Component {
       onFetchSuggestions,
       onOpenActionsModal,
       onOpenDoodleModal,
+      onOpenFocalPointModal,
       onUndoUpload,
       onUpload,
       privacy,
@@ -334,6 +398,7 @@ class Composer extends React.Component {
           onChange={handleChangeSpoiler}
           onSubmit={handleSubmit}
           text={spoilerText}
+          ref={handleRefSpoilerText}
         />
         <ComposerTextarea
           advancedOptions={advancedOptions}
@@ -357,6 +422,7 @@ class Composer extends React.Component {
             intl={intl}
             media={media}
             onChangeDescription={onChangeDescription}
+            onOpenFocalPointModal={onOpenFocalPointModal}
             onRemove={onUndoUpload}
             progress={progress}
             uploading={isUploading}
