@@ -216,3 +216,17 @@ $account-background-color: white;
   }
 }
 
+
+// Make scrim white on collapsed statuses with a media preview
+.status.collapsed.has-background::before {
+  background-image: linear-gradient(180deg,
+    rgba(255, 255, 255, .75),
+    rgba(255, 255, 255, .65) 24px,
+    rgba(255, 255, 255, .8)
+  );
+}
+
+// Fix goofy gradient on collapsed statuses with a media preview
+.status.collapsed.has-background .status__content {
+  mix-blend-mode: multiply;
+}
