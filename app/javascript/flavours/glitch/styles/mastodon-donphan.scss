@@ -66,12 +66,12 @@ $account-background-color: white;
   &:hover,
   &:active,
   &:focus {
-    color: darken($ui-base-color, 40%);
+    color: lighten($ui-base-color, 40%);
     transition: color 200ms ease-out;
   }
 
   &.disabled {
-    color: darken($ui-base-color, 30%);
+    color: lighten($ui-base-color, 30%);
   }
 
 }
@@ -79,7 +79,7 @@ $account-background-color: white;
 .status {
   &.status-direct {
     .icon-button.disabled {
-      color: darken($ui-base-color, 30%);
+      color: lighten($ui-base-color, 30%);
     }
   }
 }
@@ -112,7 +112,7 @@ $account-background-color: white;
 .dropdown-menu__item {
   a {
     background: $ui-base-color;
-    color: $ui-secondary-color;
+    color: $ui-primary-color;
   }
 }
 
@@ -139,14 +139,26 @@ $account-background-color: white;
   }
 
   .composer--options--dropdown--content--item {
-    color: $ui-primary-color;
+    color: $ui-secondary-color;
     
     strong {
-      color: $ui-primary-color;
+      color: $ui-secondary-co lor;
     }
 
   }
 
+  .composer--warning a {
+      color: lighten($ui-highlight-color, 25%);
+  }
+
+  .composer--reply > .content a {
+      color: lighten($ui-highlight-color, 25%);
+  }
+
+}
+
+attachment-list__list a {
+    color: lighten($ui-highlight-color, 25%);
 }
 
 // Change the default color used for the text in an empty column or on the error column
@@ -229,4 +241,10 @@ $account-background-color: white;
 // Fix goofy gradient on collapsed statuses with a media preview
 .status.collapsed.has-background .status__content {
   mix-blend-mode: multiply;
+}
+
+// White text on buttons
+
+.button {
+    color: white;
 }
