@@ -66,12 +66,12 @@ $account-background-color: white;
   &:hover,
   &:active,
   &:focus {
-    color: lighten($ui-base-color, 40%);
+    color: darken($ui-base-color, 40%);
     transition: color 200ms ease-out;
   }
 
   &.disabled {
-    color: lighten($ui-base-color, 30%);
+    color: darken($ui-base-color, 30%);
   }
 
 }
@@ -79,7 +79,7 @@ $account-background-color: white;
 .status {
   &.status-direct {
     .icon-button.disabled {
-      color: lighten($ui-base-color, 30%);
+      color: darken($ui-base-color, 30%);
     }
   }
 }
@@ -138,15 +138,6 @@ $account-background-color: white;
     box-shadow: unset;
   }
 
-  .composer--options--dropdown--content--item {
-    color: $ui-secondary-color;
-    
-    strong {
-      color: $ui-secondary-color;
-    }
-
-  }
-
   .composer--warning a {
       color: lighten($ui-highlight-color, 25%);
   }
@@ -155,10 +146,30 @@ $account-background-color: white;
       color: lighten($ui-highlight-color, 25%);
   }
 
-}
+  & > .attachment-list__list a {
+      color: lighten($ui-highlight-color, 25%)
+  }
 
-attachment-list__list a {
-    color: lighten($ui-highlight-color, 25%);
+  .composer--options--dropdown--content--item {
+      color: $ui-primary-color;
+
+      & > .content {
+          color: $ui-primary-color;
+
+          strong { color: $ui-primary-color }
+      }
+
+      &:hover,
+      &.active {
+          color: white;
+
+          & > .content {
+              color: white;
+              strong { color: white }
+          }
+      }
+  }
+
 }
 
 // Change the default color used for the text in an empty column or on the error column
