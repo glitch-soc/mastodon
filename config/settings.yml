@@ -33,7 +33,7 @@ defaults: &defaults
   system_font_ui: false
   noindex: false
   flavour: 'glitch'
-  skin: 'mastodon-donphan'
+  skin: 'dark-donphan'
   notification_emails:
     follow: false
     reblog: false
