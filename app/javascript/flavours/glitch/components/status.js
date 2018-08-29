@@ -48,14 +48,11 @@ export default class Status extends ImmutablePureComponent {
     withDismiss: PropTypes.bool,
     onMoveUp: PropTypes.func,
     onMoveDown: PropTypes.func,
-    getScrollPosition: PropTypes.func,
-    updateScrollBottom: PropTypes.func,
     expanded: PropTypes.bool,
   };
 
   state = {
     isCollapsed: false,
-    autoCollapsed: false,
   }
 
   // Avoid checking props that are functions (and whose equality will always
@@ -178,28 +175,6 @@ export default class Status extends ImmutablePureComponent {
       }
     }()) {
       this.setCollapsed(true);
-      // Hack to fix timeline jumps on second rendering when auto-collapsing
-      this.setState({ autoCollapsed: true });
-    }
-  }
-
-  getSnapshotBeforeUpdate (prevProps, prevState) {
-    if (this.props.getScrollPosition) {
-      return this.props.getScrollPosition();
-    } else {
-      return null;
-    }
-  }
-
-  //  Hack to fix timeline jumps on second rendering when auto-collapsing
-  componentDidUpdate (prevProps, prevState, snapshot) {
-    if (this.state.autoCollapsed) {
-      this.setState({ autoCollapsed: false });
-      if (snapshot !== null && this.props.updateScrollBottom) {
-        if (this.node.offsetTop < snapshot.top) {
-          this.props.updateScrollBottom(snapshot.height - snapshot.top);
-        }
-      }
     }
   }
 
