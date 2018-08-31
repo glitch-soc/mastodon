@@ -67,23 +67,7 @@ export default class ScrollableList extends PureComponent {
     this.handleScroll();
   }
 
-  getScrollPosition = () => {
-    if (this.node && this.node.scrollTop > 0) {
-      return {height: this.node.scrollHeight, top: this.node.scrollTop};
-    } else {
-      return null;
-    }
-  }
-
-  updateScrollBottom = (snapshot) => {
-    const newScrollTop = this.node.scrollHeight - snapshot;
-
-    if (this.node.scrollTop !== newScrollTop) {
-      this.node.scrollTop = newScrollTop;
-    }
-  }
-
-  getSnapshotBeforeUpdate (prevProps, prevState) {
+  getSnapshotBeforeUpdate (prevProps) {
     const someItemInserted = React.Children.count(prevProps.children) > 0 &&
       React.Children.count(prevProps.children) < React.Children.count(this.props.children) &&
       this.getFirstChildKey(prevProps) !== this.getFirstChildKey(this.props);
@@ -97,7 +81,15 @@ export default class ScrollableList extends PureComponent {
   componentDidUpdate (prevProps, prevState, snapshot) {
     // Reset the scroll position when a new child comes in in order not to
     // jerk the scrollbar around if you're already scrolled down the page.
-    if (snapshot !== null) this.updateScrollBottom(snapshot);
+    if (snapshot !== null) {
+      window.requestAnimationFrame(() => {
+        const newScrollTop = this.node.scrollHeight - snapshot;
+
+        if (this.node.scrollTop !== newScrollTop) {
+          this.node.scrollTop = newScrollTop;
+        }
+      });
+    }
   }
 
   componentWillUnmount () {
@@ -172,7 +164,7 @@ export default class ScrollableList extends PureComponent {
                 intersectionObserverWrapper={this.intersectionObserverWrapper}
                 saveHeightKey={trackScroll ? `${this.context.router.route.location.key}:${scrollKey}` : null}
               >
-                {React.cloneElement(child, {getScrollPosition: this.getScrollPosition, updateScrollBottom: this.updateScrollBottom})}
+                {child}
               </IntersectionObserverArticleContainer>
             ))}
 
