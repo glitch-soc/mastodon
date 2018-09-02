@@ -17,6 +17,7 @@ const messages = defineMessages({
   side_arm_keep: { id: 'settings.side_arm_reply_mode.keep', defaultMessage: 'Keep secondary toot button to set privacy' },
   side_arm_copy: { id: 'settings.side_arm_reply_mode.copy', defaultMessage: 'Copy privacy setting of the toot being replied to' },
   side_arm_restrict: { id: 'settings.side_arm_reply_mode.restrict', defaultMessage: 'Restrict privacy setting to that of the toot being replied to' },
+  regexp: { id: 'settings.content_warnings.regexp', defaultMessage: 'Regular expression' },
 });
 
 @injectIntl
@@ -77,6 +78,22 @@ export default class LocalSettingsPage extends React.PureComponent {
           <h2><FormattedMessage id='settings.compose_box_opts' defaultMessage='Compose box options' /></h2>
           <LocalSettingsPageItem
             settings={settings}
+            item={['always_show_spoilers_field']}
+            id='mastodon-settings--always_show_spoilers_field'
+            onChange={onChange}
+          >
+            <FormattedMessage id='settings.always_show_spoilers_field' defaultMessage='Always enable the Content Warning field' />
+          </LocalSettingsPageItem>
+          <LocalSettingsPageItem
+            settings={settings}
+            item={['confirm_missing_media_description']}
+            id='mastodon-settings--confirm_missing_media_description'
+            onChange={onChange}
+          >
+            <FormattedMessage id='settings.confirm_missing_media_description' defaultMessage='Show confirmation dialog before sending toots lacking media descriptions' />
+          </LocalSettingsPageItem>
+          <LocalSettingsPageItem
+            settings={settings}
             item={['side_arm']}
             id='mastodon-settings--side_arm'
             options={[
@@ -104,6 +121,29 @@ export default class LocalSettingsPage extends React.PureComponent {
             <FormattedMessage id='settings.side_arm_reply_mode' defaultMessage='When replying to a toot:' />
           </LocalSettingsPageItem>
         </section>
+      </div>
+    ),
+    ({ intl, onChange, settings }) => (
+      <div className='glitch local-settings__page content_warnings'>
+        <h1><FormattedMessage id='settings.content_warnings' defaultMessage='Content warnings' /></h1>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['content_warnings', 'auto_unfold']}
+          id='mastodon-settings--content_warnings-auto_unfold'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.enable_content_warnings_auto_unfold' defaultMessage='Automatically unfold content-warnings' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['content_warnings', 'filter']}
+          id='mastodon-settings--content_warnings-auto_unfold'
+          onChange={onChange}
+          dependsOn={[['content_warnings', 'auto_unfold']]}
+          placeholder={intl.formatMessage(messages.regexp)}
+        >
+          <FormattedMessage id='settings.content_warnings_filter' defaultMessage='Content warnings to not automatically unfold:' />
+        </LocalSettingsPageItem>
       </div>
     ),
     ({ onChange, settings }) => (

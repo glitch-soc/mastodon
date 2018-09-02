@@ -38,6 +38,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { HotKeys } from 'react-hotkeys';
 import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/util/initial_state';
 import { attachFullscreenListener, detachFullscreenListener, isFullscreen } from 'flavours/glitch/util/fullscreen';
+import { autoUnfoldCW } from 'flavours/glitch/util/content_warning';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -82,8 +83,8 @@ export default class Status extends ImmutablePureComponent {
 
   state = {
     fullscreen: false,
-    isExpanded: false,
-    threadExpanded: null,
+    isExpanded: undefined,
+    threadExpanded: undefined,
   };
 
   componentWillMount () {
@@ -95,9 +96,14 @@ export default class Status extends ImmutablePureComponent {
   }
 
   componentWillReceiveProps (nextProps) {
+    if (this.state.isExpanded === undefined) {
+      const isExpanded = autoUnfoldCW(nextProps.settings, nextProps.status);
+      if (isExpanded !== undefined) this.setState({ isExpanded: isExpanded });
+    }
     if (nextProps.params.statusId !== this.props.params.statusId && nextProps.params.statusId) {
       this._scrolledIntoView = false;
       this.props.dispatch(fetchStatus(nextProps.params.statusId));
+      this.setState({ isExpanded: autoUnfoldCW(nextProps.settings, nextProps.status) });
     }
   }
 
@@ -159,16 +165,16 @@ export default class Status extends ImmutablePureComponent {
     }
   }
 
-  handleDeleteClick = (status, withRedraft = false) => {
+  handleDeleteClick = (status, history, withRedraft = false) => {
     const { dispatch, intl } = this.props;
 
     if (!deleteModal) {
-      dispatch(deleteStatus(status.get('id'), withRedraft));
+      dispatch(deleteStatus(status.get('id'), history, withRedraft));
     } else {
       dispatch(openModal('CONFIRM', {
         message: intl.formatMessage(withRedraft ? messages.redraftMessage : messages.deleteMessage),
         confirm: intl.formatMessage(withRedraft ? messages.redraftConfirm : messages.deleteConfirm),
-        onConfirm: () => dispatch(deleteStatus(status.get('id'), withRedraft)),
+        onConfirm: () => dispatch(deleteStatus(status.get('id'), history, withRedraft)),
       }));
     }
   }
