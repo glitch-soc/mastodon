@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   }
 
   get '/users/:username', to: redirect('/@%{username}'), constraints: lambda { |req| req.format.nil? || req.format.html? }
+  get '/authorize_follow', to: redirect { |_, request| "/authorize_interaction?#{request.params.to_query}" }
 
   resources :accounts, path: 'users', only: [:show], param: :username do
     resources :stream_entries, path: 'updates', only: [:show] do
@@ -179,7 +180,7 @@ Rails.application.routes.draw do
       resource :reset, only: [:create]
       resource :silence, only: [:create, :destroy]
       resource :suspension, only: [:new, :create, :destroy]
-      resources :statuses, only: [:index, :create, :update, :destroy]
+      resources :statuses, only: [:index, :show, :create, :update, :destroy]
 
       resource :confirmation, only: [:create] do
         collection do
