@@ -32,6 +32,7 @@ const initialState = ImmutableMap({
       user_backgrounds : false,
       preview_images   : false,
     }),
+    show_action_bar : true,
   }),
   media     : ImmutableMap({
     letterbox   : true,
