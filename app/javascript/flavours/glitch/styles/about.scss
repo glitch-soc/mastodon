@@ -791,7 +791,7 @@ $small-breakpoint: 960px;
     background: darken($ui-base-color, 4%);
     border-radius: 4px;
     padding: 25px 40px;
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
 
     .row {
@@ -917,9 +917,23 @@ $small-breakpoint: 960px;
     bottom: 25px;
 
     img {
-      height: 190px;
+      height: 134px;
       width: auto;
+      margin-top: 34px;
     }
+  }
+
+  &__mascotmore {
+      height: 104px;
+      position: relative;
+      left: -40px;
+      bottom: 25px;
+
+      img {
+          height: 134px;
+          width: auto;
+          margin-top: 38px;
+      }
   }
 
   &__short-description {

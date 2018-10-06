@@ -7,7 +7,7 @@
 # For more information, see docs/Running-Mastodon/Administration-guide.md
 #
 defaults: &defaults
-  site_title: 'dev.glitch.social'
+  site_title: 'donphan.social'
   site_short_description: ''
   site_description: ''
   site_extended_description: ''
@@ -34,7 +34,7 @@ defaults: &defaults
   system_font_ui: false
   noindex: false
   flavour: 'glitch'
-  skin: 'default'
+  skin: 'dark-donphan'
   notification_emails:
     follow: false
     reblog: false
