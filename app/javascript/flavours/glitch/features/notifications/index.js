@@ -8,6 +8,8 @@ import {
   enterNotificationClearingMode,
   expandNotifications,
   scrollTopNotifications,
+  mountNotifications,
+  unmountNotifications,
 } from 'flavours/glitch/actions/notifications';
 import { addColumn, removeColumn, moveColumn } from 'flavours/glitch/actions/columns';
 import NotificationContainer from './containers/notification_container';
@@ -42,6 +44,12 @@ const mapDispatchToProps = dispatch => ({
   onEnterCleaningMode(yes) {
     dispatch(enterNotificationClearingMode(yes));
   },
+  onMount() {
+    dispatch(mountNotifications());
+  },
+  onUnmount() {
+    dispatch(unmountNotifications());
+  },
   dispatch,
 });
 
@@ -62,6 +70,8 @@ export default class Notifications extends React.PureComponent {
     localSettings: ImmutablePropTypes.map,
     notifCleaningActive: PropTypes.bool,
     onEnterCleaningMode: PropTypes.func,
+    onMount: PropTypes.func,
+    onUnmount: PropTypes.func,
   };
 
   static defaultProps = {
@@ -126,6 +136,20 @@ export default class Notifications extends React.PureComponent {
     }
   }
 
+  componentDidMount () {
+    const { onMount } = this.props;
+    if (onMount) {
+      onMount();
+    }
+  }
+
+  componentWillUnmount () {
+    const { onUnmount } = this.props;
+    if (onUnmount) {
+      onUnmount();
+    }
+  }
+
   render () {
     const { intl, notifications, shouldUpdateScroll, isLoading, isUnread, columnId, multiColumn, hasMore } = this.props;
     const pinned = !!columnId;
@@ -179,6 +203,7 @@ export default class Notifications extends React.PureComponent {
         ref={this.setColumnRef}
         name='notifications'
         extraClasses={this.props.notifCleaningActive ? 'notif-cleaning' : null}
+        label={intl.formatMessage(messages.title)}
       >
         <ColumnHeader
           icon='bell'

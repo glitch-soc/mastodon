@@ -15,7 +15,18 @@ const messages = defineMessages({
   follow: { id: 'account.follow', defaultMessage: 'Follow' },
   requested: { id: 'account.requested', defaultMessage: 'Awaiting approval. Click to cancel follow request' },
   unblock: { id: 'account.unblock', defaultMessage: 'Unblock @{name}' },
+  edit_profile: { id: 'account.edit_profile', defaultMessage: 'Edit profile' },
+  link_verified_on: { id: 'account.link_verified_on', defaultMessage: 'Ownership of this link was checked on {date}' },
 });
+
+const dateFormatOptions = {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  hour12: false,
+  hour: '2-digit',
+  minute: '2-digit',
+};
 
 @injectIntl
 export default class Header extends ImmutablePureComponent {
@@ -26,6 +37,10 @@ export default class Header extends ImmutablePureComponent {
     onBlock: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };
+
+  openEditProfile = () => {
+    window.open('/settings/profile', '_blank');
+  }
 
   render () {
     const { account, intl } = this.props;
@@ -77,6 +92,12 @@ export default class Header extends ImmutablePureComponent {
           </div>
         );
       }
+    } else {
+      actionBtn = (
+        <div className='account--action-button'>
+          <IconButton size={26} icon='pencil' title={intl.formatMessage(messages.edit_profile)} onClick={this.openEditProfile} />
+        </div>
+      );
     }
 
     if (account.get('moved') && !account.getIn(['relationship', 'following'])) {
@@ -111,7 +132,9 @@ export default class Header extends ImmutablePureComponent {
                 {fields.map((pair, i) => (
                   <dl key={i}>
                     <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} />
-                    <dd dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} title={pair.get('value_plain')} />
+                    <dd className={pair.get('verified_at') && 'verified'} title={pair.get('value_plain')}>
+                      {pair.get('verified_at') && <span title={intl.formatMessage(messages.link_verified_on, { date: intl.formatDate(pair.get('verified_at'), dateFormatOptions) })}><i className='fa fa-check verified__mark' /></span>} <span dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} />
+                    </dd>
                  </dl>
                 ))}
               </div>

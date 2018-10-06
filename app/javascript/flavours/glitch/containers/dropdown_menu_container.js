@@ -8,20 +8,21 @@ const mapStateToProps = state => ({
   isModalOpen: state.get('modal').modalType === 'ACTIONS',
   dropdownPlacement: state.getIn(['dropdown_menu', 'placement']),
   openDropdownId: state.getIn(['dropdown_menu', 'openId']),
+  openedViaKeyboard: state.getIn(['dropdown_menu', 'keyboard']),
 });
 
 const mapDispatchToProps = (dispatch, { status, items }) => ({
-  onOpen(id, onItemClick, dropdownPlacement) {
+  onOpen(id, onItemClick, dropdownPlacement, keyboard) {
     dispatch(isUserTouching() ? openModal('ACTIONS', {
       status,
       actions: items.map(
         (item, i) => item ? {
           ...item,
           name: `${item.text}-${i}`,
-          onClick: (e) => { return onItemClick(i, e) },
+          onClick: item.action ? ((e) => { return onItemClick(i, e) }) : null,
         } : null
       ),
-    }) : openDropdownMenu(id, dropdownPlacement));
+    }) : openDropdownMenu(id, dropdownPlacement, keyboard));
   },
   onClose(id) {
     dispatch(closeModal());

@@ -43,6 +43,25 @@ export default class LocalSettingsPage extends React.PureComponent {
           <FormattedMessage id='settings.show_reply_counter' defaultMessage='Display an estimate of the reply count' />
         </LocalSettingsPageItem>
         <section>
+          <h2><FormattedMessage id='settings.notifications_opts' defaultMessage='Notifications options' /></h2>
+          <LocalSettingsPageItem
+            settings={settings}
+            item={['notifications', 'tab_badge']}
+            id='mastodon-settings--notifications-tab_badge'
+            onChange={onChange}
+          >
+            <FormattedMessage id='settings.notifications.tab_badge' defaultMessage="Display a badge for unread notifications if the notifications column isn't open" />
+          </LocalSettingsPageItem>
+          <LocalSettingsPageItem
+            settings={settings}
+            item={['notifications', 'favicon_badge']}
+            id='mastodon-settings--notifications-favicon_badge'
+            onChange={onChange}
+          >
+            <FormattedMessage id='settings.notifications.favicon_badge' defaultMessage='Display unread notifications count in the favicon' />
+          </LocalSettingsPageItem>
+        </section>
+        <section>
           <h2><FormattedMessage id='settings.layout_opts' defaultMessage='Layout options' /></h2>
           <LocalSettingsPageItem
             settings={settings}
@@ -74,53 +93,63 @@ export default class LocalSettingsPage extends React.PureComponent {
             <FormattedMessage id='settings.navbar_under' defaultMessage='Navbar at the bottom (Mobile only)' />
           </LocalSettingsPageItem>
         </section>
-        <section>
-          <h2><FormattedMessage id='settings.compose_box_opts' defaultMessage='Compose box options' /></h2>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['always_show_spoilers_field']}
-            id='mastodon-settings--always_show_spoilers_field'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.always_show_spoilers_field' defaultMessage='Always enable the Content Warning field' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['confirm_missing_media_description']}
-            id='mastodon-settings--confirm_missing_media_description'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.confirm_missing_media_description' defaultMessage='Show confirmation dialog before sending toots lacking media descriptions' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['side_arm']}
-            id='mastodon-settings--side_arm'
-            options={[
-              { value: 'none', message: intl.formatMessage(messages.side_arm_none) },
-              { value: 'direct', message: intl.formatMessage({ id: 'privacy.direct.short' }) },
-              { value: 'private', message: intl.formatMessage({ id: 'privacy.private.short' }) },
-              { value: 'unlisted', message: intl.formatMessage({ id: 'privacy.unlisted.short' }) },
-              { value: 'public', message: intl.formatMessage({ id: 'privacy.public.short' }) },
-            ]}
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.side_arm' defaultMessage='Secondary toot button:' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['side_arm_reply_mode']}
-            id='mastodon-settings--side_arm_reply_mode'
-            options={[
-              { value: 'keep', message: intl.formatMessage(messages.side_arm_keep) },
-              { value: 'copy', message: intl.formatMessage(messages.side_arm_copy) },
-              { value: 'restrict', message: intl.formatMessage(messages.side_arm_restrict) },
-            ]}
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.side_arm_reply_mode' defaultMessage='When replying to a toot:' />
-          </LocalSettingsPageItem>
-        </section>
+      </div>
+    ),
+    ({ intl, onChange, settings }) => (
+      <div className='glitch local-settings__page compose_box_opts'>
+        <h1><FormattedMessage id='settings.compose_box_opts' defaultMessage='Compose box options' /></h1>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['always_show_spoilers_field']}
+          id='mastodon-settings--always_show_spoilers_field'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.always_show_spoilers_field' defaultMessage='Always enable the Content Warning field' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['preselect_on_reply']}
+          id='mastodon-settings--preselect_on_reply'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.preselect_on_reply' defaultMessage='Pre-select usernames past the first when replying to a toot with multiple participants' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['confirm_missing_media_description']}
+          id='mastodon-settings--confirm_missing_media_description'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.confirm_missing_media_description' defaultMessage='Show confirmation dialog before sending toots lacking media descriptions' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['side_arm']}
+          id='mastodon-settings--side_arm'
+          options={[
+            { value: 'none', message: intl.formatMessage(messages.side_arm_none) },
+            { value: 'direct', message: intl.formatMessage({ id: 'privacy.direct.short' }) },
+            { value: 'private', message: intl.formatMessage({ id: 'privacy.private.short' }) },
+            { value: 'unlisted', message: intl.formatMessage({ id: 'privacy.unlisted.short' }) },
+            { value: 'public', message: intl.formatMessage({ id: 'privacy.public.short' }) },
+          ]}
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.side_arm' defaultMessage='Secondary toot button:' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
+          item={['side_arm_reply_mode']}
+          id='mastodon-settings--side_arm_reply_mode'
+          options={[
+            { value: 'keep', message: intl.formatMessage(messages.side_arm_keep) },
+            { value: 'copy', message: intl.formatMessage(messages.side_arm_copy) },
+            { value: 'restrict', message: intl.formatMessage(messages.side_arm_restrict) },
+          ]}
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.side_arm_reply_mode' defaultMessage='When replying to a toot:' />
+        </LocalSettingsPageItem>
       </div>
     ),
     ({ intl, onChange, settings }) => (
@@ -238,6 +267,18 @@ export default class LocalSettingsPage extends React.PureComponent {
             dependsOn={[['collapsed', 'enabled']]}
           >
             <FormattedMessage id='settings.image_backgrounds_media' defaultMessage='Preview collapsed toot media' />
+          </LocalSettingsPageItem>
+        </section>
+        <section>
+          <h2></h2>
+          <LocalSettingsPageItem
+            settings={settings}
+            item={['collapsed', 'show_action_bar']}
+            id='mastodon-settings--collapsed-show-action-bar'
+            onChange={onChange}
+            dependsOn={[['collapsed', 'enabled']]}
+          >
+            <FormattedMessage id='settings.show_action_bar' defaultMessage='Show action buttons in collapsed toots' />
           </LocalSettingsPageItem>
         </section>
       </div>

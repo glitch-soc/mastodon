@@ -239,6 +239,11 @@
   flex: 0 1 100%;
   border-left: 1px solid lighten($ui-base-color, 8%);
   padding: 10px 0;
+  border-bottom: 4px solid transparent;
+
+  &.active {
+    border-bottom: 4px solid $ui-highlight-color;
+  }
 
   & > span {
     display: block;
@@ -410,7 +415,7 @@
     background-size: cover;
     background-position: center;
     position: absolute;
-    color: inherit;
+    color: $ui-primary-color;
     text-decoration: none;
     border-radius: 4px;
 
@@ -418,6 +423,7 @@
     &:active,
     &:focus {
       outline: 0;
+      color: $ui-secondary-color;
 
       &::before {
         content: "";
@@ -428,6 +434,14 @@
         border-radius: 4px;
       }
     }
+  }
+
+  &__icons {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
   }
 }
 

@@ -6,7 +6,7 @@ import IconButton from './icon_button';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { isIOS } from 'flavours/glitch/util/is_mobile';
 import classNames from 'classnames';
-import { autoPlayGif, displaySensitiveMedia } from 'flavours/glitch/util/initial_state';
+import { autoPlayGif, displayMedia } from 'flavours/glitch/util/initial_state';
 
 const messages = defineMessages({
   hidden: {
@@ -75,6 +75,11 @@ class Item extends React.PureComponent {
       onClick(index);
     }
 
+    e.stopPropagation();
+  }
+
+  handleMouseDown = (e) => {
+    e.preventDefault();
     e.stopPropagation();
   }
 
@@ -181,6 +186,7 @@ class Item extends React.PureComponent {
             onClick={this.handleClick}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
+            onMouseDown={this.handleMouseDown}
             autoPlay={autoPlay}
             loop
             muted
@@ -220,7 +226,7 @@ export default class MediaGallery extends React.PureComponent {
   };
 
   state = {
-    visible: this.props.revealed === undefined ? (!this.props.sensitive || displaySensitiveMedia) : this.props.revealed,
+    visible: this.props.revealed === undefined ? (displayMedia !== 'hide_all' && !this.props.sensitive || displayMedia === 'show_all') : this.props.revealed,
   };
 
   componentWillReceiveProps (nextProps) {

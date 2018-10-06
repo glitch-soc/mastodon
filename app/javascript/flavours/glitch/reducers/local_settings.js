@@ -14,6 +14,7 @@ const initialState = ImmutableMap({
   show_reply_count : false,
   always_show_spoilers_field: false,
   confirm_missing_media_description: false,
+  preselect_on_reply: true,
   content_warnings : ImmutableMap({
     auto_unfold : false,
     filter      : null,
@@ -32,10 +33,15 @@ const initialState = ImmutableMap({
       user_backgrounds : false,
       preview_images   : false,
     }),
+    show_action_bar : true,
   }),
   media     : ImmutableMap({
     letterbox   : true,
     fullwidth   : true,
+  }),
+  notifications : ImmutableMap({
+    favicon_badge : false,
+    tab_badge     : true,
   }),
 });
 

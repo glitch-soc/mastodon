@@ -46,6 +46,8 @@ const messages = defineMessages({
 //  The component.
 export default function DrawerHeader ({
   columns,
+  unreadNotifications,
+  showNotificationsBadge,
   intl,
   onSettingsClick,
 }) {
@@ -77,7 +79,12 @@ export default function DrawerHeader ({
           aria-label={intl.formatMessage(messages.notifications)}
           title={intl.formatMessage(messages.notifications)}
           to='/notifications'
-        ><Icon icon='bell' /></Link>
+        >
+          <span className='icon-badge-wrapper'>
+            <Icon icon='bell' />
+            { showNotificationsBadge && unreadNotifications > 0 && <div className='icon-badge' />}
+          </span>
+        </Link>
       ))}
       {renderForColumn('COMMUNITY', (
         <Link
@@ -112,6 +119,8 @@ export default function DrawerHeader ({
 //  Props.
 DrawerHeader.propTypes = {
   columns: ImmutablePropTypes.list,
+  unreadNotifications: PropTypes.number,
+  showNotificationsBadge: PropTypes.bool,
   intl: PropTypes.object,
   onSettingsClick: PropTypes.func,
 };

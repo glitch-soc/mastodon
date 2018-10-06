@@ -1,4 +1,7 @@
 import {
+  NOTIFICATIONS_MOUNT,
+  NOTIFICATIONS_UNMOUNT,
+  NOTIFICATIONS_SET_VISIBILITY,
   NOTIFICATIONS_UPDATE,
   NOTIFICATIONS_EXPAND_SUCCESS,
   NOTIFICATIONS_EXPAND_REQUEST,
@@ -24,9 +27,12 @@ const initialState = ImmutableMap({
   items: ImmutableList(),
   hasMore: true,
   top: true,
+  mounted: 0,
   unread: 0,
+  lastReadId: '0',
   isLoading: false,
   cleaningMode: false,
+  isTabVisible: true,
   // notification removal mark of new notifs loaded whilst cleaningMode is true.
   markNewForDelete: false,
 });
@@ -40,9 +46,11 @@ const notificationToMap = (state, notification) => ImmutableMap({
 });
 
 const normalizeNotification = (state, notification) => {
-  const top = state.get('top');
+  const top = !shouldCountUnreadNotifications(state);
 
-  if (!top) {
+  if (top) {
+    state = state.set('lastReadId', notification.id);
+  } else {
     state = state.update('unread', unread => unread + 1);
   }
 
@@ -56,6 +64,8 @@ const normalizeNotification = (state, notification) => {
 };
 
 const expandNormalizedNotifications = (state, notifications, next) => {
+  const top = !(shouldCountUnreadNotifications(state));
+  const lastReadId = state.get('lastReadId');
   let items = ImmutableList();
 
   notifications.forEach((n, i) => {
@@ -77,6 +87,14 @@ const expandNormalizedNotifications = (state, notifications, next) => {
       });
     }
 
+    if (top) {
+      if (!items.isEmpty()) {
+        mutable.update('lastReadId', id => compareId(id, items.first().get('id')) > 0 ? id : items.first().get('id'));
+      }
+    } else {
+      mutable.update('unread', unread => unread + items.filter(item => compareId(item.get('id'), lastReadId) > 0).size);
+    }
+
     if (!next) {
       mutable.set('hasMore', true);
     }
@@ -89,15 +107,29 @@ const filterNotifications = (state, relationship) => {
   return state.update('items', list => list.filterNot(item => item !== null && item.get('account') === relationship.id));
 };
 
+const clearUnread = (state) => {
+  state = state.set('unread', 0);
+  const lastNotification = state.get('items').find(item => item !== null);
+  return state.set('lastReadId', lastNotification ? lastNotification.get('id') : '0');
+}
+
 const updateTop = (state, top) => {
-  if (top) {
-    state = state.set('unread', 0);
+  state = state.set('top', top);
+
+  if (!shouldCountUnreadNotifications(state)) {
+    state = clearUnread(state);
   }
 
   return state.set('top', top);
 };
 
 const deleteByStatus = (state, statusId) => {
+  const top = !(shouldCountUnreadNotifications(state));
+  if (!top) {
+    const lastReadId = state.get('lastReadId');
+    const deletedUnread = state.get('items').filter(item => item !== null && item.get('status') === statusId && compareId(item.get('id'), lastReadId) > 0);
+    state = state.update('unread', unread => unread - deletedUnread.size);
+  }
   return state.update('items', list => list.filterNot(item => item !== null && item.get('status') === statusId));
 };
 
@@ -129,10 +161,36 @@ const deleteMarkedNotifs = (state) => {
   return state.update('items', list => list.filterNot(item => item.get('markedForDelete')));
 };
 
+const updateMounted = (state) => {
+  state = state.update('mounted', count => count + 1);
+  if (!shouldCountUnreadNotifications(state)) {
+    state = clearUnread(state);
+  }
+  return state;
+};
+
+const updateVisibility = (state, visibility) => {
+  state = state.set('isTabVisible', visibility);
+  if (!shouldCountUnreadNotifications(state)) {
+    state = clearUnread(state);
+  }
+  return state;
+};
+
+const shouldCountUnreadNotifications = (state) => {
+  return !(state.get('isTabVisible') && state.get('top') && state.get('mounted') > 0);
+};
+
 export default function notifications(state = initialState, action) {
   let st;
 
   switch(action.type) {
+  case NOTIFICATIONS_MOUNT:
+    return updateMounted(state);
+  case NOTIFICATIONS_UNMOUNT:
+    return state.update('mounted', count => count - 1);
+  case NOTIFICATIONS_SET_VISIBILITY:
+    return updateVisibility(state, action.visibility);
   case NOTIFICATIONS_EXPAND_REQUEST:
   case NOTIFICATIONS_DELETE_MARKED_REQUEST:
     return state.set('isLoading', true);

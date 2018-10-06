@@ -145,6 +145,19 @@ body.rtl {
     margin-right: 6px;
   }
 
+  .status__action-bar {
+
+    &__counter {
+      margin-right: 0;
+      margin-left: 11px;
+
+      .status__action-bar-button {
+        margin-right: 0;
+        margin-left: 4px;
+      }
+    }
+  }
+
   .status__action-bar-button {
     float: right;
     margin-right: 0;
@@ -206,13 +219,19 @@ body.rtl {
   }
 
   .simple_form .input-with-append .input input {
-    padding-left: 127px;
+    padding-left: 142px;
     padding-right: 0;
   }
 
   .simple_form .input-with-append .append {
     right: auto;
     left: 0;
+
+    &::after {
+      right: auto;
+      left: 0;
+      background-image: linear-gradient(to left, rgba($ui-base-color, 0), $ui-base-color);
+    }
   }
 
   .table th,
@@ -276,6 +295,15 @@ body.rtl {
       .drawer {
         padding-left: 5px;
         padding-right: 5px;
+      }
+    }
+  }
+
+  .public-layout {
+    .header {
+      .nav-button {
+        margin-left: 8px;
+        margin-right: 0;
       }
     }
   }
