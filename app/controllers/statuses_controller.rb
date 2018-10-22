@@ -27,6 +27,8 @@ class StatusesController < ApplicationController
     respond_to do |format|
       format.html do
         use_pack 'public'
+        skip_session! unless user_signed_in?
+
         @body_classes = 'with-modals'
 
         set_ancestors

@@ -229,5 +229,6 @@ class ApplicationController < ActionController::Base
 
   def skip_session!
     request.session_options[:skip] = true
+    expires_in 0, public: true
   end
 end

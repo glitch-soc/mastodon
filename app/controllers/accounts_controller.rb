@@ -11,6 +11,8 @@ class AccountsController < ApplicationController
     respond_to do |format|
       format.html do
         use_pack 'public'
+        skip_session! unless user_signed_in?
+
         @body_classes      = 'with-modals'
         @pinned_statuses   = []
         @endorsed_accounts = @account.endorsed_accounts.to_a.sample(4)
@@ -31,11 +33,15 @@ class AccountsController < ApplicationController
       end
 
       format.atom do
+        skip_session!
+
         @entries = @account.stream_entries.where(hidden: false).with_includes.paginate_by_max_id(PAGE_SIZE, params[:max_id], params[:since_id])
         render xml: OStatus::AtomSerializer.render(OStatus::AtomSerializer.new.feed(@account, @entries.reject { |entry| entry.status.nil? || entry.status.local_only? }))
       end
 
       format.rss do
+        skip_session!
+
         @statuses = cache_collection(default_statuses.without_reblogs.without_replies.limit(PAGE_SIZE), Status)
         render xml: RSS::AccountSerializer.render(@account, @statuses)
       end
