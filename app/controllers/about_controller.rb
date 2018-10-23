@@ -6,15 +6,21 @@ class AboutController < ApplicationController
   before_action :set_instance_presenter, only: [:show, :more, :terms]
 
   def show
+    skip_session! unless user_signed_in?
+
     serializable_resource = ActiveModelSerializers::SerializableResource.new(InitialStatePresenter.new(initial_state_params), serializer: InitialStateSerializer)
     @initial_state_json   = serializable_resource.to_json
   end
 
   def more
+    skip_session! unless user_signed_in?
+
     render layout: 'public'
   end
 
   def terms
+    skip_session! unless user_signed_in?
+
     render layout: 'public'
   end
 

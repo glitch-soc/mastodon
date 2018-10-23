@@ -61,6 +61,8 @@ class HomeController < ApplicationController
   end
 
   def default_redirect_path
+    skip_session!
+
     if request.path.start_with?('/web')
       new_user_session_path
     elsif single_user_mode?
