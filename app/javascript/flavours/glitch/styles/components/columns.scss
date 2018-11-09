@@ -38,18 +38,6 @@
   height: 100%;
 }
 
-.column {
-  width: 330px;
-  position: relative;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-
-  > .scrollable {
-    background: $ui-base-color;
-  }
-}
-
 .ui {
   flex: 0 0 auto;
   display: flex;
@@ -57,10 +45,6 @@
   width: 100%;
   height: 100%;
   background: darken($ui-base-color, 7%);
-}
-
-.column {
-  overflow: hidden;
 }
 
 @include limited-single-column('screen and (min-width: 360px)', $parent: null) {
@@ -270,7 +254,7 @@
 }
 
 .column {
-  width: 330px;
+  width: 350px;
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -279,7 +263,7 @@
 
   .wide & {
     flex: auto;
-    min-width: 330px;
+    min-width: 350px;
     max-width: 400px;
   }
 
