@@ -2,7 +2,7 @@
   - if theme[:pack] != 'common' && theme[:common]
     = render partial: 'layouts/theme', object: theme[:common]
   - if theme[:pack]
-    = javascript_pack_tag theme[:flavour] ? "flavours/#{theme[:flavour]}/#{theme[:pack]}" : "core/#{theme[:pack]}", integrity: true, crossorigin: 'anonymous'
+    = javascript_pack_tag theme[:flavour] ? "flavours/#{theme[:flavour]}/#{theme[:pack]}" : "core/#{theme[:pack]}", integrity: true, nonce: true, crossorigin: 'anonymous'
     - if theme[:skin]
       - if !theme[:flavour] || theme[:skin] == 'default'
         = stylesheet_pack_tag theme[:flavour] ? "flavours/#{theme[:flavour]}/#{theme[:pack]}" : "core/#{theme[:pack]}", integrity: true, media: 'all'

@@ -20,12 +20,12 @@
 
     %title= content_for?(:page_title) ? safe_join([yield(:page_title).chomp.html_safe, title], ' - ') : title
 
-    = javascript_pack_tag "locales", integrity: true, crossorigin: 'anonymous'
+    = javascript_pack_tag "locales", integrity: true, nonce: true, crossorigin: 'anonymous'
     - if @theme
       - if @theme[:supported_locales].include? I18n.locale.to_s
-        = javascript_pack_tag "locales/#{@theme[:flavour]}/#{I18n.locale}", integrity: true, crossorigin: 'anonymous'
+        = javascript_pack_tag "locales/#{@theme[:flavour]}/#{I18n.locale}", integrity: true, nonce: true, crossorigin: 'anonymous'
       - elsif @theme[:supported_locales].include? 'en'
-        = javascript_pack_tag "locales/#{@theme[:flavour]}/en", integrity: true, crossorigin: 'anonymous'
+        = javascript_pack_tag "locales/#{@theme[:flavour]}/en", integrity: true, nonce: true, crossorigin: 'anonymous'
     = csrf_meta_tags
 
     = stylesheet_link_tag '/inert.css', skip_pipeline: true, media: 'all', id: 'inert-style'
