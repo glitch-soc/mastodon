@@ -10,6 +10,7 @@ const initialState = element && function () {
 }();
 
 const getMeta = (prop) => initialState && initialState.meta && initialState.meta[prop];
+const getRight = (prop) => initialState && initialState.rights && initialState.rights[prop];
 
 export const reduceMotion = getMeta('reduce_motion');
 export const autoPlayGif = getMeta('auto_play_gif');
@@ -25,5 +26,7 @@ export const maxChars = (initialState && initialState.max_toot_chars) || 500;
 export const invitesEnabled = getMeta('invites_enabled');
 export const version = getMeta('version');
 export const isStaff = getMeta('is_staff');
+
+export const deleteOthersNotice = getRight('delete_others_notice');
 
 export default initialState;

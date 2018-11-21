@@ -5,7 +5,7 @@ import IconButton from './icon_button';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { me, isStaff } from 'flavours/glitch/util/initial_state';
+import { me, isStaff, deleteOthersNotice } from 'flavours/glitch/util/initial_state';
 import RelativeTimestamp from './relative_timestamp';
 import { accountAdminLink, statusAdminLink } from 'flavours/glitch/util/backend_links';
 
@@ -204,6 +204,9 @@ export default class StatusActionBar extends ImmutablePureComponent {
           });
         }
       }
+    }
+    if (deleteOthersNotice) {
+      menu.push({ text: intl.formatMessage(messages.delete), action: this.handleDeleteClick });
     }
 
     if (status.get('in_reply_to_id', null) === null) {

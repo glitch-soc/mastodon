@@ -4,7 +4,7 @@ import IconButton from 'flavours/glitch/components/icon_button';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
 import { defineMessages, injectIntl } from 'react-intl';
-import { me, isStaff } from 'flavours/glitch/util/initial_state';
+import { me, isStaff, deleteOthersNotice } from 'flavours/glitch/util/initial_state';
 import { accountAdminLink, statusAdminLink } from 'flavours/glitch/util/backend_links';
 
 const messages = defineMessages({
@@ -163,6 +163,9 @@ export default class ActionBar extends React.PureComponent {
             href: statusAdminLink(status.getIn(['account', 'id']), status.get('id')),
           });
         }
+      }
+      if (deleteOthersNotice) {
+        menu.push({ text: intl.formatMessage(messages.delete), action: this.handleDeleteClick });
       }
     }
 
