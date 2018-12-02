@@ -64,17 +64,15 @@ module.exports = {
 
   optimization: {
     runtimeChunk: {
-      name: 'locales',
+      name: 'core/common',
     },
     splitChunks: {
       cacheGroups: {
         default: false,
         vendors: false,
         common: {
-          name: 'common',
-          chunks (chunk) {
-            return !(chunk.name in entries);
-          },
+          name: 'core/common',
+          chunks: 'all',
           minChunks: 2,
           minSize: 0,
           test: /^(?!.*[\\\/]node_modules[\\\/]react-intl[\\\/]).+$/,
