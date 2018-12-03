@@ -27,7 +27,7 @@ class AboutController < ApplicationController
   helper_method :new_user
 
   def set_pack
-    use_pack action_name == 'show' ? 'about' : 'common'
+    use_pack action_name == 'show' ? 'about' : 'application'
   end
 
   def set_instance_presenter

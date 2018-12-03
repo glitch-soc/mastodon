@@ -42,7 +42,7 @@ class HomeController < ApplicationController
   end
 
   def set_pack
-    use_pack 'home'
+    use_pack 'application'
   end
 
   def set_initial_state_json

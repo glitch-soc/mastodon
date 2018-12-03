@@ -9,7 +9,7 @@ pack:
     stylesheet: true
   embed: embed.js
   error:
-  home:
+  application:
   mailer:
     filename: mailer.js
     stylesheet: true

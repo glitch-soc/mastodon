@@ -8,7 +8,7 @@ pack:
     stylesheet: true
   embed: public.js
   error:
-  home:
+  application:
     filename: application.js
     preload:
     - features/getting_started

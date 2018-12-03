@@ -8,8 +8,8 @@ pack:
     stylesheet: true
   embed: packs/public.js
   error:
-  home:
-    filename: packs/home.js
+  application:
+    filename: packs/application.js
     preload:
     - flavours/glitch/async/drawer
     - flavours/glitch/async/getting_started
