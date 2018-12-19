@@ -124,7 +124,7 @@ class Drawer extends React.Component {
         <div className='contents'>
           {!isSearchPage && <DrawerAccount account={account} />}
           {!isSearchPage && <Composer />}
-          {multiColumn && (mascot ? <img alt='' draggable='false' src={mascot} /> : <button className='mastodon' onClick={onClickElefriend} />)}
+          {multiColumn && (mascot ? <div className='drawer__inner__mastodon'><img alt='' draggable='false' src={mascot} /></div> : <button className='mastodon' onClick={onClickElefriend} />)}
           {(multiColumn || isSearchPage) &&
             <DrawerResults
               results={results}
