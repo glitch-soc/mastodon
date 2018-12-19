@@ -53,6 +53,17 @@
       border: none;
       cursor: inherit;
     }
+
+    & > img {
+      display: block;
+      object-fit: contain;
+      object-position: bottom left;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      user-drag: none;
+      user-select: none;
+    }
   }
 
   @for $i from 0 through 3 {
