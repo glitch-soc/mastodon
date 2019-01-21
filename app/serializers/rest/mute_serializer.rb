@@ -3,13 +3,8 @@
 class REST::MuteSerializer < ActiveModel::Serializer
   include RoutingHelper
   
-  attributes :id, :account, :target_account, :created_at, :hide_notifications
+  attributes :id, :target_account, :created_at, :hide_notifications
 
-  def account
-    REST::AccountSerializer.new(object.account)
-  end
-
-  def target_account
-    REST::AccountSerializer.new(object.target_account)
-  end
+  belongs_to :account, serializer: REST::AccountSerializer
+  belongs_to :target_account, serializer: REST::AccountSerializer
 end
