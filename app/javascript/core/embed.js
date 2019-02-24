@@ -20,4 +20,19 @@ window.addEventListener('message', e => {
   } else {
     document.addEventListener('DOMContentLoaded', setEmbedHeight);
   }
+
+  document.querySelectorAll('.status__content__spoiler-link').forEach(function (el) {
+    const contentEl = el.parentNode.parentNode.querySelector('.e-content');
+    el.addEventListener('click', function () {
+      if (contentEl.style.display === 'block') {
+        contentEl.style.display = 'none';
+        target.parentNode.style.marginBottom = 0;
+      } else {
+        contentEl.style.display = 'block';
+        target.parentNode.style.marginBottom = null;
+      }
+      setEmbedHeight();
+      return false;
+    });
+  });
 });
