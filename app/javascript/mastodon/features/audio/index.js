@@ -115,6 +115,9 @@ class Audio extends React.PureComponent {
 
   setAudioRef = c => {
     this.audio = c;
+    if (this.audio) {
+      this.setState({ volume: this.audio.volume, muted: this.audio.muted });
+    }
   }
 
   setSeekRef = c => {
@@ -232,6 +235,10 @@ class Audio extends React.PureComponent {
     }
   }
 
+  handleVolumeChange = () => {
+    this.setState({ volume: this.audio.volume, muted: this.audio.muted });
+  }
+
   render () {
     const { src, intl } = this.props;
     const { currentTime, duration, volume, buffer, dragging, paused, muted } = this.state;
@@ -259,6 +266,7 @@ class Audio extends React.PureComponent {
           onPause={this.handlePause}
           onTimeUpdate={this.handleTimeUpdate}
           onProgress={this.handleProgress}
+          onVolumeChange={this.handleVolumeChange}
         />
 
         <div className='video-player__controls active'>
@@ -276,7 +284,7 @@ class Audio extends React.PureComponent {
           <div className='video-player__buttons-bar'>
             <div className='video-player__buttons left'>
               <button type='button' aria-label={intl.formatMessage(paused ? messages.play : messages.pause)} onClick={this.togglePlay}><i className={classNames('fa fa-fw', { 'fa-play': paused, 'fa-pause': !paused })} /></button>
-              <button type='button' aria-label={intl.formatMessage(muted ? messages.unmute : messages.mute)} onMouseEnter={this.volumeSlider} onMouseLeave={this.volumeSlider} onClick={this.toggleMute}><i className={classNames('fa fa-fw', { 'fa-volume-off': muted, 'fa-volume-up': !muted })} /></button>
+              <button type='button' aria-label={intl.formatMessage(muted ? messages.unmute : messages.mute)} onClick={this.toggleMute}><i className={classNames('fa fa-fw', { 'fa-volume-off': muted, 'fa-volume-up': !muted })} /></button>
 
               <div className='video-player__volume' onMouseDown={this.handleVolumeMouseDown} ref={this.setVolumeRef}>
                 <div className='video-player__volume__current' style={{ width: `${volumeWidth}px` }} />
