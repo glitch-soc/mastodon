@@ -5,10 +5,10 @@ import { throttle } from 'lodash';
 import classNames from 'classnames';
 
 const messages = defineMessages({
-  play: { id: 'video.play', defaultMessage: 'Play' },
-  pause: { id: 'video.pause', defaultMessage: 'Pause' },
-  mute: { id: 'video.mute', defaultMessage: 'Mute sound' },
-  unmute: { id: 'video.unmute', defaultMessage: 'Unmute sound' },
+  play: { id: 'audio.play', defaultMessage: 'Play' },
+  pause: { id: 'audio.pause', defaultMessage: 'Pause' },
+  mute: { id: 'audio.mute', defaultMessage: 'Mute sound' },
+  unmute: { id: 'audio.unmute', defaultMessage: 'Unmute sound' },
 });
 
 const formatTime = secondsNum => {
@@ -249,7 +249,7 @@ class Audio extends React.PureComponent {
     return (
       <div
         role='menuitem'
-        className='video-player inline audio-player'
+        className='inline audio-player'
         onClick={this.handleClickRoot}
         tabIndex={0}
       >
@@ -269,39 +269,39 @@ class Audio extends React.PureComponent {
           onVolumeChange={this.handleVolumeChange}
         />
 
-        <div className='video-player__controls active'>
-          <div className='video-player__seek' onMouseDown={this.handleMouseDown} ref={this.setSeekRef}>
-            <div className='video-player__seek__buffer' style={{ width: `${buffer}%` }} />
-            <div className='video-player__seek__progress' style={{ width: `${progress}%` }} />
+        <div className='audio-player__controls active'>
+          <div className='audio-player__seek' onMouseDown={this.handleMouseDown} ref={this.setSeekRef}>
+            <div className='audio-player__seek__buffer' style={{ width: `${buffer}%` }} />
+            <div className='audio-player__seek__progress' style={{ width: `${progress}%` }} />
 
             <span
-              className={classNames('video-player__seek__handle', { active: dragging })}
+              className={classNames('audio-player__seek__handle', { active: dragging })}
               tabIndex='0'
               style={{ left: `${progress}%` }}
             />
           </div>
 
-          <div className='video-player__buttons-bar'>
-            <div className='video-player__buttons left'>
+          <div className='audio-player__buttons-bar'>
+            <div className='audio-player__buttons left'>
               <button type='button' aria-label={intl.formatMessage(paused ? messages.play : messages.pause)} onClick={this.togglePlay}><i className={classNames('fa fa-fw', { 'fa-play': paused, 'fa-pause': !paused })} /></button>
               <button type='button' aria-label={intl.formatMessage(muted ? messages.unmute : messages.mute)} onClick={this.toggleMute}><i className={classNames('fa fa-fw', { 'fa-volume-off': muted, 'fa-volume-up': !muted })} /></button>
 
-              <div className='video-player__volume' onMouseDown={this.handleVolumeMouseDown} ref={this.setVolumeRef}>
-                <div className='video-player__volume__current' style={{ width: `${volumeWidth}px` }} />
+              <div className='audio-player__volume' onMouseDown={this.handleVolumeMouseDown} ref={this.setVolumeRef}>
+                <div className='audio-player__volume__current' style={{ width: `${volumeWidth}px` }} />
 
                 <span
-                  className={classNames('video-player__volume__handle')}
+                  className={classNames('audio-player__volume__handle')}
                   tabIndex='0'
                   style={{ left: `${volumeHandleLoc}px` }}
                 />
               </div>
             </div>
 
-            <div className='video-player__buttons right'>
+            <div className='audio-player__buttons right'>
               <span>
-                <span className='video-player__time-current'>{formatTime(currentTime)}</span>
-                <span className='video-player__time-sep'>/</span>
-                <span className='video-player__time-total'>{formatTime(duration)}</span>
+                <span className='audio-player__time-current'>{formatTime(currentTime)}</span>
+                <span className='audio-player__time-sep'>/</span>
+                <span className='audio-player__time-total'>{formatTime(duration)}</span>
               </span>
             </div>
           </div>

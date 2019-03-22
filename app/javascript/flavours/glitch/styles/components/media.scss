@@ -290,6 +290,7 @@
 
 }
 
+.audio-player,
 .video-player {
   overflow: hidden;
   position: relative;
@@ -558,6 +559,7 @@
 
 &.detailed,
 &.fullscreen {
+  .audio-player__buttons,
   .video-player__buttons {
     button {
       padding-top: 10px;
@@ -567,7 +569,8 @@
 }
 }
 
-.media-spoiler-video {
+.media-spoiler-video,
+.media-spoiler-audio {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -593,13 +596,13 @@
 }
 
 .audio-player {
-  .video-player__controls {
+  .audio-player__controls {
     position: static;
     background: transparent;
     padding-top: 6px;
   }
 
-  .video-player__buttons button {
+  .audio-player__buttons button {
     color: $darker-text-color;
 
     &:hover,
@@ -609,15 +612,15 @@
     }
   }
 
-  .video-player__time-sep,
-  .video-player__time-total,
-  .video-player__time-current {
+  .audio-player__time-sep,
+  .audio-player__time-total,
+  .audio-player__time-current {
     color: $dark-text-color;
     line-height: 23px;
   }
 
-  .video-player__seek::before,
-  .video-player__volume::before {
+  .audio-player__seek::before,
+  .audio-player__volume::before {
     background: lighten($ui-base-color, 8%);
   }
 }
