@@ -15,6 +15,7 @@ import VisibilityIcon from 'flavours/glitch/components/status_visibility_icon';
 import scheduleIdleTask from 'flavours/glitch/util/schedule_idle_task';
 import classNames from 'classnames';
 import PollContainer from 'flavours/glitch/containers/poll_container';
+import Audio from 'flavours/glitch/features/audio';
 
 export default class DetailedStatus extends ImmutablePureComponent {
 
@@ -124,6 +125,12 @@ export default class DetailedStatus extends ImmutablePureComponent {
     } else if (status.get('media_attachments').size > 0) {
       if (status.get('media_attachments').some(item => item.get('type') === 'unknown')) {
         media = <AttachmentList media={status.get('media_attachments')} />;
+      } else if (status.getIn(['media_attachments', 0, 'type']) === 'audio') {
+        const audio = status.getIn(['media_attachments', 0]);
+
+        media = (
+          <Audio src={audio.get('url')} duration={audio.getIn(['meta', 'original', 'duration'])} />
+        );
       } else if (status.getIn(['media_attachments', 0, 'type']) === 'video') {
         const video = status.getIn(['media_attachments', 0]);
         media = (

@@ -5,6 +5,7 @@ import { IntlProvider, addLocaleData } from 'react-intl';
 import { getLocale } from 'mastodon/locales';
 import MediaGallery from 'flavours/glitch/components/media_gallery';
 import Video from 'flavours/glitch/features/video';
+import Audio from 'flavours/glitch/features/audio';
 import Card from 'flavours/glitch/features/status/components/card';
 import Poll from 'flavours/glitch/components/poll';
 import ModalRoot from 'flavours/glitch/components/modal_root';
@@ -14,7 +15,7 @@ import { List as ImmutableList, fromJS } from 'immutable';
 const { localeData, messages } = getLocale();
 addLocaleData(localeData);
 
-const MEDIA_COMPONENTS = { MediaGallery, Video, Card, Poll };
+const MEDIA_COMPONENTS = { MediaGallery, Video, Audio, Card, Poll };
 
 export default class MediaContainer extends PureComponent {
 
