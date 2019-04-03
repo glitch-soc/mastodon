@@ -66,7 +66,7 @@ class ProcessMentionsService < BaseService
       serializer: ActivityPub::ActivitySerializer,
       adapter: ActivityPub::Adapter
     ).as_json
-    @activitypub_json = Oj.dump(@status.distributable? ? ActivityPub::LinkedDataSignature.new(payload).sign!(@status.account) : payload)
+    @activitypub_json = Oj.dump(@status.distributable? && ENV['PARANOID_MODE'] != 'true' ? ActivityPub::LinkedDataSignature.new(payload).sign!(@status.account) : payload)
   end
 
   def resolve_account_service

@@ -20,6 +20,8 @@ class StreamEntriesController < ApplicationController
       end
 
       format.atom do
+        raise ActiveRecord::RecordNotFound if ENV['PARANOID_MODE'] == 'true'
+
         unless @stream_entry.hidden?
           skip_session!
           expires_in 3.minutes, public: true

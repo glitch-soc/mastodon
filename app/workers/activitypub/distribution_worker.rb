@@ -54,7 +54,7 @@ class ActivityPub::DistributionWorker
   end
 
   def payload
-    @payload ||= @status.distributable? ? signed_payload : Oj.dump(unsigned_payload)
+    @payload ||= @status.distributable? && ENV['PARANOID_MODE'] != 'true' ? signed_payload : Oj.dump(unsigned_payload)
   end
 
   def relay!

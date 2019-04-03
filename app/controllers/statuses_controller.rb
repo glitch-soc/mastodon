@@ -39,9 +39,9 @@ class StatusesController < ApplicationController
       end
 
       format.json do
-        mark_cacheable! unless @stream_entry.hidden?
+        raise ActiveRecord::RecordNotFound if ENV['PARANOID_MODE'] == true && current_account.nil?
 
-        render_cached_json(['activitypub', 'note', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
+        render_cached_json(['activitypub', 'note', @status], content_type: 'application/activity+json', public: status_public?) do
           ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::NoteSerializer, adapter: ActivityPub::Adapter)
         end
       end
@@ -51,7 +51,9 @@ class StatusesController < ApplicationController
   def activity
     skip_session!
 
-    render_cached_json(['activitypub', 'activity', @status], content_type: 'application/activity+json', public: !@stream_entry.hidden?) do
+    raise ActiveRecord::RecordNotFound if ENV['PARANOID_MODE'] == true && current_account.nil?
+
+    render_cached_json(['activitypub', 'activity', @status], content_type: 'application/activity+json', public: status_public?) do
       ActiveModelSerializers::SerializableResource.new(@status, serializer: ActivityPub::ActivitySerializer, adapter: ActivityPub::Adapter)
     end
   end
@@ -79,6 +81,10 @@ class StatusesController < ApplicationController
   end
 
   private
+
+  def status_public?
+    !(@stream_entry.hidden? || ENV['PARANOID_MODE'] == 'true')
+  end
 
   def replies_collection_presenter
     page = ActivityPub::CollectionPresenter.new(
