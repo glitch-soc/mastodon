@@ -286,30 +286,27 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 18px;
 
-  strong {
+  &__html, &__account {
     display: block;
     height: 18px;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 18px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
 
-  span {
-    display: block;
-    height: 18px;
-    font-size: 15px;
-    line-height: 18px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+  &__html {
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  &__account {
+    font-size: 14px;
   }
 
   &:hover {
-    strong {
+    &__html {
       text-decoration: underline;
     }
   }
@@ -318,33 +315,24 @@
     padding: 0;
     height: 18px;
     font-size: 15px;
-    line-height: 18px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
 
-    strong {
+    &__account {
       display: inline;
       height: auto;
       font-size: inherit;
       line-height: inherit;
     }
 
-    span {
+    &__html {
       display: inline;
       height: auto;
       font-size: inherit;
       line-height: inherit;
     }
   }
-}
-
-.display-name__html {
-  font-weight: 500;
-}
-
-.display-name__account {
-  font-size: 14px;
 }
 
 .image-loader {

@@ -325,7 +325,7 @@
         background: linear-gradient(rgba($ui-base-color, 0), rgba($ui-base-color, 1));
         pointer-events: none;
       }
-      
+
       a:hover {
         text-decoration: none;
       }
@@ -380,11 +380,6 @@
   overflow: hidden;
 }
 
-.status__info__account .status__display-name {
-  display: block;
-  max-width: 100%;
-}
-
 .status__info {
   display: flex;
   font-size: 15px;
@@ -419,6 +414,11 @@
 .status__info__account {
   display: flex;
   align-items: center;
+
+  .status__display-name {
+    display: block;
+    max-width: 100%;
+  }
 }
 
 .status-check-box {
@@ -620,9 +620,9 @@
 }
 
 .detailed-status__display-name {
+  display: flex;
+  align-items: center;
   color: $secondary-text-color;
-  display: block;
-  line-height: 24px;
   margin-bottom: 15px;
   overflow: hidden;
 
@@ -640,7 +640,12 @@
 }
 
 .detailed-status__display-avatar {
-  float: left;
+  img {
+    // If this image is inline, it extends the height of the <div> due to height
+    // being calculated according to line-height instead of the content height.
+    display: block;
+  }
+
   margin-right: 10px;
 }
 
