@@ -788,6 +788,10 @@
       display: block;
     }
   }
+
+  .article-type img {
+    max-width: 95%;
+  }
 }
 
 .status__content.status__content--collapsed {
