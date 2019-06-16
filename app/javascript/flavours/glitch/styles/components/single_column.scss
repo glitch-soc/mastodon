@@ -206,6 +206,10 @@
   .columns-area__panels__pane--compositional {
     display: none;
   }
+
+  .columns-area__panels__main {
+    max-width: 100%;
+  }
 }
 
 @media screen and (min-width: 600px + (285px * 1) + (10px * 1)) {
