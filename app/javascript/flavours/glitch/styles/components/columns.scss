@@ -11,15 +11,42 @@
   justify-content: flex-start;
   overflow-x: auto;
   position: relative;
-}
 
-@include limited-single-column('screen and (min-width: 360px)', $parent: null) {
-  .columns-area {
-    padding: 10px;
-  }
+  &__panels {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 
-  .react-swipeable-view-container .columns-area {
-    height: calc(100% - 20px) !important;
+    &__pane {
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      display: flex;
+      justify-content: flex-end;
+
+      &--start {
+        justify-content: flex-start;
+      }
+
+      &__inner {
+        width: 285px;
+        pointer-events: auto;
+        height: 100%;
+      }
+    }
+
+    &__main {
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+
+      @media screen and (min-width: 360px) {
+        padding: 0 10px;
+      }
+    }
   }
 }
 
@@ -61,62 +88,6 @@
 
 .column {
   overflow: hidden;
-}
-
-@include limited-single-column('screen and (min-width: 360px)', $parent: null) {
-  .tabs-bar {
-    margin: 10px;
-    margin-bottom: 0;
-  }
-}
-
-:root {  //  Overrides .wide stylings for mobile view
-  @include single-column('screen and (max-width: 630px)', $parent: null) {
-    .column {
-      flex: auto;
-      width: 100%;
-      min-width: 0;
-      max-width: none;
-      padding: 0;
-    }
-
-    .columns-area {
-      flex-direction: column;
-    }
-
-    .search__input,
-    .autosuggest-textarea__textarea {
-      font-size: 16px;
-    }
-  }
-}
-
-@include multi-columns('screen and (min-width: 631px)', $parent: null) {
-  .columns-area {
-    padding: 0;
-  }
-
-  .column {
-    flex: 0 0 auto;
-    padding: 10px;
-    padding-left: 5px;
-    padding-right: 5px;
-
-    &:first-child {
-      padding-left: 10px;
-    }
-
-    &:last-child {
-      padding-right: 10px;
-    }
-  }
-
-  .columns-area > div {
-    .column {
-      padding-left: 5px;
-      padding-right: 5px;
-    }
-  }
 }
 
 .column-back-button {
@@ -183,8 +154,30 @@
   padding: 15px;
   text-decoration: none;
 
-  &:hover {
+  &:hover,
+  &:focus,
+  &:active {
     background: lighten($ui-base-color, 11%);
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &--transparent {
+    background: transparent;
+    color: $ui-secondary-color;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: transparent;
+      color: $primary-text-color;
+    }
+
+    &.active {
+      color: $ui-highlight-color;
+    }
   }
 }
 
@@ -277,7 +270,7 @@
   flex-direction: column;
   overflow: hidden;
 
-  .wide & {
+  .wide .columns-area:not(.columns-area--mobile) & {
     flex: auto;
     min-width: 330px;
     max-width: 400px;
@@ -292,6 +285,10 @@
   height: 48px;
   display: flex;
   margin-left: 0;
+}
+
+.column-header__links {
+  margin-bottom: 14px;
 }
 
 .column-header__links .text-btn {
@@ -438,6 +435,10 @@
     contain: strict;
   }
 
+  & > span {
+    max-width: 400px;
+  }
+
   a {
     color: $highlight-text-color;
     text-decoration: none;
@@ -501,29 +502,5 @@
   .icon-button {
     flex: 0 0 auto;
     margin: 0 5px;
-  }
-}
-
-.floating-action-button {
-  position: fixed;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 3.9375rem;
-  height: 3.9375rem;
-  bottom: 1.3125rem;
-  right: 1.3125rem;
-  background: darken($ui-highlight-color, 3%);
-  color: $white;
-  border-radius: 50%;
-  font-size: 21px;
-  line-height: 21px;
-  text-decoration: none;
-  box-shadow: 2px 3px 9px rgba($base-shadow-color, 0.4);
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: lighten($ui-highlight-color, 7%);
   }
 }

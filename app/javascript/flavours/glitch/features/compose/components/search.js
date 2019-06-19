@@ -33,7 +33,7 @@ class SearchPopout extends React.PureComponent {
     const { style } = this.props;
     const extraInformation = searchEnabled ? <FormattedMessage id='search_popout.tips.full_text' defaultMessage='Simple text returns statuses you have written, favourited, boosted, or have been mentioned in, as well as matching usernames, display names, and hashtags.' /> : <FormattedMessage id='search_popout.tips.text' defaultMessage='Simple text returns matching display names, usernames and hashtags' />;
     return (
-      <div style={{ ...style, position: 'absolute', width: 285 }}>
+      <div style={{ ...style, position: 'absolute', width: 285, zIndex: 2 }}>
         <Motion defaultStyle={{ opacity: 0, scaleX: 0.85, scaleY: 0.75 }} style={{ opacity: spring(1, { damping: 35, stiffness: 400 }), scaleX: spring(1, { damping: 35, stiffness: 400 }), scaleY: spring(1, { damping: 35, stiffness: 400 }) }}>
           {({ opacity, scaleX, scaleY }) => (
             <div className='drawer--search--popout' style={{ opacity: opacity, transform: `scale(${scaleX}, ${scaleY})` }}>
@@ -60,6 +60,10 @@ class SearchPopout extends React.PureComponent {
 export default @injectIntl
 class Search extends React.PureComponent {
 
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
+
   static propTypes = {
     value: PropTypes.string.isRequired,
     submitted: PropTypes.bool,
@@ -67,6 +71,7 @@ class Search extends React.PureComponent {
     onSubmit: PropTypes.func.isRequired,
     onClear: PropTypes.func.isRequired,
     onShow: PropTypes.func.isRequired,
+    openInRoute: PropTypes.bool,
     intl: PropTypes.object.isRequired,
   };
 
@@ -109,8 +114,10 @@ class Search extends React.PureComponent {
     const { onSubmit } = this.props;
     switch (e.key) {
     case 'Enter':
-      if (onSubmit) {
-        onSubmit();
+      onSubmit();
+
+      if (this.props.openInRoute) {
+        this.context.router.history.push('/search');
       }
       break;
     case 'Escape':

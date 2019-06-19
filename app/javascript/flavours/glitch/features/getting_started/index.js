@@ -8,12 +8,13 @@ import { openModal } from 'flavours/glitch/actions/modal';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { me, invitesEnabled, version } from 'flavours/glitch/util/initial_state';
+import { me } from 'flavours/glitch/util/initial_state';
 import { fetchFollowRequests } from 'flavours/glitch/actions/accounts';
 import { List as ImmutableList } from 'immutable';
 import { createSelector } from 'reselect';
 import { fetchLists } from 'flavours/glitch/actions/lists';
-import { preferencesLink, profileLink, signOutLink } from 'flavours/glitch/util/backend_links';
+import { preferencesLink, signOutLink } from 'flavours/glitch/util/backend_links';
+import LinkFooter from 'flavours/glitch/features/ui/components/link_footer';
 
 const messages = defineMessages({
   heading: { id: 'getting_started.heading', defaultMessage: 'Getting started' },
@@ -73,9 +74,15 @@ const badgeDisplay = (number, limit) => {
   }
 };
 
-@connect(makeMapStateToProps, mapDispatchToProps)
-@injectIntl
-export default class GettingStarted extends ImmutablePureComponent {
+const NAVIGATION_PANEL_BREAKPOINT = 600 + (285 * 2) + (10 * 2);
+
+ export default @connect(makeMapStateToProps, mapDispatchToProps)
+ @injectIntl
+ class GettingStarted extends ImmutablePureComponent {
+
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  };
 
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -95,7 +102,12 @@ export default class GettingStarted extends ImmutablePureComponent {
   }
 
   componentDidMount () {
-    const { myAccount, fetchFollowRequests } = this.props;
+    const { myAccount, fetchFollowRequests, multiColumn } = this.props;
+
+    if (!multiColumn && window.innerWidth >= NAVIGATION_PANEL_BREAKPOINT) {
+      this.context.router.history.replace('/timelines/home');
+      return;
+    }
 
     if (myAccount.get('locked')) {
       fetchFollowRequests();
@@ -135,7 +147,7 @@ export default class GettingStarted extends ImmutablePureComponent {
     }
 
     if (myAccount.get('locked')) {
-      navItems.push(<ColumnLink key='6' icon='users' text={intl.formatMessage(messages.follow_requests)} badge={badgeDisplay(unreadFollowRequests, 40)} to='/follow_requests' />);
+      navItems.push(<ColumnLink key='6' icon='user-plus' text={intl.formatMessage(messages.follow_requests)} badge={badgeDisplay(unreadFollowRequests, 40)} to='/follow_requests' />);
     }
 
     navItems.push(<ColumnLink key='7' icon='ellipsis-h' text={intl.formatMessage(messages.misc)} to='/getting-started-misc' />);
@@ -163,25 +175,7 @@ export default class GettingStarted extends ImmutablePureComponent {
             <ColumnLink icon='sign-out' text={intl.formatMessage(messages.sign_out)} href={signOutLink} method='delete' />
           </div>
 
-          <div className='getting-started__footer'>
-            <ul>
-              {invitesEnabled && <li><a href='/invites' target='_blank'><FormattedMessage id='getting_started.invite' defaultMessage='Invite people' /></a> · </li>}
-              <li><a href='/about/more' target='_blank'><FormattedMessage id='navigation_bar.info' defaultMessage='About this server' /></a> · </li>
-              <li><a href='https://joinmastodon.org/apps' target='_blank'><FormattedMessage id='navigation_bar.apps' defaultMessage='Mobile apps' /></a> · </li>
-              <li><a href='/terms' target='_blank'><FormattedMessage id='getting_started.terms' defaultMessage='Terms of service' /></a> · </li>
-              <li><a href='https://docs.joinmastodon.org' target='_blank'><FormattedMessage id='getting_started.documentation' defaultMessage='Documentation' /></a></li>
-            </ul>
-
-            <p>
-              <FormattedMessage
-                id='getting_started.open_source_notice'
-                defaultMessage='Glitchsoc is open source software, a friendly fork of {Mastodon}. You can contribute or report issues on GitHub at {github}.'
-                values={{
-                  github: <span><a href='https://github.com/glitch-soc/mastodon' rel='noopener' target='_blank'>glitch-soc/mastodon</a> (v{version})</span>,
-                  Mastodon: <a href='https://github.com/tootsuite/mastodon' rel='noopener' target='_blank'>Mastodon</a> }}
-              />
-            </p>
-          </div>
+          <LinkFooter />
         </div>
       </Column>
     );

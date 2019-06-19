@@ -8,10 +8,7 @@ const ComposePanel = () => (
   <div className='compose-panel'>
     <SearchContainer openInRoute />
     <NavigationContainer />
-    <ComposeFormContainer />
-
-    <div className='flex-spacer' />
-
+    <ComposeFormContainer singleColumn />
     <LinkFooter withHotkeys />
   </div>
 );
