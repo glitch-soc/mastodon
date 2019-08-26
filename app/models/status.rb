@@ -492,8 +492,9 @@ class Status < ApplicationRecord
 
   def set_locality
     if account.domain.nil? && !attribute_changed?(:local_only)
-      self.local_only = marked_local_only?
+      self.local_only = true if marked_local_only?
     end
+    self.local_only = true if thread&.local_only? && self.local_only.nil?
     self.local_only = reblog.local_only if reblog?
   end
 
