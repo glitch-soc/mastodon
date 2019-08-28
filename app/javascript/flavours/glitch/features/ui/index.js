@@ -277,7 +277,11 @@ export default class UI extends React.Component {
     if (this.props.unreadNotifications != prevProps.unreadNotifications ||
         this.props.showFaviconBadge != prevProps.showFaviconBadge) {
       if (this.favicon) {
-        this.favicon.badge(this.props.showFaviconBadge ? this.props.unreadNotifications : 0);
+        try {
+          this.favicon.badge(this.props.showFaviconBadge ? this.props.unreadNotifications : 0);
+        } catch (err) {
+          console.error(err);
+        }
       }
     }
   }
