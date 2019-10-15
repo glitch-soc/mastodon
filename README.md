@@ -1,12 +1,10 @@
-#  Mastodon Glitch Edition  #
+#  Mastodon VA-11 Hall-A Edition  #
 
->   Now with automated deploys!
+Mastodon VA-11 Hall-A Edition is a friendly fork of [Mastodon Glitch Edition](https://github.com/glitch-soc/mastodon) with some changes like:
+* Increased image resolution limit (15360x8640px)
+* Increased poll options limit (20)
+* Lower ruby version according to Ubuntu 18.04 LTS package
 
-[![Build Status](https://img.shields.io/circleci/project/github/glitch-soc/mastodon.svg)][circleci]
+So here's the deal: we all work on this code, and then it runs on va11hal.la and anyone who uses that does so absolutely at their own risk. can you dig it?
 
-[circleci]: https://circleci.com/gh/glitch-soc/mastodon
-
-So here's the deal: we all work on this code, and then it runs on dev.glitch.social and anyone who uses that does so absolutely at their own risk. can you dig it?
-
-- You can view documentation for this project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
-- And contributing guidelines are available [here](CONTRIBUTING.md) and [here](https://glitch-soc.github.io/docs/contributing/).
+Contributing guidelines are available [here](CONTRIBUTING.md)

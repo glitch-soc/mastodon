@@ -1,3 +1,21 @@
+#  Contributing to Mastodon VA-11 Hall-A Edition  #
+
+Thank you for your interest in contributing to the `Mastodon VA-11 Hall-A Edition` project!
+Here are some guidelines, and ways you can help.
+
+>   (This document is a bit of a work-in-progress, so please bear with us.
+>   If you don't see what you're looking for here, please don't hesitate to reach out!)
+
+##  Planning  ##
+
+Right now all of the planning for this project takes place in GitHub Issues and Projects.
+
+ - - -
+
+You should also try to follow the guidelines set out in the original `CONTRIBUTING.md` from `glitch-soc/mastodon`, reproduced below.
+
+<blockquote>
+
 #  Contributing to Mastodon Glitch Edition  #
 
 Thank you for your interest in contributing to the `glitch-soc` project!
@@ -35,7 +53,7 @@ CONTRIBUTING
 =======
 Contributing
 
-Thank you for considering contributing to Mastodon 🐘
+Thank you for considering contributing to Mastodon 
 
 You can contribute in the following ways:
 
@@ -71,5 +89,7 @@ The smaller the set of changes in the pull request is, the quicker it can be rev
 ## Documentation
 
 The [Mastodon documentation](https://docs.joinmastodon.org) is a statically generated site. You can [submit merge requests to mastodon/docs](https://source.joinmastodon.org/mastodon/docs).
+
+</blockquote>
 
 </blockquote>
