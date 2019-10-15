@@ -142,7 +142,7 @@ class PollForm extends ImmutablePureComponent {
         </ul>
 
         <div className='poll__footer'>
-          {options.size < 5 && (
+          {options.size < 20 && (
             <button className='button button-secondary' onClick={this.handleAddOption}><Icon id='plus' /> <FormattedMessage {...messages.add_option} /></button>
           )}
 
