@@ -27,6 +27,14 @@ import {
 } from 'flavours/glitch/actions/compose';
 import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
 import { muteStatus, unmuteStatus, deleteStatus } from 'flavours/glitch/actions/statuses';
+import {
+  unblockAccount,
+  unmuteAccount,
+} from 'flavours/glitch/actions/accounts';
+import {
+  blockDomain,
+  unblockDomain,
+} from 'flavours/glitch/actions/domain_blocks';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
@@ -36,7 +44,7 @@ import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import ColumnHeader from '../../components/column_header';
 import StatusContainer from 'flavours/glitch/containers/status_container';
 import { openModal } from 'flavours/glitch/actions/modal';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { HotKeys } from 'react-hotkeys';
 import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/util/initial_state';
@@ -56,6 +64,7 @@ const messages = defineMessages({
   replyConfirm: { id: 'confirmations.reply.confirm', defaultMessage: 'Reply' },
   replyMessage: { id: 'confirmations.reply.message', defaultMessage: 'Replying now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
   tootHeading: { id: 'column.toot', defaultMessage: 'Toots and replies' },
+  blockDomainConfirm: { id: 'confirmations.domain_block.confirm', defaultMessage: 'Hide entire domain' },
 });
 
 const makeMapStateToProps = () => {
@@ -355,6 +364,27 @@ class Status extends ImmutablePureComponent {
     this.handleToggleMediaVisibility();
   }
 
+  handleUnmuteClick = account => {
+    this.props.dispatch(unmuteAccount(account.get('id')));
+  }
+
+  handleUnblockClick = account => {
+    this.props.dispatch(unblockAccount(account.get('id')));
+  }
+
+  handleBlockDomainClick = domain => {
+    this.props.dispatch(openModal('CONFIRM', {
+      message: <FormattedMessage id='confirmations.domain_block.message' defaultMessage='Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable. You will not see content from that domain in any public timelines or your notifications. Your followers from that domain will be removed.' values={{ domain: <strong>{domain}</strong> }} />,
+      confirm: this.props.intl.formatMessage(messages.blockDomainConfirm),
+      onConfirm: () => this.props.dispatch(blockDomain(domain)),
+    }));
+  }
+
+  handleUnblockDomainClick = domain => {
+    this.props.dispatch(unblockDomain(domain));
+  }
+
+
   handleHotkeyMoveUp = () => {
     this.handleMoveUp(this.props.status.get('id'));
   }
@@ -572,8 +602,12 @@ class Status extends ImmutablePureComponent {
                   onDirect={this.handleDirectClick}
                   onMention={this.handleMentionClick}
                   onMute={this.handleMuteClick}
+                  onUnmute={this.handleUnmuteClick}
                   onMuteConversation={this.handleConversationMuteClick}
                   onBlock={this.handleBlockClick}
+                  onUnblock={this.handleUnblockClick}
+                  onBlockDomain={this.handleBlockDomainClick}
+                  onUnblockDomain={this.handleUnblockDomainClick}
                   onReport={this.handleReport}
                   onPin={this.handlePin}
                   onEmbed={this.handleEmbed}

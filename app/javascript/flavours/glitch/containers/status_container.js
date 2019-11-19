@@ -1,3 +1,4 @@
+import React from 'react';
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
 import { List as ImmutableList } from 'immutable';
@@ -18,6 +19,14 @@ import {
   unpin,
 } from 'flavours/glitch/actions/interactions';
 import { muteStatus, unmuteStatus, deleteStatus } from 'flavours/glitch/actions/statuses';
+import {
+  unmuteAccount,
+  unblockAccount,
+} from 'flavours/glitch/actions/accounts';
+import {
+  blockDomain,
+  unblockDomain,
+} from 'flavours/glitch/actions/domain_blocks';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
@@ -42,6 +51,7 @@ const messages = defineMessages({
   author: { id: 'confirmations.unfilter.author', defaultMessage: 'Author' },
   matchingFilters: { id: 'confirmations.unfilter.filters', defaultMessage: 'Matching {count, plural, one {filter} other {filters}}' },
   editFilter: { id: 'confirmations.unfilter.edit_filter', defaultMessage: 'Edit filter' },
+  blockDomainConfirm: { id: 'confirmations.domain_block.confirm', defaultMessage: 'Hide entire domain' },
 });
 
 const makeMapStateToProps = () => {
@@ -229,6 +239,10 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     });
   },
 
+  onUnblock (account) {
+    dispatch(unblockAccount(account.get('id')));
+  },
+
   onReport (status) {
     dispatch(initReport(status.get('account'), status));
   },
@@ -237,12 +251,28 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     dispatch(initMuteModal(account));
   },
 
+  onUnmute (account) {
+    dispatch(unmuteAccount(account.get('id')));
+  },
+
   onMuteConversation (status) {
     if (status.get('muted')) {
       dispatch(unmuteStatus(status.get('id')));
     } else {
       dispatch(muteStatus(status.get('id')));
     }
+  },
+
+  onBlockDomain (domain) {
+    dispatch(openModal('CONFIRM', {
+      message: <FormattedMessage id='confirmations.domain_block.message' defaultMessage='Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable. You will not see content from that domain in any public timelines or your notifications. Your followers from that domain will be removed.' values={{ domain: <strong>{domain}</strong> }} />,
+      confirm: intl.formatMessage(messages.blockDomainConfirm),
+      onConfirm: () => dispatch(blockDomain(domain)),
+    }));
+  },
+
+  onUnblockDomain (domain) {
+    dispatch(unblockDomain(domain));
   },
 
 });
