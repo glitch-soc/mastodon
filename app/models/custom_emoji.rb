@@ -46,11 +46,10 @@ class CustomEmoji < ApplicationRecord
   validates_attachment_size :image, less_than: LOCAL_LIMIT, if: :local?
   validates :shortcode, uniqueness: { scope: :domain }, format: { with: /\A#{SHORTCODE_RE_FRAGMENT}\z/ }, length: { minimum: 2 }
 
-  scope :local, -> { where(domain: nil) }
-  scope :remote, -> { where.not(domain: nil) }
+  scope :local,      -> { where(domain: nil) }
+  scope :remote,     -> { where.not(domain: nil) }
   scope :alphabetic, -> { order(domain: :asc, shortcode: :asc) }
   scope :by_domain_and_subdomains, ->(domain) { where(domain: domain).or(where(arel_table[:domain].matches('%.' + domain))) }
-  scope :listed, -> { local.where(disabled: false).where(visible_in_picker: true) }
 
   remotable_attachment :image, LIMIT
 
