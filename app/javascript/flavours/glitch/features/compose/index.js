@@ -12,7 +12,6 @@ import Motion from 'flavours/glitch/util/optional_motion';
 import spring from 'react-motion/lib/spring';
 import SearchResultsContainer from './containers/search_results_container';
 import { me, mascot } from 'flavours/glitch/util/initial_state';
-import { cycleElefriendCompose } from 'flavours/glitch/actions/compose';
 import HeaderContainer from './containers/header_container';
 
 const messages = defineMessages({
@@ -25,10 +24,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, { intl }) => ({
-  onClickElefriend () {
-    dispatch(cycleElefriendCompose());
-  },
-
   onMount () {
     dispatch(mountCompose());
   },
@@ -46,7 +41,6 @@ class Compose extends React.PureComponent {
     showSearch: PropTypes.bool,
     isSearchPage: PropTypes.bool,
     elefriend: PropTypes.number,
-    onClickElefriend: PropTypes.func,
     onMount: PropTypes.func,
     onUnmount: PropTypes.func,
     intl: PropTypes.object.isRequired,
@@ -73,11 +67,10 @@ class Compose extends React.PureComponent {
       elefriend,
       intl,
       multiColumn,
-      onClickElefriend,
       isSearchPage,
       showSearch,
     } = this.props;
-    const computedClass = classNames('drawer', `mbstobon-${elefriend}`);
+    const computedClass = classNames('drawer');
 
     return (
       <div className={computedClass} role='region' aria-label={intl.formatMessage(messages.compose)}>
@@ -92,7 +85,7 @@ class Compose extends React.PureComponent {
             <ComposeFormContainer />
 
             <div className='drawer__inner__mastodon'>
-              {mascot ? <img alt='' draggable='false' src={mascot} /> : <button className='mastodon' onClick={onClickElefriend} />}
+              {mascot ? <img alt='' draggable='false' src={mascot} /> : <div className='mastodon' />}
             </div>
           </div>}
 

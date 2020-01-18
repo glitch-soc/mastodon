@@ -95,12 +95,6 @@ export function changeCompose(text) {
   };
 };
 
-export function cycleElefriendCompose() {
-  return {
-    type: COMPOSE_CYCLE_ELEFRIEND,
-  };
-};
-
 export function replyCompose(status, routerHistory) {
   return (dispatch, getState) => {
     const prependCWRe = getState().getIn(['local_settings', 'prepend_cw_re']);

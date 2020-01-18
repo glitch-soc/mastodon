@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'mastodon-font-sans-serif';
+  src: url('~fonts/breezesans/BreezeSans-Bold.woff2') format('woff2'),
+    url('~fonts/breezesans/BreezeSans-Bold.woff') format('woff'),
+    url('~fonts/breezesans/BreezeSans-Bold.ttf') format('truetype'),
+    url('~fonts/breezesans/BreezeSans-Bold.svg#BreezeSans-Bold') format('svg');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'mastodon-font-sans-serif';
+  src: url('~fonts/breezesans/BreezeSans-Medium.woff2') format('woff2'),
+    url('~fonts/breezesans/BreezeSans-Medium.woff') format('woff'),
+    url('~fonts/breezesans/BreezeSans-Medium.ttf') format('truetype'),
+    url('~fonts/breezesans/BreezeSans-Medium.svg#BreezeSans-Medium') format('svg');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'mastodon-font-sans-serif';
+  src: url('~fonts/breezesans/BreezeSans-Regular.woff2') format('woff2'),
+    url('~fonts/breezesans/BreezeSans-Regular.woff') format('woff'),
+    url('~fonts/breezesans/BreezeSans-Regular.ttf') format('truetype'),
+    url('~fonts/breezesans/BreezeSans-Regular.svg#BreezeSans-Regular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}

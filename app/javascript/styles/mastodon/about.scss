@@ -454,7 +454,7 @@ $small-breakpoint: 960px;
     background: $ui-base-color;
     border-radius: 4px;
     padding: 25px 40px;
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
 
     .row {
@@ -581,6 +581,18 @@ $small-breakpoint: 960px;
       height: 190px;
       width: auto;
     }
+  }
+	
+	&__mascotmore {
+    height: 104px;
+    position: relative;
+    bottom: 25px;
+
+    img {
+        width: auto;
+				height: 179px;
+        margin-left: 15px;
+      }
   }
 
   &__short-description {
@@ -709,6 +721,16 @@ $small-breakpoint: 960px;
   .hero-widget {
     margin-top: 30px;
     margin-bottom: 0;
+		
+    background: none !important;
+    box-shadow: none !important;
+	
+    &__img {
+    overflow: visible !important; // so the trunk appears past negative margins.
+    background: none !important; // so only the trunk overlaps, not the BG.
+	  margin: 0 0 -4.9% 0 !important;
+	  background: none !important;
+    }
 
     h4 {
       padding: 10px;

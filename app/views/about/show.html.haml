@@ -9,7 +9,6 @@
   .landing__brand
     = link_to root_url, class: 'brand' do
       = svg_logo_full
-      %span.brand__tagline=t 'about.tagline'
 
   .landing__grid
     .landing__grid__column.landing__grid__column-registration
@@ -50,7 +49,7 @@
 
       .hero-widget
         .hero-widget__img
-          = image_tag @instance_presenter.hero&.file&.url || @instance_presenter.thumbnail&.file&.url || asset_pack_path('media/images/preview.jpg'), alt: @instance_presenter.site_title
+          = image_tag asset_pack_path('media/images/elephant_friend.svg'), alt: @instance_presenter.site_title
 
         .hero-widget__text
           %p
