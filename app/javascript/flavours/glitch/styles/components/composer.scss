@@ -654,6 +654,19 @@
     text-align: center;
   }
 
+  & > .privacy_warning {
+    background-color: $error-value-color;
+
+    &:hover {
+      background-color: lighten($error-value-color, 5%);
+    }
+
+    &:active,
+    &:focus {
+      background-color: darken($error-value-color, 5%);
+    }
+  }
+
   &.over {
     & > .count { color: $warning-red }
   }
