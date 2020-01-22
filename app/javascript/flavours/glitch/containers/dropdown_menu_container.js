@@ -1,4 +1,5 @@
 import { openDropdownMenu, closeDropdownMenu } from 'flavours/glitch/actions/dropdown_menu';
+import { fetchRelationships } from 'flavours/glitch/actions/accounts';
 import { openModal, closeModal } from 'flavours/glitch/actions/modal';
 import { connect } from 'react-redux';
 import DropdownMenu from 'flavours/glitch/components/dropdown_menu';
@@ -13,6 +14,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = (dispatch, { status, items }) => ({
   onOpen(id, onItemClick, dropdownPlacement, keyboard) {
+    if (status) {
+      dispatch(fetchRelationships([status.getIn(['account', 'id'])]));
+    }
+
     dispatch(isUserTouching() ? openModal('ACTIONS', {
       status,
       actions: items.map(
