@@ -27,6 +27,13 @@ GIT
   ref: fd184883048b922b176939f851338d0a4971a532
   specs:
     nilsimsa (1.1.2)
+	
+GIT
+  remote: https://github.com/firstmoversadvantage/hcaptcha
+  revision: e65246bea49374566a9dbaead59fdb35b46b086d
+  ref: e65246bea49374566a9dbaead59fdb35b46b086d
+  specs:
+    hcaptcha (6.0.1)
 
 GEM
   remote: https://rubygems.org/
@@ -706,6 +713,7 @@ DEPENDENCIES
   fuubar (~> 2.5)
   goldfinger (~> 2.1)
   hamlit-rails (~> 0.2)
+  hcaptcha
   health_check!
   hiredis (~> 0.6)
   htmlentities (~> 4.3)

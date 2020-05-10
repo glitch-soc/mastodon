@@ -100,6 +100,8 @@ gem 'tzinfo-data', '~> 1.2019'
 gem 'webpacker', '~> 4.2'
 gem 'webpush'
 
+gem 'hcaptcha', git: 'https://github.com/firstmoversadvantage/hcaptcha', ref:  'e65246bea49374566a9dbaead59fdb35b46b086d', require: 'hcaptcha/rails'
+
 gem 'json-ld'
 gem 'json-ld-preloaded', '~> 3.1'
 gem 'rdf-normalize', '~> 0.4'

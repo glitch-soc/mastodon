@@ -37,6 +37,7 @@ module Admin
       @keybase_integration   = Setting.enable_keybase
       @spam_check_enabled    = Setting.spam_check_enabled
       @trends_enabled        = Setting.trends
+      @hcaptcha_enabled      = ENV['HCAPTCHA_ENABLED'] == 'true'
     end
 
     private

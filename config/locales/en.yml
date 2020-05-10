@@ -324,6 +324,7 @@ en:
       backlog: backlogged jobs
       config: Configuration
       feature_deletions: Account deletions
+      feature_hcaptcha: hCaptcha
       feature_invites: Invite links
       feature_profile_directory: Profile directory
       feature_registrations: Registrations
