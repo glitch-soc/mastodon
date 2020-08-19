@@ -33,7 +33,7 @@ class FeedInsertWorker
     # of home apply to both
     case @type
     when :home, :list
-      FeedManager.instance.filter?(:home, @status, @follower.id)
+      FeedManager.instance.filter?(@type, @status, @follower.id)
     when :direct
       FeedManager.instance.filter?(:direct, @status, @account.id)
     end
