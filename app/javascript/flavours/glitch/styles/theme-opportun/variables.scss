@@ -1,0 +1,66 @@
+// Commonly used web colors
+$black: #000000;            // Black
+$white: #ffffff;            // White
+$success-green: #79bd9a;    // Padua
+$error-red: #df405a;        // Cerise
+$warning-red: #fbbbad;      // Sunset Orange
+$gold-star: #fbbbad;        // Dark Goldenrod
+
+$red-bookmark: $warning-red;
+
+$button-color: #fbbbad;
+$button-color-hover: #ee8695;
+
+// Values from the classic Mastodon UI
+$classic-base-color: #333f58;         // Midnight Express
+$classic-primary-color: #4a7a96;      // Echo Blue
+$classic-secondary-color: lighten(#4a7a96, 40%);    // Pattens Blue
+$classic-highlight-color: #ee8695;    // Summer Sky
+//$classic-highlight-color: #fbbbad;
+
+// Variables for defaults in UI
+$base-shadow-color: $black !default;
+$base-overlay-background: $black !default;
+$base-border-color: $white !default;
+$simple-background-color: $white !default;
+$valid-value-color: $success-green !default;
+$error-value-color: $error-red !default;
+
+// Tell UI to use selected colors
+$ui-base-color: $classic-base-color !default;                  // Darkest
+$ui-base-lighter-color: lighten($ui-base-color, 26%) !default; // Lighter darkest
+$ui-primary-color: $classic-primary-color !default;            // Lighter
+$ui-secondary-color: $classic-secondary-color !default;        // Lightest
+$ui-highlight-color: $classic-highlight-color !default;
+
+// Variables for texts
+$primary-text-color: $white !default;
+$darker-text-color: lighten($ui-primary-color, 26%) !default;
+$dark-text-color: lighten($ui-base-lighter-color, 13%) !default;
+$secondary-text-color: #fbbbad !default;
+$highlight-text-color: $ui-highlight-color !default;
+$action-button-color: $ui-base-lighter-color !default;
+// For texts on inverted backgrounds
+$inverted-text-color: $ui-base-color !default;
+$lighter-text-color: darken($ui-base-lighter-color,26%) !default;
+$light-text-color: darken($ui-primary-color, 13%) !default;
+
+// Language codes that uses CJK fonts
+$cjk-langs: ja, ko, zh-CN, zh-HK, zh-TW;
+
+// Variables for components
+$media-modal-media-max-width: 100%;
+// put margins on top and bottom of image to avoid the screen covered by image.
+$media-modal-media-max-height: 80%;
+
+$no-gap-breakpoint: 415px;
+
+$font-sans-serif: 'mastodon-font-sans-serif' !default;
+$font-display: 'mastodon-font-display' !default;
+$font-monospace: 'mastodon-font-monospace' !default;
+
+// Avatar border size (8% default, 100% for rounded avatars)
+$ui-avatar-border-size: 8%;
+
+// More variables
+$dismiss-overlay-width: 4rem;
