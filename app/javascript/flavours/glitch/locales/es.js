@@ -81,7 +81,7 @@ const messages = {
   "settings.notifications.tab_badge": "Marcador de notificaciones no leídas",
   "settings.preferences": "Preferencias de usuarix",
   "settings.prepend_cw_re": 'Anteponer "re: " a las advertencias de contenido al responder',
-  "settings.preselect_on_reply_hint": "Al responder a conversaciones con múltiples participantes, preselecciona los nombres de usuarix de subsecuentes de/la primerx",
+  "settings.preselect_on_reply_hint": "Al responder a conversaciones con múltiples participantes, preselecciona los nombres de usuarix subsecuentes del/la primerx",
   "settings.preselect_on_reply": "Preseleccionar nombres de usuarix al responder",
   "settings.rewrite_mentions_acct": "Reescribir con nombre de usuarix y dominio (para cuentas remotas)",
   "settings.rewrite_mentions_no": "No reescribir menciones",
