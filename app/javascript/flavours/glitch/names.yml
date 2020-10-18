@@ -17,7 +17,7 @@ es:
   flavours:
     glitch:
       description: El diseño predeterminado para las instancias con GlitchSoc.
-      name: Diseño Glitchsoc
+      name: Glitchsoc
   skins:
     glitch:
       default: Predeterminado
