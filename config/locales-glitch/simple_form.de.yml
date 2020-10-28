@@ -1,0 +1,20 @@
+---
+de:
+  simple_form:
+    hints:
+      defaults:
+        setting_default_content_type_html: Nehme beim Schreiben von Beiträgen an, dass sie in HTML geschrieben sind, sofern nicht anders angegeben
+        setting_default_content_type_markdown: Nehme beim Schreiben von Beiträgen an, dass sie in Markdown geschrieben sind, sofern nicht anders angegeben
+        setting_default_content_type_plain: Nehme beim Schreiben von Beiträgen an, dass sie in Klartext geschrieben sind, sofern nicht anders angegeben (Standard Mastodon-Verhalten)
+        setting_default_language: Die Sprache deiner Beiträge kann automatisch erkannt werden, ist jedoch nicht immer korrekt
+        setting_skin: Ändert das Design von Mastodon
+    labels:
+      defaults:
+        setting_default_content_type: Standardformat für Beiträge
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Markdown
+        setting_default_content_type_plain: Klartext
+        setting_favourite_modal: Bestätigungsdialog vor der Markierung als Favorit anzeigen (gilt nur für die Glitch-Variante)
+        setting_hide_followers_count: Verstecke die Anzahl deiner Follower
+        setting_skin: Skin
+        setting_system_emoji_font: Verwende die Standardschriftart des Systems für Emojis (gilt nur für die Glitch-Variante)
