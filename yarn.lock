@@ -2795,7 +2795,7 @@ braces@^3.0.2, braces@~3.0.2:
   dependencies:
     fill-range "^7.0.1"
 
-bricks.js@^1.7.0:
+bricks.js@^1.7.0, bricks.js@^1.8.0:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/bricks.js/-/bricks.js-1.8.0.tgz#8fdeb3c0226af251f4d5727a7df7f9ac0092b4b2"
   integrity sha1-j96zwCJq8lH01XJ6fff5rACStLI=
@@ -9080,6 +9080,14 @@ react-event-listener@^0.6.0:
     prop-types "^15.6.0"
     warning "^4.0.1"
 
+react-giphy-searchbox@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/react-giphy-searchbox/-/react-giphy-searchbox-1.5.4.tgz#49c6f98bf1afefbbd3a9ab3c5f79709cb32f399b"
+  integrity sha512-5SCiT3Y/0aeJcFfd3yXwJ1LShmDTTSL/aKJUXu9t0eBvwUU5DSev/JvMx3ijedsWpHuMtkwHLy5jV3pBDdzPQw==
+  dependencies:
+    bricks.js "^1.8.0"
+    react-infinite-scroller "^1.2.4"
+
 react-hotkeys@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/react-hotkeys/-/react-hotkeys-1.1.4.tgz#a0712aa2e0c03a759fd7885808598497a4dace72"
@@ -9103,7 +9111,7 @@ react-immutable-pure-component@^2.2.2:
   resolved "https://registry.yarnpkg.com/react-immutable-pure-component/-/react-immutable-pure-component-2.2.2.tgz#3014d3e20cd5a7a4db73b81f1f1464f4d351684b"
   integrity sha512-vkgoMJUDqHZfXXnjVlG3keCxSO/U6WeDQ5/Sl0GK2cH8TOxEzQ5jXqDXHEL/jqk6fsNxV05oH5kD7VNMUE2k+A==
 
-react-infinite-scroller@^1.0.12:
+react-infinite-scroller@^1.0.12, react-infinite-scroller@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.4.tgz#f67eaec4940a4ce6417bebdd6e3433bfc38826e9"
   integrity sha512-/oOa0QhZjXPqaD6sictN2edFMsd3kkMiE19Vcz5JDgHpzEJVqYcmq+V3mkwO88087kvKGe1URNksHEOt839Ubw==

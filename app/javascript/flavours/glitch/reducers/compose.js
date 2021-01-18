@@ -37,6 +37,7 @@ import {
   COMPOSE_UPLOAD_CHANGE_SUCCESS,
   COMPOSE_UPLOAD_CHANGE_FAIL,
   COMPOSE_DOODLE_SET,
+  COMPOSE_GIPHY_SET,
   COMPOSE_RESET,
   COMPOSE_POLL_ADD,
   COMPOSE_POLL_REMOVE,
@@ -112,6 +113,7 @@ const initialState = ImmutableMap({
     focusY: 0,
     dirty: false,
   }),
+  giphy: null,
   doodle: ImmutableMap({
     fg: 'rgb(  0,    0,    0)',
     bg: 'rgb(255,  255,  255)',
@@ -550,6 +552,8 @@ export default function compose(state = initialState, action) {
       }));
   case COMPOSE_DOODLE_SET:
     return state.mergeIn(['doodle'], action.options);
+  case COMPOSE_GIPHY_SET:
+    return state.mergeIn(['giphy'], action.options);
   case REDRAFT:
     const do_not_federate = !!action.status.get('local_only');
     let text = action.raw_text || unescapeHTML(expandMentions(action.status));
