@@ -48,7 +48,7 @@ class GIFModal extends ImmutablePureComponent {
   }
 
   onDoneButton = (item) => {
-    const url = item["images"]["original"]["url"];
+    const url = item["images"]["original"]["mp4"];
     var modal = this;
     fetch(url).then(function(response) {
       return response.blob();
@@ -57,8 +57,7 @@ class GIFModal extends ImmutablePureComponent {
       reader.readAsDataURL(blob); 
       reader.onloadend = function() {
         var dataUrl = reader.result;
-        console.log(dataUrl);
-        const file = dataURLtoFile(dataUrl, 'giphy.gif');
+        const file = dataURLtoFile(dataUrl, 'giphy.mp4');
         modal.props.submit(file);
         modal.props.onClose(); // close dialog
       };
