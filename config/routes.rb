@@ -193,14 +193,17 @@ Rails.application.routes.draw do
   namespace :admin do
     get '/dashboard', to: 'dashboard#index'
 
-    resources :domain_allows, only: [:new, :create, :show, :destroy] do
+    resources :domain_allows, only: [:new, :create, :show, :destroy]
+    resources :domain_blocks, only: [:new, :create, :show, :destroy, :update, :edit]
+
+    resources :export_domain_allows, only: [:new] do
       collection do
         get :export, constraints: { format: :csv }
         post :import
       end
     end
 
-    resources :domain_blocks, only: [:new, :create, :show, :destroy, :update, :edit] do
+    resources :export_domain_blocks, only: [:new] do
       collection do
         get :export, constraints: { format: :csv }
         post :import
