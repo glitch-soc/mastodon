@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
@@ -11,6 +12,7 @@ import AttachmentList from 'flavours/glitch/components/attachment_list';
 import Icon from 'flavours/glitch/components/icon';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import classNames from 'classnames';
+import { changeBoostPrivacy } from 'flavours/glitch/actions/boosts';
 
 const messages = defineMessages({
   cancel_reblog: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
@@ -21,7 +23,22 @@ const messages = defineMessages({
   direct_short: { id: 'privacy.direct.short', defaultMessage: 'Direct' },
 });
 
-export default @injectIntl
+const mapStateToProps = state => {
+  return {
+    privacy: state.getIn(['boosts', 'new', 'privacy']),
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onChangeBoostPrivacy(e) {
+      dispatch(changeBoostPrivacy(e.target.value));
+    },
+  };
+};
+
+export default @connect(mapStateToProps, mapDispatchToProps)
+@injectIntl
 class BoostModal extends ImmutablePureComponent {
 
   static contextTypes = {
@@ -32,6 +49,8 @@ class BoostModal extends ImmutablePureComponent {
     status: ImmutablePropTypes.map.isRequired,
     onReblog: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
+    onChangeBoostPrivacy: PropTypes.func.isRequired,
+    privacy: PropTypes.string.isRequired,
     missingMediaDescription: PropTypes.bool,
     intl: PropTypes.object.isRequired,
   };
@@ -41,7 +60,7 @@ class BoostModal extends ImmutablePureComponent {
   }
 
   handleReblog = () => {
-    this.props.onReblog(this.props.status);
+    this.props.onReblog(this.props.status, this.props.privacy);
     this.props.onClose();
   }
 
@@ -59,8 +78,12 @@ class BoostModal extends ImmutablePureComponent {
     this.button = c;
   }
 
+  changePrivacy = (e) => {
+    this.props.onChangeBoostPrivacy(e);
+  }
+
   render () {
-    const { status, missingMediaDescription, intl } = this.props;
+    const { status, missingMediaDescription, privacy, intl } = this.props;
     const buttonText = status.get('reblogged') ? messages.cancel_reblog : messages.reblog;
 
     const visibilityIconInfo = {
@@ -101,6 +124,19 @@ class BoostModal extends ImmutablePureComponent {
               />
             )}
           </div>
+
+          { status.get('visibility') !== 'private' && !status.get('reblogged') && (
+            <div className='boost-modal__privacy-selector'>
+              <span><FormattedMessage id='boost_modal.boost_privacy' defaultMessage='Boost privacy' />: </span>
+
+              {/* eslint-disable-next-line jsx-a11y/no-onchange */}
+              <select value={privacy} onChange={this.changePrivacy}>
+                <option value='public'>{intl.formatMessage(messages.public_short)}</option>
+                <option value='unlisted'>{intl.formatMessage(messages.unlisted_short)}</option>
+                <option value='private'>{intl.formatMessage(messages.private_short)}</option>
+              </select>
+            </div>
+          )}
         </div>
 
         <div className='boost-modal__action-bar'>
