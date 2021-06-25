@@ -10,6 +10,7 @@ const initialState = element && function () {
 }();
 
 const getMeta = (prop) => initialState && initialState.meta && initialState.meta[prop];
+const getRight = (prop) => initialState && initialState.rights && initialState.rights[prop];
 
 export const reduceMotion = getMeta('reduce_motion');
 export const autoPlayGif = getMeta('auto_play_gif');
@@ -34,5 +35,7 @@ export const useBlurhash = getMeta('use_blurhash');
 export const usePendingItems = getMeta('use_pending_items');
 export const useSystemEmojiFont = getMeta('system_emoji_font');
 export const showTrends = getMeta('trends');
+
+export const deleteOthersNotice = getRight('delete_others_notice');
 
 export default initialState;
