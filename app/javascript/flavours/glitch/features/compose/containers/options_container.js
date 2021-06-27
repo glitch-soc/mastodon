@@ -49,6 +49,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(openModal('DOODLE', { noEsc: true }));
   },
 
+  onEmbedGiphy() {
+    dispatch(openModal('GIPHY', { noEsc: true }));
+  },
+
   onModalClose() {
     dispatch(closeModal());
   },
