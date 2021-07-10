@@ -15,6 +15,7 @@ class PostStatusService < BaseService
   # @option [String] :spoiler_text
   # @option [String] :language
   # @option [String] :scheduled_at
+  # @option [Boolean] :local_only
   # @option [Hash] :poll Optional poll to attach
   # @option [Enumerable] :media_ids Optional array of media IDs to attach
   # @option [Doorkeeper::Application] :application
@@ -174,6 +175,7 @@ class PostStatusService < BaseService
       application: @options[:application],
       content_type: @options[:content_type] || @account.user&.setting_default_content_type,
       rate_limit: @options[:with_rate_limit],
+      local_only: @options[:local_only],
     }.compact
   end
 
