@@ -38,6 +38,7 @@ const messages = defineMessages({
   admin_status: { id: 'status.admin_status', defaultMessage: 'Open this status in the moderation interface' },
   copy: { id: 'status.copy', defaultMessage: 'Copy link to status' },
   hide: { id: 'status.hide', defaultMessage: 'Hide toot' },
+  translate: { id: 'status.translate', defaultMessage: 'Translate' },
 });
 
 export default @injectIntl
@@ -190,6 +191,17 @@ class StatusActionBar extends ImmutablePureComponent {
     this.props.onFilter();
   }
 
+  handleTranslateClick = () => {
+    var userLang = navigator.language || navigator.userLanguage;
+    userLang = userLang.split("-")[0];
+    var html = this.props.status.get('content').replaceAll("%", "%25").replaceAll("</p><p>", "%0A").replaceAll("<p>", "").replaceAll("<br>", "%0A").replaceAll("%20", " ");
+    var temp = document.createElement("div");
+    temp.innerHTML = html;
+    var plain = temp.textContent || temp.innerText || "";
+    var url = "https://translate.google.com/?sl=auto&tl="+userLang+"&text="+plain+"&op=translate";
+    window.open(url, '_blank');
+  }
+
   render () {
     const { status, intl, withDismiss, showReplyCount, directMessage, scrollKey } = this.props;
 
@@ -307,6 +319,7 @@ class StatusActionBar extends ImmutablePureComponent {
           <IconButton key='reblog-button' className={classNames('status__action-bar-button', { reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} pressed={status.get('reblogged')} title={reblogTitle} icon={reblogIcon} onClick={this.handleReblogClick} />,
           <IconButton key='favourite-button' className='status__action-bar-button star-icon' animate active={status.get('favourited')} pressed={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} />,
           shareButton,
+          <IconButton key='translate-button' className='status__action-bar-button fa fa-language' title={intl.formatMessage(messages.translate)} onClick={this.handleTranslateClick} />,
           <IconButton key='bookmark-button' className='status__action-bar-button bookmark-icon' disabled={anonymousAccess} active={status.get('bookmarked')} pressed={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' onClick={this.handleBookmarkClick} />,
           filterButton,
           <div key='dropdown-button' className='status__action-bar-dropdown'>

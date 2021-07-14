@@ -385,6 +385,7 @@
   "status.cancel_reblog_private": "Nicht mehr teilen",
   "status.cannot_reblog": "Dieser Beitrag kann nicht geteilt werden",
   "status.copy": "Kopiere Link zum Beitrag",
+  "status.translate": "Übersetzen",
   "status.delete": "Löschen",
   "status.detailed_status": "Detaillierte Ansicht der Konversation",
   "status.direct": "Direktnachricht @{name}",
