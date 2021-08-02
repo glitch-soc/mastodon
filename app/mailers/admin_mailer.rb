@@ -21,7 +21,7 @@ class AdminMailer < ApplicationMailer
     @instance = Rails.configuration.x.local_domain
 
     locale_for_account(@me) do
-      mail to: @me.user_email, subject: I18n.t('admin_mailer.new_pending_account.subject', instance: @instance, username: @account.username)
+      mail to: @me.user_email, reply_to: user.email, subject: I18n.t('admin_mailer.new_pending_account.subject', instance: @instance, username: @account.username)
     end
   end
 
