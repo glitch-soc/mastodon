@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { preferencesLink } from 'flavours/glitch/util/backend_links';
+import { repository } from 'flavours/glitch/util/initial_state';
 import StackTrace from 'stacktrace-js';
 
 export default class ErrorBoundary extends React.PureComponent {
@@ -84,7 +85,7 @@ export default class ErrorBoundary extends React.PureComponent {
               <FormattedMessage
                 id='web_app_crash.report_issue'
                 defaultMessage='Report a bug in the {issuetracker}'
-                values={{ issuetracker: <a href='https://github.com/glitch-soc/mastodon/issues' rel='noopener noreferrer' target='_blank'><FormattedMessage id='web_app_crash.issue_tracker' defaultMessage='issue tracker' /></a> }}
+                values={{ issuetracker: <a href={`https://github.com/${repository}/issues`} rel='noopener noreferrer' target='_blank'><FormattedMessage id='web_app_crash.issue_tracker' defaultMessage='issue tracker' /></a> }}
               />
               { debugInfo !== '' && (
                 <details>
