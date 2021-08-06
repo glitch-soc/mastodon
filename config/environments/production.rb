@@ -122,8 +122,11 @@ Rails.application.configure do
     'Permissions-Policy'      => 'interest-cohort=()',
     'Referrer-Policy'         => 'same-origin',
     'Strict-Transport-Security' => 'max-age=63072000; includeSubDomains; preload',
-    'X-Clacks-Overhead' => 'GNU Natalie Nguyen'
   }
+
+  if not (clacks_overhead = ENV.fetch('CLACKS_OVERHEAD', 'GNU Natalie Nguyen')).empty?
+    config.action_dispatch.default_headers['X-Clacks-Overhead'] = clacks_overhead
+  end
 
   config.x.otp_secret = ENV.fetch('OTP_SECRET')
 end
