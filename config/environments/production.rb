@@ -121,9 +121,14 @@ Rails.application.configure do
     'X-XSS-Protection'        => '1; mode=block',
     'Permissions-Policy'      => 'interest-cohort=()',
     'Referrer-Policy'         => 'same-origin',
-    'Strict-Transport-Security' => 'max-age=63072000; includeSubDomains; preload',
     'X-Clacks-Overhead' => 'GNU Natalie Nguyen'
   }
+
+  if (hsts = ENV.fetch('HSTS', 'true')) == 'true'
+    config.action_dispatch.default_headers['Strict-Transport-Security'] = 'max-age=63072000; includeSubDomains; preload'
+  elsif hsts != 'false'
+    config.action_dispatch.default_headers['Strict-Transport-Security'] = hsts
+  end
 
   config.x.otp_secret = ENV.fetch('OTP_SECRET')
 end
