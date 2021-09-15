@@ -7,7 +7,6 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import Icon from 'flavours/glitch/components/icon';
-import { isUserTouching } from 'flavours/glitch/util/is_mobile';
 
 export default class Upload extends ImmutablePureComponent {
 
@@ -32,7 +31,7 @@ export default class Upload extends ImmutablePureComponent {
   }
 
   render () {
-    const { intl, media } = this.props;
+    const { media } = this.props;
     const focusX = media.getIn(['meta', 'focus', 'x']);
     const focusY = media.getIn(['meta', 'focus', 'y']);
     const x = ((focusX /  2) + .5) * 100;

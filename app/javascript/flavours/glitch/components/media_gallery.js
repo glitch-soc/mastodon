@@ -286,7 +286,7 @@ class MediaGallery extends React.PureComponent {
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate ( ) {
     if (this.node) {
       this.handleResize();
     }
@@ -323,7 +323,7 @@ class MediaGallery extends React.PureComponent {
 
   _setDimensions () {
     const width = this.node.offsetWidth;
- 
+
     if (width && width != this.state.width) {
       // offsetWidth triggers a layout, so only calculate when we need to
       if (this.props.cacheWidth) {

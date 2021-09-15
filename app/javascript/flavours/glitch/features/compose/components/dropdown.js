@@ -10,7 +10,6 @@ import DropdownMenu from './dropdown_menu';
 
 //  Utils.
 import { isUserTouching } from 'flavours/glitch/util/is_mobile';
-import { assignHandlers } from 'flavours/glitch/util/react_helpers';
 
 //  The component.
 export default class ComposerOptionsDropdown extends React.PureComponent {
@@ -45,7 +44,6 @@ export default class ComposerOptionsDropdown extends React.PureComponent {
   //  Toggles opening and closing the dropdown.
   handleToggle = ({ target, type }) => {
     const { onModalOpen, noModal } = this.props;
-    const { open } = this.state;
 
     if (!noModal && isUserTouching()) {
       if (this.state.open) {

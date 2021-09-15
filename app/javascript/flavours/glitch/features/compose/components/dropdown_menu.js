@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import spring from 'react-motion/lib/spring';
 import Toggle from 'react-toggle';
-import ImmutablePureComponent from 'react-immutable-pure-component';
 import classNames from 'classnames';
 
 //  Components.
@@ -12,7 +11,6 @@ import Icon from 'flavours/glitch/components/icon';
 //  Utils.
 import { withPassive } from 'flavours/glitch/util/dom_helpers';
 import Motion from 'flavours/glitch/util/optional_motion';
-import { assignHandlers } from 'flavours/glitch/util/react_helpers';
 
 //  The spring to use with our motion.
 const springMotion = spring(1, {
@@ -81,7 +79,6 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
     const {
       onChange,
       onClose,
-      items,
     } = this.props;
 
     const { on } = this.props.items.find(item => item.name === name);
@@ -196,8 +193,6 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
     const { mounted } = this.state;
     const {
       items,
-      onChange,
-      onClose,
       style,
     } = this.props;
 

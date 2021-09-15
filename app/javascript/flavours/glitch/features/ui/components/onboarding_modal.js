@@ -40,7 +40,7 @@ PageOne.propTypes = {
   domain: PropTypes.string.isRequired,
 };
 
-const PageTwo = ({ intl, myAccount }) => (
+const PageTwo = ({ myAccount }) => (
   <div className='onboarding-modal__page onboarding-modal__page-two'>
     <div className='figure non-interactive'>
       <div className='pseudo-drawer'>
@@ -63,7 +63,7 @@ PageTwo.propTypes = {
   myAccount: ImmutablePropTypes.map.isRequired,
 };
 
-const PageThree = ({ intl, myAccount }) => (
+const PageThree = ({ myAccount }) => (
   <div className='onboarding-modal__page onboarding-modal__page-three'>
     <div className='figure non-interactive'>
       <Search

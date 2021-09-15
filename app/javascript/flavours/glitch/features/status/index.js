@@ -509,7 +509,6 @@ class Status extends ImmutablePureComponent {
 
   render () {
     let ancestors, descendants;
-    const { setExpansion } = this;
     const { status, settings, ancestorsIds, descendantsIds, intl, domain, multiColumn, usingPiP } = this.props;
     const { fullscreen, isExpanded } = this.state;
 

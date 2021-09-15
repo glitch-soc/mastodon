@@ -1,10 +1,8 @@
 //  This file will be loaded on public pages, regardless of theme.
 
 import 'packs/public-path';
-import ready from '../mastodon/ready';
 
 const { delegate } = require('@rails/ujs');
-const { length } = require('stringz');
 
 delegate(document, '.webapp-btn', 'click', ({ target, button }) => {
   if (button !== 0) {

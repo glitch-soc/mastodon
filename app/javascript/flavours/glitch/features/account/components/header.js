@@ -10,7 +10,6 @@ import Icon from 'flavours/glitch/components/icon';
 import IconButton from 'flavours/glitch/components/icon_button';
 import Avatar from 'flavours/glitch/components/avatar';
 import Button from 'flavours/glitch/components/button';
-import { NavLink } from 'react-router-dom';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
 import AccountNoteContainer from '../containers/account_note_container';
 
@@ -318,7 +317,7 @@ class Header extends ImmutablePureComponent {
                     {fields.map((pair, i) => (
                       <dl key={i}>
                         <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} />
-   
+
                         <dd className={pair.get('verified_at') && 'verified'} title={pair.get('value_plain')}>
                           {pair.get('verified_at') && <span title={intl.formatMessage(messages.linkVerifiedOn, { date: intl.formatDate(pair.get('verified_at'), dateFormatOptions) })}><Icon id='check' className='verified__mark' /></span>} <span dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} className='translate' />
                         </dd>

@@ -272,7 +272,7 @@ class Status extends ImmutablePureComponent {
 
   //  Hack to fix timeline jumps on second rendering when auto-collapsing
   //  or on subsequent rendering when a preview card has been fetched
-  getSnapshotBeforeUpdate (prevProps, prevState) {
+  getSnapshotBeforeUpdate () {
     if (!this.props.getScrollPosition) return null;
 
     const { muted, hidden, status, settings } = this.props;
@@ -450,7 +450,7 @@ class Status extends ImmutablePureComponent {
     this.props.onMoveDown(this.props.containerId || this.props.id, e.target.getAttribute('data-featured'));
   }
 
-  handleHotkeyCollapse = e => {
+  handleHotkeyCollapse = () => {
     if (!this.props.settings.getIn(['collapsed', 'enabled']))
       return;
 
@@ -461,7 +461,7 @@ class Status extends ImmutablePureComponent {
     this.handleToggleMediaVisibility();
   }
 
-  handleUnfilterClick = e => {
+  handleUnfilterClick = () => {
     const { onUnfilter, status } = this.props;
     onUnfilter(status.get('reblog') ? status.get('reblog') : status, () => this.setState({ forceFilter: false }));
   }
@@ -490,7 +490,6 @@ class Status extends ImmutablePureComponent {
     const {
       handleRef,
       parseClick,
-      setExpansion,
       setCollapsed,
     } = this;
     const { router } = this.context;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
+import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import { fetchAccount } from 'flavours/glitch/actions/accounts';
 import { expandAccountMediaTimeline } from 'flavours/glitch/actions/timelines';

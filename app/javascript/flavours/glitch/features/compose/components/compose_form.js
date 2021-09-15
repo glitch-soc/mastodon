@@ -270,9 +270,7 @@ class ComposeForm extends ImmutablePureComponent {
     const {
       handleEmoji,
       handleSecondarySubmit,
-      handleSelect,
       handleSubmit,
-      handleRefTextarea,
     } = this;
     const {
       advancedOptions,
@@ -290,7 +288,6 @@ class ComposeForm extends ImmutablePureComponent {
       sideArm,
       spoiler,
       spoilerText,
-      suggestions,
       spoilersAlwaysOn,
     } = this.props;
 

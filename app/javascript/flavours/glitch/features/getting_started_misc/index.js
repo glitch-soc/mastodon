@@ -33,11 +33,11 @@ class gettingStartedMisc extends ImmutablePureComponent {
     dispatch: PropTypes.func.isRequired,
   };
 
-  openOnboardingModal = (e) => {
+  openOnboardingModal = ( ) => {
     this.props.dispatch(openModal('ONBOARDING'));
   }
 
-  openFeaturedAccountsModal = (e) => {
+  openFeaturedAccountsModal = ( ) => {
     this.props.dispatch(openModal('PINNED_ACCOUNTS_EDITOR'));
   }
 
@@ -52,15 +52,15 @@ class gettingStartedMisc extends ImmutablePureComponent {
 
         <div className='scrollable'>
           <ColumnSubheading text={intl.formatMessage(messages.subheading)} />
-          <ColumnLink key='{i++}' icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />
-          <ColumnLink key='{i++}' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />
-          <ColumnLink key='{i++}' icon='users' text={intl.formatMessage(messages.featured_users)} onClick={this.openFeaturedAccountsModal} />
-          <ColumnLink key='{i++}' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />
-          <ColumnLink key='{i++}' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />
-          <ColumnLink key='{i++}' icon='minus-circle' text={intl.formatMessage(messages.domain_blocks)} to='/domain_blocks' />
-          <ColumnLink key='{i++}' icon='question' text={intl.formatMessage(messages.keyboard_shortcuts)} to='/keyboard-shortcuts' />
-          <ColumnLink key='{i++}' icon='book' text={intl.formatMessage(messages.info)} href='/about/more' />
-          <ColumnLink key='{i++}' icon='hand-o-right' text={intl.formatMessage(messages.show_me_around)} onClick={this.openOnboardingModal} />
+          <ColumnLink key={i++} icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />
+          <ColumnLink key={i++} icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />
+          <ColumnLink key={i++} icon='users' text={intl.formatMessage(messages.featured_users)} onClick={this.openFeaturedAccountsModal} />
+          <ColumnLink key={i++} icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />
+          <ColumnLink key={i++} icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />
+          <ColumnLink key={i++} icon='minus-circle' text={intl.formatMessage(messages.domain_blocks)} to='/domain_blocks' />
+          <ColumnLink key={i++} icon='question' text={intl.formatMessage(messages.keyboard_shortcuts)} to='/keyboard-shortcuts' />
+          <ColumnLink key={i++} icon='book' text={intl.formatMessage(messages.info)} href='/about/more' />
+          <ColumnLink key={i++} icon='hand-o-right' text={intl.formatMessage(messages.show_me_around)} onClick={this.openOnboardingModal} />
         </div>
       </Column>
     );
