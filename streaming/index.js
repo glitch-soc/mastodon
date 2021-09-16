@@ -365,7 +365,11 @@ const startWorker = (workerId) => {
     case '/api/v1/streaming/user/notification':
       return 'user:notification';
     case '/api/v1/streaming/public':
-      return onlyMedia ? 'public:media' : 'public';
+      if ( onlyMedia ) {
+        return allowLocalOnly ? 'public:allow_local_only:media' : 'public:media';
+      } else {
+        return allowLocalOnly ? 'public:allow_local_only' : 'public';
+      }
     case '/api/v1/streaming/public/local':
       return onlyMedia ? 'public:local:media' : 'public:local';
     case '/api/v1/streaming/public/remote':
@@ -836,7 +840,7 @@ const startWorker = (workerId) => {
     case 'public:media':
       resolve({
         channelIds: ['timeline:public:media'],
-        options: { needsFiltering: true, notificationOnly: false, allowLocalOnly: isTruthy(query.allow_local_only) },
+        options: { needsFiltering: true, notificationOnly: false, allowLocalOnly: isTruthy(params.allow_local_only) },
       });
 
       break;
