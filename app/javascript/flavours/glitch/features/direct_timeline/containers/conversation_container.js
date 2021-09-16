@@ -4,7 +4,7 @@ import { markConversationRead, deleteConversation } from 'flavours/glitch/action
 import { makeGetStatus } from 'flavours/glitch/selectors';
 import { replyCompose } from 'flavours/glitch/actions/compose';
 import { openModal } from 'flavours/glitch/actions/modal';
-import { muteStatus, unmuteStatus, hideStatus, revealStatus } from 'flavours/glitch/actions/statuses';
+import { muteStatus, unmuteStatus } from 'flavours/glitch/actions/statuses';
 import { defineMessages, injectIntl } from 'react-intl';
 
 const messages = defineMessages({
@@ -58,14 +58,6 @@ const mapDispatchToProps = (dispatch, { intl, conversationId }) => ({
       dispatch(unmuteStatus(status.get('id')));
     } else {
       dispatch(muteStatus(status.get('id')));
-    }
-  },
-
-  onToggleHidden (status) {
-    if (status.get('hidden')) {
-      dispatch(revealStatus(status.get('id')));
-    } else {
-      dispatch(hideStatus(status.get('id')));
     }
   },
 
