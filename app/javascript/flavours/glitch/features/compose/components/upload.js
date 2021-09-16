@@ -39,7 +39,7 @@ export default class Upload extends ImmutablePureComponent {
 
     return (
       <div className='composer--upload_form--item' tabIndex='0' role='button'>
-        <Motion defaultStyle={{ scale: 0.8 }} style={{ scale: spring(1, { stiffness: 180, damping: 12, }) }}>
+        <Motion defaultStyle={{ scale: 0.8 }} style={{ scale: spring(1, { stiffness: 180, damping: 12 }) }}>
           {({ scale }) => (
             <div style={{ transform: `scale(${scale})`, backgroundImage: `url(${media.get('preview_url')})`, backgroundPosition: `${x}% ${y}%` }}>
               <div className={classNames('composer--upload_form--actions', { active: true })}>

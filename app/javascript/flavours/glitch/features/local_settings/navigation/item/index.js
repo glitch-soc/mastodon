@@ -44,7 +44,13 @@ export default class LocalSettingsPage extends React.PureComponent {
       active,
     }, className);
 
-    const iconElem = icon ? <Icon fixedWidth id={icon} /> : (textIcon ? <span className='text-icon-button'>{textIcon}</span> : null);
+    const iconElem = (() => {
+      if (icon) {
+        return <Icon fixedWidth id={icon} />;
+      } else {
+        return textIcon ? <span className='text-icon-button'>{textIcon}</span> : null;
+      }
+    })();
 
     if (href) return (
       <a

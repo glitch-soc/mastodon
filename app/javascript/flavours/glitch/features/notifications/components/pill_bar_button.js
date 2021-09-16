@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import classNames from 'classnames'
+import classNames from 'classnames';
 
 export default class PillBarButton extends React.PureComponent {
 

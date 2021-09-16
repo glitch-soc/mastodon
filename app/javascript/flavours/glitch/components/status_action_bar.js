@@ -115,7 +115,7 @@ class StatusActionBar extends ImmutablePureComponent {
 
   _openInteractionDialog = type => {
     window.open(`/interact/${this.props.status.get('id')}?type=${type}`, 'mastodon-intent', 'width=445,height=600,resizable=no,menubar=no,status=no,scrollbars=yes');
-   }
+  }
 
   handleDeleteClick = () => {
     this.props.onDelete(this.props.status, this.context.router.history);
@@ -146,7 +146,7 @@ class StatusActionBar extends ImmutablePureComponent {
   }
 
   handleOpen = () => {
-    let state = {...this.context.router.history.location.state};
+    let state = { ...this.context.router.history.location.state };
     if (state.mastodonModalKey) {
       this.context.router.history.replace(`/statuses/${this.props.status.get('id')}`, { mastodonBackSteps: (state.mastodonBackSteps || 0) + 1 });
     } else {

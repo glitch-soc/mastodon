@@ -1,6 +1,6 @@
 //  Package imports.
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useCallback } from 'react';
 import spring from 'react-motion/lib/spring';
 import Toggle from 'react-toggle';
 import classNames from 'classnames';
@@ -75,20 +75,6 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
     document.removeEventListener('touchend', this.handleDocumentClick, withPassive);
   }
 
-  handleClick = (name, e) => {
-    const {
-      onChange,
-      onClose,
-    } = this.props;
-
-    const { on } = this.props.items.find(item => item.name === name);
-    e.preventDefault();  //  Prevents change in focus on click
-    if ((on === null || typeof on === 'undefined')) {
-      onClose();
-    }
-    onChange(name);
-  }
-
   // Handle changes differently whether the dropdown is a list of options or actions
   handleChange = (name) => {
     if (this.props.value) {
@@ -98,6 +84,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
     }
   }
 
+  //  This approach is “bad” and should be changed to use `useCallback` instead of `.bind()`, but this is extremely nontrivial
   handleKeyDown = (name, e) => {
     const { items } = this.props;
     const index = items.findIndex(item => {
@@ -147,6 +134,11 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
   }
 
   renderItem = (item) => {
+    const {
+      items,
+      onChange,
+      onClose,
+    } = this.props;
     const { name, icon, meta, on, text } = item;
 
     const active = (name === (this.props.value || this.state.value));
@@ -159,18 +151,30 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
       'with-icon': icon,
     });
 
+    const handleClick = useCallback(
+      () => e => {
+        const { onn } = items.find(item => item.name === name);
+        e.preventDefault();  //  Prevents change in focus on click
+        if ((onn === null || typeof onn === 'undefined')) {
+          onClose();
+        }
+        onChange(name);
+      },
+      [name, items, onChange, onClose],
+    );
+
     let prefix = null;
 
     if (on !== null && typeof on !== 'undefined') {
-      prefix = <Toggle checked={on} onChange={this.handleClick.bind(this, name)} />;
+      prefix = <Toggle checked={on} onChange={handleClick} />;
     } else if (icon) {
-      prefix = <Icon className='icon' fixedWidth id={icon} />
+      prefix = <Icon className='icon' fixedWidth id={icon} />;
     }
 
     return (
       <div
         className={computedClass}
-        onClick={this.handleClick.bind(this, name)}
+        onClick={handleClick}
         onKeyDown={this.handleKeyDown.bind(this, name)}
         role='option'
         tabIndex='0'

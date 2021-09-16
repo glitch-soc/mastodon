@@ -84,7 +84,7 @@ const messages = {
 
   'navigation_bar.direct': 'ダイレクトメッセージ',
   'navigation_bar.bookmarks': 'ブックマーク',
-  'column.bookmarks': 'ブックマーク'
+  'column.bookmarks': 'ブックマーク',
 };
 
 export default Object.assign({}, inherited, messages);

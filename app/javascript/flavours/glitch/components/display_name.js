@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -12,6 +12,7 @@ export default class DisplayName extends React.PureComponent {
     inline: PropTypes.bool,
     localDomain: PropTypes.string,
     others: ImmutablePropTypes.list,
+    onAccountClick: PropTypes.func,
     handleClick: PropTypes.func,
   };
 
@@ -57,26 +58,39 @@ export default class DisplayName extends React.PureComponent {
     }
 
     if (others && others.size > 0) {
-      displayName = others.take(2).map(a => (
-        <a
-          href={a.get('url')}
-          target='_blank'
-          onClick={(e) => onAccountClick(a.get('id'), e)}
-          title={`@${a.get('acct')}`}
-          rel='noopener noreferrer'
-        >
-          <bdi key={a.get('id')}>
-            <strong className='display-name__html' dangerouslySetInnerHTML={{ __html: a.get('display_name_html') }} />
-          </bdi>
-        </a>
-      )).reduce((prev, cur) => [prev, ', ', cur]);
+      displayName = others.take(2).map(a => {
+
+        const handleAccountClick = useCallback(
+          () => e => onAccountClick(a.get('id'), e),
+          [onAccountClick, a],
+        );
+
+        return (
+          <a
+            href={a.get('url')}
+            target='_blank'
+            onClick={handleAccountClick}
+            title={`@${a.get('acct')}`}
+            rel='noopener noreferrer'
+          >
+            <bdi key={a.get('id')}>
+              <strong className='display-name__html' dangerouslySetInnerHTML={{ __html: a.get('display_name_html') }} />
+            </bdi>
+          </a>
+        );
+      }).reduce((prev, cur) => [prev, ', ', cur]);
 
       if (others.size - 2 > 0) {
-       displayName.push(` +${others.size - 2}`);
+        displayName.push(` +${others.size - 2}`);
       }
 
+      const handleAccountClick = useCallback(
+        () => e => onAccountClick(account.get('id'), e),
+        [onAccountClick, account],
+      );
+
       suffix = (
-        <a href={account.get('url')} target='_blank' onClick={(e) => onAccountClick(account.get('id'), e)} rel='noopener noreferrer'>
+        <a href={account.get('url')} target='_blank' onClick={handleAccountClick} rel='noopener noreferrer'>
           <span className='display-name__account'>@{acct}</span>
         </a>
       );

@@ -121,8 +121,9 @@ export default class IntersectionObserverArticle extends React.Component {
         aria-setsize={listLength}
         data-id={id}
         tabIndex='0'
-        style={style}>
-          {children && React.cloneElement(children, { hidden: !isIntersecting && (isHidden || !!cachedHeight) })}
+        style={style}
+      >
+        {children && React.cloneElement(children, { hidden: !isIntersecting && (isHidden || !!cachedHeight) })}
       </article>
     );
   }

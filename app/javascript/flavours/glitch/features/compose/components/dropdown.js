@@ -141,7 +141,7 @@ export default class ComposerOptionsDropdown extends React.PureComponent {
             onChange(name);
             component.setState({ needsModalUpdate: true });
           },
-        })
+        }),
       ),
     };
   }
@@ -166,7 +166,7 @@ export default class ComposerOptionsDropdown extends React.PureComponent {
     const { items } = this.props;
     const { needsModalUpdate } = this.state;
     if (needsModalUpdate && items.find(
-      (item, i) => item.on !== prevProps.items[i].on
+      (item, i) => item.on !== prevProps.items[i].on,
     )) {
       this.handleUpdate();
       this.setState({ needsModalUpdate: false });

@@ -7,6 +7,7 @@ import SensitiveButtonContainer from '../containers/sensitive_button_container';
 import { FormattedMessage } from 'react-intl';
 
 export default class UploadForm extends ImmutablePureComponent {
+
   static propTypes = {
     mediaIds: ImmutablePropTypes.list.isRequired,
   };

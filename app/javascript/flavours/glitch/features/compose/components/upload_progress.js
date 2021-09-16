@@ -29,10 +29,12 @@ export default class UploadProgress extends React.PureComponent {
 
           <div className='backdrop'>
             <Motion defaultStyle={{ width: 0 }} style={{ width: spring(progress) }}>
-              {({ width }) =>
-                (<div className='tracker' style={{ width: `${width}%` }}
-                />)
-              }
+              {({ width }) => (
+                <div
+                  className='tracker'
+                  style={{ width: `${width}%` }}
+                />
+              )}
             </Motion>
           </div>
         </div>

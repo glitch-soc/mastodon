@@ -18,8 +18,10 @@ const mapDispatchToProps = (dispatch, { status, items, scrollKey }) => ({
         (item, i) => item ? {
           ...item,
           name: `${item.text}-${i}`,
-          onClick: item.action ? ((e) => { return onItemClick(i, e) }) : null,
-        } : null
+          onClick: item.action ? ((e) => {
+            return onItemClick(i, e);
+          }) : null,
+        } : null,
       ),
     }) : openDropdownMenu(id, dropdownPlacement, keyboard, scrollKey));
   },

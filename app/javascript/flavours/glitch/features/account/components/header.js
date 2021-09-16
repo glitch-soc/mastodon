@@ -132,8 +132,7 @@ class Header extends ImmutablePureComponent {
 
     if (me !== account.get('id') && account.getIn(['relationship', 'followed_by'])) {
       info.push(<span className='relationship-tag'><FormattedMessage id='account.follows_you' defaultMessage='Follows you' /></span>);
-    }
-    else if (me !== account.get('id') && account.getIn(['relationship', 'blocking'])) {
+    } else if (me !== account.get('id') && account.getIn(['relationship', 'blocking'])) {
       info.push(<span className='relationship-tag'><FormattedMessage id='account.blocked' defaultMessage='Blocked' /></span>);
     }
 

@@ -54,7 +54,7 @@ export const defaultMediaVisibility = (status, settings) => {
   }
 
   return (displayMedia !== 'hide_all' && !status.get('sensitive') || displayMedia === 'show_all');
-}
+};
 
 export default @injectIntl
 class Status extends ImmutablePureComponent {
@@ -297,7 +297,9 @@ class Status extends ImmutablePureComponent {
     if (this.node && this.props.getScrollPosition) {
       const position = this.props.getScrollPosition();
       if (position !== null && this.node.offsetTop < position.top) {
-         requestAnimationFrame(() => { this.props.updateScrollBottom(position.height - position.top); });
+        requestAnimationFrame(() => {
+          this.props.updateScrollBottom(position.height - position.top);
+        });
       }
     }
   }
@@ -350,7 +352,7 @@ class Status extends ImmutablePureComponent {
             status.getIn(['reblog', 'id'], status.get('id'))
           }`;
         }
-        let state = {...router.history.location.state};
+        let state = { ...router.history.location.state };
         state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
         router.history.push(destination, state);
       }
@@ -366,7 +368,7 @@ class Status extends ImmutablePureComponent {
     if (this.context.router && e.button === 0) {
       const id = e.currentTarget.getAttribute('data-id');
       e.preventDefault();
-      let state = {...this.context.router.history.location.state};
+      let state = { ...this.context.router.history.location.state };
       state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
       this.context.router.history.push(`/accounts/${id}`, state);
     }
@@ -431,13 +433,13 @@ class Status extends ImmutablePureComponent {
   }
 
   handleHotkeyOpen = () => {
-    let state = {...this.context.router.history.location.state};
+    let state = { ...this.context.router.history.location.state };
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
     this.context.router.history.push(`/statuses/${this.props.status.get('id')}`, state);
   }
 
   handleHotkeyOpenProfile = () => {
-    let state = {...this.context.router.history.location.state};
+    let state = { ...this.context.router.history.location.state };
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
     this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`, state);
   }

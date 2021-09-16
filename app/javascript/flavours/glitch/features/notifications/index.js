@@ -290,7 +290,7 @@ class Notifications extends React.PureComponent {
           className='column-header__button'
         >
           <Icon id='check' />
-        </button>
+        </button>,
       );
     }
 
@@ -313,7 +313,7 @@ class Notifications extends React.PureComponent {
         className={notifCleaningButtonClassName}
       >
         <Icon id='eraser' />
-      </button>
+      </button>,
     );
 
     const notifCleaningDrawer = (

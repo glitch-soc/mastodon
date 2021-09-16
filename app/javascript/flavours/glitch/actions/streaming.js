@@ -132,8 +132,16 @@ export const connectCommunityStream = ({ onlyMedia } = {}) =>
  * @param {boolean} [options.allowLocalOnly]
  * @return {function(): void}
  */
-export const connectPublicStream = ({ onlyMedia, onlyRemote, allowLocalOnly } = {}) =>
-  connectTimelineStream(`public${onlyRemote ? ':remote' : (allowLocalOnly ? ':allow_local_only' : '')}${onlyMedia ? ':media' : ''}`, `public${onlyRemote ? ':remote' : (allowLocalOnly ? ':allow_local_only' : '')}${onlyMedia ? ':media' : ''}`);
+export const connectPublicStream = ({ onlyMedia, onlyRemote, allowLocalOnly } = {}) => {
+  const streamName = `public${(() => {
+    if (onlyRemote) {
+      return ':remote';
+    } else {
+      return allowLocalOnly ? ':allow_local_only' : '';
+    }
+  })()}${onlyMedia ? ':media' : ''}`;
+  return connectTimelineStream(streamName, streamName);
+};
 
 /**
  * @param {string} columnId

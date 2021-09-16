@@ -5,6 +5,7 @@ import { createBrowserHistory } from 'history';
 import { multiply } from 'color-blend';
 
 export default class ModalRoot extends React.PureComponent {
+
   static contextTypes = {
     router: PropTypes.object,
   };
