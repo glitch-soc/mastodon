@@ -1,14 +1,9 @@
-import { openModal } from './modal';
 import { changeSetting, saveSettings } from './settings';
 
-export function showOnboardingOnce() {
-  return (dispatch, getState) => {
-    const alreadySeen = getState().getIn(['settings', 'onboarded']);
+// Increment this to force the onboarding modal to show again.
+export const INTRODUCTION_VERSION = 1;
 
-    if (!alreadySeen) {
-      dispatch(openModal('ONBOARDING'));
-      dispatch(changeSetting(['onboarded'], true));
-      dispatch(saveSettings());
-    }
-  };
+export const closeOnboarding = () => dispatch => {
+  dispatch(changeSetting(['introductionVersion'], INTRODUCTION_VERSION));
+  dispatch(saveSettings());
 };

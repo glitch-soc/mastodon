@@ -9,7 +9,6 @@ import {
 import { closeModal, openModal } from 'flavours/glitch/actions/modal';
 
 function mapStateToProps (state) {
-  const spoilersAlwaysOn = state.getIn(['local_settings', 'always_show_spoilers_field']);
   const poll = state.getIn(['compose', 'poll']);
   const media = state.getIn(['compose', 'media_attachments']);
   const pending_media = state.getIn(['compose', 'pending_media_attachments']);

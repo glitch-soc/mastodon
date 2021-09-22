@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage } from 'react-intl';
-import punycode from 'punycode';
 import classnames from 'classnames';
 import { decode as decodeIDNA } from 'flavours/glitch/util/idna';
 import Icon from 'flavours/glitch/components/icon';
@@ -176,7 +175,7 @@ export default class Card extends React.PureComponent {
   }
 
   render () {
-    const { card, maxDescription, compact, defaultWidth } = this.props;
+    const { card, maxDescription, compact } = this.props;
     const { width, embedded, revealed } = this.state;
 
     if (card === null) {

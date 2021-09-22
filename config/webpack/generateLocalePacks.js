@@ -13,7 +13,7 @@ const { existsSync, readdirSync, writeFileSync } = require('fs');
 const { join, resolve } = require('path');
 const rimraf = require('rimraf');
 const mkdirp = require('mkdirp');
-const { flavours } = require('./configuration.js');
+const { flavours } = require('./configuration');
 
 module.exports = Object.keys(flavours).reduce(function (map, entry) {
   const flavour = flavours[entry];
@@ -21,7 +21,7 @@ module.exports = Object.keys(flavours).reduce(function (map, entry) {
     return map;
   }
   const locales = readdirSync(flavour.locales).filter(
-    filename => /\.js(?:on)?$/.test(filename) && !/defaultMessages|whitelist|index/.test(filename)
+    filename => /\.js(?:on)?$/.test(filename) && !/defaultMessages|whitelist|index/.test(filename),
   );
   const outPath = resolve('tmp', 'locales', entry);
 
@@ -40,9 +40,9 @@ module.exports = Object.keys(flavours).reduce(function (map, entry) {
       // fall back to English (this is what react-intl does anyway)
       'node_modules/react-intl/locale-data/en.js',
     ].filter(
-      filename => existsSync(filename)
+      filename => existsSync(filename),
     ).map(
-      filename => filename.replace(/(?:node_modules|app\/javascript)\//, '')
+      filename => filename.replace(/(?:node_modules|app\/javascript)\//, ''),
     )[0];
     const localeContent = `//
 // locales/${entry}/${localeName}.js

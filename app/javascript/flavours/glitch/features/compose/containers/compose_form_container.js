@@ -21,12 +21,9 @@ import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
 import { privacyPreference } from 'flavours/glitch/util/privacy_preference';
 
 const messages = defineMessages({
-  missingDescriptionMessage: {  id: 'confirmations.missing_media_description.message',
-                                defaultMessage: 'At least one media attachment is lacking a description. Consider describing all media attachments for the visually impaired before sending your toot.' },
-  missingDescriptionConfirm: {  id: 'confirmations.missing_media_description.confirm',
-                                defaultMessage: 'Send anyway' },
-  missingDescriptionEdit:    {  id: 'confirmations.missing_media_description.edit',
-                                defaultMessage: 'Edit media' },
+  missingDescriptionMessage: { id: 'confirmations.missing_media_description.message', defaultMessage: 'At least one media attachment is lacking a description. Consider describing all media attachments for the visually impaired before sending your toot.' },
+  missingDescriptionConfirm: { id: 'confirmations.missing_media_description.confirm', defaultMessage: 'Send anyway' },
+  missingDescriptionEdit:    { id: 'confirmations.missing_media_description.edit', defaultMessage: 'Edit media' },
 });
 
 //  State mapping.
@@ -38,12 +35,12 @@ function mapStateToProps (state) {
   const sideArmRestrictedPrivacy = replyPrivacy ? privacyPreference(replyPrivacy, sideArmBasePrivacy) : null;
   let sideArmPrivacy = null;
   switch (state.getIn(['local_settings', 'side_arm_reply_mode'])) {
-    case 'copy':
-      sideArmPrivacy = replyPrivacy;
-      break;
-    case 'restrict':
-      sideArmPrivacy = sideArmRestrictedPrivacy;
-      break;
+  case 'copy':
+    sideArmPrivacy = replyPrivacy;
+    break;
+  case 'restrict':
+    sideArmPrivacy = sideArmRestrictedPrivacy;
+    break;
   }
   sideArmPrivacy = sideArmPrivacy || sideArmBasePrivacy;
   return {

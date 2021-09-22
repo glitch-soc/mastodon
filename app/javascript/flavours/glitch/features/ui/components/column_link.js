@@ -27,7 +27,7 @@ const ColumnLink = ({ icon, text, to, onClick, href, method, badge }) => {
       e.preventDefault();
       e.stopPropagation();
       return onClick(e);
-    }
+    };
     return (
       <a href='#' onClick={onClick && handleOnClick} className='column-link' tabIndex='0'>
         <Icon id={icon} fixedWidth className='column-link__icon' />

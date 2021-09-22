@@ -54,7 +54,7 @@ export const defaultMediaVisibility = (status, settings) => {
   }
 
   return (displayMedia !== 'hide_all' && !status.get('sensitive') || displayMedia === 'show_all');
-}
+};
 
 export default @injectIntl
 class Status extends ImmutablePureComponent {
@@ -272,7 +272,7 @@ class Status extends ImmutablePureComponent {
 
   //  Hack to fix timeline jumps on second rendering when auto-collapsing
   //  or on subsequent rendering when a preview card has been fetched
-  getSnapshotBeforeUpdate (prevProps, prevState) {
+  getSnapshotBeforeUpdate () {
     if (!this.props.getScrollPosition) return null;
 
     const { muted, hidden, status, settings } = this.props;
@@ -297,7 +297,9 @@ class Status extends ImmutablePureComponent {
     if (this.node && this.props.getScrollPosition) {
       const position = this.props.getScrollPosition();
       if (position !== null && this.node.offsetTop < position.top) {
-         requestAnimationFrame(() => { this.props.updateScrollBottom(position.height - position.top); });
+        requestAnimationFrame(() => {
+          this.props.updateScrollBottom(position.height - position.top);
+        });
       }
     }
   }
@@ -350,7 +352,7 @@ class Status extends ImmutablePureComponent {
             status.getIn(['reblog', 'id'], status.get('id'))
           }`;
         }
-        let state = {...router.history.location.state};
+        let state = { ...router.history.location.state };
         state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
         router.history.push(destination, state);
       }
@@ -366,7 +368,7 @@ class Status extends ImmutablePureComponent {
     if (this.context.router && e.button === 0) {
       const id = e.currentTarget.getAttribute('data-id');
       e.preventDefault();
-      let state = {...this.context.router.history.location.state};
+      let state = { ...this.context.router.history.location.state };
       state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
       this.context.router.history.push(`/accounts/${id}`, state);
     }
@@ -431,13 +433,13 @@ class Status extends ImmutablePureComponent {
   }
 
   handleHotkeyOpen = () => {
-    let state = {...this.context.router.history.location.state};
+    let state = { ...this.context.router.history.location.state };
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
     this.context.router.history.push(`/statuses/${this.props.status.get('id')}`, state);
   }
 
   handleHotkeyOpenProfile = () => {
-    let state = {...this.context.router.history.location.state};
+    let state = { ...this.context.router.history.location.state };
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
     this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`, state);
   }
@@ -450,7 +452,7 @@ class Status extends ImmutablePureComponent {
     this.props.onMoveDown(this.props.containerId || this.props.id, e.target.getAttribute('data-featured'));
   }
 
-  handleHotkeyCollapse = e => {
+  handleHotkeyCollapse = () => {
     if (!this.props.settings.getIn(['collapsed', 'enabled']))
       return;
 
@@ -461,7 +463,7 @@ class Status extends ImmutablePureComponent {
     this.handleToggleMediaVisibility();
   }
 
-  handleUnfilterClick = e => {
+  handleUnfilterClick = () => {
     const { onUnfilter, status } = this.props;
     onUnfilter(status.get('reblog') ? status.get('reblog') : status, () => this.setState({ forceFilter: false }));
   }
@@ -490,7 +492,6 @@ class Status extends ImmutablePureComponent {
     const {
       handleRef,
       parseClick,
-      setExpansion,
       setCollapsed,
     } = this;
     const { router } = this.context;

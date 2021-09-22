@@ -10,7 +10,7 @@ const messages = defineMessages({
 });
 
 const makeMapStateToProps = () => {
-  const mapStateToProps = (state, { }) => ({
+  const mapStateToProps = () => ({
   });
 
   return mapStateToProps;

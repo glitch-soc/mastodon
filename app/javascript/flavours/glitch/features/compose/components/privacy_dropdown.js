@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import Dropdown from './dropdown';
 
@@ -47,6 +46,7 @@ export default @injectIntl
 class PrivacyDropdown extends React.PureComponent {
 
   static propTypes = {
+    disabled: PropTypes.bool,
     isUserTouching: PropTypes.func,
     onModalOpen: PropTypes.func,
     onModalClose: PropTypes.func,

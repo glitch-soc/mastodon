@@ -28,11 +28,12 @@ export default class NavigationBar extends ImmutablePureComponent {
           { profileLink !== undefined && (
             <a
               className='edit'
-              href={ profileLink }
+              href={profileLink}
             ><FormattedMessage id='navigation_bar.edit_profile' defaultMessage='Edit profile' /></a>
           )}
         </div>
       </div>
     );
   };
+
 }

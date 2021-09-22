@@ -12,7 +12,7 @@ const textMatchesTarget = (text, origin, host) => {
   return (text === origin || text === host
           || text.startsWith(origin + '/') || text.startsWith(host + '/')
           || 'www.' + text === host || ('www.' + text).startsWith(host + '/'));
-}
+};
 
 const isLinkMisleading = (link) => {
   let linkTextParts = [];

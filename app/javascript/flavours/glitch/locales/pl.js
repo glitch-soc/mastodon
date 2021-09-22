@@ -67,13 +67,13 @@ const messages = {
   'advanced_options.threaded_mode.short': 'Tryb wątków',
   'advanced_options.threaded_mode.long': 'Przechodzi do tworzenia odpowiedzi po publikacji wpisu',
   'advanced_options.threaded_mode.tooltip': 'Włączono tryb wątków',
-  
+
   'column.bookmarks': 'Zakładki',
   'compose_form.sensitive': 'Oznacz zawartość multimedialną jako wrażliwą',
   'compose_form.spoiler': 'Ukryj tekst za ostrzeżeniem',
   'favourite_modal.combo': 'Możesz nacisnąć {combo}, aby pominąć to następnym razem',
   'tabs_bar.compose': 'Napisz',
-  
+
 };
 
 export default Object.assign({}, inherited, messages);

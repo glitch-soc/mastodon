@@ -1,5 +1,5 @@
 import api, { getLinks } from 'flavours/glitch/util/api';
-import { importAccount, importFetchedAccount, importFetchedAccounts } from './importer';
+import { importFetchedAccount, importFetchedAccounts } from './importer';
 
 export const ACCOUNT_FETCH_REQUEST = 'ACCOUNT_FETCH_REQUEST';
 export const ACCOUNT_FETCH_SUCCESS = 'ACCOUNT_FETCH_SUCCESS';
@@ -770,7 +770,7 @@ export function fetchPinnedAccounts() {
   return (dispatch, getState) => {
     dispatch(fetchPinnedAccountsRequest());
 
-    api(getState).get(`/api/v1/endorsements`, { params: { limit: 0 } }).then(response => {
+    api(getState).get('/api/v1/endorsements', { params: { limit: 0 } }).then(response => {
       dispatch(importFetchedAccounts(response.data));
       dispatch(fetchPinnedAccountsSuccess(response.data));
     }).catch(err => dispatch(fetchPinnedAccountsFail(err)));
@@ -810,7 +810,7 @@ export function fetchPinnedAccountsSuggestions(q) {
     api(getState).get('/api/v1/accounts/search', { params }).then(response => {
       dispatch(importFetchedAccounts(response.data));
       dispatch(fetchPinnedAccountsSuggestionsReady(q, response.data));
-    });
+    }).catch(err => dispatch(fetchPinnedAccountsFail(err)));
   };
 };
 
@@ -832,7 +832,7 @@ export function changePinnedAccountsSuggestions(value) {
   return {
     type: PINNED_ACCOUNTS_EDITOR_SUGGESTIONS_CHANGE,
     value,
-  }
+  };
 };
 
 export function resetPinnedAccountsEditor() {

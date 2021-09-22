@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { autoPlayGif } from 'flavours/glitch/util/initial_state';
@@ -8,6 +8,7 @@ export default class AvatarComposite extends React.PureComponent {
   static propTypes = {
     accounts: ImmutablePropTypes.list.isRequired,
     animate: PropTypes.bool,
+    onAccountClick: PropTypes.func,
     size: PropTypes.number.isRequired,
   };
 
@@ -16,7 +17,7 @@ export default class AvatarComposite extends React.PureComponent {
   };
 
   renderItem (account, size, index) {
-    const { animate } = this.props;
+    const { animate, onAccountClick } = this.props;
 
     let width  = 50;
     let height = 100;
@@ -78,11 +79,16 @@ export default class AvatarComposite extends React.PureComponent {
       backgroundImage: `url(${account.get(animate ? 'avatar' : 'avatar_static')})`,
     };
 
+    const handleAccountClick = useCallback(
+      () => e => onAccountClick(account.get('id'), e),
+      [onAccountClick, account],
+    );
+
     return (
       <a
         href={account.get('url')}
         target='_blank'
-        onClick={(e) => this.props.onAccountClick(account.get('id'), e)}
+        onClick={handleAccountClick}
         title={`@${account.get('acct')}`}
         key={account.get('id')}
       >

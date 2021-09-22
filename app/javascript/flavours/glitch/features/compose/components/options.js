@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
-import spring from 'react-motion/lib/spring';
 
 //  Components.
 import IconButton from 'flavours/glitch/components/icon_button';
@@ -13,7 +12,6 @@ import PrivacyDropdown from './privacy_dropdown';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 //  Utils.
-import Motion from 'flavours/glitch/util/optional_motion';
 import { pollLimits } from 'flavours/glitch/util/initial_state';
 
 //  Messages.
@@ -149,7 +147,6 @@ class ComposerOptions extends ImmutablePureComponent {
       contentType,
       disabled,
       allowMedia,
-      hasMedia,
       allowPoll,
       hasPoll,
       intl,

@@ -204,7 +204,7 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
             <Spoilers spoilerText={intl.formatMessage(messages.author)}>
               <AccountContainer id={status.getIn(['account', 'id'])} />
             </Spoilers>
-            <Spoilers spoilerText={intl.formatMessage(messages.matchingFilters, {count: matchingFilters.size})}>
+            <Spoilers spoilerText={intl.formatMessage(messages.matchingFilters, { count: matchingFilters.size })}>
               <ul>
                 {matchingFilters.map(filter => (
                   <li>
@@ -224,7 +224,7 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
                 ))}
               </ul>
             </Spoilers>
-          </div>
+          </div>,
         ],
         confirm: intl.formatMessage(messages.unfilterConfirm),
         onConfirm: onConfirm,

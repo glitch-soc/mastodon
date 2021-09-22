@@ -160,7 +160,7 @@ class Video extends React.PureComponent {
   _setDimensions () {
     const width = this.player.offsetWidth;
 
-    if (width && width != this.state.containerWidth) {
+    if (width && width !== this.state.containerWidth) {
       if (this.props.cacheWidth) {
         this.props.cacheWidth(width);
       }
@@ -402,7 +402,7 @@ class Video extends React.PureComponent {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.player && this.player.offsetWidth && this.player.offsetWidth != this.state.containerWidth && !this.state.fullscreen) {
+    if (this.player && this.player.offsetWidth && this.player.offsetWidth !== this.state.containerWidth && !this.state.fullscreen) {
       if (this.props.cacheWidth) this.props.cacheWidth(this.player.offsetWidth);
       this.setState({
         containerWidth: this.player.offsetWidth,
@@ -552,7 +552,7 @@ class Video extends React.PureComponent {
 
       playerStyle.height = height;
     } else if (inline) {
-      return (<div className={computedClass} ref={this.setPlayerRef} tabindex={0}></div>);
+      return (<div className={computedClass} ref={this.setPlayerRef} tabindex={0} />);
     }
 
     let preload;

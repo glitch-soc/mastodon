@@ -403,7 +403,7 @@ class Status extends ImmutablePureComponent {
   }
 
   handleHotkeyOpenProfile = () => {
-    let state = {...this.context.router.history.location.state};
+    let state = { ...this.context.router.history.location.state };
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
     this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`, state);
   }
@@ -509,7 +509,6 @@ class Status extends ImmutablePureComponent {
 
   render () {
     let ancestors, descendants;
-    const { setExpansion } = this;
     const { status, settings, ancestorsIds, descendantsIds, intl, domain, multiColumn, usingPiP } = this.props;
     const { fullscreen, isExpanded } = this.state;
 

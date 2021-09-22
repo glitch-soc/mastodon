@@ -175,10 +175,10 @@ class ScrollableList extends PureComponent {
   }
 
   cacheMediaWidth = (width) => {
-    if (width && this.state.cachedMediaWidth != width) this.setState({ cachedMediaWidth: width });
+    if (width && this.state.cachedMediaWidth !== width) this.setState({ cachedMediaWidth: width });
   }
 
-  getSnapshotBeforeUpdate (prevProps, prevState) {
+  getSnapshotBeforeUpdate (prevProps) {
     const someItemInserted = React.Children.count(prevProps.children) > 0 &&
       React.Children.count(prevProps.children) < React.Children.count(this.props.children) &&
       this.getFirstChildKey(prevProps) !== this.getFirstChildKey(this.props);

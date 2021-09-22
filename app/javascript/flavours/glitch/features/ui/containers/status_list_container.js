@@ -25,8 +25,6 @@ const makeGetStatusIds = (pending = false) => createSelector([
   (state)           => state.get('statuses'),
   getRegex,
 ], (columnSettings, statusIds, statuses, regex) => {
-  const rawRegex = columnSettings.getIn(['regex', 'body'], '').trim();
-
   return statusIds.filter(id => {
     if (id === null) return true;
 

@@ -127,7 +127,13 @@ class PublicTimeline extends React.PureComponent {
         </ColumnHeader>
 
         <StatusListContainer
-          timelineId={`public${onlyRemote ? ':remote' : (allowLocalOnly ? ':allow_local_only' : '')}${onlyMedia ? ':media' : ''}`}
+          timelineId={`public${(() => {
+            if (onlyRemote) {
+              return ':remote';
+            } else {
+              return allowLocalOnly ? ':allow_local_only' : '';
+            }
+          })()}${onlyMedia ? ':media' : ''}`}
           onLoadMore={this.handleLoadMore}
           trackScroll={!pinned}
           scrollKey={`public_timeline-${columnId}`}

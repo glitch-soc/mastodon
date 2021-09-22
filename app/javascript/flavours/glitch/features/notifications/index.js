@@ -108,6 +108,7 @@ class Notifications extends React.PureComponent {
     localSettings: ImmutablePropTypes.map,
     notifCleaningActive: PropTypes.bool,
     onEnterCleaningMode: PropTypes.func,
+    onMarkAsRead: PropTypes.func,
     onMount: PropTypes.func,
     onUnmount: PropTypes.func,
     lastReadId: PropTypes.string,
@@ -220,7 +221,7 @@ class Notifications extends React.PureComponent {
 
   render () {
     const { intl, notifications, isLoading, isUnread, columnId, multiColumn, hasMore, numPending, showFilterBar, lastReadId, canMarkAsRead, needsNotificationPermission } = this.props;
-    const { notifCleaning, notifCleaningActive } = this.props;
+    const { notifCleaningActive } = this.props;
     const { animatingNCD } = this.state;
     const pinned = !!columnId;
     const emptyMessage = <FormattedMessage id='empty_column.notifications' defaultMessage="You don't have any notifications yet. When other people interact with you, you will see it here." />;
@@ -289,7 +290,7 @@ class Notifications extends React.PureComponent {
           className='column-header__button'
         >
           <Icon id='check' />
-        </button>
+        </button>,
       );
     }
 
@@ -312,7 +313,7 @@ class Notifications extends React.PureComponent {
         className={notifCleaningButtonClassName}
       >
         <Icon id='eraser' />
-      </button>
+      </button>,
     );
 
     const notifCleaningDrawer = (

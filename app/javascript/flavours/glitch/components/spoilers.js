@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 export default
 class Spoilers extends React.PureComponent {
+
   static propTypes = {
     spoilerText: PropTypes.string,
     children: PropTypes.node,
@@ -21,17 +22,19 @@ class Spoilers extends React.PureComponent {
     const { spoilerText, children } = this.props;
     const { hidden } = this.state;
 
-      const toggleText = hidden ?
-        <FormattedMessage
-          id='status.show_more'
-          defaultMessage='Show more'
-          key='0'
-        /> :
-        <FormattedMessage
-          id='status.show_less'
-          defaultMessage='Show less'
-          key='0'
-        />;
+    const toggleText = hidden ? (
+      <FormattedMessage
+        id='status.show_more'
+        defaultMessage='Show more'
+        key='0'
+      />
+    ) : (
+      <FormattedMessage
+        id='status.show_less'
+        defaultMessage='Show less'
+        key='0'
+      />
+    );
 
     return ([
       <p className='spoiler__text'>
@@ -43,8 +46,9 @@ class Spoilers extends React.PureComponent {
       </p>,
       <div className={`status__content__spoiler ${!hidden ? 'status__content__spoiler--visible' : ''}`}>
         {children}
-      </div>
+      </div>,
     ]);
   }
+
 }
 

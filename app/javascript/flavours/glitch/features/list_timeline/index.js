@@ -134,7 +134,6 @@ class ListTimeline extends React.PureComponent {
   }
 
   handleRepliesPolicyChange = ({ target }) => {
-    const { dispatch, list } = this.props;
     const { id } = this.props.params;
     this.props.dispatch(updateList(id, undefined, false, target.value));
   }

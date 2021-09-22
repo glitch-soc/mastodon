@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink, withRouter } from 'react-router-dom';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'flavours/glitch/components/icon';
@@ -33,5 +34,7 @@ const NavigationPanel = ({ onOpenSettings }) => (
     {showTrends && <TrendsContainer />}
   </div>
 );
+
+NavigationPanel.propTypes = { onOpenSettings: PropTypes.func };
 
 export default withRouter(NavigationPanel);

@@ -80,7 +80,7 @@ class LocalSettingsNavigation extends React.PureComponent {
         />
         <LocalSettingsNavigationItem
           active={index === 6}
-          href={ preferencesLink }
+          href={preferencesLink}
           index={6}
           icon='cog'
           title={intl.formatMessage(messages.preferences)}

@@ -1,6 +1,7 @@
 import React from 'react';
 import NotificationsContainer from './containers/notifications_container';
 import PropTypes from 'prop-types';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import LoadingBarContainer from './containers/loading_bar_container';
 import ModalContainer from './containers/modal_container';
 import { connect } from 'react-redux';
@@ -255,6 +256,7 @@ class UI extends React.Component {
     isComposing: PropTypes.bool,
     hasComposingText: PropTypes.bool,
     hasMediaAttachments: PropTypes.bool,
+    hicolorPrivacyIcons: PropTypes.bool,
     canUploadMore: PropTypes.bool,
     match: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,
@@ -263,7 +265,7 @@ class UI extends React.Component {
     dropdownMenuIsOpen: PropTypes.bool,
     unreadNotifications: PropTypes.number,
     showFaviconBadge: PropTypes.bool,
-    moved: PropTypes.map,
+    moved: ImmutablePropTypes.map,
     firstLaunch: PropTypes.bool,
   };
 
@@ -381,7 +383,7 @@ class UI extends React.Component {
       navigator.serviceWorker.addEventListener('message', this.handleServiceWorkerPostMessage);
     }
 
-    this.favicon = new Favico({ animation:"none" });
+    this.favicon = new Favico({ animation: 'none' });
 
     // On first launch, redirect to the follow recommendations page
     if (this.props.firstLaunch) {
@@ -418,8 +420,8 @@ class UI extends React.Component {
   }
 
   componentDidUpdate (prevProps) {
-    if (this.props.unreadNotifications != prevProps.unreadNotifications ||
-        this.props.showFaviconBadge != prevProps.showFaviconBadge) {
+    if (this.props.unreadNotifications !== prevProps.unreadNotifications ||
+        this.props.showFaviconBadge !== prevProps.showFaviconBadge) {
       if (this.favicon) {
         try {
           this.favicon.badge(this.props.showFaviconBadge ? this.props.unreadNotifications : 0);
@@ -619,7 +621,7 @@ class UI extends React.Component {
                 <PermaLink href={moved.get('url')} to={`/accounts/${moved.get('id')}`}>
                   @{moved.get('acct')}
                 </PermaLink>
-              )}}
+              ) }}
             />
           </div>)}
           <SwitchingColumnsArea location={location} layout={layout} navbarUnder={navbarUnder} onLayoutChange={this.handleLayoutChange}>

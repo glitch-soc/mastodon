@@ -53,13 +53,14 @@ export default class LocalSettingsPageItem extends React.PureComponent {
         let optionId = `${id}--${opt.value}`;
         return (
           <label htmlFor={optionId}>
-            <input type='radio'
+            <input
+              type='radio'
               name={id}
               id={optionId}
               value={opt.value}
               onBlur={handleChange}
               onChange={handleChange}
-              checked={ currentValue === opt.value }
+              checked={currentValue === opt.value}
               disabled={!enabled}
             />
             {opt.message}
