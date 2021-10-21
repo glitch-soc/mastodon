@@ -10,7 +10,7 @@ import ComposeForm from 'flavours/glitch/features/compose/components/compose_for
 import DrawerAccount from 'flavours/glitch/features/compose/components/navigation_bar';
 import Search from 'flavours/glitch/features/compose/components/search';
 import ColumnHeader from './column_header';
-import { me } from 'flavours/glitch/util/initial_state';
+import { me, source_url } from 'flavours/glitch/util/initial_state';
 
 const noop = () => { };
 
@@ -79,7 +79,7 @@ const PageThree = ({ intl, myAccount }) => (
       </div>
     </div>
 
-    <p><FormattedMessage id='onboarding.page_three.search' defaultMessage='Use the search bar to find people and look at hashtags, such as {illustration} and {introductions}. To look for a person who is not on this instance, use their full handle.' values={{ illustration: <Permalink to='/timelines/tag/illustration' href='/tags/illustration'>#illustration</Permalink>, introductions: <Permalink to='/timelines/tag/introductions' href='/tags/introductions'>#introductions</Permalink> }} /></p>
+    <p><FormattedMessage id='onboarding.page_three.search' defaultMessage='Use the search bar to find people and look at hashtags, such as {illustration} and {introductions}. To look for a person who is not on this instance, use their full handle.' values={{ illustration: <Permalink to='/tag/illustration' href='/tags/illustration'>#illustration</Permalink>, introductions: <Permalink to='/tag/introductions' href='/tags/introductions'>#introductions</Permalink> }} /></p>
     <p><FormattedMessage id='onboarding.page_three.profile' defaultMessage='Edit your profile to change your avatar, bio, and display name. There, you will also find other preferences.' /></p>
   </div>
 );
@@ -130,7 +130,7 @@ const PageSix = ({ admin, domain }) => {
   if (admin) {
     adminSection = (
       <p>
-        <FormattedMessage id='onboarding.page_six.admin' defaultMessage="Your instance's admin is {admin}." values={{ admin: <Permalink href={admin.get('url')} to={`/accounts/${admin.get('id')}`}>@{admin.get('acct')}</Permalink> }} />
+        <FormattedMessage id='onboarding.page_six.admin' defaultMessage="Your instance's admin is {admin}." values={{ admin: <Permalink href={admin.get('url')} to={`/@${admin.get('acct')}`}>@{admin.get('acct')}</Permalink> }} />
         <br />
         <FormattedMessage id='onboarding.page_six.read_guidelines' defaultMessage="Please read {domain}'s {guidelines}!" values={{ domain, guidelines: <a href='/about/more' target='_blank'><FormattedMessage id='onboarding.page_six.guidelines' defaultMessage='community guidelines' /></a> }} />
       </p>
@@ -141,7 +141,18 @@ const PageSix = ({ admin, domain }) => {
     <div className='onboarding-modal__page onboarding-modal__page-six'>
       <h1><FormattedMessage id='onboarding.page_six.almost_done' defaultMessage='Almost done...' /></h1>
       {adminSection}
-      <p><FormattedMessage id='onboarding.page_six.github' defaultMessage='{domain} runs on Glitchsoc. Glitchsoc is a friendly {fork} of {Mastodon}. Glitchsoc is fully compatible with all Mastodon apps and instances. Glitchsoc is free open-source software. You can report bugs, request features, or contribute to the code on {github}.' values={{ domain, fork: <a href='https://en.wikipedia.org/wiki/Fork_(software_development)' target='_blank' rel='noopener'>fork</a>, Mastodon: <a href='https://github.com/tootsuite/mastodon' target='_blank' rel='noopener'>Mastodon</a>, github: <a href='https://github.com/glitch-soc/mastodon' target='_blank' rel='noopener'>GitHub</a> }} /></p>
+      <p>
+        <FormattedMessage
+          id='onboarding.page_six.github'
+          defaultMessage='{domain} runs on Glitchsoc. Glitchsoc is a friendly {fork} of {Mastodon}. Glitchsoc is fully compatible with all Mastodon apps and instances. Glitchsoc is free open-source software. You can report bugs, request features, or contribute to the code on {github}.'
+          values={{
+            domain,
+            fork: <a href='https://en.wikipedia.org/wiki/Fork_(software_development)' target='_blank' rel='noopener'>fork</a>,
+            Mastodon: <a href='https://github.com/tootsuite/mastodon' target='_blank' rel='noopener'>Mastodon</a>,
+            github: <a href={source_url} target='_blank' rel='noopener'>GitHub</a>,
+          }}
+        />
+      </p>
       <p><FormattedMessage id='onboarding.page_six.apps_available' defaultMessage='There are {apps} available for iOS, Android and other platforms.' values={{ domain, apps: <a href='https://joinmastodon.org/apps' target='_blank' rel='noopener'><FormattedMessage id='onboarding.page_six.various_app' defaultMessage='mobile apps' /></a> }} /></p>
       <p><em><FormattedMessage id='onboarding.page_six.appetoot' defaultMessage='Bon Appetoot!' /></em></p>
     </div>

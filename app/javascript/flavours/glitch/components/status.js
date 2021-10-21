@@ -346,7 +346,9 @@ class Status extends ImmutablePureComponent {
         return;
       } else {
         if (destination === undefined) {
-          destination = `/statuses/${
+          destination = `/@${
+            status.getIn(['reblog', 'account', 'acct'], status.getIn(['account', 'acct']))
+          }/${
             status.getIn(['reblog', 'id'], status.get('id'))
           }`;
         }
@@ -360,16 +362,6 @@ class Status extends ImmutablePureComponent {
 
   handleToggleMediaVisibility = () => {
     this.setState({ showMedia: !this.state.showMedia });
-  }
-
-  handleAccountClick = (e) => {
-    if (this.context.router && e.button === 0) {
-      const id = e.currentTarget.getAttribute('data-id');
-      e.preventDefault();
-      let state = {...this.context.router.history.location.state};
-      state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
-      this.context.router.history.push(`/accounts/${id}`, state);
-    }
   }
 
   handleExpandedToggle = () => {
@@ -433,13 +425,14 @@ class Status extends ImmutablePureComponent {
   handleHotkeyOpen = () => {
     let state = {...this.context.router.history.location.state};
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
-    this.context.router.history.push(`/statuses/${this.props.status.get('id')}`, state);
+    const status = this.props.status;
+    this.context.router.history.push(`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`, state);
   }
 
   handleHotkeyOpenProfile = () => {
     let state = {...this.context.router.history.location.state};
     state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
-    this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`, state);
+    this.context.router.history.push(`/@${this.props.status.getIn(['account', 'acct'])}`, state);
   }
 
   handleHotkeyMoveUp = e => {
@@ -516,8 +509,8 @@ class Status extends ImmutablePureComponent {
     const { isExpanded, isCollapsed, forceFilter } = this.state;
     let background = null;
     let attachments = null;
-    let media = null;
-    let mediaIcon = null;
+    let media = [];
+    let mediaIcons = [];
 
     if (status === null) {
       return null;
@@ -586,25 +579,27 @@ class Status extends ImmutablePureComponent {
     //  After we have generated our appropriate media element and stored it in
     //  `media`, we snatch the thumbnail to use as our `background` if media
     //  backgrounds for collapsed statuses are enabled.
+
     attachments = status.get('media_attachments');
     if (status.get('poll')) {
-      media = <PollContainer pollId={status.get('poll')} />;
-      mediaIcon = 'tasks';
-    } else if (usingPiP) {
-      media = <PictureInPicturePlaceholder width={this.props.cachedMediaWidth} />;
-      mediaIcon = 'video-camera';
+      media.push(<PollContainer pollId={status.get('poll')} />);
+      mediaIcons.push('tasks');
+    }
+    if (usingPiP) {
+      media.push(<PictureInPicturePlaceholder width={this.props.cachedMediaWidth} />);
+      mediaIcons.push('video-camera');
     } else if (attachments.size > 0) {
       if (muted || attachments.some(item => item.get('type') === 'unknown')) {
-        media = (
+        media.push(
           <AttachmentList
             compact
             media={status.get('media_attachments')}
-          />
+          />,
         );
       } else if (attachments.getIn([0, 'type']) === 'audio') {
         const attachment = status.getIn(['media_attachments', 0]);
 
-        media = (
+        media.push(
           <Bundle fetchComponent={Audio} loading={this.renderLoadingAudioPlayer} >
             {Component => (
               <Component
@@ -621,13 +616,13 @@ class Status extends ImmutablePureComponent {
                 deployPictureInPicture={this.handleDeployPictureInPicture}
               />
             )}
-          </Bundle>
+          </Bundle>,
         );
-        mediaIcon = 'music';
+        mediaIcons.push('music');
       } else if (attachments.getIn([0, 'type']) === 'video') {
         const attachment = status.getIn(['media_attachments', 0]);
 
-        media = (
+        media.push(
           <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} >
             {Component => (<Component
               preview={attachment.get('preview_url')}
@@ -647,11 +642,11 @@ class Status extends ImmutablePureComponent {
               visible={this.state.showMedia}
               onToggleVisibility={this.handleToggleMediaVisibility}
             />)}
-          </Bundle>
+          </Bundle>,
         );
-        mediaIcon = 'video-camera';
+        mediaIcons.push('video-camera');
       } else {  //  Media type is 'image' or 'gifv'
-        media = (
+        media.push(
           <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery}>
             {Component => (
               <Component
@@ -667,16 +662,16 @@ class Status extends ImmutablePureComponent {
                 onToggleVisibility={this.handleToggleMediaVisibility}
               />
             )}
-          </Bundle>
+          </Bundle>,
         );
-        mediaIcon = 'picture-o';
+        mediaIcons.push('picture-o');
       }
 
       if (!status.get('sensitive') && !(status.get('spoiler_text').length > 0) && settings.getIn(['collapsed', 'backgrounds', 'preview_images'])) {
         background = attachments.getIn([0, 'preview_url']);
       }
     } else if (status.get('card') && settings.get('inline_preview_cards')) {
-      media = (
+      media.push(
         <Card
           onOpenMedia={this.handleOpenMedia}
           card={status.get('card')}
@@ -684,9 +679,9 @@ class Status extends ImmutablePureComponent {
           cacheWidth={this.props.cacheMediaWidth}
           defaultWidth={this.props.cachedMediaWidth}
           sensitive={status.get('sensitive')}
-        />
+        />,
       );
-      mediaIcon = 'link';
+      mediaIcons.push('link');
     }
 
     //  Here we prepare extra data-* attributes for CSS selectors.
@@ -753,7 +748,7 @@ class Status extends ImmutablePureComponent {
             </span>
             <StatusIcons
               status={status}
-              mediaIcon={mediaIcon}
+              mediaIcons={mediaIcons}
               collapsible={settings.getIn(['collapsed', 'enabled'])}
               collapsed={isCollapsed}
               setCollapsed={setCollapsed}
@@ -763,7 +758,7 @@ class Status extends ImmutablePureComponent {
           <StatusContent
             status={status}
             media={media}
-            mediaIcon={mediaIcon}
+            mediaIcons={mediaIcons}
             expanded={isExpanded}
             onExpandedToggle={this.handleExpandedToggle}
             parseClick={parseClick}

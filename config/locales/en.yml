@@ -371,32 +371,28 @@ en:
       updated_msg: Emoji successfully updated!
       upload: Upload
     dashboard:
-      authorized_fetch_mode: Secure mode
-      backlog: backlogged jobs
-      config: Configuration
-      feature_deletions: Account deletions
-      feature_invites: Invite links
-      feature_profile_directory: Profile directory
-      feature_registrations: Registrations
-      feature_relay: Federation relay
-      feature_timeline_preview: Timeline preview
-      features: Features
-      hidden_service: Federation with hidden services
-      open_reports: open reports
-      pending_tags: hashtags waiting for review
-      pending_users: users waiting for review
-      recent_users: Recent users
-      search: Full-text search
-      single_user_mode: Single user mode
+      active_users: active users
+      interactions: interactions
+      media_storage: Media storage
+      new_users: new users
+      opened_reports: reports opened
+      pending_reports_html:
+        one: "<strong>1</strong> pending reports"
+        other: "<strong>%{count}</strong> pending reports"
+      pending_tags_html:
+        one: "<strong>1</strong> pending hashtags"
+        other: "<strong>%{count}</strong> pending hashtags"
+      pending_users_html:
+        one: "<strong>1</strong> pending users"
+        other: "<strong>%{count}</strong> pending users"
+      resolved_reports: reports resolved
       software: Software
+      sources: Sign-up sources
       space: Space usage
       title: Dashboard
-      total_users: users in total
-      trends: Trends
-      week_interactions: interactions this week
-      week_users_active: active this week
-      week_users_new: users this week
-      whitelist_mode: Limited federation mode
+      top_languages: Top active languages
+      top_servers: Top active servers
+      website: Website
     domain_allows:
       add_new: Allow federation with domain
       created_msg: Domain has been successfully allowed for federation
@@ -1254,6 +1250,7 @@ en:
     preferences: Preferences
     profile: Profile
     relationships: Follows and followers
+    statuses_cleanup: Automated post deletion
     two_factor_authentication: Two-factor Auth
     webauthn_authentication: Security keys
   statuses:
@@ -1305,6 +1302,40 @@ en:
       public_long: Everyone can see
       unlisted: Unlisted
       unlisted_long: Everyone can see, but not listed on public timelines
+  statuses_cleanup:
+    enabled: Automatically delete old posts
+    enabled_hint: Automatically deletes your posts once they reach a specified age threshold, unless they match one of the exceptions below
+    exceptions: Exceptions
+    explanation: Because deleting posts is an expensive operation, this is done slowly over time when the server is not otherwise busy. For this reason, your posts may be deleted a while after they reach the age threshold.
+    ignore_favs: Ignore favourites
+    ignore_reblogs: Ignore boosts
+    interaction_exceptions: Exceptions based on interactions
+    interaction_exceptions_explanation: Note that there is no guarantee for posts to be deleted if they go below the favourite or boost threshold after having once gone over them.
+    keep_direct: Keep direct messages
+    keep_direct_hint: Doesn't delete any of your direct messages
+    keep_media: Keep posts with media attachments
+    keep_media_hint: Doesn't delete any of your posts that have media attachments
+    keep_pinned: Keep pinned posts
+    keep_pinned_hint: Doesn't delete any of your pinned posts
+    keep_polls: Keep polls
+    keep_polls_hint: Doesn't delete any of your polls
+    keep_self_bookmark: Keep posts you bookmarked
+    keep_self_bookmark_hint: Doesn't delete your own posts if you have bookmarked them
+    keep_self_fav: Keep posts you favourited
+    keep_self_fav_hint: Doesn't delete your own posts if you have favourited them
+    min_age:
+      '1209600': 2 weeks
+      '15778476': 6 months
+      '2629746': 1 month
+      '31556952': 1 year
+      '5259492': 2 months
+      '63113904': 2 years
+      '7889238': 3 months
+    min_age_label: Age threshold
+    min_favs: Keep posts favourited at least
+    min_favs_hint: Doesn't delete any of your posts that has received at least this amount of favourites. Leave blank to delete posts regardless of their number of favourites
+    min_reblogs: Keep posts boosted at least
+    min_reblogs_hint: Doesn't delete any of your posts that has been boosted at least this number of times. Leave blank to delete posts regardless of their number of boosts
   stream_entries:
     pinned: Pinned post
     reblogged: boosted
@@ -1474,7 +1505,7 @@ en:
     otp_lost_help_html: If you lost access to both, you may get in touch with %{email}
     seamless_external_login: You are logged in via an external service, so password and e-mail settings are not available.
     signed_in_as: 'Signed in as:'
-    suspicious_sign_in_confirmation: You appear to not have logged in from this device before, and you haven't logged in for a while, so we're sending a security code to your e-mail address to confirm that it's you.
+    suspicious_sign_in_confirmation: You appear to not have logged in from this device before, so we're sending a security code to your e-mail address to confirm that it's you.
   verification:
     explanation_html: 'You can <strong>verify yourself as the owner of the links in your profile metadata</strong>. For that, the linked website must contain a link back to your Mastodon profile. The link back <strong>must</strong> have a <code>rel="me"</code> attribute. The text content of the link does not matter. Here is an example:'
     verification: Verification
