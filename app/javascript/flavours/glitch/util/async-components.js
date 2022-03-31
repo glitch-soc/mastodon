@@ -158,8 +158,8 @@ export function ListAdder () {
   return import(/* webpackChunkName: "features/glitch/async/list_adder" */'flavours/glitch/features/list_adder');
 }
 
-export function Search () {
-  return import(/*webpackChunkName: "features/glitch/async/search" */'flavours/glitch/features/search');
+export function Explore () {
+  return import(/*webpackChunkName: "features/glitch/async/explore" */'flavours/glitch/features/explore');
 }
 
 export function Tesseract () {
