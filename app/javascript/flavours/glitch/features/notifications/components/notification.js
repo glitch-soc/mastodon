@@ -8,6 +8,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import StatusContainer from 'flavours/glitch/containers/status_container';
 import NotificationFollow from './follow';
 import NotificationFollowRequestContainer from '../containers/follow_request_container';
+import NotificationAdminSignup from './admin_signup';
 
 export default class Notification extends ImmutablePureComponent {
 
@@ -53,6 +54,19 @@ export default class Notification extends ImmutablePureComponent {
     case 'follow_request':
       return (
         <NotificationFollowRequestContainer
+          hidden={hidden}
+          id={notification.get('id')}
+          account={notification.get('account')}
+          notification={notification}
+          onMoveDown={onMoveDown}
+          onMoveUp={onMoveUp}
+          onMention={onMention}
+          unread={this.props.unread}
+        />
+      );
+    case 'admin.sign_up':
+      return (
+        <NotificationAdminSignup
           hidden={hidden}
           id={notification.get('id')}
           account={notification.get('account')}
@@ -157,6 +171,28 @@ export default class Notification extends ImmutablePureComponent {
           id={notification.get('status')}
           account={notification.get('account')}
           prepend='poll'
+          muted
+          notification={notification}
+          onMoveDown={onMoveDown}
+          onMoveUp={onMoveUp}
+          onMention={onMention}
+          getScrollPosition={getScrollPosition}
+          updateScrollBottom={updateScrollBottom}
+          cachedMediaWidth={this.props.cachedMediaWidth}
+          cacheMediaWidth={this.props.cacheMediaWidth}
+          onUnmount={this.props.onUnmount}
+          withDismiss
+          unread={this.props.unread}
+        />
+      );
+    case 'update':
+      return (
+        <StatusContainer
+          containerId={notification.get('id')}
+          hidden={hidden}
+          id={notification.get('status')}
+          account={notification.get('account')}
+          prepend='update'
           muted
           notification={notification}
           onMoveDown={onMoveDown}

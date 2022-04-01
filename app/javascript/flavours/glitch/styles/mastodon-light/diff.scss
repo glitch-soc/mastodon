@@ -116,7 +116,8 @@
 }
 
 .dropdown-menu__item {
-  a {
+  a,
+  button {
     background: $ui-base-color;
     color: $ui-secondary-color;
   }
@@ -164,15 +165,15 @@
   }
 }
 
-.composer--upload_form--item > div input {
-  color: lighten($white, 7%);
-
-  &::placeholder {
-    color: lighten($white, 10%);
-  }
+.dropdown-menu__separator,
+.dropdown-menu__item.edited-timestamp__history__item,
+.dropdown-menu__container__header,
+.compare-history-modal .report-modal__target,
+.report-dialog-modal .poll__option.dialog-option {
+  border-bottom-color: lighten($ui-base-color, 12%);
 }
 
-.dropdown-menu__separator {
+.report-dialog-modal__container {
   border-bottom-color: lighten($ui-base-color, 12%);
 }
 
@@ -229,13 +230,20 @@
 .mute-modal,
 .block-modal,
 .report-modal,
+.report-dialog-modal,
 .embed-modal,
 .error-modal,
 .onboarding-modal,
+.compare-history-modal,
 .report-modal__comment .setting-text__wrapper,
-.report-modal__comment .setting-text {
+.report-modal__comment .setting-text,
+.report-dialog-modal__textarea {
   background: $white;
   border: 1px solid lighten($ui-base-color, 8%);
+}
+
+.report-dialog-modal .dialog-option .poll__input {
+  color: $white;
 }
 
 .report-modal__comment {

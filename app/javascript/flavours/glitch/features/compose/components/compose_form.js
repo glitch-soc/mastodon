@@ -47,6 +47,7 @@ class ComposeForm extends ImmutablePureComponent {
     preselectDate: PropTypes.instanceOf(Date),
     isSubmitting: PropTypes.bool,
     isChangingUpload: PropTypes.bool,
+    isEditing: PropTypes.bool,
     isUploading: PropTypes.bool,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
@@ -245,9 +246,14 @@ class ComposeForm extends ImmutablePureComponent {
         selectionStart = selectionEnd = text.length;
       }
       if (textarea) {
-        textarea.setSelectionRange(selectionStart, selectionEnd);
-        textarea.focus();
-        if (!singleColumn) textarea.scrollIntoView();
+        // Because of the wicg-inert polyfill, the activeElement may not be
+        // immediately selectable, we have to wait for observers to run, as
+        // described in https://github.com/WICG/inert#performance-and-gotchas
+        Promise.resolve().then(() => {
+          textarea.setSelectionRange(selectionStart, selectionEnd);
+          textarea.focus();
+          if (!singleColumn) textarea.scrollIntoView();
+        }).catch(console.error);
       }
 
     //  Refocuses the textarea after submitting.
@@ -293,6 +299,7 @@ class ComposeForm extends ImmutablePureComponent {
       spoilerText,
       suggestions,
       spoilersAlwaysOn,
+      isEditing,
     } = this.props;
 
     const countText = this.getFulltextForCharacterCounting();
@@ -353,6 +360,7 @@ class ComposeForm extends ImmutablePureComponent {
             onToggleSpoiler={spoilersAlwaysOn ? null : onChangeSpoilerness}
             onUpload={onPaste}
             privacy={privacy}
+            isEditing={isEditing}
             sensitive={sensitive || (spoilersAlwaysOn && spoilerText && spoilerText.length > 0)}
             spoiler={spoilersAlwaysOn ? (spoilerText && spoilerText.length > 0) : spoiler}
           />
@@ -364,6 +372,7 @@ class ComposeForm extends ImmutablePureComponent {
         <Publisher
           countText={countText}
           disabled={!this.canSubmit()}
+          isEditing={isEditing}
           onSecondarySubmit={handleSecondarySubmit}
           onSubmit={handleSubmit}
           privacy={privacy}

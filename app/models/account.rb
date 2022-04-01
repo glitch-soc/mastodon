@@ -40,13 +40,15 @@
 #  also_known_as                 :string           is an Array
 #  silenced_at                   :datetime
 #  suspended_at                  :datetime
-#  trust_level                   :integer
 #  hide_collections              :boolean
 #  avatar_storage_schema_version :integer
 #  header_storage_schema_version :integer
 #  devices_url                   :string
 #  suspension_origin             :integer
 #  sensitized_at                 :datetime
+#  trendable                     :boolean
+#  reviewed_at                   :datetime
+#  requested_review_at           :datetime
 #
 
 class Account < ApplicationRecord
@@ -56,6 +58,7 @@ class Account < ApplicationRecord
     remote_url
     salmon_url
     hub_url
+    trust_level
   )
 
   USERNAME_RE   = /[a-z0-9_]+([a-z0-9_\.-]+[a-z0-9_]+)?/i
@@ -77,11 +80,6 @@ class Account < ApplicationRecord
   MAX_DISPLAY_NAME_LENGTH = (ENV['MAX_DISPLAY_NAME_CHARS'] || 30).to_i
   MAX_NOTE_LENGTH = (ENV['MAX_BIO_CHARS'] || 500).to_i
   MAX_FIELDS = (ENV['MAX_PROFILE_FIELDS'] || 4).to_i
-
-  TRUST_LEVELS = {
-    untrusted: 0,
-    trusted: 1,
-  }.freeze
 
   enum protocol: [:ostatus, :activitypub]
   enum suspension_origin: [:local, :remote], _prefix: true
@@ -134,13 +132,13 @@ class Account < ApplicationRecord
            :approved?,
            :pending?,
            :disabled?,
+           :unconfirmed?,
            :unconfirmed_or_pending?,
            :role,
            :admin?,
            :moderator?,
            :staff?,
            :locale,
-           :hides_network?,
            :shows_application?,
            to: :user,
            prefix: true,
@@ -206,10 +204,6 @@ class Account < ApplicationRecord
     last_webfingered_at.nil? || last_webfingered_at <= 1.day.ago
   end
 
-  def trust_level
-    self[:trust_level] || 0
-  end
-
   def refresh!
     ResolveAccountService.new.call(acct) unless local?
   end
@@ -272,6 +266,10 @@ class Account < ApplicationRecord
 
   def sign?
     true
+  end
+
+  def previous_strikes_count
+    strikes.where(overruled_at: nil).count
   end
 
   def keypair
@@ -353,11 +351,11 @@ class Account < ApplicationRecord
   end
 
   def hides_followers?
-    hide_collections? || user_hides_network?
+    hide_collections?
   end
 
   def hides_following?
-    hide_collections? || user_hides_network?
+    hide_collections?
   end
 
   def object_type
@@ -384,6 +382,22 @@ class Account < ApplicationRecord
     return 'local' if local?
 
     @synchronization_uri_prefix ||= "#{uri[URL_PREFIX_RE]}/"
+  end
+
+  def requires_review?
+    reviewed_at.nil?
+  end
+
+  def reviewed?
+    reviewed_at.present?
+  end
+
+  def requested_review?
+    requested_review_at.present?
+  end
+
+  def requires_review_notification?
+    requires_review? && !requested_review?
   end
 
   class Field < ActiveModelSerializers::Model

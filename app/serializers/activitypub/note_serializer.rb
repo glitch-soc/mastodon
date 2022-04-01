@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ActivityPub::NoteSerializer < ActivityPub::Serializer
+  include FormattingHelper
+
   context_extensions :atom_uri, :conversation, :sensitive, :voters_count, :direct_message
 
   attributes :id, :type, :summary,
@@ -15,7 +17,7 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   attribute :direct_message, if: :non_public?
 
-  has_many :media_attachments, key: :attachment
+  has_many :virtual_attachments, key: :attachment
   has_many :virtual_tags, key: :tag
 
   has_one :replies, serializer: ActivityPub::CollectionSerializer, if: :local?
@@ -50,11 +52,11 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
   end
 
   def content
-    Formatter.instance.format(object)
+    status_content_format(object)
   end
 
   def content_map
-    { object.language => Formatter.instance.format(object) }
+    { object.language => content }
   end
 
   def replies
@@ -115,6 +117,10 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   def sensitive
     object.account.sensitized? || object.sensitive || (!instance_options[:allow_local_only] && Setting.outgoing_spoilers.present?)
+  end
+
+  def virtual_attachments
+    object.ordered_media_attachments
   end
 
   def virtual_tags

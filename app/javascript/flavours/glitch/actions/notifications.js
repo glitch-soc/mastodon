@@ -47,7 +47,6 @@ export const NOTIFICATIONS_UNMOUNT = 'NOTIFICATIONS_UNMOUNT';
 
 export const NOTIFICATIONS_SET_VISIBILITY = 'NOTIFICATIONS_SET_VISIBILITY';
 
-
 export const NOTIFICATIONS_MARK_AS_READ = 'NOTIFICATIONS_MARK_AS_READ';
 
 export const NOTIFICATIONS_SET_BROWSER_SUPPORT    = 'NOTIFICATIONS_SET_BROWSER_SUPPORT';
@@ -58,7 +57,7 @@ defineMessages({
 });
 
 const fetchRelatedRelationships = (dispatch, notifications) => {
-  const accountIds = notifications.filter(item => item.type === 'follow').map(item => item.account.id);
+  const accountIds = notifications.filter(item => ['follow', 'follow_request', 'admin.sign_up'].indexOf(item.type) !== -1).map(item => item.account.id);
 
   if (accountIds > 0) {
     dispatch(fetchRelationships(accountIds));
@@ -136,7 +135,18 @@ const excludeTypesFromSettings = state => state.getIn(['settings', 'notification
 
 
 const excludeTypesFromFilter = filter => {
-  const allTypes = ImmutableList(['follow', 'follow_request', 'favourite', 'reblog', 'mention', 'poll']);
+  const allTypes = ImmutableList([
+    'follow',
+    'follow_request',
+    'favourite',
+    'reblog',
+    'mention',
+    'poll',
+    'status',
+    'update',
+    'admin.sign_up',
+  ]);
+
   return allTypes.filterNot(item => item === filter).toJS();
 };
 

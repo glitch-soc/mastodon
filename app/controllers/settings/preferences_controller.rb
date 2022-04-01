@@ -48,7 +48,6 @@ class Settings::PreferencesController < Settings::BaseController
       :setting_system_font_ui,
       :setting_system_emoji_font,
       :setting_noindex,
-      :setting_hide_network,
       :setting_hide_followers_count,
       :setting_aggregate_reblogs,
       :setting_show_application,
@@ -58,7 +57,7 @@ class Settings::PreferencesController < Settings::BaseController
       :setting_use_pending_items,
       :setting_trends,
       :setting_crop_images,
-      notification_emails: %i(follow follow_request reblog favourite mention digest report pending_account trending_tag),
+      notification_emails: %i(follow follow_request reblog favourite mention digest report pending_account trending_tag trending_link trending_status),
       interactions: %i(must_be_follower must_be_following must_be_following_dm)
     )
   end
