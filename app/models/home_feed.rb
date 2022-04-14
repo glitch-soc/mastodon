@@ -16,23 +16,30 @@ class HomeFeed < Feed
     since_id = since_id.to_i if since_id.present?
     min_id   = min_id.to_i if min_id.present?
 
-    statuses = from_redis(limit, max_id, since_id, min_id)
+    if min_id.present?
+      redis_min_id = from_redis(1, nil, nil, 0).first&.id
+      return from_redis(limit, max_id, since_id, min_id) if redis_min_id && min_id >= redis_min_id
 
-    return statuses if statuses.size >= limit
+      statuses = from_database(limit, redis_min_id, since_id, min_id)
+      remaining_limit = limit - statuses.size
+      min_id = statuses.first.id unless statuses.empty?
+      return from_redis(remaining_limit, max_id, since_id, min_id) + statuses
+    else
+      statuses = from_redis(limit, max_id, since_id, min_id)
 
-    redis_min_id = from_redis(1, nil, nil, 0).first&.id if min_id.present? || since_id.present?
-    redis_sufficient = redis_min_id && (
-      (min_id.present? && min_id >= redis_min_id) ||
-      (since_id.present? && since_id >= redis_min_id)
-    )
+      return statuses if statuses.size >= limit
 
-    unless redis_sufficient
+      if since_id.present?
+        redis_min_id = from_redis(1, nil, nil, 0).first&.id
+        return statuses if redis_min_id.present? && since_id >= redis_min_id
+      end
+
       remaining_limit = limit - statuses.size
       max_id = statuses.last.id unless statuses.empty?
       statuses += from_database(remaining_limit, max_id, since_id, min_id)
-    end
 
-    statuses
+      statuses
+    end
   end
 
   protected
