@@ -13,7 +13,8 @@ RSpec.describe HomeFeed, type: :model do
 
       Fabricate(:status, account: account,  id: 1)
       Fabricate(:status, account: account,  id: 2)
-      Fabricate(:status, account: followed, id: 3)
+      status = Fabricate(:status, account: followed, id: 3)
+      Fabricate(:mention, account: account, status: status)
       Fabricate(:status, account: account,  id: 10)
       Fabricate(:status, account: other,    id: 11)
       Fabricate(:status, account: followed, id: 12, visibility: :private)
