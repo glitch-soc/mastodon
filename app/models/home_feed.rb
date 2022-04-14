@@ -17,7 +17,7 @@ class HomeFeed < Feed
     min_id   = min_id.to_i if min_id.present?
 
     if min_id.present?
-      redis_min_id = get_min_redis_id
+      redis_min_id = fetch_min_redis_id
       return from_redis(limit, max_id, since_id, min_id) if redis_min_id && min_id >= redis_min_id
 
       statuses = from_database(limit, redis_min_id, since_id, min_id)
@@ -25,23 +25,19 @@ class HomeFeed < Feed
 
       remaining_limit = limit - statuses.size
       min_id = statuses.first.id unless statuses.empty?
-      statuses = from_redis(remaining_limit, max_id, since_id, min_id) + statuses
-
-      statuses
+      from_redis(remaining_limit, max_id, since_id, min_id) + statuses
     else
       statuses = from_redis(limit, max_id, since_id, min_id)
       return statuses if statuses.size >= limit
 
       if since_id.present?
-        redis_min_id = get_min_redis_id
+        redis_min_id = fetch_min_redis_id
         return statuses if redis_min_id.present? && since_id >= redis_min_id
       end
 
       remaining_limit = limit - statuses.size
       max_id = statuses.last.id unless statuses.empty?
-      statuses += from_database(remaining_limit, max_id, since_id, min_id)
-
-      statuses
+      statuses + from_database(remaining_limit, max_id, since_id, min_id)
     end
   end
 
@@ -60,7 +56,7 @@ class HomeFeed < Feed
 
   private
 
-  def get_min_redis_id
-    redis.zrangebyscore(key, "(0", "(+inf", limit: [0, 1], with_scores: true).first&.first&.to_i
+  def fetch_min_redis_id
+    redis.zrangebyscore(key, '(0', '(+inf', limit: [0, 1], with_scores: true).first&.first&.to_i
   end
 end
