@@ -17,20 +17,23 @@ class HomeFeed < Feed
     min_id   = min_id.to_i if min_id.present?
 
     if min_id.present?
-      redis_min_id = from_redis(1, nil, nil, 0).first&.id
+      redis_min_id = get_min_redis_id
       return from_redis(limit, max_id, since_id, min_id) if redis_min_id && min_id >= redis_min_id
 
       statuses = from_database(limit, redis_min_id, since_id, min_id)
+      return statuses if statuses.size >= limit
+
       remaining_limit = limit - statuses.size
       min_id = statuses.first.id unless statuses.empty?
-      return from_redis(remaining_limit, max_id, since_id, min_id) + statuses
+      statuses = from_redis(remaining_limit, max_id, since_id, min_id) + statuses
+
+      statuses
     else
       statuses = from_redis(limit, max_id, since_id, min_id)
-
       return statuses if statuses.size >= limit
 
       if since_id.present?
-        redis_min_id = from_redis(1, nil, nil, 0).first&.id
+        redis_min_id = get_min_redis_id
         return statuses if redis_min_id.present? && since_id >= redis_min_id
       end
 
@@ -46,11 +49,17 @@ class HomeFeed < Feed
 
   def from_database(limit, max_id, since_id, min_id)
     # Note that this query will not contains direct messages
-    Status
-      .where(account: [@account] + @account.following)
-      .where(visibility: [:public, :unlisted, :private])
+    scope = Status.where(account: @account).or(Status.where(account: @account.following))
+    scope = scope.where(visibility: %i(public unlisted private))
+    scope
       .to_a_paginated_by_id(limit, min_id: min_id, max_id: max_id, since_id: since_id)
       .reject { |status| FeedManager.instance.filter?(:home, status, @account) }
       .sort_by { |status| -status.id }
+  end
+
+  private
+
+  def get_min_redis_id
+    redis.zrangebyscore(key, "(0", "(+inf", limit: [0, 1], with_scores: true).first&.first&.to_i
   end
 end
