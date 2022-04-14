@@ -15,16 +15,13 @@ RSpec.describe HomeFeed, type: :model do
 
     context 'when feed is generated' do
       before do
-        Redis.current.zadd(
-          FeedManager.instance.key(:home, account.id),
-          [[4, 4], [3, 3], [2, 2], [1, 1]]
-        )
+        FeedManager.instance.populate_home(account)
       end
 
       it 'gets statuses with ids in the range from redis with database' do
         results = subject.get(3)
 
-        expect(results.map(&:id)).to eq [3, 2, 1]
+        expect(results.map(&:id)).to eq [10, 3, 2]
         expect(results.first.attributes.keys).to eq %w(id updated_at)
       end
 
