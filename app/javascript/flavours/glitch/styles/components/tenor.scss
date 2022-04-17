@@ -62,8 +62,23 @@
   position: relative;
 }
 
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -800px 0
+  }
+  100% {
+    background-position: 800px 0
+  }
+}
+
 .react-tenor--result {
-  background: rgba(87, 87, 131, 0.15);
+  animation-duration: 5s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background-color: #f5f5f5;
+  background: linear-gradient(to right, #f5f5f5 16%, #efefef 40%, #f5f5f5 66%);
   border: 0;
   cursor: pointer;
   display: inline-block;
