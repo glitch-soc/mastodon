@@ -67,10 +67,10 @@ const messages = {
   'advanced_options.threaded_mode.long': 'Öffnet automatisch eine Antwort zum vorherigen Beitrag',
   'advanced_options.threaded_mode.tooltip': 'Thread-Modus aktiviert',
 
-  'giphy.search': 'Suche nach GIFs',
-  'giphy.error': 'Ups! Etwas ist schiefgelaufen. Bitte versuche es erneut.',
-  'giphy.loading': 'Lädt...',
-  'giphy.nomatches': 'Keine Treffer gefunden.'
+  'tenor.search': 'Suche nach GIFs',
+  'tenor.error': 'Ups! Etwas ist schiefgelaufen. Bitte versuche es erneut.',
+  'tenor.loading': 'Lädt...',
+  'tenor.nomatches': 'Keine Treffer gefunden.'
 };
 
 export default Object.assign({}, inherited, messages);

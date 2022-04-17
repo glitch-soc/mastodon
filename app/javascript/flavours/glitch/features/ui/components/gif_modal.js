@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { giphySet, uploadCompose } from 'flavours/glitch/actions/compose';
+import { tenorSet, uploadCompose } from 'flavours/glitch/actions/compose';
 import IconButton from 'flavours/glitch/components/icon_button';
-import ReactGiphySearchbox from 'react-giphy-searchbox'
+import Tenor from 'react-tenor';
 import { defineMessages, injectIntl } from 'react-intl';
 
 const messages = defineMessages({
-  search:    { id: 'giphy.search', defaultMessage: 'Search for GIFs' },
-  error:     { id: 'giphy.error', defaultMessage: 'Oops! Something went wrong. Please, try again.' },
-  loading:   { id: 'giphy.loading', defaultMessage: 'Loading...'},
-  nomatches: { id: 'giphy.nomatches', defaultMessage: 'No matches found.' },
+  search:    { id: 'tenor.search', defaultMessage: 'Search for GIFs' },
+  error:     { id: 'tenor.error', defaultMessage: 'Oops! Something went wrong. Please, try again.' },
+  loading:   { id: 'tenor.loading', defaultMessage: 'Loading...' },
+  nomatches: { id: 'tenor.nomatches', defaultMessage: 'No matches found.' },
   close:     { id: 'settings.close', defaultMessage: 'Close' },
 });
 
@@ -28,12 +28,12 @@ function dataURLtoFile(dataurl, filename) {
 }
 
 const mapStateToProps = state => ({
-  options: state.getIn(['compose', 'giphy']),
+  options: state.getIn(['compose', 'tenor']),
 });
 
 const mapDispatchToProps = dispatch => ({
   /** Set options in the redux store */
-  setOpt: (opts) => dispatch(giphySet(opts)),
+  setOpt: (opts) => dispatch(tenorSet(opts)),
   /** Submit GIF for upload */
   submit: (file) => dispatch(uploadCompose([file])),
 });
@@ -50,9 +50,10 @@ class GIFModal extends ImmutablePureComponent {
     submit: PropTypes.func.isRequired,
   };
 
-  onDoneButton = (item) => {
-    const url = item["images"]["original"]["mp4"];
+  onDoneButton = (result) => {
+    const url = result.media[0].mp4.url;
     var modal = this;
+    // eslint-disable-next-line promise/catch-or-return
     fetch(url).then(function(response) {
       return response.blob();
     }).then(function(blob) {
@@ -60,7 +61,7 @@ class GIFModal extends ImmutablePureComponent {
       reader.readAsDataURL(blob); 
       reader.onloadend = function() {
         var dataUrl = reader.result;
-        const file = dataURLtoFile(dataUrl, 'giphy.mp4');
+        const file = dataURLtoFile(dataUrl, 'tenor.mp4');
         modal.props.submit(file);
         modal.props.onClose(); // close dialog
       };
@@ -72,23 +73,26 @@ class GIFModal extends ImmutablePureComponent {
     const { intl } = this.props;
 
     return (
-      <div className='modal-root__modal giphy-modal'>
-        <div className='giphy-modal__container'>
-          <IconButton title={intl.formatMessage(messages.close)} icon="close" size="16" onClick={this.props.onClose}  style={{float: "right"}} /><br />
-          <ReactGiphySearchbox
-            apiKey="1ttK05MF98dLllFFknTAVo0U4CGcQb4J"
-            onSelect={item => this.onDoneButton(item)}
-            masonryConfig={[
-              { columns: 2, imageWidth: 190, gutter: 5 },
-              { mq: "700px", columns: 2, imageWidth: 210, gutter: 5 }
-            ]}
-            autoFocus="true"
-            searchPlaceholder={intl.formatMessage(messages.search)}
-            messageError={intl.formatMessage(messages.error)}
-            messageLoading={intl.formatMessage(messages.loading)}
-            messageNoMatches={intl.formatMessage(messages.nomatches)}
-            wrapperClassName="giphy-modal__searchbox"
-          />
+      <div className='modal-root__modal tenor-modal'>
+        <div className='tenor-modal__container'>
+          <IconButton title={intl.formatMessage(messages.close)} icon='close' size="16" onClick={this.props.onClose}  style={{ float: 'right' }} /><br />
+          <div className='giphy-modal__searchbox'>
+            <Tenor
+              token='FJBKNQSVF2DD'
+              // eslint-disable-next-line react/jsx-no-bind
+              onSelect={result => this.onDoneButton(result)}
+              masonryConfig={[
+                { columns: 2, imageWidth: 190, gutter: 5 },
+                { mq: '700px', columns: 2, imageWidth: 210, gutter: 5 }
+              ]}
+              autoFocus='true'
+              searchPlaceholder={intl.formatMessage(messages.search)}
+              messageError={intl.formatMessage(messages.error)}
+              messageLoading={intl.formatMessage(messages.loading)}
+              messageNoMatches={intl.formatMessage(messages.nomatches)}
+            />
+          </div>
+          <br /><img src='/tenor.svg' alt='Tenor logo' />
         </div>
       </div>
     );
