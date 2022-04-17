@@ -75,23 +75,17 @@ class GIFModal extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal tenor-modal'>
         <div className='tenor-modal__container'>
-          <IconButton title={intl.formatMessage(messages.close)} icon='close' size="16" onClick={this.props.onClose}  style={{ float: 'right' }} /><br />
-          <div className='giphy-modal__searchbox'>
-            <Tenor
-              token='FJBKNQSVF2DD'
-              // eslint-disable-next-line react/jsx-no-bind
-              onSelect={result => this.onDoneButton(result)}
-              masonryConfig={[
-                { columns: 2, imageWidth: 190, gutter: 5 },
-                { mq: '700px', columns: 2, imageWidth: 210, gutter: 5 }
-              ]}
-              autoFocus='true'
-              searchPlaceholder={intl.formatMessage(messages.search)}
-              messageError={intl.formatMessage(messages.error)}
-              messageLoading={intl.formatMessage(messages.loading)}
-              messageNoMatches={intl.formatMessage(messages.nomatches)}
-            />
-          </div>
+        <IconButton title={intl.formatMessage(messages.close)} icon='close' size="16" onClick={this.props.onClose}  style={{ float: 'right' }} />
+          <Tenor
+            token='FJBKNQSVF2DD'
+            // eslint-disable-next-line react/jsx-no-bind
+            onSelect={result => this.onDoneButton(result)}
+            autoFocus='true'
+            searchPlaceholder={intl.formatMessage(messages.search)}
+            messageError={intl.formatMessage(messages.error)}
+            messageLoading={intl.formatMessage(messages.loading)}
+            messageNoMatches={intl.formatMessage(messages.nomatches)}
+          />
           <br /><img src='/tenor.svg' alt='Tenor logo' />
         </div>
       </div>

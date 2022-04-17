@@ -8,35 +8,31 @@
   padding: 20px;
 }
 
-.tenor-modal__searchbox {
-  width: 450px !important;
-}
-
-.react-tenor {
-  background-color: #f7f7f7;
-  border: 1px solid #ccc;
-  max-width: 480px;
+.tenor-modal__container .icon-button {
+  margin: 10px;
 }
 
 .react-tenor-active {
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, .2);
 }
 
-.react-tenor--search-bar {
-  position: relative;
-}
-
 .react-tenor--search {
-  background-color: white;
-  border: 1px solid #f7f7f7;
   box-sizing: border-box;
   color: #555;
   font-family: Arial;
-  font-size: 1em;
+  font-size: 1.5em;
+  margin-bottom: 10px;
   line-height: 1.3;
   overflow: visible;
-  padding: .25em .5em;
+  padding: 10px;
   width: 100%;
+  -webkit-appearance:none;
+}
+
+.react-tenor--search[type="search"]::-webkit-search-cancel-button,
+.react-tenor--search[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .react-tenor--search:focus {
@@ -45,16 +41,7 @@
 }
 
 .react-tenor--autocomplete {
-  box-sizing: border-box;
-  color: #aaa;
-  font-family: Arial;
-  font-size: 1em;
-  line-height: 1.3;
-  left: 0;
-  padding: .25em .5em;
-  pointer-events: none;
-  position: absolute;
-  top: 1px;
+  display: none;
 }
 
 .react-tenor--autocomplete span {
@@ -62,42 +49,11 @@
 }
 
 .react-tenor--spinner {
-  animation: react-tenor-spin 1s linear infinite;
-  height: 22px;
-  position: absolute;
-  right: 4px;
-  top: 3px;
-  width: 22px;
-}
-
-.react-tenor--spinner path {
-  fill: #999;
+  display: none;
 }
 
 .react-tenor--suggestions {
-  overflow-x: auto;
-  padding: .5em .5em;
-  white-space: nowrap;
-}
-
-.react-tenor--suggestions button {
-  background: #6a89af;
-  border: 1px solid #f7f7f7;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  display: inline-block;
-  font-size: 1em;
-  padding: 3px 5px;
-}
-
-.react-tenor--suggestions button:focus {
-  box-shadow: 0 0 2px 2px #6a89af;
-  outline: none;
-}
-
-.react-tenor--suggestions button + button {
-  margin-left: .5em;
+  display: none;
 }
 
 .react-tenor--results {
@@ -107,14 +63,7 @@
 }
 
 .react-tenor--result {
-  background: #6a89af;
-  background-image: repeating-linear-gradient(
-    45deg,
-    rgba(255, 255, 255, .1),
-    rgba(255, 255, 255, .1) 15px,
-    transparent 0,
-    transparent 30px
-  );
+  background: rgba(87, 87, 131, 0.15);
   border: 0;
   cursor: pointer;
   display: inline-block;
@@ -153,57 +102,7 @@
 
 .react-tenor--page-left,
 .react-tenor--page-right {
-  background: #6a89af;
-  border: 0;
-  cursor: pointer;
-  height: 1.8em;
-  position: absolute;
-  top: calc(50% - .9em);
-  opacity: .5;
-  position: absolute;
-  transition: opacity .2s, left .2s, right .2s;
-  width: 1.8em;
-  z-index: -1;
-}
-
-.react-tenor--results:hover .react-tenor--page-left,
-.react-tenor--results:hover .react-tenor--page-right {
-  opacity: 1;
-  z-index: 1;
-}
-
-.react-tenor--results:hover .react-tenor--page-left {
-  left: -1em;
-}
-
-.react-tenor--results:hover .react-tenor--page-right {
-  right: -1em;
-}
-
-.react-tenor--page-left div,
-.react-tenor--page-right div {
-  background: inherit;
-  height: 1.6em;
-  transform: rotate(45deg);
-  top: .1em;
-  position: absolute;
-  width: 1.6em;
-}
-
-.react-tenor--page-left {
-  left: -.3em;
-}
-
-.react-tenor--page-left div {
-  left: -.7em;
-}
-
-.react-tenor--page-right {
-  right: -.3em;
-}
-
-.react-tenor--page-right div {
-  right: -.7em;
+  display: none;
 }
 
 @keyframes react-tenor-fade-in {
