@@ -85,6 +85,8 @@ class GIFModal extends ImmutablePureComponent {
             messageError={intl.formatMessage(messages.error)}
             messageLoading={intl.formatMessage(messages.loading)}
             messageNoMatches={intl.formatMessage(messages.nomatches)}
+            contentFilter='off'
+            mediaFilter='off'
           />
           <br /><img src='/tenor.svg' alt='Tenor logo' />
         </div>
