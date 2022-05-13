@@ -10,6 +10,7 @@ import illustration from 'flavours/glitch/images/logo_warn_glitch.svg';
 const messages = defineMessages({
   discardChanges: { id: 'confirmations.deprecated_settings.confirm', defaultMessage: 'Use Mastodon preferences' },
   user_setting_expand_spoilers: { id: 'settings.enable_content_warnings_auto_unfold', defaultMessage: 'Automatically unfold content-warnings' },
+  user_setting_disable_swiping: { id: 'settings.swipe_to_change_columns', defaultMessage: 'Allow swiping to change columns (Mobile only)' },
 });
 
 export default @injectIntl

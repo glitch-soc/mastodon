@@ -5,7 +5,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 //  Our imports
-import { expandSpoilers } from 'flavours/glitch/util/initial_state';
+import { expandSpoilers, disableSwiping } from 'flavours/glitch/util/initial_state';
 import { preferenceLink } from 'flavours/glitch/util/backend_links';
 import LocalSettingsPageItem from './item';
 import DeprecatedLocalSettingsPageItem from './deprecated_item';
@@ -149,14 +149,28 @@ class LocalSettingsPage extends React.PureComponent {
           >
             <FormattedMessage id='settings.navbar_under' defaultMessage='Navbar at the bottom (Mobile only)' />
           </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['swipe_to_change_columns']}
+          <DeprecatedLocalSettingsPageItem
             id='mastodon-settings--swipe_to_change_columns'
-            onChange={onChange}
+            value={!disableSwiping}
           >
             <FormattedMessage id='settings.swipe_to_change_columns' defaultMessage='Allow swiping to change columns (Mobile only)' />
-          </LocalSettingsPageItem>
+            <span className='hint'>
+              <FormattedMessage
+                id='settings.deprecated_setting'
+                defaultMessage="This setting is now controlled from Mastodon's {settings_page_link}"
+                values={{
+                  settings_page_link: (
+                    <a href={preferenceLink('user_setting_disable_swiping')}>
+                      <FormattedMessage
+                        id='settings.shared_settings_link'
+                        defaultMessage='user preferences'
+                      />
+                    </a>
+                  )
+                }}
+              />
+            </span>
+          </DeprecatedLocalSettingsPageItem>
         </section>
       </div>
     ),
