@@ -3,7 +3,7 @@ import { Map as ImmutableMap } from 'immutable';
 
 //  Our imports.
 import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
-import { LOCAL_SETTING_CHANGE } from 'flavours/glitch/actions/local_settings';
+import { LOCAL_SETTING_CHANGE, LOCAL_SETTING_DELETE } from 'flavours/glitch/actions/local_settings';
 
 const initialState = ImmutableMap({
   layout    : 'auto',
@@ -26,7 +26,6 @@ const initialState = ImmutableMap({
   tag_misleading_links: true,
   rewrite_mentions: 'no',
   content_warnings : ImmutableMap({
-    auto_unfold : false,
     filter      : null,
   }),
   collapsed : ImmutableMap({
@@ -66,6 +65,8 @@ export default function localSettings(state = initialState, action) {
     return hydrate(state, action.state.get('local_settings'));
   case LOCAL_SETTING_CHANGE:
     return state.setIn(action.key, action.value);
+  case LOCAL_SETTING_DELETE:
+    return state.deleteIn(action.key);
   default:
     return state;
   }
