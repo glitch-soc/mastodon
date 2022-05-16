@@ -22,10 +22,10 @@ module Admin
     def import
       authorize :domain_block, :create?
 
-      if params[:admin_import]&.key?(:data)
-        import_from_upload!
-      else
+      if params[:admin_import] && params[:admin_import][:url].present?
         import_from_remote_domain!
+      else
+        import_from_upload!
       end
     end
 
