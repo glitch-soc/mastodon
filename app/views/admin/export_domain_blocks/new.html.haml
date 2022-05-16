@@ -6,5 +6,8 @@
     .fields-group.fields-row__column.fields-row__column-6
       = f.input :data, wrapper: :with_block_label, hint: t('simple_form.hints.imports.data'), as: :file
 
+    .fields-group.fields-row__column.fields-row__column-6
+      = f.input :url, wrapper: :with_block_label, label: t('admin.export_domain_blocks.import.url.label'), hint: t('admin.export_domain_blocks.import.url.hint')
+
   .actions
     = f.button :button, t('imports.upload'), type: :submit
