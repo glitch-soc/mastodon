@@ -10,7 +10,6 @@ class Admin::Import
 
   # Paperclip required callbacks
   define_model_callbacks :save, only: [:after]
-  define_model_callbacks :commit, only: [:after]
   define_model_callbacks :destroy, only: [:before, :after]
 
   attr_accessor :data_file_name, :data_content_type
@@ -26,9 +25,5 @@ class Admin::Import
 
   def destroy
     run_callbacks :destroy
-  end
-
-  def commit
-    run_callbacks :commit
   end
 end
