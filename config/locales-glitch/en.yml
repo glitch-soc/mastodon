@@ -15,6 +15,8 @@ en:
         title: Import domain allows
       no_file: No file selected
     export_domain_blocks:
+      errors:
+        fetch_remote_list: Unexpected error while fetching remote block list
       import:
         description_html: You are about to import a list of domain blocks. Please review this list very carefully, especially if you have not authored this list yourself.
         existing_relationships_warning: Existing follow relationships

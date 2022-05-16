@@ -65,6 +65,10 @@ module Admin
       end
 
       @warning_domains = Instance.where(domain: @domain_blocks.map(&:domain)).where('EXISTS (SELECT 1 FROM follows JOIN accounts ON follows.account_id = accounts.id OR follows.target_account_id = accounts.id WHERE accounts.domain = instances.domain)').pluck(:domain)
+    rescue HTTP::Error, OpenSSL::SSL::SSLError
+      flash.now[:alert] = I18n.t('admin.export_domain_blocks.errors.fetch_remote_list')
+      set_dummy_import!
+      render :new
     end
 
     def import_from_upload!
