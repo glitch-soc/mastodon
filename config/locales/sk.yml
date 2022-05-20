@@ -195,6 +195,7 @@ sk:
       silenced: Stíšený/é
       statuses: Príspevkov
       subscribe: Odoberaj
+      suspend: Vylúč
       suspended: Vylúčený/á
       title: Účty
       unblock_email: Odblokuj emailovú adresu
@@ -894,11 +895,6 @@ sk:
         many: A ešte, kým si bol/a preč, si získal/a %{count} nových následovateľov! Hurá!
         one: A ešte, kým si bol/a preč, si získal/a jedného nového následovateľa! Hurá!
         other: A ešte, kým si bol/a preč, si získal/a %{count} nových následovateľov! Hurá!
-      subject:
-        few: "%{count} nových oboznámení od tvojej poslednej návštevy 🐘"
-        many: "%{count} nových oboznámení od tvojej poslednej návštevy 🐘"
-        one: "Jedno nové oboznámenie od tvojej poslednej návštevy 🐘"
-        other: "%{count} nové oboznámenia od tvojej poslednej návštevy 🐘"
       title: Zatiaľ čo si bol/a preč…
     favourite:
       body: 'Tvoj príspevok bol uložený medzi obľúbené užívateľa %{name}:'
