@@ -194,7 +194,25 @@ Rails.application.routes.draw do
     get '/dashboard', to: 'dashboard#index'
 
     resources :domain_allows, only: [:new, :create, :show, :destroy]
-    resources :domain_blocks, only: [:new, :create, :destroy, :update, :edit]
+    resources :domain_blocks, only: [:new, :create, :show, :destroy, :update, :edit] do
+      collection do
+        post :batch
+      end
+    end
+
+    resources :export_domain_allows, only: [:new] do
+      collection do
+        get :export, constraints: { format: :csv }
+        post :import
+      end
+    end
+
+    resources :export_domain_blocks, only: [:new] do
+      collection do
+        get :export, constraints: { format: :csv }
+        post :import
+      end
+    end
 
     resources :email_domain_blocks, only: [:index, :new, :create] do
       collection do
@@ -471,6 +489,7 @@ Rails.application.routes.draw do
       end
 
       resource :domain_blocks, only: [:show, :create, :destroy]
+
       resource :directory, only: [:show]
 
       resources :follow_requests, only: [:index] do

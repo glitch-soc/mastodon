@@ -15,7 +15,7 @@ import { me, mascot } from 'flavours/glitch/util/initial_state';
 import HeaderContainer from './containers/header_container';
 
 const messages = defineMessages({
-  compose: { id: 'navigation_bar.compose', defaultMessage: 'Compose new toot' },
+  compose: { id: 'navigation_bar.compose', defaultMessage: 'Compose new post' },
 });
 
 const mapStateToProps = (state, ownProps) => ({
