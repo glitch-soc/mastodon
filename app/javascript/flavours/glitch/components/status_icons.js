@@ -50,6 +50,7 @@ class StatusIcons extends React.PureComponent {
     directMessage: PropTypes.bool,
     setCollapsed: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
+    settings: ImmutablePropTypes.map.isRequired,
   };
 
   //  Handles clicks on collapsed button
@@ -99,13 +100,14 @@ class StatusIcons extends React.PureComponent {
       collapsible,
       collapsed,
       directMessage,
+      settings,
       intl,
     } = this.props;
 
     return (
       <div className='status__info__icons'>
-        {status.get('language') && <LanguageIcon language={status.get('language')} />}
-        {status.get('in_reply_to_id', null) !== null ? (
+        {settings.get('language') && status.get('language') && <LanguageIcon language={status.get('language')} />}
+        {settings.get('reply') && status.get('in_reply_to_id', null) !== null ? (
           <Icon
             className='status__reply-icon'
             fixedWidth
@@ -114,16 +116,16 @@ class StatusIcons extends React.PureComponent {
             title={intl.formatMessage(messages.inReplyTo)}
           />
         ) : null}
-        {status.get('local_only') &&
+        {settings.get('local_only') && status.get('local_only') &&
           <Icon
             fixedWidth
             id='home'
             aria-hidden='true'
             title={intl.formatMessage(messages.localOnly)}
           />}
-        { !!mediaIcons && mediaIcons.map(icon => this.renderIcon(icon)) }
-        {!directMessage && <VisibilityIcon visibility={status.get('visibility')} />}
-        {collapsible ? (
+        {settings.get('media') && !!mediaIcons && mediaIcons.map(icon => this.renderIcon(icon))}
+        {settings.get('visibility') && !directMessage && <VisibilityIcon visibility={status.get('visibility')} />}
+        {collapsible && (
           <IconButton
             className='status__collapse-button'
             animate
@@ -136,7 +138,7 @@ class StatusIcons extends React.PureComponent {
             icon='angle-double-up'
             onClick={this.handleCollapsedClick}
           />
-        ) : null}
+        )}
       </div>
     );
   }
