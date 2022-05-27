@@ -30,13 +30,14 @@ const LanguageIcon = ({ language }) => {
   if (!lang) return null;
 
   return (
-    <Icon
-      fixedWidth
-      id='language'
-      aria-hidden='true'
-      title={`${lang[2]} (${lang[1]})`}
-    />
+    <span className='text-icon' title={`${lang[2]} (${lang[1]})`} aria-hidden='true'>
+      {lang[0].toUpperCase()}
+    </span>
   );
+};
+
+LanguageIcon.propTypes = {
+  language: PropTypes.string.isRequired,
 };
 
 export default @injectIntl
