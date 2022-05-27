@@ -8,6 +8,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 import IconButton from './icon_button';
 import VisibilityIcon from './status_visibility_icon';
 import Icon from 'flavours/glitch/components/icon';
+import { languages } from 'flavours/glitch/util/initial_state';
 
 //  Messages for use with internationalization stuff.
 const messages = defineMessages({
@@ -21,6 +22,22 @@ const messages = defineMessages({
   audio: { id: 'status.has_audio', defaultMessage: 'Features attached audio files' },
   localOnly: { id: 'status.local_only', defaultMessage: 'Only visible from your instance' },
 });
+
+const LanguageIcon = ({ language }) => {
+  if (!languages) return null;
+
+  const lang = languages.find((lang) => lang[0] === language);
+  if (!lang) return null;
+
+  return (
+    <Icon
+      fixedWidth
+      id='language'
+      aria-hidden='true'
+      title={`${lang[2]} (${lang[1]})`}
+    />
+  );
+};
 
 export default @injectIntl
 class StatusIcons extends React.PureComponent {
@@ -87,6 +104,7 @@ class StatusIcons extends React.PureComponent {
 
     return (
       <div className='status__info__icons'>
+        {status.get('language') && <LanguageIcon language={status.get('language')} />}
         {status.get('in_reply_to_id', null) !== null ? (
           <Icon
             className='status__reply-icon'
