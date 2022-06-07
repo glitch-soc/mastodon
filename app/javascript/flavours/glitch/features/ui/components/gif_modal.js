@@ -35,7 +35,7 @@ const mapDispatchToProps = dispatch => ({
   /** Set options in the redux store */
   setOpt: (opts) => dispatch(tenorSet(opts)),
   /** Submit GIF for upload */
-  submit: (file) => dispatch(uploadCompose([file])),
+  submit: (file, alt) => dispatch(uploadCompose([file], alt)),
 });
 
 export default @connect(mapStateToProps, mapDispatchToProps)
@@ -52,6 +52,7 @@ class GIFModal extends ImmutablePureComponent {
 
   onDoneButton = (result) => {
     const url = result.media[0].mp4.url;
+    const alt = result.content_description;
     var modal = this;
     // eslint-disable-next-line promise/catch-or-return
     fetch(url).then(function(response) {
@@ -62,7 +63,7 @@ class GIFModal extends ImmutablePureComponent {
       reader.onloadend = function() {
         var dataUrl = reader.result;
         const file = dataURLtoFile(dataUrl, 'tenor.mp4');
-        modal.props.submit(file);
+        modal.props.submit(file, alt);
         modal.props.onClose(); // close dialog
       };
     });

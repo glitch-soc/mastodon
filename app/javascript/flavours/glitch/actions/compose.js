@@ -274,7 +274,7 @@ export function tenorSet(options) {
   };
 };
 
-export function uploadCompose(files) {
+export function uploadCompose(files, alt = '') {
   return function (dispatch, getState) {
     const uploadLimit = 4;
     const media  = getState().getIn(['compose', 'media_attachments']);
@@ -300,6 +300,7 @@ export function uploadCompose(files) {
       resizeImage(f).then(file => {
         const data = new FormData();
         data.append('file', file);
+        data.append('description', alt);
         // Account for disparity in size of original image and resized data
         total += file.size - f.size;
 
