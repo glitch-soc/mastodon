@@ -256,6 +256,17 @@ Rails.application.routes.draw do
 
     resources :rules
 
+    resources :webhooks do
+      member do
+        post :enable
+        post :disable
+      end
+
+      resource :secret, only: [], controller: 'webhooks/secrets' do
+        post :rotate
+      end
+    end
+
     resources :reports, only: [:index, :show] do
       resources :actions, only: [:create], controller: 'reports/actions'
 
@@ -582,6 +593,8 @@ Rails.application.routes.draw do
             post :resolve
           end
         end
+
+        resources :domain_blocks, only: [:index, :show, :update, :create, :destroy]
 
         namespace :trends do
           resources :tags, only: [:index]

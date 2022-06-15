@@ -26,7 +26,6 @@
 #  otp_required_for_login    :boolean          default(FALSE), not null
 #  last_emailed_at           :datetime
 #  otp_backup_codes          :string           is an Array
-#  filtered_languages        :string           default([]), not null, is an Array
 #  account_id                :bigint(8)        not null
 #  disabled                  :boolean          default(FALSE), not null
 #  moderator                 :boolean          default(FALSE), not null
@@ -38,7 +37,6 @@
 #  sign_in_token_sent_at     :datetime
 #  webauthn_id               :string
 #  sign_up_ip                :inet
-#  skip_sign_in_token        :boolean
 #
 
 class User < ApplicationRecord
@@ -48,6 +46,7 @@ class User < ApplicationRecord
     current_sign_in_ip
     last_sign_in_ip
     skip_sign_in_token
+    filtered_languages
   )
 
   include Settings::Extend
@@ -120,6 +119,7 @@ class User < ApplicationRecord
   before_validation :sanitize_languages
   before_create :set_approved
   after_commit :send_pending_devise_notifications
+  after_create_commit :trigger_webhooks
 
   # This avoids a deprecation warning from Rails 5.1
   # It seems possible that a future release of devise-two-factor will
@@ -182,7 +182,9 @@ class User < ApplicationRecord
   end
 
   def update_sign_in!(new_sign_in: false)
-    old_current, new_current = current_sign_in_at, Time.now.utc
+    old_current = current_sign_in_at
+    new_current = Time.now.utc
+
     self.last_sign_in_at     = old_current || new_current
     self.current_sign_in_at  = new_current
 
@@ -479,5 +481,9 @@ class User < ApplicationRecord
 
   def invite_text_required?
     Setting.require_invite_text && !invited? && !external? && !bypass_invite_request_check?
+  end
+
+  def trigger_webhooks
+    TriggerWebhookWorker.perform_async('account.created', 'Account', account_id)
   end
 end
