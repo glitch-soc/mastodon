@@ -244,7 +244,7 @@ ru:
         approve_appeal: Одобрить обжалование
         approve_user: Утвердить
         assigned_to_self_report: Присвоение жалоб
-        change_email_user: Изменение e-mail пользователей
+        change_email_user: Изменение эл. почты пользователя
         confirm_user: Подтверждение пользователей
         create_account_warning: Выдача предупреждения
         create_announcement: Создание объявлений
@@ -292,6 +292,7 @@ ru:
         update_domain_block: Изменение блокировки домена
         update_status: Изменение постов
       actions:
+        approve_appeal_html: "%{name} одобрил апелляцию на умеренное решение от %{target}"
         approve_user_html: "%{name} утвердил(а) регистрацию %{target}"
         assigned_to_self_report_html: "%{name} назначил(а) себя для решения жалобы %{target}"
         change_email_user_html: "%{name} сменил(а) e-mail пользователя %{target}"
@@ -323,6 +324,7 @@ ru:
         enable_user_html: "%{name} разморозил(а) пользователя %{target}"
         memorialize_account_html: "%{name} перевел(а) учётную запись пользователя %{target} в статус памятника"
         promote_user_html: "%{name} повысил(а) пользователя %{target}"
+        reject_appeal_html: "%{name} отклонил апелляцию на модерацию от %{target}"
         reject_user_html: "%{name} отклонил(а) регистрацию %{target}"
         remove_avatar_user_html: "%{name} убрал(а) аватарку пользователя %{target}"
         reopen_report_html: "%{name} повторно открыл(а) жалобу %{target}"
@@ -424,6 +426,7 @@ ru:
       destroyed_msg: Блокировка домена снята
       domain: Домен
       edit: Редактировать блокировку
+      existing_domain_block: Вы уже установили более строгие ограничения для %{name}.
       existing_domain_block_html: Вы уже ввели более строгие ограничения на %{name}, вам нужно <a href="%{unblock_url}">разблокировать его</a> сначала.
       new:
         create: Создать блокировку
@@ -466,7 +469,9 @@ ru:
       domain: Домен
       new:
         create: Создать блокировку
+        resolve: Отрезолвенные домены
         title: Новая блокировка по домену
+      no_email_domain_block_selected: Блоки домена электронной почты не были изменены, так как не были выбраны
       resolved_through_html: Разрешено через %{domain}
       title: Блокировка e-mail доменов
     follow_recommendations:
@@ -488,8 +493,15 @@ ru:
       by_domain: Домен
       confirm_purge: Вы уверены, что хотите навсегда удалить данные с этого домена?
       content_policies:
+        comment: Внутренняя заметка
+        policies:
+          reject_media: Отклонить медиа
+          silence: Лимит
+          suspend: Приостановить
         policy: Политика
+        reason: Публичная причина
       dashboard:
+        instance_accounts_dimension: Популярные аккаунты
         instance_accounts_measure: сохраненные учетные записи
         instance_languages_dimension: Популярные языки
         instance_media_attachments_measure: сохраненные медиафайлы
@@ -789,6 +801,8 @@ ru:
         title: Издатели
       rejected: Отклонённые
       statuses:
+        allow: Разрешить пост
+        allow_account: Разрешить автора
         title: Популярные посты
       tags:
         current_score: Текущий счет %{score}
@@ -821,6 +835,10 @@ ru:
       title: Управление шаблонами предупреждений
   admin_mailer:
     new_appeal:
+      actions:
+        none: предупреждение
+        silence: ограничить учётную запись
+        suspend: приостановить действие учётной записи
       subject: "%{username} обжалует решение модерации на %{instance}"
     new_pending_account:
       body: Ниже указана информация учётной записи. Вы можете одобрить или отклонить заявку.
@@ -836,6 +854,7 @@ ru:
       new_trending_statuses:
         title: Популярные посты
       new_trending_tags:
+        no_approved_tags: На данный момент популярные подтвержденные хэштеги отсутствуют.
         title: Популярные хэштеги
   aliases:
     add_new: Создать псевдоним
@@ -980,6 +999,7 @@ ru:
   disputes:
     strikes:
       action_taken: Предпринятые меры
+      appeal: Обжаловать
       appeal_approved: Это замечание было успешно обжаловано и более не действительно
       appeal_rejected: Апелляция была отклонена
       appeal_submitted_at: Апелляция отправлена
@@ -996,9 +1016,12 @@ ru:
       title: "%{action} от %{date}"
       title_actions:
         delete_statuses: Удаление поста
+        disable: Заморозка аккаунта
         mark_statuses_as_sensitive: Помечать посты как деликатные
+        none: Требующие внимания
         sensitive: Отметить учетную запись как деликатную
         silence: Ограничение учетной записи
+        suspend: Приостановка Аккаунта
       your_appeal_approved: Ваша апелляция одобрена
       your_appeal_pending: Вы подали апелляцию
       your_appeal_rejected: Ваша апелляция отклонена
@@ -1041,7 +1064,7 @@ ru:
     add_new: Добавить
     errors:
       limit: Вы уже добавили максимальное число хэштегов
-    hint_html: "<strong>Особенные хэштеги</strong> отображаются в вашем профиле и позволяют людям просматривать ваши посты, отмеченные ими. Это отличный инструмент для отслеживания долгосрочных проектов и творческих работ."
+    hint_html: "<strong>Избранные хэштеги</strong> отображаются в вашем профиле и позволяют людям быстро найти посты, отмеченные ими. Это отличный инструмент для отслеживания долгосрочных проектов и творческих работ."
   filters:
     contexts:
       account: Посты в профилях
@@ -1372,7 +1395,7 @@ ru:
     development: Разработчикам
     edit_profile: Изменить профиль
     export: Экспорт данных
-    featured_tags: Особенные хэштеги
+    featured_tags: Избранные хэштеги
     import: Импорт
     import_and_export: Импорт и экспорт
     migrate: Миграция учётной записи
@@ -1448,9 +1471,9 @@ ru:
       unlisted_long: Показывать всем, но не отображать в публичных лентах
   statuses_cleanup:
     enabled: Автоматически удалять устаревшие посты
-    enabled_hint: Автоматически удаляет ваши посты после того, как они достигли определённого возраста, за некоторыми исключениями ниже.
+    enabled_hint: Автоматически удаляет ваши посты после того, как они достигли определённого возрастного порога, за некоторыми исключениями ниже.
     exceptions: Исключения
-    explanation: Из-за того, что удаление постов — это ресурсоёмкий процесс, оно производится медленно со временем, когда сервер менее всего занят. По этой причине, посты могут удаляться не сразу, а спустя определённое время, по достижению возрастного порога.
+    explanation: Из-за того, что удаление постов — это ресурсоёмкий процесс, оно производится медленно со временем, когда сервер менее всего загружен. По этой причине, посты могут удаляться не сразу, а спустя определённое время, по достижению возрастного порога.
     ignore_favs: Игнорировать отметки «избранного»
     ignore_reblogs: Игнорировать продвижения
     interaction_exceptions: Исключения на основе взаимодействий
@@ -1458,13 +1481,13 @@ ru:
     keep_direct: Не удалять адресованные посты
     keep_direct_hint: Не удалять ваши посты с «адресованной» видимостью.
     keep_media: Не удалять посты с вложениями
-    keep_media_hint: Не удалять ваши посты, содержащие любые медийные вложения
+    keep_media_hint: Не удалять ваши посты, содержащие любые медийные вложения.
     keep_pinned: Не удалять закреплённые посты
     keep_pinned_hint: Не удалять ваши посты, которые закреплены в профиле.
     keep_polls: Не удалять опросы
     keep_polls_hint: Не удалять ваши посты с опросами.
     keep_self_bookmark: Не удалять закладки
-    keep_self_bookmark_hint: Не удалять ваши посты с закладками
+    keep_self_bookmark_hint: Не удалять ваши посты с закладками.
     keep_self_fav: Оставить посты, отмеченные «избранными»
     keep_self_fav_hint: Не удалять ваши посты, если вы отметили их как «избранные».
     min_age:
@@ -1491,83 +1514,6 @@ ru:
   tags:
     does_not_match_previous_name: не совпадает с предыдущим именем
   terms:
-    body_html: |
-      <h2>Privacy Policy</h2>
-      <h3 id="collect">What information do we collect?</h3>
-
-      <ul>
-      <li><em>Basic account information</em>: If you register on this server, you may be asked to enter a username, an e-mail address and a password. You may also enter additional profile information such as a display name and biography, and upload a profile picture and header image. The username, display name, biography, profile picture and header image are always listed publicly.</li>
-      <li><em>Posts, following and other public information</em>: The list of people you follow is listed publicly, the same is true for your followers. When you submit a message, the date and time is stored as well as the application you submitted the message from. Messages may contain media attachments, such as pictures and videos. Public and unlisted posts are available publicly. When you feature a post on your profile, that is also publicly available information. Your posts are delivered to your followers, in some cases it means they are delivered to different servers and copies are stored there. When you delete posts, this is likewise delivered to your followers. The action of reblogging or favouriting another post is always public.</li>
-      <li><em>Direct and followers-only posts</em>: All posts are stored and processed on the server. Followers-only posts are delivered to your followers and users who are mentioned in them, and direct posts are delivered only to users mentioned in them. In some cases it means they are delivered to different servers and copies are stored there. We make a good faith effort to limit the access to those posts only to authorized persons, but other servers may fail to do so. Therefore it's important to review servers your followers belong to. You may toggle an option to approve and reject new followers manually in the settings. <em>Please keep in mind that the operators of the server and any receiving server may view such messages</em>, and that recipients may screenshot, copy or otherwise re-share them. <em>Do not share any dangerous information over Mastodon.</em></li>
-      <li><em>IPs and other metadata</em>: When you log in, we record the IP address you log in from, as well as the name of your browser application. All the logged in sessions are available for your review and revocation in the settings. The latest IP address used is stored for up to 12 months. We also may retain server logs which include the IP address of every request to our server.</li>
-      </ul>
-
-      <hr class="spacer" />
-
-      <h3 id="use">What do we use your information for?</h3>
-
-      <p>Any of the information we collect from you may be used in the following ways:</p>
-
-      <ul>
-      <li>To provide the core functionality of Mastodon. You can only interact with other people's content and post your own content when you are logged in. For example, you may follow other people to view their combined posts in your own personalized home timeline.</li>
-      <li>To aid moderation of the community, for example comparing your IP address with other known ones to determine ban evasion or other violations.</li>
-      <li>The email address you provide may be used to send you information, notifications about other people interacting with your content or sending you messages, and to respond to inquiries, and/or other requests or questions.</li>
-      </ul>
-
-      <hr class="spacer" />
-
-      <h3 id="protect">How do we protect your information?</h3>
-
-      <p>We implement a variety of security measures to maintain the safety of your personal information when you enter, submit, or access your personal information. Among other things, your browser session, as well as the traffic between your applications and the API, are secured with SSL, and your password is hashed using a strong one-way algorithm. You may enable two-factor authentication to further secure access to your account.</p>
-
-      <hr class="spacer" />
-
-      <h3 id="data-retention">What is our data retention policy?</h3>
-
-      <p>We will make a good faith effort to:</p>
-
-      <ul>
-      <li>Retain server logs containing the IP address of all requests to this server, in so far as such logs are kept, no more than 90 days.</li>
-      <li>Retain the IP addresses associated with registered users no more than 12 months.</li>
-      </ul>
-
-      <p>You can request and download an archive of your content, including your posts, media attachments, profile picture, and header image.</p>
-
-      <p>You may irreversibly delete your account at any time.</p>
-
-      <hr class="spacer"/>
-
-      <h3 id="cookies">Do we use cookies?</h3>
-
-      <p>Yes. Cookies are small files that a site or its service provider transfers to your computer's hard drive through your Web browser (if you allow). These cookies enable the site to recognize your browser and, if you have a registered account, associate it with your registered account.</p>
-
-      <p>We use cookies to understand and save your preferences for future visits.</p>
-
-      <hr class="spacer" />
-
-      <h3 id="disclose">Do we disclose any information to outside parties?</h3>
-
-      <p>We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information. This does not include trusted third parties who assist us in operating our site, conducting our business, or servicing you, so long as those parties agree to keep this information confidential. We may also release your information when we believe release is appropriate to comply with the law, enforce our site policies, or protect ours or others rights, property, or safety.</p>
-
-      <p>Your public content may be downloaded by other servers in the network. Your public and followers-only posts are delivered to the servers where your followers reside, and direct messages are delivered to the servers of the recipients, in so far as those followers or recipients reside on a different server than this.</p>
-
-      <p>When you authorize an application to use your account, depending on the scope of permissions you approve, it may access your public profile information, your following list, your followers, your lists, all your posts, and your favourites. Applications can never access your e-mail address or password.</p>
-
-      <hr class="spacer" />
-
-      <h3 id="coppa">Children's Online Privacy Protection Act Compliance</h3>
-
-      <p>Our site, products and services are all directed to people who are at least 13 years old. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA (<a href="https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act">Children's Online Privacy Protection Act</a>) do not use this site.</p>
-
-      <hr class="spacer" />
-
-      <h3 id="changes">Changes to our Privacy Policy</h3>
-
-      <p>If we decide to change our privacy policy, we will post those changes on this page.</p>
-
-      <p>This document is CC-BY-SA. It was last updated March 7, 2018.</p>
-
-      <p>Originally adapted from the <a href="https://github.com/discourse/discourse">Discourse privacy policy</a>.</p>
     title: Условия обслуживания и политика конфиденциальности %{instance}
   themes:
     contrast: Mastodon (высококонтрастная)
@@ -1667,7 +1613,7 @@ ru:
     seamless_external_login: Вы залогинены через сторонний сервис, поэтому настройки e-mail и пароля недоступны.
     signed_in_as: 'Выполнен вход под именем:'
   verification:
-    explanation_html: 'Владение ссылками в профиле <strong>можно подтвердить</strong>. Для этого на указанном сайте должна содержаться ссылка на ваш профиль Mastodon, а у самой ссылки <strong>должен</strong> быть атрибут <code>rel="me"</code>. Что внутри ссылки — значения не имеет. Вот вам пример ссылки:'
+    explanation_html: 'Вы можете <strong>подтвердить владение</strong> любой из ссылок в таблице. Для этого страница по ссылке должна содержать обратную ссылку на ваш профиль Mastodon, а у самой ссылки <strong>должен</strong> атрибут <code>rel="me"</code>. Текст ссылки значения не имеет. Вот пример:'
     verification: Верификация ссылок
   webauthn_credentials:
     add: Добавить новый ключ безопасности

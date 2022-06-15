@@ -79,7 +79,7 @@ class Account < ApplicationRecord
 
   MAX_DISPLAY_NAME_LENGTH = (ENV['MAX_DISPLAY_NAME_CHARS'] || 30).to_i
   MAX_NOTE_LENGTH = (ENV['MAX_BIO_CHARS'] || 500).to_i
-  MAX_FIELDS = (ENV['MAX_PROFILE_FIELDS'] || 4).to_i
+  DEFAULT_FIELDS_SIZE = (ENV['MAX_PROFILE_FIELDS'] || 4).to_i
 
   enum protocol: [:ostatus, :activitypub]
   enum suspension_origin: [:local, :remote], _prefix: true
@@ -92,10 +92,10 @@ class Account < ApplicationRecord
 
   # Local user validations
   validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
-  validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? }
+  validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
   validates :display_name, length: { maximum: MAX_DISPLAY_NAME_LENGTH }, if: -> { local? && will_save_change_to_display_name? }
   validates :note, note_length: { maximum: MAX_NOTE_LENGTH }, if: -> { local? && will_save_change_to_note? }
-  validates :fields, length: { maximum: MAX_FIELDS }, if: -> { local? && will_save_change_to_fields? }
+  validates :fields, length: { maximum: DEFAULT_FIELDS_SIZE }, if: -> { local? && will_save_change_to_fields? }
 
   scope :remote, -> { where.not(domain: nil) }
   scope :local, -> { where(domain: nil) }
@@ -113,7 +113,8 @@ class Account < ApplicationRecord
   scope :matches_username, ->(value) { where(arel_table[:username].matches("#{value}%")) }
   scope :matches_display_name, ->(value) { where(arel_table[:display_name].matches("#{value}%")) }
   scope :matches_domain, ->(value) { where(arel_table[:domain].matches("%#{value}%")) }
-  scope :searchable, -> { without_suspended.where(moved_to_account_id: nil) }
+  scope :without_unapproved, -> { left_outer_joins(:user).remote.or(left_outer_joins(:user).merge(User.approved.confirmed)) }
+  scope :searchable, -> { without_unapproved.without_suspended.where(moved_to_account_id: nil) }
   scope :discoverable, -> { searchable.without_silenced.where(discoverable: true).left_outer_joins(:account_stat) }
   scope :followable_by, ->(account) { joins(arel_table.join(Follow.arel_table, Arel::Nodes::OuterJoin).on(arel_table[:id].eq(Follow.arel_table[:target_account_id]).and(Follow.arel_table[:account_id].eq(account.id))).join_sources).where(Follow.arel_table[:id].eq(nil)).joins(arel_table.join(FollowRequest.arel_table, Arel::Nodes::OuterJoin).on(arel_table[:id].eq(FollowRequest.arel_table[:target_account_id]).and(FollowRequest.arel_table[:account_id].eq(account.id))).join_sources).where(FollowRequest.arel_table[:id].eq(nil)) }
   scope :by_recent_status, -> { order(Arel.sql('(case when account_stats.last_status_at is null then 1 else 0 end) asc, account_stats.last_status_at desc, accounts.id desc')) }
@@ -197,7 +198,7 @@ class Account < ApplicationRecord
   end
 
   def searchable?
-    !(suspended? || moved?)
+    !(suspended? || moved?) && (!local? || (approved? && confirmed?))
   end
 
   def possibly_stale?
@@ -329,12 +330,12 @@ class Account < ApplicationRecord
   end
 
   def build_fields
-    return if fields.size >= MAX_FIELDS
+    return if fields.size >= DEFAULT_FIELDS_SIZE
 
     tmp = self[:fields] || []
     tmp = [] if tmp.is_a?(Hash)
 
-    (MAX_FIELDS - tmp.size).times do
+    (DEFAULT_FIELDS_SIZE - tmp.size).times do
       tmp << { name: '', value: '' }
     end
 
@@ -463,9 +464,11 @@ class Account < ApplicationRecord
           accounts.*,
           ts_rank_cd(#{TEXTSEARCH}, to_tsquery('simple', :tsquery), 32) AS rank
         FROM accounts
+        LEFT JOIN users ON accounts.id = users.account_id
         WHERE to_tsquery('simple', :tsquery) @@ #{TEXTSEARCH}
           AND accounts.suspended_at IS NULL
           AND accounts.moved_to_account_id IS NULL
+          AND (accounts.domain IS NOT NULL OR (users.approved = TRUE AND users.confirmed_at IS NOT NULL))
         ORDER BY rank DESC
         LIMIT :limit OFFSET :offset
       SQL
@@ -541,9 +544,11 @@ class Account < ApplicationRecord
             (count(f.id) + 1) * ts_rank_cd(#{TEXTSEARCH}, to_tsquery('simple', :tsquery), 32) AS rank
           FROM accounts
           LEFT OUTER JOIN follows AS f ON (accounts.id = f.account_id AND f.target_account_id = :id) OR (accounts.id = f.target_account_id AND f.account_id = :id)
+          LEFT JOIN users ON accounts.id = users.account_id
           WHERE to_tsquery('simple', :tsquery) @@ #{TEXTSEARCH}
             AND accounts.suspended_at IS NULL
             AND accounts.moved_to_account_id IS NULL
+            AND (accounts.domain IS NOT NULL OR (users.approved = TRUE AND users.confirmed_at IS NOT NULL))
           GROUP BY accounts.id
           ORDER BY rank DESC
           LIMIT :limit OFFSET :offset

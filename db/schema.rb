@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_29_101850) do
+ActiveRecord::Schema.define(version: 2022_06_06_044941) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -986,7 +986,6 @@ ActiveRecord::Schema.define(version: 2022_04_29_101850) do
     t.boolean "otp_required_for_login", default: false, null: false
     t.datetime "last_emailed_at"
     t.string "otp_backup_codes", array: true
-    t.string "filtered_languages", default: [], null: false, array: true
     t.bigint "account_id", null: false
     t.boolean "disabled", default: false, null: false
     t.boolean "moderator", default: false, null: false
@@ -1037,6 +1036,16 @@ ActiveRecord::Schema.define(version: 2022_04_29_101850) do
     t.datetime "updated_at", null: false
     t.index ["external_id"], name: "index_webauthn_credentials_on_external_id", unique: true
     t.index ["user_id"], name: "index_webauthn_credentials_on_user_id"
+  end
+
+  create_table "webhooks", force: :cascade do |t|
+    t.string "url", null: false
+    t.string "events", default: [], null: false, array: true
+    t.string "secret", default: "", null: false
+    t.boolean "enabled", default: true, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["url"], name: "index_webhooks_on_url", unique: true
   end
 
   add_foreign_key "account_aliases", "accounts", on_delete: :cascade
