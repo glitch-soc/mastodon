@@ -85,6 +85,15 @@ class LocalSettingsPage extends React.PureComponent {
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
+          item={['linkify_twitter_mentions']}
+          id='mastodon-settings--linkify_twitter_mentions'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.linkify_twitter_mentions' defaultMessage='Linkify Twitter mentions' />
+          <span className='hint'><FormattedMessage id='settings.linkify_twitter_mentions.hint' defaultMessage="Linkify incoming Twitter mentions (@twitter.com)" /></span>
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
           item={['rewrite_mentions']}
           id='mastodon-settings--rewrite_mentions'
           options={[
