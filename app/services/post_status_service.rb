@@ -118,6 +118,17 @@ class PostStatusService < BaseService
 
     @media = @account.media_attachments.where(status_id: nil).where(id: @options[:media_ids].take(4).map(&:to_i))
 
+    @media.each do |item|
+      if item.video?
+        str = "Video"
+      elsif item.audio?
+        str = "Audio"
+      else
+        str = "Image"
+      end
+      item.description = item.description.presence || str
+    end
+
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.images_and_video') if @media.size > 1 && @media.find(&:audio_or_video?)
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.not_ready') if @media.any?(&:not_processed?)
   end
