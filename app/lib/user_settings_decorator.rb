@@ -43,6 +43,7 @@ class UserSettingsDecorator
     user.settings['trends']              = trends_preference if change?('setting_trends')
     user.settings['crop_images']         = crop_images_preference if change?('setting_crop_images')
     user.settings['always_send_emails']  = always_send_emails_preference if change?('setting_always_send_emails')
+    user.settings['home_dms']            = home_dms_preference if change?('setting_home_dms')
   end
 
   def merged_notification_emails
