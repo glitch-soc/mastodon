@@ -314,6 +314,10 @@ class User < ApplicationRecord
     @aggregates_reblogs ||= settings.aggregate_reblogs
   end
 
+  def home_dms?
+    @home_dms ||= settings.home_dms
+  end
+
   def shows_application?
     @shows_application ||= settings.show_application
   end
