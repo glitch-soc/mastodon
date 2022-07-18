@@ -24,6 +24,7 @@ const initialState = ImmutableMap({
   filtering_behavior: 'hide',
   tag_misleading_links: true,
   rewrite_mentions: 'no',
+  linkify_twitter_mentions: 'yes',
   content_warnings : ImmutableMap({
     filter      : null,
   }),
