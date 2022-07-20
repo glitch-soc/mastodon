@@ -164,7 +164,7 @@ export default class StatusContent extends React.PureComponent {
       return;
     }
 
-    const re = /@([A-Za-z_\-]+)@twitter.com/g;
+    const re = /@([0-9A-Za-z_\-]+)@twitter.com/g;
     node.innerHTML = node.innerHTML.replaceAll(re, function (m, a) {
       return '<a href="https://twitter.com/'+a+'">'+m+'</a>';
     });
