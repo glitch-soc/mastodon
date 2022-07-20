@@ -203,7 +203,6 @@ export default class StatusContent extends React.PureComponent {
   }
 
   componentDidUpdate () {
-    this._linkifyTwitterMentions();
     this._updateStatusLinks();
     if (this.props.onUpdate) this.props.onUpdate();
   }
