@@ -9292,6 +9292,11 @@ react-swipeable-views@^0.14.0:
     react-swipeable-views-utils "^0.14.0"
     warning "^4.0.1"
 
+react-tenor@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-tenor/-/react-tenor-2.2.0.tgz#98326868cc199165bacb911abdbbb48306232b6f"
+  integrity sha512-hs0KomduflTLU05fvKAtrf9f/aAj3wN2kPF2cl5cAOFPkhuaVJuWLNxRSAQN1m+aKHinujEQZ1fXp+gL1KgYhg==
+
 react-test-renderer@^16.14.0:
   version "16.14.0"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.14.0.tgz#e98360087348e260c56d4fe2315e970480c228ae"
