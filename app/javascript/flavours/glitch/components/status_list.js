@@ -23,6 +23,7 @@ export default class StatusList extends ImmutablePureComponent {
     hasMore: PropTypes.bool,
     prepend: PropTypes.node,
     alwaysPrepend: PropTypes.bool,
+    withCounters: PropTypes.bool,
     emptyMessage: PropTypes.node,
     timelineId: PropTypes.string.isRequired,
   };
@@ -99,6 +100,7 @@ export default class StatusList extends ImmutablePureComponent {
           onMoveDown={this.handleMoveDown}
           contextType={timelineId}
           scrollKey={this.props.scrollKey}
+          withCounters={this.props.withCounters}
         />
       ))
     ) : null;
@@ -113,6 +115,7 @@ export default class StatusList extends ImmutablePureComponent {
           onMoveDown={this.handleMoveDown}
           contextType={timelineId}
           scrollKey={this.props.scrollKey}
+          withCounters={this.props.withCounters}
         />
       )).concat(scrollableContent);
     }

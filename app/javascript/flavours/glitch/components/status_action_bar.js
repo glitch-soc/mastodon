@@ -68,6 +68,7 @@ class StatusActionBar extends ImmutablePureComponent {
     onBookmark: PropTypes.func,
     onFilter: PropTypes.func,
     withDismiss: PropTypes.bool,
+    withCounters: PropTypes.bool,
     showReplyCount: PropTypes.bool,
     scrollKey: PropTypes.string,
     intl: PropTypes.object.isRequired,
