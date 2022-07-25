@@ -26,7 +26,8 @@ const initialState = ImmutableMap({
   rewrite_mentions: 'no',
   linkify_twitter_mentions: 'yes',
   content_warnings : ImmutableMap({
-    filter      : null,
+    filter       : null,
+    media_outside: false,
   }),
   collapsed : ImmutableMap({
     enabled     : true,
