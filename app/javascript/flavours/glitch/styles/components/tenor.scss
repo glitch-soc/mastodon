@@ -92,7 +92,8 @@
 
 .react-tenor--result span {
   animation: react-tenor-fade-in .2s;
-  background-size: cover;
+  background-repeat: no-repeat;
+  background-size: contain;
   display: block;
   height: 100%;
   width: 100%;
