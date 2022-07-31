@@ -62,7 +62,7 @@ export default class Dimension extends React.PureComponent {
       const sum = data[0].data.reduce((sum, cur) => sum + (cur.value * 1), 0);
 
       const DimensionSpan = ({ item }) => {
-        if (dimension === 'servers') {
+        if (dimension === 'servers' || dimension === 'tag_servers') {
           return (
             <a href={`/admin/instances/${item.key}`} target='blank' style={{ color: 'unset', textDecoration: 'none' }}>
               <span title={item.key}>{item.human_key}</span>
