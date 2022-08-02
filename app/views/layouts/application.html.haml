@@ -37,6 +37,11 @@
 
     = stylesheet_link_tag '/inert.css', skip_pipeline: true, media: 'all', id: 'inert-style'
 
+    -# InstanceTicker
+    = stylesheet_link_tag 'https://inst.ance.tk/css/1.css', media: 'all'
+    :css
+      .display-name::after {--ff: 500 9pt "mastodon-font-sans-serif", sans-serif}
+
     = yield :header_tags
 
     -#  These must come after :header_tags to ensure our initial state has been defined.
