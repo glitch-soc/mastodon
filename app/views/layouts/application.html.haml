@@ -27,6 +27,10 @@
 
     %title= content_for?(:page_title) ? safe_join([yield(:page_title).chomp.html_safe, title], ' - ') : title
 
+    %script{"type": "text/javascript",
+      "src": "https://frankly-shankly-stone.compostintraining.club/script.js",
+      "data": {"site": "XQLVEOED", "spa": "auto"}, "defer": true }
+
     = javascript_pack_tag "locales", crossorigin: 'anonymous'
     - if @theme
       - if @theme[:supported_locales].include? I18n.locale.to_s
