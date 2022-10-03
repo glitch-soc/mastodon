@@ -83,6 +83,7 @@ defaults: &defaults
   require_invite_text: false
   captcha_enabled: false
   home_dms: false
+  backups_retention_period: 7
 
 development:
   <<: *defaults
