@@ -136,10 +136,6 @@ const NAVIGATION_PANEL_BREAKPOINT = 600 + (285 * 2) + (10 * 2);
       if (!columns.find(item => item.get('id') === 'PUBLIC')) {
         navItems.push(<ColumnLink key='public_timeline' icon='globe' text={intl.formatMessage(messages.public_timeline)} to='/public' />);
       }
-
-      if (!columns.find(item => item.get('id') === 'EXPLORE')) {
-        navItems.push(<ColumnLink key='explore' icon='hashtag' text={intl.formatMessage(messages.explore)} to='/explore' />);
-      }
     }
 
     if (showTrends) {
