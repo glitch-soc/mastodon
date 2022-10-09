@@ -22,9 +22,9 @@ export default class StatusList extends ImmutablePureComponent {
     isPartial: PropTypes.bool,
     hasMore: PropTypes.bool,
     prepend: PropTypes.node,
+    emptyMessage: PropTypes.node,
     alwaysPrepend: PropTypes.bool,
     withCounters: PropTypes.bool,
-    emptyMessage: PropTypes.node,
     timelineId: PropTypes.string.isRequired,
     regex: PropTypes.string,
   };
