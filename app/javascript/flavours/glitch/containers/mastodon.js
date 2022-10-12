@@ -11,7 +11,7 @@ import { connectUserStream } from 'flavours/glitch/actions/streaming';
 import { checkDeprecatedLocalSettings } from 'flavours/glitch/actions/local_settings';
 import { IntlProvider, addLocaleData } from 'react-intl';
 import { getLocale } from 'locales';
-import initialState from 'flavours/glitch/util/initial_state';
+import initialState from 'flavours/glitch/initial_state';
 import ErrorBoundary from 'flavours/glitch/components/error_boundary';
 
 const { localeData, messages } = getLocale();
@@ -31,7 +31,7 @@ const createIdentityContext = state => ({
   signedIn: !!state.meta.me,
   accountId: state.meta.me,
   accessToken: state.meta.access_token,
-  permissions: state.role.permissions,
+  permissions: state.role ? state.role.permissions : 0,
 });
 
 export default class Mastodon extends React.PureComponent {

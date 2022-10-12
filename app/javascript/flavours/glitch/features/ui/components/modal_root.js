@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { getScrollbarWidth } from 'flavours/glitch/util/scrollbar';
+import { getScrollbarWidth } from 'flavours/glitch/utils/scrollbar';
 import Base from 'flavours/glitch/components/modal_root';
 import BundleContainer from '../containers/bundle_container';
 import BundleModalError from './bundle_modal_error';
@@ -17,6 +17,7 @@ import ConfirmationModal from './confirmation_modal';
 import SubscribedLanguagesModal from 'flavours/glitch/features/subscribed_languages_modal';
 import FocalPointModal from './focal_point_modal';
 import DeprecatedSettingsModal from './deprecated_settings_modal';
+import InteractionModal from 'flavours/glitch/features/interaction_modal';
 import {
   OnboardingModal,
   MuteModal,
@@ -29,7 +30,7 @@ import {
   PinnedAccountsEditor,
   CompareHistoryModal,
   FilterModal,
-} from 'flavours/glitch/util/async-components';
+} from 'flavours/glitch/features/ui/util/async-components';
 
 const MODAL_COMPONENTS = {
   'MEDIA': () => Promise.resolve({ default: MediaModal }),
@@ -55,6 +56,7 @@ const MODAL_COMPONENTS = {
   'COMPARE_HISTORY': CompareHistoryModal,
   'FILTER': FilterModal,
   'SUBSCRIBED_LANGUAGES': () => Promise.resolve({ default: SubscribedLanguagesModal }),
+  'INTERACTION': () => Promise.resolve({ default: InteractionModal }),
 };
 
 export default class ModalRoot extends React.PureComponent {
