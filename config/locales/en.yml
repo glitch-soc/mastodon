@@ -1724,6 +1724,7 @@ en:
     contrast: Mastodon (High contrast)
     default: Mastodon (Dark)
     mastodon-light: Mastodon (Light)
+    fairy-floss: Fairy Floss (Pastel dark)
   time:
     formats:
       default: "%b %d, %Y, %H:%M"

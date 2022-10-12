@@ -35,7 +35,7 @@ export default class Dimension extends React.PureComponent {
   }
 
   render () {
-    const { label, limit } = this.props;
+    const { dimension, label, limit } = this.props;
     const { loading, data } = this.state;
 
     let content;
@@ -61,6 +61,20 @@ export default class Dimension extends React.PureComponent {
     } else {
       const sum = data[0].data.reduce((sum, cur) => sum + (cur.value * 1), 0);
 
+      const DimensionSpan = ({ item }) => {
+        if (dimension === 'servers' || dimension === 'tag_servers') {
+          return (
+            <a href={`/admin/instances/${item.key}`} target='blank' style={{ color: 'unset', textDecoration: 'none' }}>
+              <span title={item.key}>{item.human_key}</span>
+            </a>
+          );
+        } else {
+          return (
+            <span title={item.key}>{item.human_key}</span>
+          );
+        }
+      };
+
       content = (
         <table>
           <tbody>
@@ -68,7 +82,7 @@ export default class Dimension extends React.PureComponent {
               <tr className='dimension__item' key={item.key}>
                 <td className='dimension__item__key'>
                   <span className={`dimension__item__indicator dimension__item__indicator--${roundTo10(((item.value * 1) / sum) * 100)}`} />
-                  <span title={item.key}>{item.human_key}</span>
+                  <DimensionSpan item={item} />
                 </td>
 
                 <td className='dimension__item__value'>
