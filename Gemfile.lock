@@ -8,7 +8,7 @@ GIT
       jwt (~> 2.0)
 
 GIT
-  remote: https://github.com/CompostInTraining/redcarpet.git
+  remote: https://github.com/prplecake/redcarpet.git
   revision: 8125b8e21327031e0401ce1070383e4ab4bce0a5
   ref: 8125b8e21327031e0401ce1070383e4ab4bce0a5
   specs:
