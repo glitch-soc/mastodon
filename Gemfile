@@ -98,7 +98,7 @@ gem 'json-ld'
 gem 'json-ld-preloaded', '~> 3.2'
 gem 'rdf-normalize', '~> 0.5'
 
-gem 'redcarpet', '~> 3.5'
+gem 'redcarpet', git: 'https://github.com/prplecake/redcarpet.git', ref: '8125b8e21327031e0401ce1070383e4ab4bce0a5'
 
 group :development, :test do
   gem 'fabrication', '~> 2.30'
