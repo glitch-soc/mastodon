@@ -12,7 +12,7 @@ class Admin::Import
   define_model_callbacks :save, only: [:after]
   define_model_callbacks :destroy, only: [:before, :after]
 
-  attr_accessor :data_file_name, :data_content_type
+  attr_accessor :data_file_name, :data_content_type, :url
 
   has_attached_file :data
   validates_attachment_content_type :data, content_type: FILE_TYPES
