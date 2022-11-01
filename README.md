@@ -1,5 +1,7 @@
 # Glitch-soc CiT Edition
 
+https://compostintraining.club
+
 So here's the deal: we all work on this code, and anyone who uses that does so absolutely at their own risk. can you dig it?
 
 - You can view documentation for this project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
