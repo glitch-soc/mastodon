@@ -11,7 +11,7 @@ import Button from 'flavours/glitch/components/button';
 import Icon from 'flavours/glitch/components/icon';
 
 //  Utils.
-import { maxChars } from 'flavours/glitch/initial_state';
+import { maxChars, publishButtonText } from 'flavours/glitch/initial_state';
 
 //  Messages.
 const messages = defineMessages({
@@ -60,13 +60,25 @@ class Publisher extends ImmutablePureComponent {
       publishText = intl.formatMessage(messages.saveChanges);
     } else if (privacy === 'private' || privacy === 'direct') {
       const iconId = privacyIcons[privacy];
-      publishText = (
-        <span>
-          <Icon id={iconId} /> {intl.formatMessage(messages.publish)}
-        </span>
-      );
+      if (publishButtonText !== null){
+        publishText = (
+          <span>
+            <Icon id={iconId} /> {publishButtonText}
+          </span>
+        );
+      } else {
+        publishText = (
+          <span>
+            <Icon id={iconId} /> {intl.formatMessage(messages.publish)}
+          </span>
+        );
+      }
     } else {
-      publishText = privacy !== 'unlisted' ? intl.formatMessage(messages.publishLoud, { publish: intl.formatMessage(messages.publish) }) : intl.formatMessage(messages.publish);
+      if (publishButtonText !== null){
+        publishText = privacy !== 'unlisted' ? publishButtonText+'!' : publishButtonText;
+      } else {
+        publishText = privacy !== 'unlisted' ? intl.formatMessage(messages.publishLoud, { publish: intl.formatMessage(messages.publish) }) : intl.formatMessage(messages.publish);
+      }
     }
 
     return (

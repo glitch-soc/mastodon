@@ -40,6 +40,10 @@ class REST::V1::InstanceSerializer < ActiveModel::Serializer
     StatusLengthValidator::MAX_CHARS
   end
 
+  def publish_button_text
+    ENV['PUBLISH_BUTTON_TEXT']
+  end
+
   def poll_limits
     {
       max_options: PollValidator::MAX_OPTIONS,
