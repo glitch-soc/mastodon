@@ -1,3 +1,5 @@
+![Uptime Robot ratio (30 days)](https://img.shields.io/uptimerobot/ratio/m792992213-27b1f57c4a545d7c2dd05575)
+
 # Glitch-soc CiT Edition
 
 https://compostintraining.club
