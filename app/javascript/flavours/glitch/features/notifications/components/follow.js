@@ -84,11 +84,13 @@ export default class NotificationFollow extends ImmutablePureComponent {
               <Icon fixedWidth id='user-plus' />
             </div>
 
-            <FormattedMessage
-              id='notification.follow'
-              defaultMessage='{name} followed you'
-              values={{ name: link }}
-            />
+            <span title={notification.get('created_at')}>
+              <FormattedMessage
+                id='notification.follow'
+                defaultMessage='{name} followed you'
+                values={{ name: link }}
+              />
+            </span>
           </div>
 
           <AccountContainer hidden={hidden} id={account.get('id')} withNote={false} />
