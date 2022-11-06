@@ -7,10 +7,6 @@ class StatusPolicy < ApplicationPolicy
     @preloaded_relations = preloaded_relations
   end
 
-  def index?
-    staff?
-  end
-
   def show?
     return false if author.suspended?
     return false if local_only? && (current_account.nil? || !current_account.local?)
@@ -33,13 +29,13 @@ class StatusPolicy < ApplicationPolicy
   end
 
   def destroy?
-    staff? || owned?
+    owned?
   end
 
   alias unreblog? destroy?
 
   def update?
-    staff?
+    owned?
   end
 
   private
@@ -93,7 +89,7 @@ class StatusPolicy < ApplicationPolicy
   def author
     record.account
   end
-  
+
   def local_only?
     record.local_only?
   end

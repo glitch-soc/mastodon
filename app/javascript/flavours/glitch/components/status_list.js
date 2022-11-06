@@ -18,14 +18,15 @@ export default class StatusList extends ImmutablePureComponent {
     onScrollToTop: PropTypes.func,
     onScroll: PropTypes.func,
     trackScroll: PropTypes.bool,
-    shouldUpdateScroll: PropTypes.func,
     isLoading: PropTypes.bool,
     isPartial: PropTypes.bool,
     hasMore: PropTypes.bool,
     prepend: PropTypes.node,
-    alwaysPrepend: PropTypes.bool,
     emptyMessage: PropTypes.node,
+    alwaysPrepend: PropTypes.bool,
+    withCounters: PropTypes.bool,
     timelineId: PropTypes.string.isRequired,
+    regex: PropTypes.string,
   };
 
   static defaultProps = {
@@ -100,6 +101,7 @@ export default class StatusList extends ImmutablePureComponent {
           onMoveDown={this.handleMoveDown}
           contextType={timelineId}
           scrollKey={this.props.scrollKey}
+          withCounters={this.props.withCounters}
         />
       ))
     ) : null;
@@ -114,6 +116,7 @@ export default class StatusList extends ImmutablePureComponent {
           onMoveDown={this.handleMoveDown}
           contextType={timelineId}
           scrollKey={this.props.scrollKey}
+          withCounters={this.props.withCounters}
         />
       )).concat(scrollableContent);
     }

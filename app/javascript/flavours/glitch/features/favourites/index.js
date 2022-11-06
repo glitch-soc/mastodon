@@ -1,16 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import React from 'react';
+import ImmutablePureComponent from 'react-immutable-pure-component';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import ColumnHeader from 'flavours/glitch/components/column_header';
+import Icon from 'flavours/glitch/components/icon';
 import { fetchFavourites } from 'flavours/glitch/actions/interactions';
+import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
+import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import AccountContainer from 'flavours/glitch/containers/account_container';
 import Column from 'flavours/glitch/features/ui/components/column';
-import Icon from 'flavours/glitch/components/icon';
-import ColumnHeader from 'flavours/glitch/components/column_header';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import ImmutablePureComponent from 'react-immutable-pure-component';
-import ScrollableList from '../../components/scrollable_list';
+import { Helmet } from 'react-helmet';
 
 const messages = defineMessages({
   heading: { id: 'column.favourited_by', defaultMessage: 'Favourited by' },
@@ -68,7 +69,7 @@ class Favourites extends ImmutablePureComponent {
       );
     }
 
-    const emptyMessage = <FormattedMessage id='empty_column.favourites' defaultMessage='No one has favourited this toot yet. When someone does, they will show up here.' />;
+    const emptyMessage = <FormattedMessage id='empty_column.favourites' defaultMessage='No one has favourited this post yet. When someone does, they will show up here.' />;
 
     return (
       <Column ref={this.setRef}>
@@ -91,6 +92,10 @@ class Favourites extends ImmutablePureComponent {
             <AccountContainer key={id} id={id} withNote={false} />,
           )}
         </ScrollableList>
+
+        <Helmet>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

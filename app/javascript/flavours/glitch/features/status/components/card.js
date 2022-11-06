@@ -5,9 +5,9 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage } from 'react-intl';
 import punycode from 'punycode';
 import classnames from 'classnames';
-import { decode as decodeIDNA } from 'flavours/glitch/util/idna';
+import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
 import Icon from 'flavours/glitch/components/icon';
-import { useBlurhash } from 'flavours/glitch/util/initial_state';
+import { useBlurhash } from 'flavours/glitch/initial_state';
 import Blurhash from 'flavours/glitch/components/blurhash';
 import { debounce } from 'lodash';
 
@@ -24,7 +24,7 @@ const trim = (text, len) => {
     return text;
   }
 
-  return text.substring(0, cut) + (text.length > len ? '…' : '');
+  return text.slice(0, cut) + (text.length > len ? '…' : '');
 };
 
 const domParser = new DOMParser();

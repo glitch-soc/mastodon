@@ -11,7 +11,6 @@ kab:
         type_html: Fren d acu ara txedmeḍ s <strong>%{acct}</strong>
       defaults:
         autofollow: Imdanen ara ijerrden s usnebgi-inek, ad k-ḍefṛen s wudem awurman
-        discoverable: Tabdert n yimaγnuten d udem-nniḍen i umiḍan-ik akken ad yettwassen ugar
         email: Ad n-teṭṭfeḍ imayl i usentem
         irreversible: Tijewwaqin i tessazedgeḍ ad ttwakksent i lebda, ula ma tekkseḍ imsizdeg-nni ar zdat
         locale: Tutlayt n ugrudem, imaylen d tilγa
@@ -22,8 +21,6 @@ kab:
         setting_display_media_show_all: Ffer yal tikkelt teywalt yettwacreḍ d tanafrit
         setting_hide_network: Wid i teṭṭafaṛeḍ d wid i k-yeṭṭafaṛen ur d-ttwaseknen ara deg umaγnu-inek
         username: Isem-ik n umseqdac ad yili d ayiwen, ulac am netta deg %{domain}
-      featured_tag:
-        name: 'Ahat ad tebγuḍ ad tesqedceḍ yiwen gar-asen:'
       imports:
         data: Afaylu CSV id yusan seg uqeddac-nniḍen n Maṣṭudun
       ip_block:
@@ -45,6 +42,7 @@ kab:
         types:
           disable: Sens anekcum
           none: Ur teg kra
+          sensitive: Amḥulfu
           silence: Sgugem
           suspend: Ḥbes di leεḍil
       announcement:
@@ -78,11 +76,14 @@ kab:
         setting_theme: Asental n wesmel
         setting_use_pending_items: Askar aleγwayan
         sign_in_token_attempt: Tangalt n tɣellist
+        type: Anaw n uktar
         username: Isem n useqdac
         username_or_email: Isem n useqdac neγ imal
         whole_word: Awal akk
       featured_tag:
         name: Ahacṭag
+      form_admin_settings:
+        site_terms: Tasertit tabaḍnit
       invite:
         comment: Awennit
       invite_request:
@@ -94,8 +95,11 @@ kab:
           no_access: Sewḥel anekcum
         severity: Alugen
       notification_emails:
+        follow: Yeḍfer-ik·im-id walbɛaḍ
         mention: Yuder-ik·em-id walbɛaḍ
         reblog: Yella win yesselhan adda-dik·im
+      rule:
+        text: Alugen
       tag:
         name: Ahacṭag
     'no': Ala

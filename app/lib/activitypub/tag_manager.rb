@@ -12,6 +12,10 @@ class ActivityPub::TagManager
     public: 'https://www.w3.org/ns/activitystreams#Public',
   }.freeze
 
+  def public_collection?(uri)
+    uri == COLLECTIONS[:public] || uri == 'as:Public' || uri == 'Public'
+  end
+
   def url_for(target)
     return target.url if target.respond_to?(:local?) && !target.local?
 
@@ -40,6 +44,10 @@ class ActivityPub::TagManager
     end
   end
 
+  def key_uri_for(target)
+    [uri_for(target), '#main-key'].join
+  end
+
   def uri_for_username(username)
     account_url(username: username)
   end
@@ -60,6 +68,10 @@ class ActivityPub::TagManager
     account_status_replies_url(target.account, target, page_params)
   end
 
+  def followers_uri_for(target)
+    target.local? ? account_followers_url(target) : target.followers_url.presence
+  end
+
   # Primary audience of a status
   # Public statuses go out to primarily the public collection
   # Unlisted and private statuses go out primarily to the followers collection
@@ -76,17 +88,17 @@ class ActivityPub::TagManager
         account_ids = status.active_mentions.pluck(:account_id)
         to = status.account.followers.where(id: account_ids).each_with_object([]) do |account, result|
           result << uri_for(account)
-          result << account_followers_url(account) if account.group?
+          result << followers_uri_for(account) if account.group?
         end
         to.concat(FollowRequest.where(target_account_id: status.account_id, account_id: account_ids).each_with_object([]) do |request, result|
           result << uri_for(request.account)
-          result << account_followers_url(request.account) if request.account.group?
-        end)
+          result << followers_uri_for(request.account) if request.account.group?
+        end).compact
       else
         status.active_mentions.each_with_object([]) do |mention, result|
           result << uri_for(mention.account)
-          result << account_followers_url(mention.account) if mention.account.group?
-        end
+          result << followers_uri_for(mention.account) if mention.account.group?
+        end.compact
       end
     end
   end
@@ -114,17 +126,17 @@ class ActivityPub::TagManager
         account_ids = status.active_mentions.pluck(:account_id)
         cc.concat(status.account.followers.where(id: account_ids).each_with_object([]) do |account, result|
           result << uri_for(account)
-          result << account_followers_url(account) if account.group?
-        end)
+          result << followers_uri_for(account) if account.group?
+        end.compact)
         cc.concat(FollowRequest.where(target_account_id: status.account_id, account_id: account_ids).each_with_object([]) do |request, result|
           result << uri_for(request.account)
-          result << account_followers_url(request.account) if request.account.group?
-        end)
+          result << followers_uri_for(request.account) if request.account.group?
+        end.compact)
       else
         cc.concat(status.active_mentions.each_with_object([]) do |mention, result|
           result << uri_for(mention.account)
-          result << account_followers_url(mention.account) if mention.account.group?
-        end)
+          result << followers_uri_for(mention.account) if mention.account.group?
+        end.compact)
       end
     end
 
@@ -145,6 +157,10 @@ class ActivityPub::TagManager
     path_params = Rails.application.routes.recognize_path(uri)
     path_params[:username] = Rails.configuration.x.local_domain if path_params[:controller] == 'instance_actors'
     path_params[param]
+  end
+
+  def uri_to_actor(uri)
+    uri_to_resource(uri, Account)
   end
 
   def uri_to_resource(uri, klass)

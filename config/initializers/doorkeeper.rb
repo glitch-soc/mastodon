@@ -52,6 +52,11 @@ Doorkeeper.configure do
   # Issue access tokens with refresh token (disabled by default)
   # use_refresh_token
 
+  # Forbids creating/updating applications with arbitrary scopes that are
+  # not in configuration, i.e. `default_scopes` or `optional_scopes`.
+  # (Disabled by default)
+  enforce_configured_scopes
+
   # Provide support for an owner to be assigned to each registered application (disabled by default)
   # Optional parameter :confirmation => true (default false) if you want to enforce ownership of
   # a registered application
@@ -122,6 +127,13 @@ Doorkeeper.configure do
   # communication to the HTTPS protocol so it is wise to keep this enabled.
   #
   force_ssl_in_redirect_uri false
+
+  # Specify what redirect URI's you want to block during Application creation.
+  # Any redirect URI is whitelisted by default.
+  #
+  # You can use this option in order to forbid URI's with 'javascript' scheme
+  # for example.
+  forbid_redirect_uri { |uri| %w[data vbscript javascript].include?(uri.scheme.to_s.downcase) }
 
   # Specify what grant flows are enabled in array of Strings. The valid
   # strings and the flows they enable are:

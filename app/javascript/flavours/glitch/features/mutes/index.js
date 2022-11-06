@@ -11,6 +11,7 @@ import AccountContainer from 'flavours/glitch/containers/account_container';
 import { fetchMutes, expandMutes } from 'flavours/glitch/actions/mutes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
+import { Helmet } from 'react-helmet';
 
 const messages = defineMessages({
   heading: { id: 'column.mutes', defaultMessage: 'Muted users' },
@@ -69,9 +70,13 @@ class Mutes extends ImmutablePureComponent {
           bindToDocument={!multiColumn}
         >
           {accountIds.map(id =>
-            <AccountContainer key={id} id={id} />,
+            <AccountContainer key={id} id={id} defaultAction='mute' />,
           )}
         </ScrollableList>
+
+        <Helmet>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

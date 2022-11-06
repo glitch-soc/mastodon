@@ -2,13 +2,31 @@
 eo:
   simple_form:
     hints:
+      account_alias:
+        acct: Specifu la uzantnomon@domajnon de la konto el kiu vi volas translokiĝi
+      account_migration:
+        acct: Specifu la uzantnomon@domajnon de la konto al kiu vi volas translokiĝi
       account_warning_preset:
         text: Vi povas uzi skribmanierojn de mesaĝoj, kiel URL-ojn, kradvortojn kaj menciojn
+        title: Laŭvola. Ne videbla por la ricevanto
       admin_account_action:
+        include_statuses: La uzanto vidos, kiujn afiŝojn kaŭzis la agon de moderigo aŭ de averto
         send_email_notification: La uzanto ricevos klarigon pri tio, kio okazis al ties konto
         text_html: Malnepra. Vi povas uzi skribmanierojn de mesaĝoj. Vi povas <a href="%{path}">aldoni avertajn antaŭagordojn</a> por ŝpari tempon
         type_html: Elektu kion fari kun <strong>%{acct}</strong>
+        types:
+          disable: Malhelpi la uzanton uzi sian konton, sed ne forigi aŭ kaŝi ties enhavojn.
+          none: Uzu ĉi tion por sendi averton al la uzanto, sen ekigi alian agon.
+          sensitive: Devigi ĉiujn da plurmediaj aldonaĵoj esti markitaj kiel sentemaj.
+          silence: Malhelpi la uzanton povu afiŝi per publika videbleco, kaŝi ties afiŝojn kaj sciigojn de homoj kiuj ne sekvas rin.
+          suspend: Malhelpu ajnan interagon de aŭ al ĉi tiu konto kaj forigu ĝian enhavon. Returnebla ene de 30 tagoj.
         warning_preset_id: Malnepra. Vi povas ankoraŭ aldoni propran tekston al la fino de la antaŭagordo
+      announcement:
+        all_day: Kiam markita, nur la datoj de la tempointervalo estos montrataj
+        ends_at: Laŭvola. La anonco estos aŭtomate maleldonita ĉi tiam
+        scheduled_at: Lasi malplena por eldoni la anoncon tuj
+        starts_at: Laŭvola. Se via anonco estas ligita al specifa tempo
+        text: Vi povas uzi afiŝo-sintakson. Bonvolu mensemi pri la spaco, kiun la anonco okupos sur la ekrano de la uzanto
       defaults:
         autofollow: Homoj, kiuj registriĝos per la invito aŭtomate sekvos vin
         avatar: Formato PNG, GIF aŭ JPG. Ĝis %{size}. Estos malgrandigita al %{dimensions}px
@@ -17,30 +35,34 @@ eo:
         current_password: Pro sekuraj kialoj, bonvolu enigi la pasvorton de la nuna konto
         current_username: Por konfirmi, bonvolu enigi la uzantnomon de la nuna konto
         digest: Sendita nur post longa tempo de neaktiveco, kaj nur se vi ricevis personan mesaĝon en via foresto
-        discoverable: Montru ĉi tiun profilon en la profilujon por ke la konto estos pli-vaste vidata
-        email: Vi ricevos konfirman retmesaĝon
+        email: Vi ricevos retpoŝtaĵon de konfirmo
         fields: Vi povas havi ĝis 4 tabelajn elementojn en via profilo
         header: Formato PNG, GIF aŭ JPG. Ĝis %{size}. Estos malgrandigita al %{dimensions}px
         inbox_url: Kopiu la URL de la ĉefpaĝo de la ripetilo, kiun vi volas uzi
-        irreversible: Elfiltritaj mesaĝoj malaperos por ĉiam, eĉ se la filtrilo estas poste forigita
-        locale: La lingvo de la uzant-interfaco, retmesaĝoj kaj puŝ-sciigoj
+        irreversible: La filtritaj mesaĝoj malaperos por eterne, eĉ se la filtrilo poste estas forigita
+        locale: La lingvo de la fasado, de retpoŝtaĵoj, kaj de sciigoj
         locked: Vi devos aprobi ĉiun peton de sekvado mane
         password: Uzu almenaŭ 8 signojn
         phrase: Estos provita senzorge pri la uskleco de teksto aŭ averto pri enhavo de mesaĝo
         scopes: Kiujn API-ojn la aplikaĵo permesiĝos atingi. Se vi elektas supran amplekson, vi ne bezonas elekti la individuajn.
-        setting_aggregate_reblogs: Ne montri novajn diskonigojn de mesaĝoj laste diskonigitaj (nur efikas al novaj diskonigoj)
-        setting_default_sensitive: Tiklaj aŭdovidaĵoj estas defaŭlte kaŝita kaj povas esti malkiŝita per klako
-        setting_display_media_default: Kaŝi aŭdovidaĵojn markitajn kiel tiklaj
-        setting_display_media_hide_all: Ĉiam kaŝi ĉiujn aŭdovidaĵojn
-        setting_display_media_show_all: Ĉiam montri aŭdovidaĵojn markitajn kiel tiklaj
-        setting_hide_network: Tiuj, kiujn vi sekvas, kaj tiuj, kiuj sekvas vin ne estos videblaj en via profilo
+        setting_aggregate_reblogs: Ne montri novajn plusendojn de mesaĝoj lastatempe plusenditaj (nur efikas al nove ricevitaj plusendoj)
+        setting_always_send_emails: Normale, la sciigoj per retpoŝto ne estos senditaj kiam vi uzas Mastodon aktive
+        setting_default_sensitive: La tiklaj aŭdovidaĵoj estas kaŝitaj implicite, kaj povas esti montritaj per klako
+        setting_display_media_default: Kaŝi aŭdovidaĵojn markitajn kiel tikla
+        setting_display_media_hide_all: Ĉiam kaŝi la aŭdovidaĵojn
+        setting_display_media_show_all: Ĉiam montri la aŭdovidaĵojn
+        setting_hide_network: Tiuj kiujn vi sekvas, kaj tiuj kiuj sekvas vin estos kaŝitaj en via profilo
         setting_noindex: Influas vian publikan profilon kaj mesaĝajn paĝojn
         setting_show_application: La aplikaĵo, kiun vi uzas por afiŝi, estos montrita en la detala vido de viaj mesaĝoj
         setting_use_blurhash: Transirojn estas bazita sur la koloroj de la kaŝitaj aŭdovidaĵoj sed ne montri iun ajn detalon
-        username: Via uzantnomo estos unika ĉe %{domain}
+        setting_use_pending_items: Kaŝi tempoliniajn ĝisdatigojn malantaŭ klako anstataŭ aŭtomate rulumi la fluon
+        username: Via uzantnomo estos unika en %{domain}
         whole_word: Kiam la vorto aŭ frazo estas nur litera aŭ cifera, ĝi estos uzata nur se ĝi kongruas kun la tuta vorto
-      featured_tag:
-        name: 'Vi povus uzi iun el la jenaj:'
+      domain_allow:
+        domain: Ĉi tiu domajno povos akiri datumon de ĉi tiu servilo kaj envenanta datumo estos prilaborita kaj konservita
+      filters:
+        actions:
+          warn: Kaŝi la enhavon filtritan malantaŭ averto mencianta la nomon de la filtro
       form_challenge:
         current_password: Vi eniras sekuran areon
       imports:
@@ -48,12 +70,20 @@ eo:
       invite_request:
         text: Ĉi tio helpos nin revizii vian kandidatiĝon
       ip_block:
+        comment: Laŭvola. Memoru, kial vi aldonis ĉi tiun regulon.
         severities:
+          no_access: Bloki aliron al ĉiuj rimedoj
           sign_up_requires_approval: Novaj registriĝoj devigos vian aprobon
+        severity: Elektu, kio okazos pri petoj de ĉi tiu IP
+      rule:
+        text: Priskribu regulon aŭ neceson por uzantoj en ĉi tiu servilo. Provu fari ĝin mallonga kaj simpla
       sessions:
         otp: 'Enmetu la kodon de dufaktora aŭtentigo el via telefono aŭ uzu unu el viaj realiraj kodoj:'
+        webauthn: Se ĝi estas USB-ŝlosilo, certu enmeti ĝin kaj, se necese, frapi ĝin.
+      tag:
+        name: Vi povas ŝanĝi nur la majuskladon de la literoj, ekzemple, por igi ĝin pli legebla
       user:
-        chosen_languages: Kiam estas elekto, nur mesaĝoj en elektitaj lingvoj aperos en publikaj tempolinioj
+        chosen_languages: Kiam estas elekto, nur mesaĝoj en elektitaj lingvoj aperos en publikaj templinioj
     labels:
       account:
         fields:
@@ -67,6 +97,7 @@ eo:
         text: Antaŭagordita teksto
         title: Titolo
       admin_account_action:
+        include_statuses: Inkluzivi raportitajn afiŝojn en la retpoŝtmesaĝo
         send_email_notification: Sciigi la uzanton retpoŝte
         text: Propra averto
         type: Ago
@@ -85,7 +116,7 @@ eo:
         text: Anonco
       defaults:
         autofollow: Inviti al sekvi vian konton
-        avatar: Profilbildo
+        avatar: Rolfiguro
         bot: Tio estas robota konto
         chosen_languages: Filtri lingvojn
         confirm_new_password: Konfirmi novan pasvorton
@@ -102,16 +133,17 @@ eo:
         honeypot: "%{label} (ne plenigi)"
         inbox_url: URL de la ripetila enirkesto
         irreversible: Forĵeti anstataŭ kaŝi
-        locale: Interfaca lingvo
+        locale: Lingvo de la fasado
         locked: Ŝlosi konton
         max_uses: Maksimuma nombro de uzoj
         new_password: Nova pasvorto
         note: Sinprezento
         otp_attempt: Kodo de dufaktora aŭtentigo
         password: Pasvorto
-        phrase: Vorto aŭ frazo
+        phrase: Ĉefvorto aŭ frazo
         setting_advanced_layout: Ebligi altnivelan retpaĝan interfacon
-        setting_aggregate_reblogs: Grupigi diskonigojn en tempolinioj
+        setting_aggregate_reblogs: Grupigi diskonigojn en templinioj
+        setting_always_send_emails: Ĉiam sendi la sciigojn per retpoŝto
         setting_auto_play_gif: Aŭtomate ekigi GIF-ojn
         setting_boost_modal: Montri konfirman fenestron antaŭ ol diskonigi mesaĝon
         setting_crop_images: Stuci bildojn en negrandigitaj mesaĝoj al 16x9
@@ -119,29 +151,35 @@ eo:
         setting_default_privacy: Mesaĝa videbleco
         setting_default_sensitive: Ĉiam marki aŭdovidaĵojn tiklaj
         setting_delete_modal: Montri konfirman fenestron antaŭ ol forigi mesaĝon
+        setting_disable_swiping: Malebligi svingajn movojn
         setting_display_media: Aŭdovidaĵa montrado
-        setting_display_media_default: Dekomenca
+        setting_display_media_default: Implicita
         setting_display_media_hide_all: Kaŝi ĉiujn
         setting_display_media_show_all: Montri ĉiujn
         setting_expand_spoilers: Ĉiam malfoldas mesaĝojn markitajn per averto pri enhavo
         setting_hide_network: Kaŝi viajn sekvantojn kaj sekvatojn
         setting_noindex: Ellistiĝi de retserĉila indeksado
-        setting_reduce_motion: Malrapidigi animaciojn
+        setting_reduce_motion: Redukti la movecojn de la animacioj
         setting_show_application: Publikigi la aplikaĵon uzatan por sendi mesaĝojn
         setting_system_font_ui: Uzi la dekomencan tiparon de la sistemo
-        setting_theme: Reteja etoso
+        setting_theme: Etoso de la retejo
         setting_trends: Montri hodiaŭajn furoraĵojn
         setting_unfollow_modal: Montri konfirman fenestron antaŭ ol ĉesi sekvi iun
         setting_use_blurhash: Montri buntajn transirojn por kaŝitaj aŭdovidaĵoj
-        setting_use_pending_items: Malrapida reĝimo
+        setting_use_pending_items: Malrapida modo
         severity: Graveco
         sign_in_token_attempt: Sekureca kodo
+        title: Titolo
         type: Importa tipo
         username: Uzantnomo
         username_or_email: Uzantnomo aŭ Retadreso
         whole_word: Tuta vorto
       featured_tag:
         name: Kradvorto
+      filters:
+        actions:
+          hide: Kaŝi komplete
+          warn: Kaŝi malantaŭ averto
       interactions:
         must_be_follower: Bloki sciigojn de nesekvantoj
         must_be_following: Bloki sciigojn de homoj, kiujn vi ne sekvas
@@ -165,8 +203,8 @@ eo:
         mention: Sendi retmesaĝon kiam iu mencias vin
         pending_account: Sendi retmesaĝon kiam nova konto bezonas kontrolon
         reblog: Sendi retmesaĝon kiam iu diskonigas vian mesaĝon
-        report: Nova signalo estas sendita
-        trending_tag: Nekontrolita kradvorto furoras
+      rule:
+        text: Regulo
       tag:
         name: Kradvorto
         trendable: Permesi al ĉi tiu kradvorto aperi en furoraĵoj
@@ -176,4 +214,7 @@ eo:
     required:
       mark: "*"
       text: bezonata
+    title:
+      sessions:
+        webauthn: Uzi unu el viaj sekurecaj ŝlosiloj por ensaluti
     'yes': Jes

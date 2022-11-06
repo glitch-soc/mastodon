@@ -16,7 +16,6 @@ describe AuthorizeInteractionsController do
 
     describe 'when signed in' do
       let(:user) { Fabricate(:user) }
-      let(:account) { Fabricate(:account, user: user) }
 
       before do
         sign_in(user)
@@ -40,7 +39,7 @@ describe AuthorizeInteractionsController do
       end
 
       it 'sets resource from url' do
-        account = Account.new
+        account = Fabricate(:account)
         service = double
         allow(ResolveURLService).to receive(:new).and_return(service)
         allow(service).to receive(:call).with('http://example.com').and_return(account)
@@ -52,7 +51,7 @@ describe AuthorizeInteractionsController do
       end
 
       it 'sets resource from acct uri' do
-        account = Account.new
+        account = Fabricate(:account)
         service = double
         allow(ResolveAccountService).to receive(:new).and_return(service)
         allow(service).to receive(:call).with('found@hostname').and_return(account)
@@ -76,7 +75,7 @@ describe AuthorizeInteractionsController do
 
     describe 'when signed in' do
       let!(:user) { Fabricate(:user) }
-      let!(:account) { user.account }
+      let(:account) { user.account }
 
       before do
         sign_in(user)
@@ -99,12 +98,10 @@ describe AuthorizeInteractionsController do
 
         allow(ResolveAccountService).to receive(:new).and_return(service)
         allow(service).to receive(:call).with('user@hostname').and_return(target_account)
-        allow(service).to receive(:call).with(target_account, skip_webfinger: true).and_return(target_account)
 
 
         post :create, params: { acct: 'acct:user@hostname' }
 
-        expect(service).to have_received(:call).with(target_account, skip_webfinger: true)
         expect(account.following?(target_account)).to be true
         expect(response).to render_template(:success)
       end

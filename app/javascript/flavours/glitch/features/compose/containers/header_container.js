@@ -2,7 +2,7 @@ import { openModal } from 'flavours/glitch/actions/modal';
 import { connect }   from 'react-redux';
 import { defineMessages, injectIntl } from 'react-intl';
 import Header from '../components/header';
-import { logOut } from 'flavours/glitch/util/log_out';
+import { logOut } from 'flavours/glitch/utils/log_out';
 
 const messages = defineMessages({
   logoutMessage: { id: 'confirmations.logout.message', defaultMessage: 'Are you sure you want to log out?' },
@@ -27,6 +27,7 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     dispatch(openModal('CONFIRM', {
       message: intl.formatMessage(messages.logoutMessage),
       confirm: intl.formatMessage(messages.logoutConfirm),
+      closeWhenConfirm: false,
       onConfirm: () => logOut(),
     }));
   },

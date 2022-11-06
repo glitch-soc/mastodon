@@ -1,30 +1,11 @@
 ---
 zgh:
-  about:
-    about_this: ⵖⴼ
-    api: API
-    contact: ⴰⵎⵢⴰⵡⴰⴹ
-    learn_more: ⵙⵙⵏ ⵓⴳⴳⴰⵔ
-    status_count_after:
-      one: ⴰⴷⴷⴰⴷ
-      other: ⴰⴷⴷⴰⴷⵏ
-    unavailable_content_description:
-      domain: ⴰⵎⴰⴽⴽⴰⵢ
-    what_is_mastodon: ⵎⴰ'ⵢⴷ ⵉⴳⴰⵏ ⵎⴰⵙⵜⵔⴷⵓⵎ?
   accounts:
     follow: ⴹⴼⵕ
     followers:
       one: ⴰⵎⴹⴼⴰⵕ
       other: ⵉⵎⴹⴼⴰⵕⵏ
-    media: ⵉⵙⵏⵖⵎⵉⵙⵏ
-    never_active: ⵓⵙⴰⵔ
-    roles:
-      bot: ⴰⴱⵓⵜ
-      group: ⵜⴰⵔⴰⴱⴱⵓⵜ
-    unfollow: ⴽⴽⵙ ⴰⴹⴼⴼⵓⵕ
   admin:
-    account_moderation_notes:
-      delete: ⴽⴽⵙ
     accounts:
       change_email:
         label: ⵙⵏⴼⵍ ⵉⵎⴰⵢⵍ
@@ -44,8 +25,6 @@ zgh:
         all: ⵎⴰⵕⵕⴰ
       public: ⴰⴳⴷⵓⴷⴰⵏ
       reject: ⴰⴳⵢ
-      roles:
-        user: ⵓⵏⵙⵙⵓⵎⵔⵙ
       title: ⵉⵎⵉⴹⴰⵏⵏ
       web: ⵡⵉⴱ
     action_logs:
@@ -82,18 +61,10 @@ zgh:
       notes:
         delete: ⴽⴽⵙ
       status: ⴰⴷⴷⴰⴷ
-    settings:
-      site_title: ⵉⵙⵎ ⵏ ⵓⵎⴰⴽⴽⴰⵢ
-      title: ⵜⵉⵙⵖⴰⵍ ⵏ ⵡⴰⵙⵉⵜ
     statuses:
-      batch:
-        delete: ⴽⴽⵙ
       media:
         title: ⵉⵙⵏⵖⵎⵉⵙⵏ
       with_media: ⵙ ⵉⵙⵏⵖⵎⵉⵙⵏ
-    tags:
-      name: ⵀⴰⵛⵟⴰⴳ
-      title: ⵉⵀⴰⵛⵟⴰⴳⵏ
     warning_presets:
       delete: ⴽⴽⵙ
   application_mailer:
@@ -128,8 +99,6 @@ zgh:
   filters:
     index:
       delete: ⴽⴽⵙ
-  footer:
-    more: ⵓⴳⴳⴰⵔ…
   generic:
     all: ⵎⴰⵕⵕⴰ
     copy: ⵙⵏⵖⵍ
@@ -144,6 +113,9 @@ zgh:
       '86400': ⴰⵙⵙ
     expires_in_prompt: ⵓⵙⴰⵔ
   notification_mailer:
+    admin:
+      sign_up:
+        subject: "%{name} ⴼⴼⵖⵏ"
     mention:
       action: ⵔⴰⵔ
   relationships:

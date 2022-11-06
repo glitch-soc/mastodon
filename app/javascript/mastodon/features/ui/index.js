@@ -3,7 +3,7 @@ import React from 'react';
 import { HotKeys } from 'react-hotkeys';
 import { defineMessages, injectIntl } from 'react-intl';
 import { connect } from 'react-redux';
-import { Redirect, withRouter } from 'react-router-dom';
+import { Redirect, Route, withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import NotificationsContainer from './containers/notifications_container';
 import LoadingBarContainer from './containers/loading_bar_container';
@@ -13,14 +13,14 @@ import { debounce } from 'lodash';
 import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
 import { expandHomeTimeline } from '../../actions/timelines';
 import { expandNotifications } from '../../actions/notifications';
-import { fetchFilters } from '../../actions/filters';
+import { fetchServer } from '../../actions/server';
 import { clearHeight } from '../../actions/height_cache';
 import { focusApp, unfocusApp, changeLayout } from 'mastodon/actions/app';
 import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'mastodon/actions/markers';
 import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
+import BundleColumnError from './components/bundle_column_error';
 import UploadArea from './components/upload_area';
 import ColumnsAreaContainer from './containers/columns_area_container';
-import DocumentTitle from './components/document_title';
 import PictureInPicture from 'mastodon/features/picture_in_picture';
 import {
   Compose,
@@ -40,7 +40,6 @@ import {
   HashtagTimeline,
   Notifications,
   FollowRequests,
-  GenericNotFound,
   FavouritedStatuses,
   BookmarkedStatuses,
   ListTimeline,
@@ -49,12 +48,15 @@ import {
   Mutes,
   PinnedStatuses,
   Lists,
-  Search,
   Directory,
+  Explore,
+  FollowRecommendations,
+  About,
+  PrivacyPolicy,
 } from './util/async-components';
-import { me } from '../../initial_state';
-import { previewState as previewMediaState } from './components/media_modal';
-import { previewState as previewVideoState } from './components/video_modal';
+import initialState, { me, owner, singleUserMode, showTrends } from '../../initial_state';
+import { closeOnboarding, INTRODUCTION_VERSION } from 'mastodon/actions/onboarding';
+import Header from './components/header';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
@@ -71,6 +73,8 @@ const mapStateToProps = state => ({
   hasMediaAttachments: state.getIn(['compose', 'media_attachments']).size > 0,
   canUploadMore: !state.getIn(['compose', 'media_attachments']).some(x => ['audio', 'video'].includes(x.get('type'))) && state.getIn(['compose', 'media_attachments']).size < 4,
   dropdownMenuIsOpen: state.getIn(['dropdown_menu', 'openId']) !== null,
+  firstLaunch: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
+  username: state.getIn(['accounts', me, 'username']),
 });
 
 const keyMap = {
@@ -108,6 +112,10 @@ const keyMap = {
 
 class SwitchingColumnsArea extends React.PureComponent {
 
+  static contextTypes = {
+    identity: PropTypes.object,
+  };
+
   static propTypes = {
     children: PropTypes.node,
     location: PropTypes.object,
@@ -135,59 +143,83 @@ class SwitchingColumnsArea extends React.PureComponent {
     }
   }
 
-  shouldUpdateScroll (_, { location }) {
-    return location.state !== previewMediaState && location.state !== previewVideoState;
-  }
-
   setRef = c => {
     if (c) {
-      this.node = c.getWrappedInstance();
+      this.node = c;
     }
   }
 
   render () {
     const { children, mobile } = this.props;
-    const redirect = mobile ? <Redirect from='/' to='/timelines/home' exact /> : <Redirect from='/' to='/getting-started' exact />;
+    const { signedIn } = this.context.identity;
+
+    let redirect;
+
+    if (signedIn) {
+      if (mobile) {
+        redirect = <Redirect from='/' to='/home' exact />;
+      } else {
+        redirect = <Redirect from='/' to='/getting-started' exact />;
+      }
+    } else if (singleUserMode && owner && initialState?.accounts[owner]) {
+      redirect = <Redirect from='/' to={`/@${initialState.accounts[owner].username}`} exact />;
+    } else if (showTrends) {
+      redirect = <Redirect from='/' to='/explore' exact />;
+    } else {
+      redirect = <Redirect from='/' to='/about' exact />;
+    }
 
     return (
       <ColumnsAreaContainer ref={this.setRef} singleColumn={mobile}>
         <WrappedSwitch>
           {redirect}
+
           <WrappedRoute path='/getting-started' component={GettingStarted} content={children} />
           <WrappedRoute path='/keyboard-shortcuts' component={KeyboardShortcuts} content={children} />
-          <WrappedRoute path='/timelines/home' component={HomeTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/timelines/public' exact component={PublicTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/timelines/public/local' exact component={CommunityTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/timelines/direct' component={DirectTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/timelines/tag/:id' component={HashtagTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/timelines/list/:id' component={ListTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          <WrappedRoute path='/about' component={About} content={children} />
+          <WrappedRoute path='/privacy-policy' component={PrivacyPolicy} content={children} />
 
-          <WrappedRoute path='/notifications' component={Notifications} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/favourites' component={FavouritedStatuses} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          <WrappedRoute path={['/home', '/timelines/home']} component={HomeTimeline} content={children} />
+          <WrappedRoute path={['/public', '/timelines/public']} exact component={PublicTimeline} content={children} />
+          <WrappedRoute path={['/public/local', '/timelines/public/local']} exact component={CommunityTimeline} content={children} />
+          <WrappedRoute path={['/conversations', '/timelines/direct']} component={DirectTimeline} content={children} />
+          <WrappedRoute path='/tags/:id' component={HashtagTimeline} content={children} />
+          <WrappedRoute path='/lists/:id' component={ListTimeline} content={children} />
+          <WrappedRoute path='/notifications' component={Notifications} content={children} />
+          <WrappedRoute path='/favourites' component={FavouritedStatuses} content={children} />
+
           <WrappedRoute path='/bookmarks' component={BookmarkedStatuses} content={children} />
-          <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} />
 
-          <WrappedRoute path='/search' component={Search} content={children} />
-          <WrappedRoute path='/directory' component={Directory} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          <WrappedRoute path='/start' component={FollowRecommendations} content={children} />
+          <WrappedRoute path='/directory' component={Directory} content={children} />
+          <WrappedRoute path={['/explore', '/search']} component={Explore} content={children} />
+          <WrappedRoute path={['/publish', '/statuses/new']} component={Compose} content={children} />
 
-          <WrappedRoute path='/statuses/new' component={Compose} content={children} />
-          <WrappedRoute path='/statuses/:statusId' exact component={Status} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/statuses/:statusId/reblogs' component={Reblogs} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/statuses/:statusId/favourites' component={Favourites} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          <WrappedRoute path={['/@:acct', '/accounts/:id']} exact component={AccountTimeline} content={children} />
+          <WrappedRoute path='/@:acct/tagged/:tagged?' exact component={AccountTimeline} content={children} />
+          <WrappedRoute path={['/@:acct/with_replies', '/accounts/:id/with_replies']} component={AccountTimeline} content={children} componentParams={{ withReplies: true }} />
+          <WrappedRoute path={['/accounts/:id/followers', '/users/:acct/followers', '/@:acct/followers']} component={Followers} content={children} />
+          <WrappedRoute path={['/accounts/:id/following', '/users/:acct/following', '/@:acct/following']} component={Following} content={children} />
+          <WrappedRoute path={['/@:acct/media', '/accounts/:id/media']} component={AccountGallery} content={children} />
+          <WrappedRoute path='/@:acct/:statusId' exact component={Status} content={children} />
+          <WrappedRoute path='/@:acct/:statusId/reblogs' component={Reblogs} content={children} />
+          <WrappedRoute path='/@:acct/:statusId/favourites' component={Favourites} content={children} />
 
-          <WrappedRoute path='/accounts/:accountId' exact component={AccountTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/accounts/:accountId/with_replies' component={AccountTimeline} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll, withReplies: true }} />
-          <WrappedRoute path='/accounts/:accountId/followers' component={Followers} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/accounts/:accountId/following' component={Following} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/accounts/:accountId/media' component={AccountGallery} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          {/* Legacy routes, cannot be easily factored with other routes because they share a param name */}
+          <WrappedRoute path='/timelines/tag/:id' component={HashtagTimeline} content={children} />
+          <WrappedRoute path='/timelines/list/:id' component={ListTimeline} content={children} />
+          <WrappedRoute path='/statuses/:statusId' exact component={Status} content={children} />
+          <WrappedRoute path='/statuses/:statusId/reblogs' component={Reblogs} content={children} />
+          <WrappedRoute path='/statuses/:statusId/favourites' component={Favourites} content={children} />
 
-          <WrappedRoute path='/follow_requests' component={FollowRequests} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/blocks' component={Blocks} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/domain_blocks' component={DomainBlocks} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/mutes' component={Mutes} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
-          <WrappedRoute path='/lists' component={Lists} content={children} componentParams={{ shouldUpdateScroll: this.shouldUpdateScroll }} />
+          <WrappedRoute path='/follow_requests' component={FollowRequests} content={children} />
+          <WrappedRoute path='/blocks' component={Blocks} content={children} />
+          <WrappedRoute path='/domain_blocks' component={DomainBlocks} content={children} />
+          <WrappedRoute path='/mutes' component={Mutes} content={children} />
+          <WrappedRoute path='/lists' component={Lists} content={children} />
 
-          <WrappedRoute component={GenericNotFound} content={children} />
+          <Route component={BundleColumnError} />
         </WrappedSwitch>
       </ColumnsAreaContainer>
     );
@@ -202,6 +234,7 @@ class UI extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
+    identity: PropTypes.object.isRequired,
   };
 
   static propTypes = {
@@ -215,6 +248,8 @@ class UI extends React.PureComponent {
     intl: PropTypes.object.isRequired,
     dropdownMenuIsOpen: PropTypes.bool,
     layout: PropTypes.string.isRequired,
+    firstLaunch: PropTypes.bool,
+    username: PropTypes.string,
   };
 
   state = {
@@ -335,6 +370,8 @@ class UI extends React.PureComponent {
   }
 
   componentDidMount () {
+    const { signedIn } = this.context.identity;
+
     window.addEventListener('focus', this.handleWindowFocus, false);
     window.addEventListener('blur', this.handleWindowBlur, false);
     window.addEventListener('beforeunload', this.handleBeforeUnload, false);
@@ -350,11 +387,19 @@ class UI extends React.PureComponent {
       navigator.serviceWorker.addEventListener('message', this.handleServiceWorkerPostMessage);
     }
 
-    this.props.dispatch(fetchMarkers());
-    this.props.dispatch(expandHomeTimeline());
-    this.props.dispatch(expandNotifications());
+    // On first launch, redirect to the follow recommendations page
+    if (signedIn && this.props.firstLaunch) {
+      this.context.router.history.replace('/start');
+      this.props.dispatch(closeOnboarding());
+    }
 
-    setTimeout(() => this.props.dispatch(fetchFilters()), 500);
+    if (signedIn) {
+      this.props.dispatch(fetchMarkers());
+      this.props.dispatch(expandHomeTimeline());
+      this.props.dispatch(expandNotifications());
+
+      setTimeout(() => this.props.dispatch(fetchServer()), 3000);
+    }
 
     this.hotkeys.__mousetrap__.stopCallback = (e, element) => {
       return ['TEXTAREA', 'SELECT', 'INPUT'].includes(element.tagName);
@@ -447,7 +492,7 @@ class UI extends React.PureComponent {
   }
 
   handleHotkeyGoToHome = () => {
-    this.context.router.history.push('/timelines/home');
+    this.context.router.history.push('/home');
   }
 
   handleHotkeyGoToNotifications = () => {
@@ -455,15 +500,15 @@ class UI extends React.PureComponent {
   }
 
   handleHotkeyGoToLocal = () => {
-    this.context.router.history.push('/timelines/public/local');
+    this.context.router.history.push('/public/local');
   }
 
   handleHotkeyGoToFederated = () => {
-    this.context.router.history.push('/timelines/public');
+    this.context.router.history.push('/public');
   }
 
   handleHotkeyGoToDirect = () => {
-    this.context.router.history.push('/timelines/direct');
+    this.context.router.history.push('/conversations');
   }
 
   handleHotkeyGoToStart = () => {
@@ -479,7 +524,7 @@ class UI extends React.PureComponent {
   }
 
   handleHotkeyGoToProfile = () => {
-    this.context.router.history.push(`/accounts/${me}`);
+    this.context.router.history.push(`/@${this.props.username}`);
   }
 
   handleHotkeyGoToBlocked = () => {
@@ -523,6 +568,8 @@ class UI extends React.PureComponent {
     return (
       <HotKeys keyMap={keyMap} handlers={handlers} ref={this.setHotkeysRef} attach={window} focused>
         <div className={classNames('ui', { 'is-composing': isComposing })} ref={this.setRef} style={{ pointerEvents: dropdownMenuIsOpen ? 'none' : null }}>
+          <Header />
+
           <SwitchingColumnsArea location={location} mobile={layout === 'mobile' || layout === 'single-column'}>
             {children}
           </SwitchingColumnsArea>
@@ -532,7 +579,6 @@ class UI extends React.PureComponent {
           <LoadingBarContainer className='loading-bar' />
           <ModalContainer />
           <UploadArea active={draggingOver} onClose={this.closeUploadModal} />
-          <DocumentTitle />
         </div>
       </HotKeys>
     );

@@ -26,6 +26,7 @@ class Poll < ApplicationRecord
   belongs_to :status
 
   has_many :votes, class_name: 'PollVote', inverse_of: :poll, dependent: :delete_all
+  has_many :voters, -> { group('accounts.id') }, through: :votes, class_name: 'Account', source: :account
 
   has_many :notifications, as: :activity, dependent: :destroy
 
@@ -38,13 +39,12 @@ class Poll < ApplicationRecord
 
   before_validation :prepare_options, if: :local?
   before_validation :prepare_votes_count
-
-  after_initialize :prepare_cached_tallies
+  before_validation :prepare_cached_tallies
 
   after_commit :reset_parent_cache, on: :update
 
   def loaded_options
-    options.map.with_index { |title, key| Option.new(self, key.to_s, title, show_totals_now? ? cached_tallies[key] : nil) }
+    options.map.with_index { |title, key| Option.new(self, key.to_s, title, show_totals_now? ? (cached_tallies[key] || 0) : nil) }
   end
 
   def possibly_stale?
@@ -80,6 +80,12 @@ class Poll < ApplicationRecord
         votes_count: votes_count,
       )
     end
+  end
+
+  def reset_votes!
+    self.cached_tallies = options.map { 0 }
+    self.votes_count = 0
+    votes.delete_all unless new_record?
   end
 
   private

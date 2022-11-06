@@ -9,6 +9,8 @@ import { expandPublicTimeline } from '../../actions/timelines';
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import { connectPublicStream } from '../../actions/streaming';
+import { Helmet } from 'react-helmet';
+import DismissableBanner from 'mastodon/components/dismissable_banner';
 
 const messages = defineMessages({
   title: { id: 'column.public', defaultMessage: 'Federated timeline' },
@@ -35,6 +37,7 @@ class PublicTimeline extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
+    identity: PropTypes.object,
   };
 
   static defaultProps = {
@@ -43,7 +46,6 @@ class PublicTimeline extends React.PureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    shouldUpdateScroll: PropTypes.func,
     intl: PropTypes.object.isRequired,
     columnId: PropTypes.string,
     multiColumn: PropTypes.bool,
@@ -73,18 +75,30 @@ class PublicTimeline extends React.PureComponent {
 
   componentDidMount () {
     const { dispatch, onlyMedia, onlyRemote } = this.props;
+    const { signedIn } = this.context.identity;
 
     dispatch(expandPublicTimeline({ onlyMedia, onlyRemote }));
-    this.disconnect = dispatch(connectPublicStream({ onlyMedia, onlyRemote }));
+
+    if (signedIn) {
+      this.disconnect = dispatch(connectPublicStream({ onlyMedia, onlyRemote }));
+    }
   }
 
   componentDidUpdate (prevProps) {
+    const { signedIn } = this.context.identity;
+
     if (prevProps.onlyMedia !== this.props.onlyMedia || prevProps.onlyRemote !== this.props.onlyRemote) {
       const { dispatch, onlyMedia, onlyRemote } = this.props;
 
-      this.disconnect();
+      if (this.disconnect) {
+        this.disconnect();
+      }
+
       dispatch(expandPublicTimeline({ onlyMedia, onlyRemote }));
-      this.disconnect = dispatch(connectPublicStream({ onlyMedia, onlyRemote }));
+
+      if (signedIn) {
+        this.disconnect = dispatch(connectPublicStream({ onlyMedia, onlyRemote }));
+      }
     }
   }
 
@@ -106,7 +120,7 @@ class PublicTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, shouldUpdateScroll, columnId, hasUnread, multiColumn, onlyMedia, onlyRemote } = this.props;
+    const { intl, columnId, hasUnread, multiColumn, onlyMedia, onlyRemote } = this.props;
     const pinned = !!columnId;
 
     return (
@@ -124,15 +138,23 @@ class PublicTimeline extends React.PureComponent {
           <ColumnSettingsContainer columnId={columnId} />
         </ColumnHeader>
 
+        <DismissableBanner id='public_timeline'>
+          <FormattedMessage id='dismissable_banner.public_timeline' defaultMessage='These are the most recent public posts from people on this and other servers of the decentralized network that this server knows about.' />
+        </DismissableBanner>
+
         <StatusListContainer
           timelineId={`public${onlyRemote ? ':remote' : ''}${onlyMedia ? ':media' : ''}`}
           onLoadMore={this.handleLoadMore}
           trackScroll={!pinned}
           scrollKey={`public_timeline-${columnId}`}
           emptyMessage={<FormattedMessage id='empty_column.public' defaultMessage='There is nothing here! Write something publicly, or manually follow users from other servers to fill it up' />}
-          shouldUpdateScroll={shouldUpdateScroll}
           bindToDocument={!multiColumn}
         />
+
+        <Helmet>
+          <title>{intl.formatMessage(messages.title)}</title>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

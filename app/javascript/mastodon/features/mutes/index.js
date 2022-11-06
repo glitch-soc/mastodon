@@ -11,6 +11,7 @@ import ColumnBackButtonSlim from '../../components/column_back_button_slim';
 import AccountContainer from '../../containers/account_container';
 import { fetchMutes, expandMutes } from '../../actions/mutes';
 import ScrollableList from '../../components/scrollable_list';
+import { Helmet } from 'react-helmet';
 
 const messages = defineMessages({
   heading: { id: 'column.mutes', defaultMessage: 'Muted users' },
@@ -29,7 +30,6 @@ class Mutes extends ImmutablePureComponent {
   static propTypes = {
     params: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
-    shouldUpdateScroll: PropTypes.func,
     hasMore: PropTypes.bool,
     isLoading: PropTypes.bool,
     accountIds: ImmutablePropTypes.list,
@@ -46,7 +46,7 @@ class Mutes extends ImmutablePureComponent {
   }, 300, { leading: true });
 
   render () {
-    const { intl, shouldUpdateScroll, hasMore, accountIds, multiColumn, isLoading } = this.props;
+    const { intl, hasMore, accountIds, multiColumn, isLoading } = this.props;
 
     if (!accountIds) {
       return (
@@ -66,14 +66,17 @@ class Mutes extends ImmutablePureComponent {
           onLoadMore={this.handleLoadMore}
           hasMore={hasMore}
           isLoading={isLoading}
-          shouldUpdateScroll={shouldUpdateScroll}
           emptyMessage={emptyMessage}
           bindToDocument={!multiColumn}
         >
           {accountIds.map(id =>
-            <AccountContainer key={id} id={id} />,
+            <AccountContainer key={id} id={id} defaultAction='mute' />,
           )}
         </ScrollableList>
+
+        <Helmet>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

@@ -10,8 +10,8 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import Icon from 'flavours/glitch/components/icon';
 
 //  Utils.
-import { conditionalRender } from 'flavours/glitch/util/react_helpers';
-import { signOutLink } from 'flavours/glitch/util/backend_links';
+import { conditionalRender } from 'flavours/glitch/utils/react_helpers';
+import { signOutLink } from 'flavours/glitch/utils/backend_links';
 
 //  Messages.
 const messages = defineMessages({
@@ -87,7 +87,7 @@ class Header extends ImmutablePureComponent {
           <Link
             aria-label={intl.formatMessage(messages.home_timeline)}
             title={intl.formatMessage(messages.home_timeline)}
-            to='/timelines/home'
+            to='/home'
           ><Icon id='home' /></Link>
         ))}
         {renderForColumn('NOTIFICATIONS', (
@@ -106,20 +106,20 @@ class Header extends ImmutablePureComponent {
           <Link
             aria-label={intl.formatMessage(messages.community)}
             title={intl.formatMessage(messages.community)}
-            to='/timelines/public/local'
+            to='/public/local'
           ><Icon id='users' /></Link>
         ))}
         {renderForColumn('PUBLIC', (
           <Link
             aria-label={intl.formatMessage(messages.public)}
             title={intl.formatMessage(messages.public)}
-            to='/timelines/public'
+            to='/public'
           ><Icon id='globe' /></Link>
         ))}
         <a
           aria-label={intl.formatMessage(messages.settings)}
           onClick={onSettingsClick}
-          href='#'
+          href='/settings/preferences'
           title={intl.formatMessage(messages.settings)}
         ><Icon id='cogs' /></a>
         <a

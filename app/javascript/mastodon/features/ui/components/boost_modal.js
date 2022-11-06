@@ -68,7 +68,7 @@ class BoostModal extends ImmutablePureComponent {
     if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       this.props.onClose();
-      this.context.router.history.push(`/accounts/${this.props.status.getIn(['account', 'id'])}`);
+      this.context.router.history.push(`/@${this.props.status.getIn(['account', 'acct'])}`);
     }
   }
 
@@ -88,7 +88,7 @@ class BoostModal extends ImmutablePureComponent {
       'public': { icon: 'globe', text: intl.formatMessage(messages.public_short) },
       'unlisted': { icon: 'unlock', text: intl.formatMessage(messages.unlisted_short) },
       'private': { icon: 'lock', text: intl.formatMessage(messages.private_short) },
-      'direct': { icon: 'envelope', text: intl.formatMessage(messages.direct_short) },
+      'direct': { icon: 'at', text: intl.formatMessage(messages.direct_short) },
     };
 
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
@@ -97,12 +97,11 @@ class BoostModal extends ImmutablePureComponent {
       <div className='modal-root__modal boost-modal'>
         <div className='boost-modal__container'>
           <div className={classNames('status', `status-${status.get('visibility')}`, 'light')}>
-            <div className='boost-modal__status-header'>
-              <div className='boost-modal__status-time'>
-                <a href={status.get('url')} className='status__relative-time' target='_blank' rel='noopener noreferrer'>
-                  <span className='status__visibility-icon'><Icon id={visibilityIcon.icon} title={visibilityIcon.text} /></span>
-                  <RelativeTimestamp timestamp={status.get('created_at')} /></a>
-              </div>
+            <div className='status__info'>
+              <a href={status.get('url')} className='status__relative-time' target='_blank' rel='noopener noreferrer'>
+                <span className='status__visibility-icon'><Icon id={visibilityIcon.icon} title={visibilityIcon.text} /></span>
+                <RelativeTimestamp timestamp={status.get('created_at')} />
+              </a>
 
               <a onClick={this.handleAccountClick} href={status.getIn(['account', 'url'])} className='status__display-name'>
                 <div className='status__avatar'>

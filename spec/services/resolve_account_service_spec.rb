@@ -13,6 +13,47 @@ RSpec.describe ResolveAccountService, type: :service do
     stub_request(:get, 'https://example.com/.well-known/webfinger?resource=acct:hoge@example.com').to_return(status: 410)
   end
 
+  context 'using skip_webfinger' do
+    context 'when account is known' do
+      let!(:remote_account) { Fabricate(:account, username: 'foo', domain: 'ap.example.com', protocol: 'activitypub') }
+
+      context 'when domain is banned' do
+        let!(:domain_block) { Fabricate(:domain_block, domain: 'ap.example.com', severity: :suspend) }
+
+        it 'does not return an account' do
+          expect(subject.call('foo@ap.example.com', skip_webfinger: true)).to be_nil
+        end
+
+        it 'does not make a webfinger query' do
+          subject.call('foo@ap.example.com', skip_webfinger: true)
+          expect(a_request(:get, 'https://ap.example.com/.well-known/webfinger?resource=acct:foo@ap.example.com')).to_not have_been_made
+        end
+      end
+
+      context 'when domain is not banned' do
+        it 'returns the expected account' do
+          expect(subject.call('foo@ap.example.com', skip_webfinger: true)).to eq remote_account
+        end
+
+        it 'does not make a webfinger query' do
+          subject.call('foo@ap.example.com', skip_webfinger: true)
+          expect(a_request(:get, 'https://ap.example.com/.well-known/webfinger?resource=acct:foo@ap.example.com')).to_not have_been_made
+        end
+      end
+    end
+
+    context 'when account is not known' do
+      it 'does not return an account' do
+        expect(subject.call('foo@ap.example.com', skip_webfinger: true)).to be_nil
+      end
+
+      it 'does not make a webfinger query' do
+        subject.call('foo@ap.example.com', skip_webfinger: true)
+        expect(a_request(:get, 'https://ap.example.com/.well-known/webfinger?resource=acct:foo@ap.example.com')).to_not have_been_made
+      end
+    end
+  end
+
   context 'when there is an LRDD endpoint but no resolvable account' do
     before do
       stub_request(:get, "https://quitter.no/.well-known/host-meta").to_return(request_fixture('.host-meta.txt'))
@@ -96,8 +137,8 @@ RSpec.describe ResolveAccountService, type: :service do
       stub_request(:get, 'https://evil.example.com/.well-known/webfinger?resource=acct:foo@evil.example.com').to_return(body: Oj.dump(webfinger2), headers: { 'Content-Type': 'application/jrd+json' })
     end
 
-    it 'returns new remote account' do
-      expect { subject.call('Foo@redirected.example.com') }.to raise_error Webfinger::RedirectError
+    it 'does not return a new remote account' do
+      expect(subject.call('Foo@redirected.example.com')).to be_nil
     end
   end
 
@@ -179,6 +220,8 @@ RSpec.describe ResolveAccountService, type: :service do
           return_values << described_class.new.call('foo@ap.example.com')
         rescue ActiveRecord::RecordNotUnique
           fail_occurred = true
+        ensure
+          RedisConfiguration.pool.checkin if Thread.current[:redis]
         end
       end
     end

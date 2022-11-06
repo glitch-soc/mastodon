@@ -60,8 +60,6 @@ eo:
       error:
         title: Eraro okazis
       new:
-        able_to: Ĝi povos
-        prompt: La aplikaĵo %{client_name} petas aliron al via konto
         title: Rajtigo bezonata
       show:
         title: Kopiu ĉi tiun rajtigan kodon kaj gluu ĝin al la aplikaĵo.
@@ -71,10 +69,6 @@ eo:
       confirmations:
         revoke: Ĉu vi certas?
       index:
-        application: Aplikaĵo
-        created_at: Rajtigita
-        date_format: "%Y-%m-%d %H:%M:%S"
-        scopes: Ampleksoj
         title: Viaj rajtigitaj aplikaĵoj
     errors:
       messages:
@@ -83,7 +77,10 @@ eo:
         invalid_client: Klienta aŭtentigo malsukcesa pro nekonata kliento, neniu klienta aŭtentigo inkluzivita, aŭ nesubtenata aŭtentiga metodo.
         invalid_grant: La rajtiga konsento ne estas valida, ne plu estas valida, estis forigita, ne kongruas kun la plusenda URI uzita en la aŭtentiga peto, aŭ estis sendita al alia kliento.
         invalid_redirect_uri: La plusenda URI uzita ne estas valida.
-        invalid_request: Mankis al la peto nepra parametro, enhavas nesubtenatan parametran valoron, aŭ la peto simple estas misformita.
+        invalid_request:
+          missing_param: 'Mankas bezonata parametro: %{value}.'
+          request_not_authorized: Request need to be authorized. Required parameter for authorizing request is missing or invalid.
+          unknown: Mankis al la peto nepra parametro, enhavas nesubtenatan parametran valoron, aŭ la peto simple estas misformita.
         invalid_resource_owner: La donitaj identigiloj pri la posedanto de la rimedo ne estas validaj, aŭ tiu lasta ne povas esti trovita
         invalid_scope: La petita amplekso estas nevalida, nekonata, aŭ misformita.
         invalid_token:
@@ -107,6 +104,15 @@ eo:
       authorized_applications:
         destroy:
           notice: Aplikaĵo malrajtigita.
+    grouped_scopes:
+      title:
+        blocks: Blokita
+        bookmarks: Legosignoj
+        lists: Listoj
+        mutes: Silentigitaj
+        reports: Raportoj
+        search: Serĉi
+        statuses: Afiŝoj
     layouts:
       admin:
         nav:

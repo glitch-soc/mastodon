@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ActivityPub::NoteSerializer < ActivityPub::Serializer
+  include FormattingHelper
+
   context_extensions :atom_uri, :conversation, :sensitive, :voters_count, :direct_message
 
   attributes :id, :type, :summary,
@@ -11,10 +13,11 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   attribute :content
   attribute :content_map, if: :language?
+  attribute :updated, if: :edited?
 
   attribute :direct_message, if: :non_public?
 
-  has_many :media_attachments, key: :attachment
+  has_many :virtual_attachments, key: :attachment
   has_many :virtual_tags, key: :tag
 
   has_one :replies, serializer: ActivityPub::CollectionSerializer, if: :local?
@@ -49,11 +52,11 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
   end
 
   def content
-    Formatter.instance.format(object)
+    status_content_format(object)
   end
 
   def content_map
-    { object.language => Formatter.instance.format(object) }
+    { object.language => content }
   end
 
   def replies
@@ -76,6 +79,8 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
     object.language.present?
   end
 
+  delegate :edited?, to: :object
+
   def in_reply_to
     return unless object.reply? && !object.thread.nil?
 
@@ -88,6 +93,10 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   def published
     object.created_at.iso8601
+  end
+
+  def updated
+    object.edited_at.iso8601
   end
 
   def url
@@ -108,6 +117,10 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
   def sensitive
     object.account.sensitized? || object.sensitive || (!instance_options[:allow_local_only] && Setting.outgoing_spoilers.present?)
+  end
+
+  def virtual_attachments
+    object.ordered_media_attachments
   end
 
   def virtual_tags
@@ -181,6 +194,8 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
     attributes :type, :media_type, :url, :name, :blurhash
     attribute :focal_point, if: :focal_point?
+    attribute :width, if: :width?
+    attribute :height, if: :height?
 
     has_one :icon, serializer: ActivityPub::ImageSerializer, if: :thumbnail?
 
@@ -214,6 +229,22 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
 
     def thumbnail?
       object.thumbnail.present?
+    end
+
+    def width?
+      object.file.meta&.dig('original', 'width').present?
+    end
+
+    def height?
+      object.file.meta&.dig('original', 'height').present?
+    end
+
+    def width
+      object.file.meta.dig('original', 'width')
+    end
+
+    def height
+      object.file.meta.dig('original', 'height')
     end
   end
 

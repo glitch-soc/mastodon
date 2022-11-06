@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'flavours/glitch/components/icon';
-import { me } from 'flavours/glitch/util/initial_state';
+import { me } from 'flavours/glitch/initial_state';
 
 export default class StatusPrepend extends React.PureComponent {
 
@@ -17,7 +17,7 @@ export default class StatusPrepend extends React.PureComponent {
 
   handleClick = (e) => {
     const { account, parseClick } = this.props;
-    parseClick(e, `/accounts/${account.get('id')}`);
+    parseClick(e, `/@${account.get('acct')}`);
   }
 
   Message = () => {
@@ -38,7 +38,7 @@ export default class StatusPrepend extends React.PureComponent {
     switch (type) {
     case 'featured':
       return (
-        <FormattedMessage id='status.pinned' defaultMessage='Pinned toot' />
+        <FormattedMessage id='status.pinned' defaultMessage='Pinned post' />
       );
     case 'reblogged_by':
       return (
@@ -88,6 +88,14 @@ export default class StatusPrepend extends React.PureComponent {
           />
         );
       }
+    case 'update':
+      return (
+        <FormattedMessage
+          id='notification.update'
+          defaultMessage='{name} edited a post'
+          values={{ name: link }}
+        />
+      );
     }
     return null;
   }
@@ -114,6 +122,9 @@ export default class StatusPrepend extends React.PureComponent {
       break;
     case 'status':
       iconId = 'bell';
+      break;
+    case 'update':
+      iconId = 'pencil';
       break;
     };
 

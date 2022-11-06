@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
 import { List as ImmutableList } from 'immutable';
-import { makeGetStatus, regexFromFilters, toServerSideType } from 'flavours/glitch/selectors';
+import { makeGetStatus } from 'flavours/glitch/selectors';
 import {
   replyCompose,
   mentionCompose,
@@ -17,7 +17,17 @@ import {
   pin,
   unpin,
 } from 'flavours/glitch/actions/interactions';
-import { muteStatus, unmuteStatus, deleteStatus } from 'flavours/glitch/actions/statuses';
+import {
+  muteStatus,
+  unmuteStatus,
+  deleteStatus,
+  hideStatus,
+  revealStatus,
+  editStatus
+} from 'flavours/glitch/actions/statuses';
+import {
+  initAddFilter,
+} from 'flavours/glitch/actions/filters';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
@@ -26,8 +36,8 @@ import { openModal } from 'flavours/glitch/actions/modal';
 import { deployPictureInPicture } from 'flavours/glitch/actions/picture_in_picture';
 import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/util/initial_state';
-import { filterEditLink } from 'flavours/glitch/util/backend_links';
+import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/initial_state';
+import { filterEditLink } from 'flavours/glitch/utils/backend_links';
 import { showAlertForError } from '../actions/alerts';
 import AccountContainer from 'flavours/glitch/containers/account_container';
 import Spoilers from '../components/spoilers';
@@ -66,12 +76,16 @@ const makeMapStateToProps = () => {
     }
 
     return {
-      containerId : props.containerId || props.id,  //  Should match reblogStatus's id for reblogs
-      status      : status,
-      account     : account || props.account,
-      settings    : state.get('local_settings'),
-      prepend     : prepend || props.prepend,
-      usingPiP    : state.get('picture_in_picture').statusId === props.id,
+      containerId: props.containerId || props.id,  //  Should match reblogStatus's id for reblogs
+      status: status,
+      account: account || props.account,
+      settings: state.get('local_settings'),
+      prepend: prepend || props.prepend,
+
+      pictureInPicture: {
+        inUse: state.getIn(['meta', 'layout']) !== 'mobile' && state.get('picture_in_picture').statusId === props.id,
+        available: state.getIn(['meta', 'layout']) !== 'mobile',
+      },
     };
   };
 
@@ -169,6 +183,10 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     }
   },
 
+  onEdit (status, history) {
+    dispatch(editStatus(status.get('id'), history));
+  },
+
   onDirect (account, router) {
     dispatch(directCompose(account, router));
   },
@@ -177,12 +195,12 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     dispatch(mentionCompose(account, router));
   },
 
-  onOpenMedia (media, index) {
-    dispatch(openModal('MEDIA', { media, index }));
+  onOpenMedia (statusId, media, index) {
+    dispatch(openModal('MEDIA', { statusId, media, index }));
   },
 
-  onOpenVideo (media, options) {
-    dispatch(openModal('VIDEO', { media, options }));
+  onOpenVideo (statusId, media, options) {
+    dispatch(openModal('VIDEO', { statusId, media, options }));
   },
 
   onBlock (status) {
@@ -190,50 +208,12 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     dispatch(initBlockModal(account));
   },
 
-  onUnfilter (status, onConfirm) {
-    dispatch((_, getState) => {
-      let state = getState();
-      const serverSideType = toServerSideType(contextType);
-      const enabledFilters = state.get('filters', ImmutableList()).filter(filter => filter.get('context').includes(serverSideType) && (filter.get('expires_at') === null || Date.parse(filter.get('expires_at')) > (new Date()))).toArray();
-      const searchIndex = status.get('search_index');
-      const matchingFilters = enabledFilters.filter(filter => regexFromFilters([filter]).test(searchIndex));
-      dispatch(openModal('CONFIRM', {
-        message: [
-          <FormattedMessage id='confirmations.unfilter' defaultMessage='Information about this filtered toot' />,
-          <div className='filtered-status-info'>
-            <Spoilers spoilerText={intl.formatMessage(messages.author)}>
-              <AccountContainer id={status.getIn(['account', 'id'])} />
-            </Spoilers>
-            <Spoilers spoilerText={intl.formatMessage(messages.matchingFilters, {count: matchingFilters.size})}>
-              <ul>
-                {matchingFilters.map(filter => (
-                  <li>
-                    {filter.get('phrase')}
-                    {!!filterEditLink && ' '}
-                    {!!filterEditLink && (
-                      <a
-                        target='_blank'
-                        className='filtered-status-edit-link'
-                        title={intl.formatMessage(messages.editFilter)}
-                        href={filterEditLink(filter.get('id'))}
-                      >
-                        <Icon id='pencil' />
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </Spoilers>
-          </div>
-        ],
-        confirm: intl.formatMessage(messages.unfilterConfirm),
-        onConfirm: onConfirm,
-      }));
-    });
-  },
-
   onReport (status) {
     dispatch(initReport(status.get('account'), status));
+  },
+
+  onAddFilter (status) {
+    dispatch(initAddFilter(status, { contextType }));
   },
 
   onMute (account) {
@@ -248,12 +228,28 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     }
   },
 
+  onToggleHidden (status) {
+    if (status.get('hidden')) {
+      dispatch(revealStatus(status.get('id')));
+    } else {
+      dispatch(hideStatus(status.get('id')));
+    }
+  },
+
   deployPictureInPicture (status, type, mediaProps) {
     dispatch((_, getState) => {
       if (getState().getIn(['local_settings', 'media', 'pop_in_player'])) {
         dispatch(deployPictureInPicture(status.get('id'), status.getIn(['account', 'id']), type, mediaProps));
       }
     });
+  },
+
+  onInteractionModal (type, status) {
+    dispatch(openModal('INTERACTION', {
+      type,
+      accountId: status.getIn(['account', 'id']),
+      url: status.get('url'),
+    }));
   },
 
 });

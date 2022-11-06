@@ -32,10 +32,9 @@ class UserSettingsDecorator
     user.settings['system_font_ui']      = system_font_ui_preference if change?('setting_system_font_ui')
     user.settings['system_emoji_font']   = system_emoji_font_preference if change?('setting_system_emoji_font')
     user.settings['noindex']             = noindex_preference if change?('setting_noindex')
-    user.settings['hide_followers_count']= hide_followers_count_preference if change?('setting_hide_followers_count')
+    user.settings['hide_followers_count'] = hide_followers_count_preference if change?('setting_hide_followers_count')
     user.settings['flavour']             = flavour_preference if change?('setting_flavour')
     user.settings['skin']                = skin_preference if change?('setting_skin')
-    user.settings['hide_network']        = hide_network_preference if change?('setting_hide_network')
     user.settings['aggregate_reblogs']   = aggregate_reblogs_preference if change?('setting_aggregate_reblogs')
     user.settings['show_application']    = show_application_preference if change?('setting_show_application')
     user.settings['advanced_layout']     = advanced_layout_preference if change?('setting_advanced_layout')
@@ -44,6 +43,8 @@ class UserSettingsDecorator
     user.settings['use_pending_items']   = use_pending_items_preference if change?('setting_use_pending_items')
     user.settings['trends']              = trends_preference if change?('setting_trends')
     user.settings['crop_images']         = crop_images_preference if change?('setting_crop_images')
+    user.settings['always_send_emails']  = always_send_emails_preference if change?('setting_always_send_emails')
+    user.settings['home_dms']            = home_dms_preference if change?('setting_home_dms')
   end
 
   def merged_notification_emails
@@ -110,10 +111,6 @@ class UserSettingsDecorator
     boolean_cast_setting 'setting_noindex'
   end
 
-  def hide_followers_count_preference
-    boolean_cast_setting 'setting_hide_followers_count'
-  end
-
   def flavour_preference
     settings['setting_flavour']
   end
@@ -122,8 +119,8 @@ class UserSettingsDecorator
     settings['setting_skin']
   end
 
-  def hide_network_preference
-    boolean_cast_setting 'setting_hide_network'
+  def hide_followers_count_preference
+    boolean_cast_setting 'setting_hide_followers_count'
   end
 
   def show_application_preference
@@ -160,6 +157,10 @@ class UserSettingsDecorator
 
   def crop_images_preference
     boolean_cast_setting 'setting_crop_images'
+  end
+
+  def always_send_emails_preference
+    boolean_cast_setting 'setting_always_send_emails'
   end
 
   def boolean_cast_setting(key)

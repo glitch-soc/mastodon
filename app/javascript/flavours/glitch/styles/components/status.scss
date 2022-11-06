@@ -125,7 +125,7 @@
 
     sub {
       font-size: smaller;
-      text-align: sub;
+      vertical-align: sub;
     }
 
     sup {
@@ -134,7 +134,7 @@
     }
 
     ul, ol {
-      margin-left: 1em;
+      margin-left: 2em;
 
       p {
         margin: 0;
@@ -187,7 +187,7 @@
   }
 
   a.unhandled-link {
-    color: lighten($ui-highlight-color, 8%);
+    color: $highlight-text-color;
 
     .link-origin-tag {
       color: $gold-star;
@@ -198,26 +198,38 @@
   .status__content__spoiler-link {
     background: lighten($ui-base-color, 30%);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: lighten($ui-base-color, 33%);
       text-decoration: none;
     }
   }
 }
 
+.status__content__edited-label {
+  display: block;
+  cursor: default;
+  font-size: 15px;
+  line-height: 20px;
+  padding: 0;
+  padding-top: 8px;
+  color: $dark-text-color;
+  font-weight: 500;
+}
+
 .status__content__spoiler-link {
   display: inline-block;
   border-radius: 2px;
   background: lighten($ui-base-color, 30%);
-  border: none;
+  border: 0;
   color: $inverted-text-color;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 11px;
   padding: 0 5px;
   text-transform: uppercase;
   line-height: inherit;
   cursor: pointer;
-  vertical-align: bottom;
+  vertical-align: top;
 
   &:hover {
     background: lighten($ui-base-color, 33%);
@@ -389,8 +401,10 @@
       &:after {
         content: "";
         position: absolute;
-        top: 0; bottom: 0;
-        left: 0; right: 0;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
         background: linear-gradient(rgba($ui-base-color, 0), rgba($ui-base-color, 1));
         pointer-events: none;
       }
@@ -474,7 +488,8 @@
 
   .status__media-icon,
   .status__visibility-icon,
-  .status__reply-icon {
+  .status__reply-icon,
+  .text-icon {
     padding-left: 2px;
     padding-right: 2px;
   }
@@ -504,51 +519,46 @@
   justify-content: flex-start;
 }
 
-.status-check-box {
-  border-bottom: 1px solid $ui-secondary-color;
-  display: flex;
+.status-check-box__status {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0 10px;
 
-  .status-check-box__status {
-    margin: 10px 0 10px 10px;
-    flex: 1;
-    overflow: hidden;
+  .detailed-status__display-name {
+    color: lighten($inverted-text-color, 16%);
 
-    .media-gallery {
-      max-width: 250px;
+    span {
+      display: inline;
     }
 
-    .status__content {
-      padding: 0;
-      white-space: normal;
+    &:hover strong {
+      text-decoration: none;
     }
+  }
 
-    .video-player,
-    .audio-player {
-      margin-top: 8px;
-      max-width: 250px;
-    }
+  .media-gallery,
+  .audio-player,
+  .video-player {
+    margin-top: 15px;
+    max-width: 250px;
+  }
 
-    .media-gallery__item-thumbnail {
-      cursor: default;
-    }
+  .status__content {
+    padding: 0;
+    white-space: normal;
+  }
+
+  .media-gallery__item-thumbnail {
+    cursor: default;
   }
 }
 
-.status-check-box-toggle {
-  align-items: center;
-  display: flex;
-  flex: 0 0 auto;
-  justify-content: center;
-  padding: 10px;
-}
-
 .status__prepend {
-  margin-top: -10px;
-  margin-bottom: 10px;
+  margin-top: -2px;
+  margin-bottom: 8px;
   margin-left: 58px;
   color: $dark-text-color;
-  padding: 8px 0;
-  padding-bottom: 2px;
   font-size: 14px;
   position: relative;
 
@@ -750,7 +760,8 @@ a.status__display-name,
     background: $ui-base-lighter-color;
     color: $inverted-text-color;
 
-    &:hover {
+    &:hover,
+    &:focus {
       background: lighten($ui-base-color, 29%);
       text-decoration: none;
     }
@@ -1093,6 +1104,7 @@ a.status-card.compact:hover {
     &__account {
       display: flex;
       text-decoration: none;
+      overflow: hidden;
     }
 
     .account__avatar {
@@ -1119,21 +1131,6 @@ a.status-card.compact:hover {
   .video-player,
   .audio-player {
     border-radius: 0;
-  }
-
-  @media screen and (max-width: 415px) {
-    width: 210px;
-    bottom: 10px;
-    right: 10px;
-
-    &__footer {
-      display: none;
-    }
-
-    .video-player,
-    .audio-player {
-      border-radius: 0 0 4px 4px;
-    }
   }
 }
 

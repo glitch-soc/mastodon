@@ -6,6 +6,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { debounce } from 'lodash';
 import LoadingIndicator from '../../components/loading_indicator';
 import {
+  lookupAccount,
   fetchAccount,
   fetchFollowers,
   expandFollowers,
@@ -18,16 +19,32 @@ import ColumnBackButton from '../../components/column_back_button';
 import ScrollableList from '../../components/scrollable_list';
 import MissingIndicator from 'mastodon/components/missing_indicator';
 import TimelineHint from 'mastodon/components/timeline_hint';
+import LimitedAccountHint from '../account_timeline/components/limited_account_hint';
+import { getAccountHidden } from 'mastodon/selectors';
+import { normalizeForLookup } from 'mastodon/reducers/accounts_map';
 
-const mapStateToProps = (state, props) => ({
-  remote: !!(state.getIn(['accounts', props.params.accountId, 'acct']) !== state.getIn(['accounts', props.params.accountId, 'username'])),
-  remoteUrl: state.getIn(['accounts', props.params.accountId, 'url']),
-  isAccount: !!state.getIn(['accounts', props.params.accountId]),
-  accountIds: state.getIn(['user_lists', 'followers', props.params.accountId, 'items']),
-  hasMore: !!state.getIn(['user_lists', 'followers', props.params.accountId, 'next']),
-  isLoading: state.getIn(['user_lists', 'followers', props.params.accountId, 'isLoading'], true),
-  blockedBy: state.getIn(['relationships', props.params.accountId, 'blocked_by'], false),
-});
+const mapStateToProps = (state, { params: { acct, id } }) => {
+  const accountId = id || state.getIn(['accounts_map', normalizeForLookup(acct)]);
+
+  if (!accountId) {
+    return {
+      isLoading: true,
+    };
+  }
+
+  return {
+    accountId,
+    remote: !!(state.getIn(['accounts', accountId, 'acct']) !== state.getIn(['accounts', accountId, 'username'])),
+    remoteUrl: state.getIn(['accounts', accountId, 'url']),
+    isAccount: !!state.getIn(['accounts', accountId]),
+    accountIds: state.getIn(['user_lists', 'followers', accountId, 'items']),
+    hasMore: !!state.getIn(['user_lists', 'followers', accountId, 'next']),
+    isLoading: state.getIn(['user_lists', 'followers', accountId, 'isLoading'], true),
+    suspended: state.getIn(['accounts', accountId, 'suspended'], false),
+    hidden: getAccountHidden(state, accountId),
+    blockedBy: state.getIn(['relationships', accountId, 'blocked_by'], false),
+  };
+};
 
 const RemoteHint = ({ url }) => (
   <TimelineHint url={url} resource={<FormattedMessage id='timeline_hint.resources.followers' defaultMessage='Followers' />} />
@@ -41,39 +58,57 @@ export default @connect(mapStateToProps)
 class Followers extends ImmutablePureComponent {
 
   static propTypes = {
-    params: PropTypes.object.isRequired,
+    params: PropTypes.shape({
+      acct: PropTypes.string,
+      id: PropTypes.string,
+    }).isRequired,
+    accountId: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
-    shouldUpdateScroll: PropTypes.func,
     accountIds: ImmutablePropTypes.list,
     hasMore: PropTypes.bool,
     isLoading: PropTypes.bool,
     blockedBy: PropTypes.bool,
     isAccount: PropTypes.bool,
+    suspended: PropTypes.bool,
+    hidden: PropTypes.bool,
     remote: PropTypes.bool,
     remoteUrl: PropTypes.string,
     multiColumn: PropTypes.bool,
   };
 
-  componentWillMount () {
-    if (!this.props.accountIds) {
-      this.props.dispatch(fetchAccount(this.props.params.accountId));
-      this.props.dispatch(fetchFollowers(this.props.params.accountId));
+  _load () {
+    const { accountId, isAccount, dispatch } = this.props;
+
+    if (!isAccount) dispatch(fetchAccount(accountId));
+    dispatch(fetchFollowers(accountId));
+  }
+
+  componentDidMount () {
+    const { params: { acct }, accountId, dispatch } = this.props;
+
+    if (accountId) {
+      this._load();
+    } else {
+      dispatch(lookupAccount(acct));
     }
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.params.accountId !== this.props.params.accountId && nextProps.params.accountId) {
-      this.props.dispatch(fetchAccount(nextProps.params.accountId));
-      this.props.dispatch(fetchFollowers(nextProps.params.accountId));
+  componentDidUpdate (prevProps) {
+    const { params: { acct }, accountId, dispatch } = this.props;
+
+    if (prevProps.accountId !== accountId && accountId) {
+      this._load();
+    } else if (prevProps.params.acct !== acct) {
+      dispatch(lookupAccount(acct));
     }
   }
 
   handleLoadMore = debounce(() => {
-    this.props.dispatch(expandFollowers(this.props.params.accountId));
+    this.props.dispatch(expandFollowers(this.props.accountId));
   }, 300, { leading: true });
 
   render () {
-    const { shouldUpdateScroll, accountIds, hasMore, blockedBy, isAccount, multiColumn, isLoading, remote, remoteUrl } = this.props;
+    const { accountId, accountIds, hasMore, blockedBy, isAccount, multiColumn, isLoading, suspended, hidden, remote, remoteUrl } = this.props;
 
     if (!isAccount) {
       return (
@@ -93,7 +128,13 @@ class Followers extends ImmutablePureComponent {
 
     let emptyMessage;
 
-    if (blockedBy) {
+    const forceEmptyState = blockedBy || suspended || hidden;
+
+    if (suspended) {
+      emptyMessage = <FormattedMessage id='empty_column.account_suspended' defaultMessage='Account suspended' />;
+    } else if (hidden) {
+      emptyMessage = <LimitedAccountHint accountId={accountId} />;
+    } else if (blockedBy) {
       emptyMessage = <FormattedMessage id='empty_column.account_unavailable' defaultMessage='Profile unavailable' />;
     } else if (remote && accountIds.isEmpty()) {
       emptyMessage = <RemoteHint url={remoteUrl} />;
@@ -109,17 +150,16 @@ class Followers extends ImmutablePureComponent {
 
         <ScrollableList
           scrollKey='followers'
-          hasMore={hasMore}
+          hasMore={!forceEmptyState && hasMore}
           isLoading={isLoading}
           onLoadMore={this.handleLoadMore}
-          shouldUpdateScroll={shouldUpdateScroll}
-          prepend={<HeaderContainer accountId={this.props.params.accountId} hideTabs />}
+          prepend={<HeaderContainer accountId={this.props.accountId} hideTabs />}
           alwaysPrepend
           append={remoteMessage}
           emptyMessage={emptyMessage}
           bindToDocument={!multiColumn}
         >
-          {blockedBy ? [] : accountIds.map(id =>
+          {forceEmptyState ? [] : accountIds.map(id =>
             <AccountContainer key={id} id={id} withNote={false} />,
           )}
         </ScrollableList>

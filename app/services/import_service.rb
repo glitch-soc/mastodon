@@ -27,7 +27,7 @@ class ImportService < BaseService
 
   def import_follows!
     parse_import_data!(['Account address'])
-    import_relationships!('follow', 'unfollow', @account.following, ROWS_PROCESSING_LIMIT, reblogs: { header: 'Show boosts', default: true })
+    import_relationships!('follow', 'unfollow', @account.following, ROWS_PROCESSING_LIMIT, reblogs: { header: 'Show boosts', default: true }, notify: { header: 'Notify on new posts', default: false }, languages: { header: 'Languages', default: nil })
   end
 
   def import_blocks!
@@ -45,7 +45,7 @@ class ImportService < BaseService
     items = @data.take(ROWS_PROCESSING_LIMIT).map { |row| row['#domain'].strip }
 
     if @import.overwrite?
-      presence_hash = items.each_with_object({}) { |id, mapping| mapping[id] = true }
+      presence_hash = items.index_with(true)
 
       @account.domain_blocks.find_each do |domain_block|
         if presence_hash[domain_block.domain]
@@ -76,7 +76,7 @@ class ImportService < BaseService
         if presence_hash[target_account.acct]
           items.delete(target_account.acct)
           extra = presence_hash[target_account.acct][1]
-          Import::RelationshipWorker.perform_async(@account.id, target_account.acct, action, extra)
+          Import::RelationshipWorker.perform_async(@account.id, target_account.acct, action, extra.stringify_keys)
         else
           Import::RelationshipWorker.perform_async(@account.id, target_account.acct, undo_action)
         end
@@ -87,7 +87,7 @@ class ImportService < BaseService
     tail_items = items - head_items
 
     Import::RelationshipWorker.push_bulk(head_items + tail_items) do |acct, extra|
-      [@account.id, acct, action, extra]
+      [@account.id, acct, action, extra.stringify_keys]
     end
   end
 
@@ -96,7 +96,7 @@ class ImportService < BaseService
     items = @data.take(ROWS_PROCESSING_LIMIT).map { |row| row['#uri'].strip }
 
     if @import.overwrite?
-      presence_hash = items.each_with_object({}) { |id, mapping| mapping[id] = true }
+      presence_hash = items.index_with(true)
 
       @account.bookmarks.find_each do |bookmark|
         if presence_hash[bookmark.status.uri]
@@ -112,6 +112,11 @@ class ImportService < BaseService
       next if status.nil? && ActivityPub::TagManager.instance.local_uri?(uri)
 
       status || ActivityPub::FetchRemoteStatusService.new.call(uri)
+    rescue HTTP::Error, OpenSSL::SSL::SSLError, Mastodon::UnexpectedResponseError
+      nil
+    rescue StandardError => e
+      Rails.logger.warn "Unexpected error when importing bookmark: #{e}"
+      nil
     end
 
     account_ids         = statuses.map(&:account_id)

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe UrlValidator, type: :validator do
+RSpec.describe URLValidator, type: :validator do
   describe '#validate_each' do
     before do
       allow(validator).to receive(:compliant?).with(value) { compliant }
@@ -19,7 +19,7 @@ RSpec.describe UrlValidator, type: :validator do
       let(:compliant) { false }
 
       it 'calls errors.add' do
-        expect(errors).to have_received(:add).with(attribute, I18n.t('applications.invalid_url'))
+        expect(errors).to have_received(:add).with(attribute, :invalid)
       end
     end
 

@@ -3,6 +3,7 @@ import loadPolyfills from '../mastodon/load_polyfills';
 import ready from '../mastodon/ready';
 import { start } from '../mastodon/common';
 import loadKeyboardExtensions from '../mastodon/load_keyboard_extensions';
+import 'cocoon-js-vanilla';
 
 start();
 
@@ -15,7 +16,6 @@ function main() {
   const { messages } = getLocale();
   const React = require('react');
   const ReactDOM = require('react-dom');
-  const Rellax = require('rellax');
   const { createBrowserHistory } = require('history');
 
   const scrollToDetailedStatus = () => {
@@ -94,16 +94,12 @@ function main() {
       scrollToDetailedStatus();
     }
 
-    const parallaxComponents = document.querySelectorAll('.parallax');
-
-    if (parallaxComponents.length > 0 ) {
-      new Rellax('.parallax', { speed: -1 });
-    }
-
     delegate(document, '#registration_user_password_confirmation,#registration_user_password', 'input', () => {
       const password = document.getElementById('registration_user_password');
       const confirmation = document.getElementById('registration_user_password_confirmation');
-      if (password.value && password.value !== confirmation.value) {
+      if (confirmation.value && confirmation.value.length > password.maxLength) {
+        confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.exceeds_maxlength'] || 'Password confirmation exceeds the maximum password length', locale)).format());
+      } else if (password.value && password.value !== confirmation.value) {
         confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.mismatching'] || 'Password confirmation does not match', locale)).format());
       } else {
         confirmation.setCustomValidity('');
@@ -115,7 +111,9 @@ function main() {
       const confirmation = document.getElementById('user_password_confirmation');
       if (!confirmation) return;
 
-      if (password.value && password.value !== confirmation.value) {
+      if (confirmation.value && confirmation.value.length > password.maxLength) {
+        confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.exceeds_maxlength'] || 'Password confirmation exceeds the maximum password length', locale)).format());
+      } else if (password.value && password.value !== confirmation.value) {
         confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.mismatching'] || 'Password confirmation does not match', locale)).format());
       } else {
         confirmation.setCustomValidity('');
@@ -146,13 +144,30 @@ function main() {
     });
   });
 
-  delegate(document, '.sidebar__toggle__icon', 'click', () => {
-    const target = document.querySelector('.sidebar ul');
+  const toggleSidebar = () => {
+    const sidebar = document.querySelector('.sidebar ul');
+    const toggleButton = document.querySelector('.sidebar__toggle__icon');
 
-    if (target.style.display === 'block') {
-      target.style.display = 'none';
+    if (sidebar.classList.contains('visible')) {
+      document.body.style.overflow = null;
+      toggleButton.setAttribute('aria-expanded', false);
     } else {
-      target.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      toggleButton.setAttribute('aria-expanded', true);
+    }
+
+    toggleButton.classList.toggle('active');
+    sidebar.classList.toggle('visible');
+  };
+
+  delegate(document, '.sidebar__toggle__icon', 'click', () => {
+    toggleSidebar();
+  });
+
+  delegate(document, '.sidebar__toggle__icon', 'keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      toggleSidebar();
     }
   });
 

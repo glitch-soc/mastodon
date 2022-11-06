@@ -32,19 +32,15 @@ RSpec.describe ReblogService, type: :service do
     end
   end
 
-  context 'OStatus' do
-    let(:bob)    { Fabricate(:account, username: 'bob', domain: 'example.com', salmon_url: 'http://salmon.example.com') }
-    let(:status) { Fabricate(:status, account: bob, uri: 'tag:example.com;something:something') }
-
-    subject { ReblogService.new }
+  context 'when the reblogged status is discarded in the meantime' do
+    let(:status) { Fabricate(:status, account: alice, visibility: :public) }
 
     before do
-      stub_request(:post, 'http://salmon.example.com')
-      subject.call(alice, status)
+      status.discard
     end
 
-    it 'creates a reblog' do
-      expect(status.reblogs.count).to eq 1
+    it 'raises an exception' do
+      expect { subject.call(alice, status) }.to raise_error ActiveRecord::ActiveRecordError
     end
   end
 

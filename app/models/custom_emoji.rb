@@ -21,7 +21,10 @@
 #
 
 class CustomEmoji < ApplicationRecord
-  LIMIT = 50.kilobytes
+  include Attachmentable
+
+  LOCAL_LIMIT = (ENV['MAX_EMOJI_SIZE'] || 256.kilobytes).to_i
+  LIMIT       = [LOCAL_LIMIT, (ENV['MAX_REMOTE_EMOJI_SIZE'] || 256.kilobytes).to_i].max
 
   SHORTCODE_RE_FRAGMENT = '[a-zA-Z0-9_]{2,}'
 
@@ -29,27 +32,28 @@ class CustomEmoji < ApplicationRecord
     :(#{SHORTCODE_RE_FRAGMENT}):
     (?=[^[:alnum:]:]|$)/x
 
-  IMAGE_MIME_TYPES = %w(image/png image/gif).freeze
+  IMAGE_MIME_TYPES = %w(image/png image/gif image/webp).freeze
 
   belongs_to :category, class_name: 'CustomEmojiCategory', optional: true
   has_one :local_counterpart, -> { where(domain: nil) }, class_name: 'CustomEmoji', primary_key: :shortcode, foreign_key: :shortcode
 
-  has_attached_file :image, styles: { static: { format: 'png', convert_options: '-coalesce -strip' } }
+  has_attached_file :image, styles: { static: { format: 'png', convert_options: '-coalesce -strip' } }, validate_media_type: false
 
   before_validation :downcase_domain
 
-  validates_attachment :image, content_type: { content_type: IMAGE_MIME_TYPES }, presence: true, size: { less_than: LIMIT }
+  validates_attachment :image, content_type: { content_type: IMAGE_MIME_TYPES }, presence: true
+  validates_attachment_size :image, less_than: LIMIT, unless: :local?
+  validates_attachment_size :image, less_than: LOCAL_LIMIT, if: :local?
   validates :shortcode, uniqueness: { scope: :domain }, format: { with: /\A#{SHORTCODE_RE_FRAGMENT}\z/ }, length: { minimum: 2 }
 
   scope :local, -> { where(domain: nil) }
   scope :remote, -> { where.not(domain: nil) }
+  scope :remote_only, -> { where.not(domain: nil).where(category_id: nil).where(local_counterpart: { id: nil }) }
   scope :alphabetic, -> { order(domain: :asc, shortcode: :asc) }
-  scope :by_domain_and_subdomains, ->(domain) { where(domain: domain).or(where(arel_table[:domain].matches('%.' + domain))) }
+  scope :by_domain_and_subdomains, ->(domain) { where(domain: domain).or(where(arel_table[:domain].matches("%.#{domain}"))) }
   scope :listed, -> { local.where(disabled: false).where(visible_in_picker: true) }
 
   remotable_attachment :image, LIMIT
-
-  include Attachmentable
 
   after_commit :remove_entity_cache
 
@@ -65,6 +69,10 @@ class CustomEmoji < ApplicationRecord
     copy = self.class.find_or_initialize_by(domain: nil, shortcode: shortcode)
     copy.image = image
     copy.tap(&:save!)
+  end
+
+  def to_log_human_identifier
+    shortcode
   end
 
   class << self

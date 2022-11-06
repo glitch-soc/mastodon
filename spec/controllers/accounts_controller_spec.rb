@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe AccountsController, type: :controller do
   render_views
 
-  let(:account) { Fabricate(:user).account }
+  let(:account) { Fabricate(:account) }
 
-  shared_examples 'cachable response' do
+  shared_examples 'cacheable response' do
     it 'does not set cookies' do
       expect(response.cookies).to be_empty
       expect(response.headers['Set-Cookies']).to be nil
@@ -35,6 +35,7 @@ RSpec.describe AccountsController, type: :controller do
     before do
       status_media.media_attachments << Fabricate(:media_attachment, account: account, type: :image)
       account.pinned_statuses << status_pinned
+      account.pinned_statuses << status_private
     end
 
     shared_examples 'preliminary checks' do
@@ -98,100 +99,6 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it_behaves_like 'common response characteristics'
-
-        it 'renders public status' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status))
-        end
-
-        it 'renders self-reply' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_self_reply))
-        end
-
-        it 'renders status with media' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_media))
-        end
-
-        it 'renders reblog' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_reblog.reblog))
-        end
-
-        it 'renders pinned status' do
-          expect(response.body).to include(I18n.t('stream_entries.pinned'))
-        end
-
-        it 'does not render private status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_private))
-        end
-
-        it 'does not render direct status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_direct))
-        end
-
-        it 'does not render reply to someone else' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reply))
-        end
-      end
-
-      context 'when signed-in' do
-        let(:user) { Fabricate(:user) }
-
-        before do
-          sign_in(user)
-        end
-
-        context 'when user follows account' do
-          before do
-            user.account.follow!(account)
-            get :show, params: { username: account.username, format: format }
-          end
-
-          it 'does not render private status' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_private))
-          end
-        end
-
-        context 'when user is blocked' do
-          before do
-            account.block!(user.account)
-            get :show, params: { username: account.username, format: format }
-          end
-
-          it 'renders unavailable message' do
-            expect(response.body).to include(I18n.t('accounts.unavailable'))
-          end
-
-          it 'does not render public status' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status))
-          end
-
-          it 'does not render self-reply' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_self_reply))
-          end
-
-          it 'does not render status with media' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_media))
-          end
-
-          it 'does not render reblog' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reblog.reblog))
-          end
-
-          it 'does not render pinned status' do
-            expect(response.body).to_not include(I18n.t('stream_entries.pinned'))
-          end
-
-          it 'does not render private status' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_private))
-          end
-
-          it 'does not render direct status' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_direct))
-          end
-
-          it 'does not render reply to someone else' do
-            expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reply))
-          end
-        end
       end
 
       context 'with replies' do
@@ -201,38 +108,6 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it_behaves_like 'common response characteristics'
-
-        it 'renders public status' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status))
-        end
-
-        it 'renders self-reply' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_self_reply))
-        end
-
-        it 'renders status with media' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_media))
-        end
-
-        it 'renders reblog' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_reblog.reblog))
-        end
-
-        it 'does not render pinned status' do
-          expect(response.body).to_not include(I18n.t('stream_entries.pinned'))
-        end
-
-        it 'does not render private status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_private))
-        end
-
-        it 'does not render direct status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_direct))
-        end
-
-        it 'renders reply to someone else' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_reply))
-        end
       end
 
       context 'with media' do
@@ -242,38 +117,6 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it_behaves_like 'common response characteristics'
-
-        it 'does not render public status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status))
-        end
-
-        it 'does not render self-reply' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_self_reply))
-        end
-
-        it 'renders status with media' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_media))
-        end
-
-        it 'does not render reblog' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reblog.reblog))
-        end
-
-        it 'does not render pinned status' do
-          expect(response.body).to_not include(I18n.t('stream_entries.pinned'))
-        end
-
-        it 'does not render private status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_private))
-        end
-
-        it 'does not render direct status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_direct))
-        end
-
-        it 'does not render reply to someone else' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reply))
-        end
       end
 
       context 'with tag' do
@@ -288,42 +131,6 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it_behaves_like 'common response characteristics'
-
-        it 'does not render public status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status))
-        end
-
-        it 'does not render self-reply' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_self_reply))
-        end
-
-        it 'does not render status with media' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_media))
-        end
-
-        it 'does not render reblog' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reblog.reblog))
-        end
-
-        it 'does not render pinned status' do
-          expect(response.body).to_not include(I18n.t('stream_entries.pinned'))
-        end
-
-        it 'does not render private status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_private))
-        end
-
-        it 'does not render direct status' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_direct))
-        end
-
-        it 'does not render reply to someone else' do
-          expect(response.body).to_not include(ActivityPub::TagManager.instance.url_for(status_reply))
-        end
-
-        it 'renders status with tag' do
-          expect(response.body).to include(ActivityPub::TagManager.instance.url_for(status_tag))
-        end
       end
     end
 
@@ -370,10 +177,10 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
-        it_behaves_like 'cachable response'
+        it_behaves_like 'cacheable response'
 
         it 'renders account' do
           json = body_as_json
@@ -402,7 +209,7 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns public Cache-Control header' do
@@ -419,7 +226,7 @@ RSpec.describe AccountsController, type: :controller do
         let(:remote_account) { Fabricate(:account, domain: 'example.com') }
 
         before do
-          allow(controller).to receive(:signed_request_account).and_return(remote_account)
+          allow(controller).to receive(:signed_request_actor).and_return(remote_account)
           get :show, params: { username: account.username, format: format }
         end
 
@@ -428,10 +235,10 @@ RSpec.describe AccountsController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
-        it_behaves_like 'cachable response'
+        it_behaves_like 'cacheable response'
 
         it 'renders account' do
           json = body_as_json
@@ -446,7 +253,7 @@ RSpec.describe AccountsController, type: :controller do
           end
 
           it 'returns application/activity+json' do
-            expect(response.content_type).to eq 'application/activity+json'
+            expect(response.media_type).to eq 'application/activity+json'
           end
 
           it 'returns private Cache-Control header' do
@@ -498,7 +305,7 @@ RSpec.describe AccountsController, type: :controller do
           expect(response).to have_http_status(200)
         end
 
-        it_behaves_like 'cachable response'
+        it_behaves_like 'cacheable response'
       end
 
       context do

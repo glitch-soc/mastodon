@@ -4,7 +4,7 @@ class ActivityPub::CollectionsController < ActivityPub::BaseController
   include SignatureVerification
   include AccountOwnedConcern
 
-  before_action :require_signature!, if: :authorized_fetch_mode?
+  before_action :require_account_signature!, if: :authorized_fetch_mode?
   before_action :set_items
   before_action :set_size
   before_action :set_type
@@ -21,6 +21,7 @@ class ActivityPub::CollectionsController < ActivityPub::BaseController
     case params[:id]
     when 'featured'
       @items = for_signed_account { cache_collection(@account.pinned_statuses.not_local_only, Status) }
+      @items = @items.map { |item| item.distributable? ? item : ActivityPub::TagManager.instance.uri_for(item) }
     when 'tags'
       @items = for_signed_account { @account.featured_tags }
     when 'devices'

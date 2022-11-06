@@ -49,6 +49,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(openModal('DOODLE', { noEsc: true }));
   },
 
+  onEmbedTenor() {
+    dispatch(openModal('TENOR', { noEsc: true }));
+  },
+
   onModalClose() {
     dispatch(closeModal());
   },

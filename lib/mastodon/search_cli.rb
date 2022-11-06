@@ -16,22 +16,30 @@ module Mastodon
       StatusesIndex,
     ].freeze
 
-    option :concurrency, type: :numeric, default: 2, aliases: [:c], desc: 'Workload will be split between this number of threads'
+    option :concurrency, type: :numeric, default: 5, aliases: [:c], desc: 'Workload will be split between this number of threads'
+    option :batch_size, type: :numeric, default: 100, aliases: [:b], desc: 'Number of records in each batch'
     option :only, type: :array, enum: %w(accounts tags statuses), desc: 'Only process these indices'
-    desc 'deploy', 'Create or upgrade ElasticSearch indices and populate them'
+    option :import, type: :boolean, default: true, desc: 'Import data from the database to the index'
+    option :clean, type: :boolean, default: true, desc: 'Remove outdated documents from the index'
+    desc 'deploy', 'Create or upgrade Elasticsearch indices and populate them'
     long_desc <<~LONG_DESC
-      If ElasticSearch is empty, this command will create the necessary indices
+      If Elasticsearch is empty, this command will create the necessary indices
       and then import data from the database into those indices.
 
       This command will also upgrade indices if the underlying schema has been
-      changed since the last run.
+      changed since the last run. Index upgrades erase index data.
 
       Even if creating or upgrading indices is not necessary, data from the
-      database will be imported into the indices.
+      database will be imported into the indices, unless overridden with --no-import.
     LONG_DESC
     def deploy
       if options[:concurrency] < 1
         say('Cannot run with this concurrency setting, must be at least 1', :red)
+        exit(1)
+      end
+
+      if options[:batch_size] < 1
+        say('Cannot run with this batch_size setting, must be at least 1', :red)
         exit(1)
       end
 
@@ -43,7 +51,9 @@ module Mastodon
         end
       end
 
-      progress = ProgressBar.create(total: nil, format: '%t%c/%u |%b%i| %e (%r docs/s)', autofinish: false)
+      pool      = Concurrent::FixedThreadPool.new(options[:concurrency], max_queue: options[:concurrency] * 10)
+      importers = indices.index_with { |index| "Importer::#{index.name}Importer".constantize.new(batch_size: options[:batch_size], executor: pool) }
+      progress  = ProgressBar.create(total: nil, format: '%t%c/%u |%b%i| %e (%r docs/s)', autofinish: false)
 
       # First, ensure all indices are created and have the correct
       # structure, so that live data can already be written
@@ -53,99 +63,46 @@ module Mastodon
         index.specification.lock!
       end
 
-      ActiveRecord::Base.configurations[Rails.env]['pool'] = options[:concurrency] + 1
-
-      pool    = Concurrent::FixedThreadPool.new(options[:concurrency])
-      added   = Concurrent::AtomicFixnum.new(0)
-      removed = Concurrent::AtomicFixnum.new(0)
-
       progress.title = 'Estimating workload '
+      progress.total = indices.sum { |index| importers[index].estimate! }
 
-      # Estimate the amount of data that has to be imported first
+      reset_connection_pools!
+
+      added   = 0
+      removed = 0
+
       indices.each do |index|
-        index.types.each do |type|
-          progress.total = (progress.total || 0) + type.adapter.default_scope.count
+        importer = importers[index]
+        importer.optimize_for_import!
+
+        importer.on_progress do |(indexed, deleted)|
+          progress.total = nil if progress.progress + indexed + deleted > progress.total
+          progress.progress += indexed + deleted
+          added   += indexed
+          removed += deleted
         end
+
+        importer.on_failure do |reason|
+          progress.log(pastel.red("Error while importing #{index}: #{reason}"))
+        end
+
+        if options[:import]
+          progress.title = "Importing #{index} "
+          importer.import!
+        end
+
+        if options[:clean]
+          progress.title = "Cleaning #{index} "
+          importer.clean_up!
+        end
+      ensure
+        importer.optimize_for_search!
       end
 
-      # Now import all the actual data. Mind that unlike chewy:sync, we don't
-      # fetch and compare all record IDs from the database and the index to
-      # find out which to add and which to remove from the index. Because with
-      # potentially millions of rows, the memory footprint of such a calculation
-      # is uneconomical. So we only ever add.
-      indices.each do |index|
-        progress.title = "Importing #{index} "
-        batch_size     = 1_000
-        slice_size     = (batch_size / options[:concurrency]).ceil
+      progress.title = 'Done! '
+      progress.finish
 
-        index.types.each do |type|
-          type.adapter.default_scope.reorder(nil).find_in_batches(batch_size: batch_size) do |batch|
-            futures = []
-
-            batch.each_slice(slice_size) do |records|
-              futures << Concurrent::Future.execute(executor: pool) do
-                begin
-                  if !progress.total.nil? && progress.progress + records.size > progress.total
-                    # The number of items has changed between start and now,
-                    # since there is no good way to predict the final count from
-                    # here, just change the progress bar to an indeterminate one
-
-                    progress.total = nil
-                  end
-
-                  grouped_records = nil
-                  bulk_body       = nil
-                  index_count     = 0
-                  delete_count    = 0
-
-                  ActiveRecord::Base.connection_pool.with_connection do
-                    grouped_records = type.adapter.send(:grouped_objects, records)
-                    bulk_body       = Chewy::Type::Import::BulkBuilder.new(type, grouped_records).bulk_body
-                  end
-
-                  index_count  = grouped_records[:index].size  if grouped_records.key?(:index)
-                  delete_count = grouped_records[:delete].size if grouped_records.key?(:delete)
-
-                  # The following is an optimization for statuses specifically, since
-                  # we want to de-index statuses that cannot be searched by anybody,
-                  # but can't use Chewy's delete_if logic because it doesn't use
-                  # crutches and our searchable_by logic depends on them
-                  if type == StatusesIndex::Status
-                    bulk_body.map! do |entry|
-                      if entry[:index] && entry.dig(:index, :data, 'searchable_by').blank?
-                        index_count  -= 1
-                        delete_count += 1
-
-                        { delete: entry[:index].except(:data) }
-                      else
-                        entry
-                      end
-                    end
-                  end
-
-                  Chewy::Type::Import::BulkRequest.new(type).perform(bulk_body)
-
-                  progress.progress += records.size
-
-                  added.increment(index_count)
-                  removed.increment(delete_count)
-
-                  sleep 1
-                rescue => e
-                  progress.log pastel.red("Error importing #{index}: #{e}")
-                end
-              end
-            end
-
-            futures.map(&:value)
-          end
-        end
-      end
-
-      progress.title = ''
-      progress.stop
-
-      say("Indexed #{added.value} records, de-indexed #{removed.value}", :green, true)
+      say("Indexed #{added} records, de-indexed #{removed}", :green, true)
     end
   end
 end

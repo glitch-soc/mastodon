@@ -54,10 +54,10 @@ module Mastodon
 
     option :email, required: true
     option :confirmed, type: :boolean
-    option :role, default: 'user'
+    option :role
     option :reattach, type: :boolean
     option :force, type: :boolean
-    desc 'create USERNAME', 'Create a new user'
+    desc 'create USERNAME', 'Create a new user account'
     long_desc <<-LONG_DESC
       Create a new user account with a given USERNAME and an
       e-mail address provided with --email.
@@ -65,8 +65,7 @@ module Mastodon
       With the --confirmed option, the confirmation e-mail will
       be skipped and the account will be active straight away.
 
-      With the --role option one of  "user", "admin" or "moderator"
-      can be supplied. Defaults to "user"
+      With the --role option, the role can be supplied.
 
       With the --reattach option, the new user will be reattached
       to a given existing username of an old account. If the old
@@ -75,9 +74,22 @@ module Mastodon
       username to the new account anyway.
     LONG_DESC
     def create(username)
+      role_id  = nil
+
+      if options[:role]
+        role = UserRole.find_by(name: options[:role])
+
+        if role.nil?
+          say('Cannot find user role with that name', :red)
+          exit(1)
+        end
+
+        role_id = role.id
+      end
+
       account  = Account.new(username: username)
       password = SecureRandom.hex
-      user     = User.new(email: options[:email], password: password, agreement: true, approved: true, admin: options[:role] == 'admin', moderator: options[:role] == 'moderator', confirmed_at: options[:confirmed] ? Time.now.utc : nil, bypass_invite_request_check: true)
+      user     = User.new(email: options[:email], password: password, agreement: true, approved: true, role_id: role_id, confirmed_at: options[:confirmed] ? Time.now.utc : nil, bypass_invite_request_check: true)
 
       if options[:reattach]
         account = Account.find_local(username) || Account.new(username: username)
@@ -106,7 +118,7 @@ module Mastodon
         user.errors.to_h.each do |key, error|
           say('Failure/Error: ', :red)
           say(key)
-          say('    ' + error, :red)
+          say("    #{error}", :red)
         end
 
         exit(1)
@@ -114,6 +126,7 @@ module Mastodon
     end
 
     option :role
+    option :remove_role, type: :boolean
     option :email
     option :confirm, type: :boolean
     option :enable, type: :boolean
@@ -121,12 +134,12 @@ module Mastodon
     option :disable_2fa, type: :boolean
     option :approve, type: :boolean
     option :reset_password, type: :boolean
-    desc 'modify USERNAME', 'Modify a user'
+    desc 'modify USERNAME', 'Modify a user account'
     long_desc <<-LONG_DESC
       Modify a user account.
 
-      With the --role option, update the user's role to one of "user",
-      "moderator" or "admin".
+      With the --role option, update the user's role. To remove the user's
+      role, i.e. demote to normal user, use --remove-role.
 
       With the --email option, update the user's e-mail address. With
       the --confirm option, mark the user's e-mail as confirmed.
@@ -152,8 +165,16 @@ module Mastodon
       end
 
       if options[:role]
-        user.admin = options[:role] == 'admin'
-        user.moderator = options[:role] == 'moderator'
+        role = UserRole.find_by(name: options[:role])
+
+        if role.nil?
+          say('Cannot find user role with that name', :red)
+          exit(1)
+        end
+
+        user.role_id = role.id
+      elsif options[:remove_role]
+        user.role_id = nil
       end
 
       password = SecureRandom.hex if options[:reset_password]
@@ -172,7 +193,7 @@ module Mastodon
         user.errors.to_h.each do |key, error|
           say('Failure/Error: ', :red)
           say(key)
-          say('    ' + error, :red)
+          say("    #{error}", :red)
         end
 
         exit(1)
@@ -278,7 +299,7 @@ module Mastodon
 
     option :concurrency, type: :numeric, default: 5, aliases: [:c]
     option :dry_run, type: :boolean
-    desc 'cull', 'Remove remote accounts that no longer exist'
+    desc 'cull [DOMAIN...]', 'Remove remote accounts that no longer exist'
     long_desc <<-LONG_DESC
       Query every single remote account in the database to determine
       if it still exists on the origin server, and if it doesn't,
@@ -287,19 +308,22 @@ module Mastodon
       Accounts that have had confirmed activity within the last week
       are excluded from the checks.
     LONG_DESC
-    def cull
+    def cull(*domains)
       skip_threshold = 7.days.ago
       dry_run        = options[:dry_run] ? ' (DRY RUN)' : ''
       skip_domains   = Concurrent::Set.new
 
-      processed, culled = parallelize_with_progress(Account.remote.where(protocol: :activitypub).partitioned) do |account|
+      query = Account.remote.where(protocol: :activitypub)
+      query = query.where(domain: domains) unless domains.empty?
+
+      processed, culled = parallelize_with_progress(query.partitioned) do |account|
         next if account.updated_at >= skip_threshold || (account.last_webfingered_at.present? && account.last_webfingered_at >= skip_threshold) || skip_domains.include?(account.domain)
 
         code = 0
 
         begin
           code = Request.new(:head, account.uri).perform(&:code)
-        rescue HTTP::ConnectionError
+        rescue HTTP::TimeoutError, HTTP::ConnectionError, OpenSSL::SSL::SSLError
           skip_domains << account.domain
         end
 
@@ -316,7 +340,7 @@ module Mastodon
 
       unless skip_domains.empty?
         say('The following domains were not available during the check:', :yellow)
-        skip_domains.each { |domain| say('    ' + domain) }
+        skip_domains.each { |domain| say("    #{domain}") }
       end
     end
 

@@ -31,8 +31,8 @@ import {
 } from 'flavours/glitch/actions/markers';
 import { DOMAIN_BLOCK_SUCCESS } from 'flavours/glitch/actions/domain_blocks';
 import { TIMELINE_DELETE, TIMELINE_DISCONNECT } from 'flavours/glitch/actions/timelines';
-import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
-import compareId from 'flavours/glitch/util/compare_id';
+import { fromJS, Map as ImmutableMap, List as ImmutableList } from 'immutable';
+import compareId from '../compare_id';
 
 const initialState = ImmutableMap({
   pendingItems: ImmutableList(),
@@ -43,7 +43,7 @@ const initialState = ImmutableMap({
   unread: 0,
   lastReadId: '0',
   readMarkerId: '0',
-  isLoading: false,
+  isLoading: 0,
   cleaningMode: false,
   isTabVisible: true,
   browserSupport: false,
@@ -52,19 +52,26 @@ const initialState = ImmutableMap({
   markNewForDelete: false,
 });
 
-const notificationToMap = (state, notification) => ImmutableMap({
+const notificationToMap = (notification, markForDelete) => ImmutableMap({
   id: notification.id,
   type: notification.type,
   account: notification.account.id,
-  markedForDelete: state.get('markNewForDelete'),
+  markedForDelete: markForDelete,
   status: notification.status ? notification.status.id : null,
+  report: notification.report ? fromJS(notification.report) : null,
 });
 
 const normalizeNotification = (state, notification, usePendingItems) => {
+  const markNewForDelete = state.get('markNewForDelete');
   const top = state.get('top');
 
+  // Under currently unknown conditions, the client may receive duplicates from the server
+  if (state.get('pendingItems').some((item) => item?.get('id') === notification.id) || state.get('items').some((item) => item?.get('id') === notification.id)) {
+    return state;
+  }
+
   if (usePendingItems || !state.get('pendingItems').isEmpty()) {
-    return state.update('pendingItems', list => list.unshift(notificationToMap(state, notification))).update('unread', unread => unread + 1);
+    return state.update('pendingItems', list => list.unshift(notificationToMap(notification, markNewForDelete))).update('unread', unread => unread + 1);
   }
 
   if (shouldCountUnreadNotifications(state)) {
@@ -78,32 +85,79 @@ const normalizeNotification = (state, notification, usePendingItems) => {
       list = list.take(20);
     }
 
-    return list.unshift(notificationToMap(state, notification));
+    return list.unshift(notificationToMap(notification, markNewForDelete));
   });
 };
 
-const expandNormalizedNotifications = (state, notifications, next, isLoadingRecent, usePendingItems) => {
-  const lastReadId = state.get('lastReadId');
-  let items = ImmutableList();
+const expandNormalizedNotifications = (state, notifications, next, isLoadingMore, isLoadingRecent, usePendingItems) => {
+  // This method is pretty tricky because:
+  // - existing notifications might be out of order
+  // - the existing notifications may have gaps, most often explicitly noted with a `null` item
+  // - ideally, we don't want it to reorder existing items
+  // - `notifications` may include items that are already included
+  // - this function can be called either to fill in a gap, or load newer items
 
-  notifications.forEach((n, i) => {
-    items = items.set(i, notificationToMap(state, n));
-  });
+  const markNewForDelete = state.get('markNewForDelete');
+  const lastReadId = state.get('lastReadId');
+  const newItems = ImmutableList(notifications.map((notification) => notificationToMap(notification, markNewForDelete)));
 
   return state.withMutations(mutable => {
-    if (!items.isEmpty()) {
+    if (!newItems.isEmpty()) {
       usePendingItems = isLoadingRecent && (usePendingItems || !mutable.get('pendingItems').isEmpty());
 
-      mutable.update(usePendingItems ? 'pendingItems' : 'items', list => {
-        const lastIndex = 1 + list.findLastIndex(
-          item => item !== null && (compareId(item.get('id'), items.last().get('id')) > 0 || item.get('id') === items.last().get('id')),
-        );
+      mutable.update(usePendingItems ? 'pendingItems' : 'items', oldItems => {
+        // If called to poll *new* notifications, we just need to add them on top without duplicates
+        if (isLoadingRecent) {
+          const idsToCheck = oldItems.map(item => item?.get('id')).toSet();
+          const insertedItems = newItems.filterNot(item => idsToCheck.includes(item.get('id')));
+          return insertedItems.concat(oldItems);
+        }
 
-        const firstIndex = 1 + list.take(lastIndex).findLastIndex(
-          item => item !== null && compareId(item.get('id'), items.first().get('id')) > 0,
-        );
+        // If called to expand more (presumably older than any known to the WebUI), we just have to
+        // add them to the bottom without duplicates
+        if (isLoadingMore) {
+          const idsToCheck = oldItems.map(item => item?.get('id')).toSet();
+          const insertedItems = newItems.filterNot(item => idsToCheck.includes(item.get('id')));
+          return oldItems.concat(insertedItems);
+        }
 
-        return list.take(firstIndex).concat(items, list.skip(lastIndex));
+        // Now this gets tricky, as we don't necessarily know for sure where the gap to fill is,
+        // and some items in the timeline may not be properly ordered.
+
+        // However, we know that `newItems.last()` is the oldest item that was requested and that
+        // there is no “hole” between `newItems.last()` and `newItems.first()`.
+
+        // First, find the furthest (if properly sorted, oldest) item in the notifications that is
+        // newer than the oldest fetched one, as it's most likely that it delimits the gap.
+        // Start the gap *after* that item.
+        const lastIndex = oldItems.findLastIndex(item => item !== null && compareId(item.get('id'), newItems.last().get('id')) >= 0) + 1;
+
+        // Then, try to find the furthest (if properly sorted, oldest) item in the notifications that
+        // is newer than the most recent fetched one, as it delimits a section comprised of only
+        // items older or within `newItems` (or that were deleted from the server, so should be removed
+        // anyway).
+        // Stop the gap *after* that item.
+        const firstIndex = oldItems.take(lastIndex).findLastIndex(item => item !== null && compareId(item.get('id'), newItems.first().get('id')) > 0) + 1;
+
+        // At this point:
+        // - no `oldItems` after `firstIndex` is newer than any of the `newItems`
+        // - all `oldItems` after `lastIndex` are older than every of the `newItems`
+        // - it is possible for items in the replaced slice to be older than every `newItems`
+        // - it is possible for items before `firstIndex` to be in the `newItems` range
+        // Therefore:
+        // - to avoid losing items, items from the replaced slice that are older than `newItems`
+        //   should be added in the back.
+        // - to avoid duplicates, `newItems` should be checked the first `firstIndex` items of
+        //   `oldItems`
+        const idsToCheck = oldItems.take(firstIndex).map(item => item?.get('id')).toSet();
+        const insertedItems = newItems.filterNot(item => idsToCheck.includes(item.get('id')));
+        const olderItems = oldItems.slice(firstIndex, lastIndex).filter(item => item !== null && compareId(item.get('id'), newItems.last().get('id')) < 0);
+
+        return oldItems.take(firstIndex).concat(
+          insertedItems,
+          olderItems,
+          oldItems.skip(lastIndex),
+        );
       });
     }
 
@@ -112,15 +166,15 @@ const expandNormalizedNotifications = (state, notifications, next, isLoadingRece
     }
 
     if (shouldCountUnreadNotifications(state)) {
-      mutable.update('unread', unread => unread + items.count(item => compareId(item.get('id'), lastReadId) > 0));
+      mutable.set('unread', mutable.get('pendingItems').count(item => item !== null) + mutable.get('items').count(item => item && compareId(item.get('id'), lastReadId) > 0));
     } else {
-      const mostRecent = items.find(item => item !== null);
+      const mostRecent = newItems.find(item => item !== null);
       if (mostRecent && compareId(lastReadId, mostRecent.get('id')) < 0) {
         mutable.set('lastReadId', mostRecent.get('id'));
       }
     }
 
-    mutable.set('isLoading', false);
+    mutable.update('isLoading', (nbLoading) => nbLoading - 1);
   });
 };
 
@@ -161,7 +215,9 @@ const deleteByStatus = (state, statusId) => {
 
 const markForDelete = (state, notificationId, yes) => {
   return state.update('items', list => list.map(item => {
-    if(item.get('id') === notificationId) {
+    if (item === null) {
+      return null;
+    } else if(item.get('id') === notificationId) {
       return item.set('markedForDelete', yes);
     } else {
       return item;
@@ -171,7 +227,9 @@ const markForDelete = (state, notificationId, yes) => {
 
 const markAllForDelete = (state, yes) => {
   return state.update('items', list => list.map(item => {
-    if(yes !== null) {
+    if (item === null) {
+      return null;
+    } else if(yes !== null) {
       return item.set('markedForDelete', yes);
     } else {
       return item.set('markedForDelete', !item.get('markedForDelete'));
@@ -180,11 +238,11 @@ const markAllForDelete = (state, yes) => {
 };
 
 const unmarkAllForDelete = (state) => {
-  return state.update('items', list => list.map(item => item.set('markedForDelete', false)));
+  return state.update('items', list => list.map(item => item === null ? item : item.set('markedForDelete', false)));
 };
 
 const deleteMarkedNotifs = (state) => {
-  return state.update('items', list => list.filterNot(item => item.get('markedForDelete')));
+  return state.update('items', list => list.filterNot(item => item === null ? item : item.get('markedForDelete')));
 };
 
 const updateMounted = (state) => {
@@ -248,10 +306,10 @@ export default function notifications(state = initialState, action) {
     return state.update('items', list => state.get('pendingItems').concat(list.take(40))).set('pendingItems', ImmutableList()).set('unread', 0);
   case NOTIFICATIONS_EXPAND_REQUEST:
   case NOTIFICATIONS_DELETE_MARKED_REQUEST:
-    return state.set('isLoading', true);
+    return state.update('isLoading', (nbLoading) => nbLoading + 1);
   case NOTIFICATIONS_DELETE_MARKED_FAIL:
   case NOTIFICATIONS_EXPAND_FAIL:
-    return state.set('isLoading', false);
+    return state.update('isLoading', (nbLoading) => nbLoading - 1);
   case NOTIFICATIONS_FILTER_SET:
     return state.set('items', ImmutableList()).set('hasMore', true);
   case NOTIFICATIONS_SCROLL_TOP:
@@ -259,7 +317,7 @@ export default function notifications(state = initialState, action) {
   case NOTIFICATIONS_UPDATE:
     return normalizeNotification(state, action.notification, action.usePendingItems);
   case NOTIFICATIONS_EXPAND_SUCCESS:
-    return expandNormalizedNotifications(state, action.notifications, action.next, action.isLoadingRecent, action.usePendingItems);
+    return expandNormalizedNotifications(state, action.notifications, action.next, action.isLoadingMore, action.isLoadingRecent, action.usePendingItems);
   case ACCOUNT_BLOCK_SUCCESS:
     return filterNotifications(state, [action.relationship.id]);
   case ACCOUNT_MUTE_SUCCESS:
@@ -269,8 +327,6 @@ export default function notifications(state = initialState, action) {
   case FOLLOW_REQUEST_AUTHORIZE_SUCCESS:
   case FOLLOW_REQUEST_REJECT_SUCCESS:
     return filterNotifications(state, [action.id], 'follow_request');
-  case ACCOUNT_MUTE_SUCCESS:
-    return action.relationship.muting_notifications ? filterNotifications(state, [action.relationship.id]) : state;
   case NOTIFICATIONS_CLEAR:
     return state.set('items', ImmutableList()).set('pendingItems', ImmutableList()).set('hasMore', false);
   case TIMELINE_DELETE:
@@ -288,7 +344,7 @@ export default function notifications(state = initialState, action) {
     return markForDelete(state, action.id, action.yes);
 
   case NOTIFICATIONS_DELETE_MARKED_SUCCESS:
-    return deleteMarkedNotifs(state).set('isLoading', false);
+    return deleteMarkedNotifs(state).update('isLoading', (nbLoading) => nbLoading - 1);
 
   case NOTIFICATIONS_ENTER_CLEARING_MODE:
     st = state.set('cleaningMode', action.yes);

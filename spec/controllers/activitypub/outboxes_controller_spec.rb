@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe ActivityPub::OutboxesController, type: :controller do
   let!(:account) { Fabricate(:account) }
 
-  shared_examples 'cachable response' do
+  shared_examples 'cacheable response' do
     it 'does not set cookies' do
       expect(response.cookies).to be_empty
       expect(response.headers['Set-Cookies']).to be nil
@@ -28,7 +28,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
   end
 
   before do
-    allow(controller).to receive(:signed_request_account).and_return(remote_account)
+    allow(controller).to receive(:signed_request_actor).and_return(remote_account)
   end
 
   describe 'GET #show' do
@@ -46,14 +46,18 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns totalItems' do
           expect(body[:totalItems]).to eq 4
         end
 
-        it_behaves_like 'cachable response'
+        it_behaves_like 'cacheable response'
+
+        it 'does not have a Vary header' do
+          expect(response.headers['Vary']).to be_nil
+        end
 
         context 'when account is permanently suspended' do
           before do
@@ -85,7 +89,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns orderedItems with public or unlisted statuses' do
@@ -94,7 +98,11 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
           expect(body[:orderedItems].all? { |item| item[:to].include?(ActivityPub::TagManager::COLLECTIONS[:public]) || item[:cc].include?(ActivityPub::TagManager::COLLECTIONS[:public]) }).to be true
         end
 
-        it_behaves_like 'cachable response'
+        it_behaves_like 'cacheable response'
+
+        it 'returns Vary header with Signature' do
+          expect(response.headers['Vary']).to include 'Signature'
+        end
 
         context 'when account is permanently suspended' do
           before do
@@ -133,7 +141,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns orderedItems with public or unlisted statuses' do
@@ -144,7 +152,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns private Cache-Control header' do
-          expect(response.headers['Cache-Control']).to eq 'max-age=0, private'
+          expect(response.headers['Cache-Control']).to eq 'max-age=60, private'
         end
       end
 
@@ -159,7 +167,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns orderedItems with private statuses' do
@@ -170,7 +178,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns private Cache-Control header' do
-          expect(response.headers['Cache-Control']).to eq 'max-age=0, private'
+          expect(response.headers['Cache-Control']).to eq 'max-age=60, private'
         end
       end
 
@@ -185,7 +193,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns empty orderedItems' do
@@ -195,7 +203,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns private Cache-Control header' do
-          expect(response.headers['Cache-Control']).to eq 'max-age=0, private'
+          expect(response.headers['Cache-Control']).to eq 'max-age=60, private'
         end
       end
 
@@ -210,7 +218,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns application/activity+json' do
-          expect(response.content_type).to eq 'application/activity+json'
+          expect(response.media_type).to eq 'application/activity+json'
         end
 
         it 'returns empty orderedItems' do
@@ -220,7 +228,7 @@ RSpec.describe ActivityPub::OutboxesController, type: :controller do
         end
 
         it 'returns private Cache-Control header' do
-          expect(response.headers['Cache-Control']).to eq 'max-age=0, private'
+          expect(response.headers['Cache-Control']).to eq 'max-age=60, private'
         end
       end
     end

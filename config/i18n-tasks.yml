@@ -17,8 +17,8 @@ data:
 
 search:
   paths:
-   - app/
-   - config/navigation.rb
+    - app/
+    - config/navigation.rb
 
   relative_roots:
     - app/controllers
@@ -40,7 +40,6 @@ ignore_missing:
   - 'errors.messages.*'
   - 'activerecord.errors.models.doorkeeper/*'
   - 'sessions.{browsers,platforms}.*'
-  - 'terms.body_html'
   - 'application_mailer.salutation'
   - 'errors.500'
   - 'auth.providers.*'
@@ -60,8 +59,10 @@ ignore_unused:
   - 'admin.accounts.roles.*'
   - 'admin.action_logs.actions.*'
   - 'themes.*'
+  - 'admin_mailer.new_appeal.actions.*'
   - 'statuses.attached.*'
   - 'move_handler.carry_{mutes,blocks}_over_text'
+  - 'notification_mailer.*'
 
 ignore_inconsistent_interpolations:
   - '*.one'

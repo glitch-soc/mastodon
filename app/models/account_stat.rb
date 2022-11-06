@@ -11,53 +11,25 @@
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  last_status_at  :datetime
-#  lock_version    :integer          default(0), not null
 #
 
 class AccountStat < ApplicationRecord
+  self.locking_column = nil
+  self.ignored_columns = %w(lock_version)
+
   belongs_to :account, inverse_of: :account_stat
 
-  update_index('accounts#account', :account)
+  update_index('accounts', :account)
 
-  def increment_count!(key)
-    update(attributes_for_increment(key))
-  rescue ActiveRecord::StaleObjectError, ActiveRecord::RecordNotUnique
-    begin
-      reload_with_id
-    rescue ActiveRecord::RecordNotFound
-      return
-    end
-
-    retry
+  def following_count
+    [attributes['following_count'], 0].max
   end
 
-  def decrement_count!(key)
-    update(attributes_for_decrement(key))
-  rescue ActiveRecord::StaleObjectError, ActiveRecord::RecordNotUnique
-    begin
-      reload_with_id
-    rescue ActiveRecord::RecordNotFound
-      return
-    end
-
-    retry
+  def followers_count
+    [attributes['followers_count'], 0].max
   end
 
-  private
-
-  def attributes_for_increment(key)
-    attrs = { key => public_send(key) + 1 }
-    attrs[:last_status_at] = Time.now.utc if key == :statuses_count
-    attrs
-  end
-
-  def attributes_for_decrement(key)
-    attrs = { key => [public_send(key) - 1, 0].max }
-    attrs
-  end
-
-  def reload_with_id
-    self.id = self.class.find_by!(account: account).id if new_record?
-    reload
+  def statuses_count
+    [attributes['statuses_count'], 0].max
   end
 end

@@ -31,12 +31,20 @@
 class MediaAttachment < ApplicationRecord
   self.inheritance_column = nil
 
+  include Attachmentable
+
   enum type: [:image, :gifv, :video, :unknown, :audio]
   enum processing: [:queued, :in_progress, :complete, :failed], _prefix: true
 
   MAX_DESCRIPTION_LENGTH = 1_500
 
-  IMAGE_FILE_EXTENSIONS = %w(.jpg .jpeg .png .gif).freeze
+  IMAGE_LIMIT = (ENV['MAX_IMAGE_SIZE'] || 10.megabytes).to_i
+  VIDEO_LIMIT = (ENV['MAX_VIDEO_SIZE'] || 40.megabytes).to_i
+
+  MAX_VIDEO_MATRIX_LIMIT = 2_304_000 # 1920x1200px
+  MAX_VIDEO_FRAME_RATE   = 60
+
+  IMAGE_FILE_EXTENSIONS = %w(.jpg .jpeg .png .gif .webp .heic .heif .avif).freeze
   VIDEO_FILE_EXTENSIONS = %w(.webm .mp4 .m4v .mov).freeze
   AUDIO_FILE_EXTENSIONS = %w(.ogg .oga .mp3 .wav .flac .opus .aac .m4a .3gp .wma).freeze
 
@@ -47,10 +55,11 @@ class MediaAttachment < ApplicationRecord
     small
   ).freeze
 
-  IMAGE_MIME_TYPES             = %w(image/jpeg image/png image/gif).freeze
+  IMAGE_MIME_TYPES             = %w(image/jpeg image/png image/gif image/heic image/heif image/webp image/avif).freeze
+  IMAGE_CONVERTIBLE_MIME_TYPES = %w(image/heic image/heif).freeze
   VIDEO_MIME_TYPES             = %w(video/webm video/mp4 video/quicktime video/ogg).freeze
   VIDEO_CONVERTIBLE_MIME_TYPES = %w(video/webm video/quicktime).freeze
-  AUDIO_MIME_TYPES             = %w(audio/wave audio/wav audio/x-wav audio/x-pn-wave audio/ogg audio/mpeg audio/mp3 audio/webm audio/flac audio/aac audio/m4a audio/x-m4a audio/mp4 audio/3gpp video/x-ms-asf).freeze
+  AUDIO_MIME_TYPES             = %w(audio/wave audio/wav audio/x-wav audio/x-pn-wave audio/vnd.wave audio/ogg audio/vorbis audio/mpeg audio/mp3 audio/webm audio/flac audio/aac audio/m4a audio/x-m4a audio/mp4 audio/3gpp video/x-ms-asf).freeze
 
   BLURHASH_OPTIONS = {
     x_comp: 4,
@@ -64,15 +73,26 @@ class MediaAttachment < ApplicationRecord
     }.freeze,
 
     small: {
-      pixels: 160_000, # 400x400px
+      pixels: 230_400, # 640x360px
       file_geometry_parser: FastGeometryParser,
       blurhash: BLURHASH_OPTIONS,
     }.freeze,
   }.freeze
 
+  IMAGE_CONVERTED_STYLES = {
+    original: {
+      format: 'jpeg',
+    }.merge(IMAGE_STYLES[:original]).freeze,
+
+    small: {
+      format: 'jpeg',
+    }.merge(IMAGE_STYLES[:small]).freeze,
+  }.freeze
+
   VIDEO_FORMAT = {
     format: 'mp4',
     content_type: 'video/mp4',
+    vfr_frame_rate_threshold: MAX_VIDEO_FRAME_RATE,
     convert_options: {
       output: {
         'loglevel' => 'fatal',
@@ -150,12 +170,6 @@ class MediaAttachment < ApplicationRecord
     all: '-quality 90 -strip +set modify-date +set create-date',
   }.freeze
 
-  IMAGE_LIMIT = (ENV['MAX_IMAGE_SIZE'] || 10.megabytes).to_i
-  VIDEO_LIMIT = (ENV['MAX_VIDEO_SIZE'] || 40.megabytes).to_i
-
-  MAX_VIDEO_MATRIX_LIMIT = 2_304_000 # 1920x1200px
-  MAX_VIDEO_FRAME_RATE   = 60
-
   belongs_to :account,          inverse_of: :media_attachments, optional: true
   belongs_to :status,           inverse_of: :media_attachments, optional: true
   belongs_to :scheduled_status, inverse_of: :media_attachments, optional: true
@@ -165,12 +179,11 @@ class MediaAttachment < ApplicationRecord
                     processors: ->(f) { file_processors f },
                     convert_options: GLOBAL_CONVERT_OPTIONS
 
-  before_file_post_process :set_type_and_extension
-  before_file_post_process :check_video_dimensions
+  before_file_validate :set_type_and_extension
+  before_file_validate :check_video_dimensions
 
   validates_attachment_content_type :file, content_type: IMAGE_MIME_TYPES + VIDEO_MIME_TYPES + AUDIO_MIME_TYPES
-  validates_attachment_size :file, less_than: IMAGE_LIMIT, unless: :larger_media_format?
-  validates_attachment_size :file, less_than: VIDEO_LIMIT, if: :larger_media_format?
+  validates_attachment_size :file, less_than: ->(m) { m.larger_media_format? ? VIDEO_LIMIT : IMAGE_LIMIT }
   remotable_attachment :file, VIDEO_LIMIT, suppress_errors: false, download_on_assign: false, attribute_name: :remote_url
 
   has_attached_file :thumbnail,
@@ -182,10 +195,8 @@ class MediaAttachment < ApplicationRecord
   validates_attachment_size :thumbnail, less_than: IMAGE_LIMIT
   remotable_attachment :thumbnail, IMAGE_LIMIT, suppress_errors: true, download_on_assign: false
 
-  include Attachmentable
-
   validates :account, presence: true
-  validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }, if: :local?
+  validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }
   validates :file, presence: true, if: :local?
   validates :thumbnail, absence: true, if: -> { local? && !audio_or_video? }
 
@@ -209,6 +220,10 @@ class MediaAttachment < ApplicationRecord
     file.blank? && remote_url.present?
   end
 
+  def significantly_changed?
+    description_previously_changed? || thumbnail_updated_at_previously_changed? || file_meta_previously_changed?
+  end
+
   def larger_media_format?
     video? || gifv? || audio?
   end
@@ -218,7 +233,7 @@ class MediaAttachment < ApplicationRecord
   end
 
   def to_param
-    shortcode
+    shortcode.presence || id&.to_s
   end
 
   def focus=(point)
@@ -244,18 +259,17 @@ class MediaAttachment < ApplicationRecord
   attr_writer :delay_processing
 
   def delay_processing?
-    @delay_processing
+    @delay_processing && larger_media_format?
   end
 
   def delay_processing_for_attachment?(attachment_name)
-    @delay_processing && attachment_name == :file
+    delay_processing? && attachment_name == :file
   end
 
   after_commit :enqueue_processing, on: :create
   after_commit :reset_parent_cache, on: :update
 
-  before_create :prepare_description, unless: :local?
-  before_create :set_shortcode
+  before_create :set_unknown_type
   before_create :set_processing
 
   after_post_process :set_meta
@@ -274,6 +288,8 @@ class MediaAttachment < ApplicationRecord
     def file_styles(attachment)
       if attachment.instance.file_content_type == 'image/gif' || VIDEO_CONVERTIBLE_MIME_TYPES.include?(attachment.instance.file_content_type)
         VIDEO_CONVERTED_STYLES
+      elsif IMAGE_CONVERTIBLE_MIME_TYPES.include?(attachment.instance.file_content_type)
+        IMAGE_CONVERTED_STYLES
       elsif IMAGE_MIME_TYPES.include?(attachment.instance.file_content_type)
         IMAGE_STYLES
       elsif VIDEO_MIME_TYPES.include?(attachment.instance.file_content_type)
@@ -287,7 +303,7 @@ class MediaAttachment < ApplicationRecord
       if instance.file_content_type == 'image/gif'
         [:gif_transcoder, :blurhash_transcoder]
       elsif VIDEO_MIME_TYPES.include?(instance.file_content_type)
-        [:video_transcoder, :blurhash_transcoder, :type_corrector]
+        [:transcoder, :blurhash_transcoder, :type_corrector]
       elsif AUDIO_MIME_TYPES.include?(instance.file_content_type)
         [:image_extractor, :transcoder, :type_corrector]
       else
@@ -298,19 +314,8 @@ class MediaAttachment < ApplicationRecord
 
   private
 
-  def set_shortcode
+  def set_unknown_type
     self.type = :unknown if file.blank? && !type_changed?
-
-    return unless local?
-
-    loop do
-      self.shortcode = SecureRandom.urlsafe_base64(14)
-      break if MediaAttachment.find_by(shortcode: shortcode).nil?
-    end
-  end
-
-  def prepare_description
-    self.description = description.strip[0...MAX_DESCRIPTION_LENGTH] unless description.nil?
   end
 
   def set_type_and_extension
@@ -388,7 +393,7 @@ class MediaAttachment < ApplicationRecord
   # paths but ultimately the same file, so it makes sense to memoize the
   # result while disregarding the path
   def ffmpeg_data(path = nil)
-    @ffmpeg_data ||= FFMPEG::Movie.new(path)
+    @ffmpeg_data ||= VideoMetadataExtractor.new(path)
   end
 
   def enqueue_processing

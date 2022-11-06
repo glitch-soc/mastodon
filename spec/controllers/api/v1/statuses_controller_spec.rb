@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::StatusesController, type: :controller do
   render_views
 
-  let(:user)  { Fabricate(:user, account: Fabricate(:account, username: 'alice')) }
+  let(:user)  { Fabricate(:user) }
   let(:app)   { Fabricate(:application, name: 'Test app', website: 'http://testapp.com') }
   let(:token) { Fabricate(:accessible_access_token, resource_owner_id: user.id, application: app, scopes: scopes) }
 
@@ -19,6 +19,85 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
       it 'returns http success' do
         get :show, params: { id: status.id }
         expect(response).to have_http_status(200)
+      end
+
+      context 'when post includes filtered terms' do
+        let(:status) { Fabricate(:status, text: 'this toot is about that banned word') }
+
+        before do
+          user.account.custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
+        end
+
+        it 'returns http success' do
+          get :show, params: { id: status.id }
+          expect(response).to have_http_status(200)
+        end
+
+        it 'returns filter information' do
+          get :show, params: { id: status.id }
+          json = body_as_json
+          expect(json[:filtered][0]).to include({
+            filter: a_hash_including({
+              id: user.account.custom_filters.first.id.to_s,
+              title: 'filter1',
+              filter_action: 'hide',
+            }),
+            keyword_matches: ['banned'],
+          })
+        end
+      end
+
+      context 'when post is explicitly filtered' do
+        let(:status) { Fabricate(:status, text: 'hello world') }
+
+        before do
+          filter = user.account.custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide)
+          filter.statuses.create!(status_id: status.id)
+        end
+
+        it 'returns http success' do
+          get :show, params: { id: status.id }
+          expect(response).to have_http_status(200)
+        end
+
+        it 'returns filter information' do
+          get :show, params: { id: status.id }
+          json = body_as_json
+          expect(json[:filtered][0]).to include({
+            filter: a_hash_including({
+              id: user.account.custom_filters.first.id.to_s,
+              title: 'filter1',
+              filter_action: 'hide',
+            }),
+            status_matches: [status.id.to_s],
+          })
+        end
+      end
+
+      context 'when reblog includes filtered terms' do
+        let(:status) { Fabricate(:status, reblog: Fabricate(:status, text: 'this toot is about that banned word')) }
+
+        before do
+          user.account.custom_filters.create!(phrase: 'filter1', context: %w(home), action: :hide, keywords_attributes: [{ keyword: 'banned' }, { keyword: 'irrelevant' }])
+        end
+
+        it 'returns http success' do
+          get :show, params: { id: status.id }
+          expect(response).to have_http_status(200)
+        end
+
+        it 'returns filter information' do
+          get :show, params: { id: status.id }
+          json = body_as_json
+          expect(json[:reblog][:filtered][0]).to include({
+            filter: a_hash_including({
+              id: user.account.custom_filters.first.id.to_s,
+              title: 'filter1',
+              filter_action: 'hide',
+            }),
+            keyword_matches: ['banned'],
+          })
+        end
       end
     end
 
@@ -102,6 +181,23 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
         expect(Status.find_by(id: status.id)).to be nil
       end
     end
+
+    describe 'PUT #update' do
+      let(:scopes) { 'write:statuses' }
+      let(:status) { Fabricate(:status, account: user.account) }
+
+      before do
+        put :update, params: { id: status.id, status: 'I am updated' }
+      end
+
+      it 'returns http success' do
+        expect(response).to have_http_status(200)
+      end
+
+      it 'updates the status' do
+        expect(status.reload.text).to eq 'I am updated'
+      end
+    end
   end
 
   context 'without an oauth token' do
@@ -113,7 +209,7 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
       let(:status) { Fabricate(:status, account: user.account, visibility: :private) }
 
       describe 'GET #show' do
-        it 'returns http unautharized' do
+        it 'returns http unauthorized' do
           get :show, params: { id: status.id }
           expect(response).to have_http_status(404)
         end
@@ -124,7 +220,7 @@ RSpec.describe Api::V1::StatusesController, type: :controller do
           Fabricate(:status, account: user.account, thread: status)
         end
 
-        it 'returns http unautharized' do
+        it 'returns http unauthorized' do
           get :context, params: { id: status.id }
           expect(response).to have_http_status(404)
         end

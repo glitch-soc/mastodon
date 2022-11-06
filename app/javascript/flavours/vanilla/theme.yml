@@ -1,7 +1,8 @@
 #  (REQUIRED) The location of the pack files inside `pack_directory`.
 pack:
-  about: about.js
-  admin: public.js
+  admin:
+    - admin.js
+    - public.js
   auth: public.js
   common:
     filename: common.js

@@ -2,23 +2,123 @@
 bg:
   about:
     about_mastodon_html: Mastodon е <em>безплатен</em> сървър с <em>отворен код</em> за социални мрежи. Като <em>децентрализирана</em> алтернатива на комерсиалните платформи, той позволява избягването на риска от монополизация на твоята комуникация от единични компании. Изберете си сървър, на който се доверявате, и ще можете да контактувате с всички останали. Всеки може да пусне Mastodon и лесно да вземе участие в <em>социалната мрежа</em>.
-    about_this: За тази инстанция
-    contact: За контакти
-    source_code: Програмен код
-    status_count_before: Написали
-    user_count_before: Дом на
+    contact_missing: Не е зададено
+    contact_unavailable: Не е приложимо
+    hosted_on: Mastodon е хостван на %{domain}
   accounts:
     follow: Последвай
+    followers:
+      one: Последовател
+      other: Последователи
     following: Следва
+    last_active: последна дейност
+    link_verified_on: Собствеността върху тази връзка е проверена на %{date}
     nothing_here: Тук няма никого!
-    people_followed_by: Хора, които %{name} следва
-    people_who_follow: Хора, които следват %{name}
-    unfollow: Не следвай
+    pin_errors:
+      following: Трябва вече да следвате човека, когото искате да подкрепите
+    posts:
+      one: Публикация
+      other: Публикации
+    posts_tab_heading: Публикации
+  admin:
+    account_actions:
+      action: Изпълняване на действие
+    account_moderation_notes:
+      create: Оставяне на бележка
+      created_msg: Бележката за модерация е създадена успешно!
+    accounts:
+      add_email_domain_block: Блокиране на имейл домейн
+      approve: Одобряване
+      are_you_sure: Сигурни ли сте?
+      avatar: Аватар
+      by_domain: Домейн
+      change_email:
+        current_email: Текущ имейл
+        label: Промяна на имейл
+        new_email: Нов имейл
+        submit: Промяна на имейл
+        title: Промяна на имейл за %{username}
+      confirm: Потвърждаване
+      confirmed: Потвърдено
+      confirming: Потвърждаване
+      delete: Изтриване на данни
+      deleted: Изтрито
+      demote: Понижаване
+      destroyed_msg: Данните на %{username} вече са на опашка за незабавно изтриване
+      disable: Замразяване
+      disable_two_factor_authentication: Изключване на 2FA
+      disabled: Замразено
+      display_name: Показвано име
+      domain: Домейн
+      edit: Редакция
+      email: Имейл
+      email_status: Състояние на имейл
+      enable: Размразяване
+      enabled: Включено
+      follows: Последвания
+      header: Заглавна част
+      inbox_url: Входящ URL
+      invite_request_text: Причини за присъединяване
+      invited_by: Покана от
+      ip: IP
+      joined: Присъединено
+      location:
+        all: Всичко
+        local: Локално
+        remote: Дистанционно
+        title: Местоположение
+      login_status: Състояние на вход
+      media_attachments: Прикачена мултимедия
+      moderation:
+        active: Активно
+        all: Всичко
+        pending: Чакащо
+        suspended: Спряно
+        title: Модерация
+      moderation_notes: Модераторни бележки
+      most_recent_activity: Последна дейност
+      most_recent_ip: Последен IP
+      no_account_selected: Нито един акаунт не е променен, тъй като нито един не е избран
+      no_limits_imposed: Няма наложени ограничения
+      not_subscribed: Без абонамент
+      pending: Изчаква преглед
+      perform_full_suspension: Спиране
+      promote: Повишаване
+      protocol: Протокол
+      public: Публично
+      push_subscription_expires: PuSH абонаментът изтича
+      redownload: Опресняване на профил
+      reject: Отхвърляне
+      rejected_msg: Успешно отхвърлена заявка за регистрация на %{username}
+      remove_avatar: Премахване на аватар
+      remove_header: Премахване на заглавна част
+      unsubscribe: Отписване
+      username: Потребителско име
+      warn: Предупреждение
+      web: Уеб
+    action_logs:
+      action_types:
+        confirm_user: Потвърждаване на потребител
+        create_account_warning: Създаване на предупреждение
+        create_announcement: Създаване на оповестяване
+        create_custom_emoji: Създаване на персонализирано емоджи
+        create_ip_block: Създаване на IP правило
+        demote_user: Понижаване на потребител
+        destroy_announcement: Изтриване на оповестяване
+        destroy_custom_emoji: Изтриване на персонализирано емоджи
+        destroy_status: Изтриване на статус
+        disable_2fa_user: Деактивиране на 2FA
+        disable_custom_emoji: Деактивиране на персонализирано емоджи
+        disable_user: Деактивиране на потребител
+        enable_custom_emoji: Активиране на персонализирано емоджи
+        enable_user: Активиране на потребител
+        promote_user: Повишаване на потребител
+        remove_avatar_user: Премахване на аватар
+        reopen_report: Повторно отваряне на доклад
+        reset_password_user: Нулиране на парола
   application_mailer:
     settings: 'Промяна на предпочитанията за e-mail: %{link}'
     view: 'Преглед:'
-  applications:
-    invalid_url: Предоставеният URL е невалиден
   auth:
     didnt_get_confirmation: Не получих инструкции за потвърждение
     forgot_password: Забравих си паролата
@@ -75,15 +175,6 @@ bg:
       images_and_video: Не мога да прикача видеоклип към публикация, която вече съдържа изображения
       too_many: Не мога да прикача повече от 4 файла
   notification_mailer:
-    digest:
-      body: Ето кратко резюме на нещата, които се случиха от последното ти посещение на %{since}
-      mention: "%{name} те спомена в:"
-      new_followers_summary:
-        one: Имаш един нов последовател! Ура!
-        other: Имаш %{count} нови последователи! Изумително!
-      subject:
-        one: "1 ново известие от последното ти посещение \U0001F418"
-        other: "%{count} нови известия от последното ти посещение \U0001F418"
     favourite:
       body: 'Публикацията ти беше харесана от %{name}:'
       subject: "%{name} хареса твоята публикация"
@@ -103,10 +194,7 @@ bg:
     next: Напред
     prev: Назад
   remote_follow:
-    acct: Въведи потребителско_име@домейн, от които искаш да следваш
     missing_resource: Неуспешно търсене на нужния URL за пренасочване за твоя акаунт
-    proceed: Започни следване
-    prompt: 'Ще последваш:'
   settings:
     authorized_apps: Упълномощени приложения
     back: Обратно към Mastodon
@@ -132,5 +220,4 @@ bg:
   two_factor_authentication:
     disable: Деактивирай
   users:
-    invalid_email: E-mail адресът е невалиден
     invalid_otp_token: Невалиден код

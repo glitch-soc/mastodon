@@ -2,6 +2,7 @@
 
 class PostStatusService < BaseService
   include Redisable
+  include LanguagesHelper
 
   MIN_SCHEDULE_OFFSET = 5.minutes.freeze
 
@@ -83,6 +84,9 @@ class PostStatusService < BaseService
     status_for_validation = @account.statuses.build(status_attributes)
 
     if status_for_validation.valid?
+      # Marking the status as destroyed is necessary to prevent the status from being
+      # persisted when the associated media attachments get updated when creating the
+      # scheduled status.
       status_for_validation.destroy
 
       # The following transaction block is needed to wrap the UPDATEs to
@@ -97,25 +101,35 @@ class PostStatusService < BaseService
   end
 
   def postprocess_status!
-    LinkCrawlWorker.perform_async(@status.id) unless @status.spoiler_text?
+    Trends.tags.register(@status)
+    LinkCrawlWorker.perform_async(@status.id)
     DistributionWorker.perform_async(@status.id)
     ActivityPub::DistributionWorker.perform_async(@status.id) unless @status.local_only?
     PollExpirationNotifyWorker.perform_at(@status.poll.expires_at, @status.poll.id) if @status.poll
   end
 
   def validate_media!
-    return if @options[:media_ids].blank? || !@options[:media_ids].is_a?(Enumerable)
+    if @options[:media_ids].blank? || !@options[:media_ids].is_a?(Enumerable)
+      @media = []
+      return
+    end
 
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.too_many') if @options[:media_ids].size > 4 || @options[:poll].present?
 
     @media = @account.media_attachments.where(status_id: nil).where(id: @options[:media_ids].take(4).map(&:to_i))
 
+    @media.each do |item|
+      item.description = item.description.presence || if item.video?
+                                                        "Video"
+                                                      elsif item.audio?
+                                                        "Audio"
+                                                      else
+                                                        "Image"
+                                                      end
+    end
+
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.images_and_video') if @media.size > 1 && @media.find(&:audio_or_video?)
     raise Mastodon::ValidationError, I18n.t('media_attachments.validations.not_ready') if @media.any?(&:not_processed?)
-  end
-
-  def language_from_option(str)
-    ISO_639.find(str)&.alpha2
   end
 
   def process_mentions_service
@@ -165,12 +179,13 @@ class PostStatusService < BaseService
     {
       text: @text,
       media_attachments: @media || [],
+      ordered_media_attachment_ids: (@options[:media_ids] || []).map(&:to_i) & @media.map(&:id),
       thread: @in_reply_to,
       poll_attributes: poll_attributes,
       sensitive: @sensitive,
       spoiler_text: @options[:spoiler_text] || '',
       visibility: @visibility,
-      language: language_from_option(@options[:language]) || @account.user&.setting_default_language&.presence || LanguageDetector.instance.detect(@text, @account),
+      language: valid_locale_cascade(@options[:language], @account.user&.preferred_posting_language, I18n.default_locale),
       application: @options[:application],
       content_type: @options[:content_type] || @account.user&.setting_default_content_type,
       rate_limit: @options[:with_rate_limit],

@@ -1,5 +1,5 @@
 import React from 'react';
-import Motion from 'flavours/glitch/util/optional_motion';
+import Motion from '../features/ui/util/optional_motion';
 import spring from 'react-motion/lib/spring';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -30,6 +30,7 @@ export default class IconButton extends React.PureComponent {
     label: PropTypes.string,
     counter: PropTypes.number,
     obfuscateCount: PropTypes.bool,
+    href: PropTypes.string,
   };
 
   static defaultProps = {
@@ -83,15 +84,21 @@ export default class IconButton extends React.PureComponent {
   }
 
   render () {
+    // Hack required for some icons which have an overriden size
+    let containerSize = '1.28571429em';
+    if (this.props.style?.fontSize) {
+      containerSize = `${this.props.size * 1.28571429}px`;
+    }
+
     let style = {
       fontSize: `${this.props.size}px`,
-      height: `${this.props.size * 1.28571429}px`,
+      height: containerSize,
       lineHeight: `${this.props.size}px`,
       ...this.props.style,
       ...(this.props.active ? this.props.activeStyle : {}),
     };
     if (!this.props.label) {
-      style.width = `${this.props.size * 1.28571429}px`;
+      style.width = containerSize;
     } else {
       style.textAlign = 'left';
     }
@@ -109,6 +116,7 @@ export default class IconButton extends React.PureComponent {
       title,
       counter,
       obfuscateCount,
+      href,
     } = this.props;
 
     const {
@@ -130,6 +138,21 @@ export default class IconButton extends React.PureComponent {
       style.width = 'auto';
     }
 
+    let contents = (
+      <React.Fragment>
+        <Icon id={icon} fixedWidth aria-hidden='true' /> {typeof counter !== 'undefined' && <span className='icon-button__counter'><AnimatedNumber value={counter} obfuscate={obfuscateCount} /></span>}
+        {this.props.label}
+      </React.Fragment>
+    );
+
+    if (href && !this.prop) {
+      contents = (
+        <a href={href} target='_blank' rel='noopener noreferrer'>
+          {contents}
+        </a>
+      );
+    }
+
     return (
       <button
         aria-label={title}
@@ -145,8 +168,7 @@ export default class IconButton extends React.PureComponent {
         tabIndex={tabIndex}
         disabled={disabled}
       >
-        <Icon id={icon} fixedWidth aria-hidden='true' /> {typeof counter !== 'undefined' && <span className='icon-button__counter'><AnimatedNumber value={counter} obfuscate={obfuscateCount} /></span>}
-        {this.props.label}
+        {contents}
       </button>
     );
   }

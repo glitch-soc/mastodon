@@ -5,8 +5,8 @@ import { FormattedMessage } from 'react-intl';
 import Permalink from './permalink';
 import classnames from 'classnames';
 import Icon from 'flavours/glitch/components/icon';
-import { autoPlayGif } from 'flavours/glitch/util/initial_state';
-import { decode as decodeIDNA } from 'flavours/glitch/util/idna';
+import { autoPlayGif } from 'flavours/glitch/initial_state';
+import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
 
 const textMatchesTarget = (text, origin, host) => {
   return (text === origin || text === host
@@ -69,18 +69,21 @@ export default class StatusContent extends React.PureComponent {
     expanded: PropTypes.bool,
     collapsed: PropTypes.bool,
     onExpandedToggle: PropTypes.func,
-    media: PropTypes.element,
-    mediaIcon: PropTypes.string,
+    media: PropTypes.node,
+    extraMedia: PropTypes.node,
+    mediaIcons: PropTypes.arrayOf(PropTypes.string),
     parseClick: PropTypes.func,
     disabled: PropTypes.bool,
     onUpdate: PropTypes.func,
     tagLinks: PropTypes.bool,
     rewriteMentions: PropTypes.string,
+    linkifyTwitterMentions: PropTypes.bool,
   };
 
   static defaultProps = {
     tagLinks: true,
     rewriteMentions: 'no',
+    linkifyTwitterMentions: true,
   };
 
   state = {
@@ -123,6 +126,9 @@ export default class StatusContent extends React.PureComponent {
         link.setAttribute('title', link.href);
         link.classList.add('unhandled-link');
 
+      link.setAttribute('target', '_blank');
+      link.setAttribute('rel', 'noopener nofollow noreferrer');
+
         try {
           if (tagLinks && isLinkMisleading(link)) {
             // Add a tag besides the link to display its origin
@@ -148,10 +154,22 @@ export default class StatusContent extends React.PureComponent {
           if (tagLinks && e instanceof TypeError) link.removeAttribute('href');
         }
       }
-
-      link.setAttribute('target', '_blank');
-      link.setAttribute('rel', 'noopener noreferrer');
     }
+  }
+
+  _linkifyTwitterMentions () {
+    const node = this.contentsNode;
+    const { linkifyTwitterMentions } = this.props;
+
+    if (!node || !linkifyTwitterMentions) {
+      return;
+    }
+
+    const re = /@([0-9A-Za-z_\-]+)@twitter.com/g;
+    node.innerHTML = node.innerHTML.replaceAll(re, function (m, a) {
+      return '<a href="https://twitter.com/'+a+'">'+m+'</a>';
+    });
+
   }
 
   handleMouseEnter = ({ currentTarget }) => {
@@ -181,6 +199,7 @@ export default class StatusContent extends React.PureComponent {
   }
 
   componentDidMount () {
+    this._linkifyTwitterMentions();
     this._updateStatusLinks();
   }
 
@@ -197,7 +216,7 @@ export default class StatusContent extends React.PureComponent {
 
   onMentionClick = (mention, e) => {
     if (this.props.parseClick) {
-      this.props.parseClick(e, `/accounts/${mention.get('id')}`);
+      this.props.parseClick(e, `/@${mention.get('acct')}`);
     }
   }
 
@@ -205,7 +224,7 @@ export default class StatusContent extends React.PureComponent {
     hashtag = hashtag.replace(/^#/, '');
 
     if (this.props.parseClick) {
-      this.props.parseClick(e, `/timelines/tag/${hashtag}`);
+      this.props.parseClick(e, `/tags/${hashtag}`);
     }
   }
 
@@ -224,8 +243,8 @@ export default class StatusContent extends React.PureComponent {
     const [ deltaX, deltaY ] = [Math.abs(e.clientX - startX), Math.abs(e.clientY - startY)];
 
     let element = e.target;
-    while (element) {
-      if (['button', 'video', 'a', 'label', 'canvas'].includes(element.localName)) {
+    while (element !== e.currentTarget) {
+      if (['button', 'video', 'a', 'label', 'canvas'].includes(element.localName) || element.getAttribute('role') === 'button') {
         return;
       }
       element = element.parentNode;
@@ -256,17 +275,20 @@ export default class StatusContent extends React.PureComponent {
     const {
       status,
       media,
-      mediaIcon,
+      extraMedia,
+      mediaIcons,
       parseClick,
       disabled,
       tagLinks,
       rewriteMentions,
+      linkifyTwitterMentions,
     } = this.props;
 
     const hidden = this.props.onExpandedToggle ? !this.props.expanded : this.state.hidden;
 
     const content = { __html: status.get('contentHtml') };
     const spoilerContent = { __html: status.get('spoilerHtml') };
+    const lang = status.get('language');
     const classNames = classnames('status__content', {
       'status__content--with-action': parseClick && !disabled,
       'status__content--with-spoiler': status.get('spoiler_text').length > 0,
@@ -277,7 +299,7 @@ export default class StatusContent extends React.PureComponent {
 
       const mentionLinks = status.get('mentions').map(item => (
         <Permalink
-          to={`/accounts/${item.get('id')}`}
+          to={`/@${item.get('acct')}`}
           href={item.get('url')}
           key={item.get('id')}
           className='mention'
@@ -286,28 +308,37 @@ export default class StatusContent extends React.PureComponent {
         </Permalink>
       )).reduce((aggregate, item) => [...aggregate, item, ' '], []);
 
-      const toggleText = hidden ? [
-        <FormattedMessage
-          id='status.show_more'
-          defaultMessage='Show more'
-          key='0'
-        />,
-        mediaIcon ? (
-          <Icon
-            fixedWidth
-            className='status__content__spoiler-icon'
-            id={mediaIcon}
-            aria-hidden='true'
-            key='1'
+      let toggleText = null;
+      if (hidden) {
+        toggleText = [
+          <FormattedMessage
+            id='status.show_more'
+            defaultMessage='Show more'
+            key='0'
+          />,
+        ];
+        if (mediaIcons) {
+          mediaIcons.forEach((mediaIcon, idx) => {
+            toggleText.push(
+              <Icon
+                fixedWidth
+                className='status__content__spoiler-icon'
+                id={mediaIcon}
+                aria-hidden='true'
+                key={`icon-${idx}`}
+              />,
+            );
+          });
+        }
+      } else {
+        toggleText = (
+          <FormattedMessage
+            id='status.show_less'
+            defaultMessage='Show less'
+            key='0'
           />
-        ) : null,
-      ] : [
-        <FormattedMessage
-          id='status.show_less'
-          defaultMessage='Show less'
-          key='0'
-        />,
-      ];
+        );
+      }
 
       if (hidden) {
         mentionsPlaceholder = <div>{mentionLinks}</div>;
@@ -318,7 +349,7 @@ export default class StatusContent extends React.PureComponent {
           <p
             style={{ marginBottom: hidden && status.get('mentions').isEmpty() ? '0px' : null }}
           >
-            <span dangerouslySetInnerHTML={spoilerContent} className='translate' />
+            <span dangerouslySetInnerHTML={spoilerContent} className='translate' lang={lang} />
             {' '}
             <button tabIndex='0' className='status__content__spoiler-link' onClick={this.handleSpoilerClick}>
               {toggleText}
@@ -336,9 +367,12 @@ export default class StatusContent extends React.PureComponent {
               className='status__content__text translate'
               onMouseEnter={this.handleMouseEnter}
               onMouseLeave={this.handleMouseLeave}
+              lang={lang}
             />
             {media}
           </div>
+
+          {extraMedia}
 
         </div>
       );
@@ -358,8 +392,10 @@ export default class StatusContent extends React.PureComponent {
             tabIndex='0'
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
+            lang={lang}
           />
           {media}
+          {extraMedia}
         </div>
       );
     } else {
@@ -376,8 +412,10 @@ export default class StatusContent extends React.PureComponent {
             tabIndex='0'
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
+            lang={lang}
           />
           {media}
+          {extraMedia}
         </div>
       );
     }

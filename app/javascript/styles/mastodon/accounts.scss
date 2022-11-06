@@ -210,9 +210,9 @@
   font-size: 12px;
   line-height: 12px;
   font-weight: 500;
-  color: $ui-secondary-color;
-  background-color: rgba($ui-secondary-color, 0.1);
-  border: 1px solid rgba($ui-secondary-color, 0.5);
+  color: var(--user-role-accent, $ui-secondary-color);
+  background-color: var(--user-role-background, rgba($ui-secondary-color, 0.1));
+  border: 1px solid var(--user-role-border, rgba($ui-secondary-color, 0.5));
 
   &.moderator {
     color: $success-green;
@@ -323,5 +323,53 @@
 
   &__body {
     margin-top: 10px;
+  }
+}
+
+.batch-table__row--muted {
+  color: lighten($ui-base-color, 26%);
+}
+
+.batch-table__row--muted .pending-account__header,
+.batch-table__row--muted .accounts-table,
+.batch-table__row--muted .name-tag {
+  &,
+  a,
+  strong {
+    color: lighten($ui-base-color, 26%);
+  }
+}
+
+.batch-table__row--muted .name-tag .avatar {
+  opacity: 0.5;
+}
+
+.batch-table__row--muted .accounts-table {
+  tbody td.accounts-table__extra,
+  &__count,
+  &__count small {
+    color: lighten($ui-base-color, 26%);
+  }
+}
+
+.batch-table__row--attention {
+  color: $gold-star;
+}
+
+.batch-table__row--attention .pending-account__header,
+.batch-table__row--attention .accounts-table,
+.batch-table__row--attention .name-tag {
+  &,
+  a,
+  strong {
+    color: $gold-star;
+  }
+}
+
+.batch-table__row--attention .accounts-table {
+  tbody td.accounts-table__extra,
+  &__count,
+  &__count small {
+    color: $gold-star;
   }
 }

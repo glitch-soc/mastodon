@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { autoPlayGif } from 'flavours/glitch/util/initial_state';
+import { autoPlayGif } from 'flavours/glitch/initial_state';
 
 export default class AvatarComposite extends React.PureComponent {
 
@@ -82,7 +82,7 @@ export default class AvatarComposite extends React.PureComponent {
       <a
         href={account.get('url')}
         target='_blank'
-        onClick={(e) => this.props.onAccountClick(account.get('id'), e)}
+        onClick={(e) => this.props.onAccountClick(account.get('acct'), e)}
         title={`@${account.get('acct')}`}
         key={account.get('id')}
       >

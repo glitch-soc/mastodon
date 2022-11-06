@@ -1,15 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import { fetchFavouritedStatuses, expandFavouritedStatuses } from '../../actions/favourites';
-import Column from '../ui/components/column';
-import ColumnHeader from '../../components/column_header';
-import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
-import StatusList from '../../components/status_list';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import ImmutablePureComponent from 'react-immutable-pure-component';
 import { debounce } from 'lodash';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePureComponent from 'react-immutable-pure-component';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import { addColumn, removeColumn, moveColumn } from 'mastodon/actions/columns';
+import { fetchFavouritedStatuses, expandFavouritedStatuses } from 'mastodon/actions/favourites';
+import ColumnHeader from 'mastodon/components/column_header';
+import StatusList from 'mastodon/components/status_list';
+import Column from 'mastodon/features/ui/components/column';
 
 const messages = defineMessages({
   heading: { id: 'column.favourites', defaultMessage: 'Favourites' },
@@ -27,7 +28,6 @@ class Favourites extends ImmutablePureComponent {
 
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    shouldUpdateScroll: PropTypes.func,
     statusIds: ImmutablePropTypes.list.isRequired,
     intl: PropTypes.object.isRequired,
     columnId: PropTypes.string,
@@ -68,10 +68,10 @@ class Favourites extends ImmutablePureComponent {
   }, 300, { leading: true })
 
   render () {
-    const { intl, shouldUpdateScroll, statusIds, columnId, multiColumn, hasMore, isLoading } = this.props;
+    const { intl, statusIds, columnId, multiColumn, hasMore, isLoading } = this.props;
     const pinned = !!columnId;
 
-    const emptyMessage = <FormattedMessage id='empty_column.favourited_statuses' defaultMessage="You don't have any favourite toots yet. When you favourite one, it will show up here." />;
+    const emptyMessage = <FormattedMessage id='empty_column.favourited_statuses' defaultMessage="You don't have any favourite posts yet. When you favourite one, it will show up here." />;
 
     return (
       <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.heading)}>
@@ -93,10 +93,14 @@ class Favourites extends ImmutablePureComponent {
           hasMore={hasMore}
           isLoading={isLoading}
           onLoadMore={this.handleLoadMore}
-          shouldUpdateScroll={shouldUpdateScroll}
           emptyMessage={emptyMessage}
           bindToDocument={!multiColumn}
         />
+
+        <Helmet>
+          <title>{intl.formatMessage(messages.heading)}</title>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

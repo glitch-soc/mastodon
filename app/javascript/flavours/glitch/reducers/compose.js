@@ -15,6 +15,7 @@ import {
   COMPOSE_UPLOAD_FAIL,
   COMPOSE_UPLOAD_UNDO,
   COMPOSE_UPLOAD_PROGRESS,
+  COMPOSE_UPLOAD_PROCESSING,
   THUMBNAIL_UPLOAD_REQUEST,
   THUMBNAIL_UPLOAD_SUCCESS,
   THUMBNAIL_UPLOAD_FAIL,
@@ -22,6 +23,7 @@ import {
   COMPOSE_SUGGESTIONS_CLEAR,
   COMPOSE_SUGGESTIONS_READY,
   COMPOSE_SUGGESTION_SELECT,
+  COMPOSE_SUGGESTION_IGNORE,
   COMPOSE_SUGGESTION_TAGS_UPDATE,
   COMPOSE_TAG_HISTORY_UPDATE,
   COMPOSE_ADVANCED_OPTIONS_CHANGE,
@@ -29,12 +31,14 @@ import {
   COMPOSE_SPOILERNESS_CHANGE,
   COMPOSE_SPOILER_TEXT_CHANGE,
   COMPOSE_VISIBILITY_CHANGE,
+  COMPOSE_LANGUAGE_CHANGE,
   COMPOSE_CONTENT_TYPE_CHANGE,
   COMPOSE_EMOJI_INSERT,
   COMPOSE_UPLOAD_CHANGE_REQUEST,
   COMPOSE_UPLOAD_CHANGE_SUCCESS,
   COMPOSE_UPLOAD_CHANGE_FAIL,
   COMPOSE_DOODLE_SET,
+  COMPOSE_TENOR_SET,
   COMPOSE_RESET,
   COMPOSE_POLL_ADD,
   COMPOSE_POLL_REMOVE,
@@ -42,17 +46,21 @@ import {
   COMPOSE_POLL_OPTION_CHANGE,
   COMPOSE_POLL_OPTION_REMOVE,
   COMPOSE_POLL_SETTINGS_CHANGE,
+  INIT_MEDIA_EDIT_MODAL,
+  COMPOSE_CHANGE_MEDIA_DESCRIPTION,
+  COMPOSE_CHANGE_MEDIA_FOCUS,
+  COMPOSE_SET_STATUS,
 } from 'flavours/glitch/actions/compose';
 import { TIMELINE_DELETE } from 'flavours/glitch/actions/timelines';
 import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
 import { REDRAFT } from 'flavours/glitch/actions/statuses';
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
-import uuid from 'flavours/glitch/util/uuid';
-import { privacyPreference } from 'flavours/glitch/util/privacy_preference';
-import { me, defaultContentType } from 'flavours/glitch/util/initial_state';
-import { overwrite } from 'flavours/glitch/util/js_helpers';
-import { unescapeHTML } from 'flavours/glitch/util/html';
-import { recoverHashtags } from 'flavours/glitch/util/hashtag';
+import uuid from '../uuid';
+import { privacyPreference } from 'flavours/glitch/utils/privacy_preference';
+import { me, defaultContentType } from 'flavours/glitch/initial_state';
+import { overwrite } from 'flavours/glitch/utils/js_helpers';
+import { unescapeHTML } from 'flavours/glitch/utils/html';
+import { recoverHashtags } from 'flavours/glitch/utils/hashtag';
 
 const totalElefriends = 3;
 
@@ -71,6 +79,7 @@ const initialState = ImmutableMap({
   spoiler: false,
   spoiler_text: '',
   privacy: null,
+  id: null,
   content_type: defaultContentType || 'text/plain',
   text: '',
   focusDate: null,
@@ -94,9 +103,18 @@ const initialState = ImmutableMap({
   }),
   default_privacy: 'public',
   default_sensitive: false,
+  default_language: 'en',
   resetFileKey: Math.floor((Math.random() * 0x10000)),
   idempotencyKey: null,
   tagHistory: ImmutableList(),
+  tenor: null,
+  media_modal: ImmutableMap({
+    id: null,
+    description: '',
+    focusX: 0,
+    focusY: 0,
+    dirty: false,
+  }),
   doodle: ImmutableMap({
     fg: 'rgb(  0,    0,    0)',
     bg: 'rgb(255,  255,  255)',
@@ -149,6 +167,7 @@ function apiStatusToTextHashtags (state, status) {
 
 function clearAll(state) {
   return state.withMutations(map => {
+    map.set('id', null);
     map.set('text', '');
     if (defaultContentType) map.set('content_type', defaultContentType);
     map.set('spoiler', false);
@@ -161,7 +180,8 @@ function clearAll(state) {
       map => map.mergeWith(overwrite, state.get('default_advanced_options'))
     );
     map.set('privacy', state.get('default_privacy'));
-    map.set('sensitive', false);
+    map.set('sensitive', state.get('default_sensitive'));
+    map.set('language', state.get('default_language'));
     map.update('media_attachments', list => list.clear());
     map.set('poll', null);
     map.set('idempotencyKey', uuid());
@@ -206,6 +226,7 @@ function appendMedia(state, media, file) {
     }
     map.update('media_attachments', list => list.push(media));
     map.set('is_uploading', false);
+    map.set('is_processing', false);
     map.set('resetFileKey', Math.floor((Math.random() * 0x10000)));
     map.set('idempotencyKey', uuid());
     map.update('pending_media_attachments', n => n - 1);
@@ -238,6 +259,17 @@ const insertSuggestion = (state, position, token, completion, path) => {
       map.set('focusDate', new Date());
       map.set('caretPosition', position + completion.length + 1);
     }
+    map.set('idempotencyKey', uuid());
+  });
+};
+
+const ignoreSuggestion = (state, position, token, completion, path) => {
+  return state.withMutations(map => {
+    map.updateIn(path, oldText => `${oldText.slice(0, position + token.length)} ${oldText.slice(position + token.length)}`);
+    map.set('suggestion_token', null);
+    map.set('suggestions', ImmutableList());
+    map.set('focusDate', new Date());
+    map.set('caretPosition', position + token.length + 1);
     map.set('idempotencyKey', uuid());
   });
 };
@@ -378,17 +410,22 @@ export default function compose(state = initialState, action) {
       .set('elefriend', (state.get('elefriend') + 1) % totalElefriends);
   case COMPOSE_REPLY:
     return state.withMutations(map => {
+      map.set('id', null);
       map.set('in_reply_to', action.status.get('id'));
       map.set('text', statusToTextMentions(state, action.status));
       map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
       map.update(
         'advanced_options',
-        map => map.merge(new ImmutableMap({ do_not_federate: action.status.get('local_only') }))
+        map => map.merge(new ImmutableMap({ do_not_federate: !!action.status.get('local_only') }))
       );
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
       map.set('preselectDate', new Date());
       map.set('idempotencyKey', uuid());
+
+      if (action.status.get('language')) {
+        map.set('language', action.status.get('language'));
+      }
 
       if (action.status.get('spoiler_text').length > 0) {
         let spoiler_text = action.status.get('spoiler_text');
@@ -412,6 +449,7 @@ export default function compose(state = initialState, action) {
       map.set('spoiler', false);
       map.set('spoiler_text', '');
       map.set('privacy', state.get('default_privacy'));
+      map.set('id', null);
       map.set('poll', null);
       map.update(
         'advanced_options',
@@ -431,10 +469,12 @@ export default function compose(state = initialState, action) {
     return state.set('is_changing_upload', false);
   case COMPOSE_UPLOAD_REQUEST:
     return state.set('is_uploading', true).update('pending_media_attachments', n => n + 1);
+  case COMPOSE_UPLOAD_PROCESSING:
+    return state.set('is_processing', true);
   case COMPOSE_UPLOAD_SUCCESS:
     return appendMedia(state, fromJS(action.media), action.file);
   case COMPOSE_UPLOAD_FAIL:
-    return state.set('is_uploading', false).update('pending_media_attachments', n => n - 1);
+    return state.set('is_uploading', false).set('is_processing', false).update('pending_media_attachments', n => n - 1);
   case COMPOSE_UPLOAD_UNDO:
     return removeMedia(state, action.media_id);
   case COMPOSE_UPLOAD_PROGRESS:
@@ -455,6 +495,19 @@ export default function compose(state = initialState, action) {
 
         return item;
       }));
+  case INIT_MEDIA_EDIT_MODAL:
+    const media =  state.get('media_attachments').find(item => item.get('id') === action.id);
+    return state.set('media_modal', ImmutableMap({
+      id: action.id,
+      description: media.get('description') || '',
+      focusX: media.getIn(['meta', 'focus', 'x'], 0),
+      focusY: media.getIn(['meta', 'focus', 'y'], 0),
+      dirty: false,
+    }));
+  case COMPOSE_CHANGE_MEDIA_DESCRIPTION:
+    return state.setIn(['media_modal', 'description'], action.description).setIn(['media_modal', 'dirty'], true);
+  case COMPOSE_CHANGE_MEDIA_FOCUS:
+    return state.setIn(['media_modal', 'focusX'], action.focusX).setIn(['media_modal', 'focusY'], action.focusY).setIn(['media_modal', 'dirty'], true);
   case COMPOSE_MENTION:
     return state.withMutations(map => {
       map.update('text', text => [text.trim(), `@${action.account.get('acct')} `].filter((str) => str.length !== 0).join(' '));
@@ -476,6 +529,8 @@ export default function compose(state = initialState, action) {
     return state.set('suggestions', ImmutableList(normalizeSuggestions(state, action))).set('suggestion_token', action.token);
   case COMPOSE_SUGGESTION_SELECT:
     return insertSuggestion(state, action.position, action.token, action.completion, action.path);
+  case COMPOSE_SUGGESTION_IGNORE:
+    return ignoreSuggestion(state, action.position, action.token, action.completion, action.path);
   case COMPOSE_SUGGESTION_TAGS_UPDATE:
     return updateSuggestionTags(state, action.token);
   case COMPOSE_TAG_HISTORY_UPDATE:
@@ -491,6 +546,7 @@ export default function compose(state = initialState, action) {
   case COMPOSE_UPLOAD_CHANGE_SUCCESS:
     return state
       .set('is_changing_upload', false)
+      .setIn(['media_modal', 'dirty'], false)
       .update('media_attachments', list => list.map(item => {
         if (item.get('id') === action.media.id) {
           return fromJS(action.media);
@@ -500,8 +556,10 @@ export default function compose(state = initialState, action) {
       }));
   case COMPOSE_DOODLE_SET:
     return state.mergeIn(['doodle'], action.options);
+  case COMPOSE_TENOR_SET:
+    return state.mergeIn(['tenor'], action.options);
   case REDRAFT:
-    const do_not_federate = action.status.get('local_only', false);
+    const do_not_federate = !!action.status.get('local_only');
     let text = action.raw_text || unescapeHTML(expandMentions(action.status));
     if (do_not_federate) text = text.replace(/ ?👁\ufe0f?\u200b?$/, '');
     return state.withMutations(map => {
@@ -514,6 +572,7 @@ export default function compose(state = initialState, action) {
       map.set('caretPosition', null);
       map.set('idempotencyKey', uuid());
       map.set('sensitive', action.status.get('sensitive'));
+      map.set('language', action.status.get('language'));
       map.update(
         'advanced_options',
         map => map.merge(new ImmutableMap({ do_not_federate }))
@@ -522,6 +581,35 @@ export default function compose(state = initialState, action) {
       if (action.status.get('spoiler_text').length > 0) {
         map.set('spoiler', true);
         map.set('spoiler_text', action.status.get('spoiler_text'));
+      } else {
+        map.set('spoiler', false);
+        map.set('spoiler_text', '');
+      }
+
+      if (action.status.get('poll')) {
+        map.set('poll', ImmutableMap({
+          options: action.status.getIn(['poll', 'options']).map(x => x.get('title')),
+          multiple: action.status.getIn(['poll', 'multiple']),
+          expires_in: expiresInFromExpiresAt(action.status.getIn(['poll', 'expires_at'])),
+        }));
+      }
+    });
+  case COMPOSE_SET_STATUS:
+    return state.withMutations(map => {
+      map.set('id', action.status.get('id'));
+      map.set('text', action.text);
+      map.set('in_reply_to', action.status.get('in_reply_to_id'));
+      map.set('privacy', action.status.get('visibility'));
+      map.set('media_attachments', action.status.get('media_attachments'));
+      map.set('focusDate', new Date());
+      map.set('caretPosition', null);
+      map.set('idempotencyKey', uuid());
+      map.set('sensitive', action.status.get('sensitive'));
+      map.set('language', action.status.get('language'));
+
+      if (action.spoiler_text.length > 0) {
+        map.set('spoiler', true);
+        map.set('spoiler_text', action.spoiler_text);
       } else {
         map.set('spoiler', false);
         map.set('spoiler_text', '');
@@ -547,6 +635,8 @@ export default function compose(state = initialState, action) {
     return state.updateIn(['poll', 'options'], options => options.delete(action.index));
   case COMPOSE_POLL_SETTINGS_CHANGE:
     return state.update('poll', poll => poll.set('expires_in', action.expiresIn).set('multiple', action.isMultiple));
+  case COMPOSE_LANGUAGE_CHANGE:
+    return state.set('language', action.language);
   default:
     return state;
   }

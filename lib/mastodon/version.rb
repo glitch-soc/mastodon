@@ -5,11 +5,11 @@ module Mastodon
     module_function
 
     def major
-      3
+      4
     end
 
     def minor
-      3
+      0
     end
 
     def patch
@@ -17,11 +17,11 @@ module Mastodon
     end
 
     def flags
-      ''
+      'rc2'
     end
 
     def suffix
-      '+glitch'
+      '+glitch+CiT'
     end
 
     def to_a
@@ -33,7 +33,7 @@ module Mastodon
     end
 
     def repository
-      ENV.fetch('GITHUB_REPOSITORY', 'glitch-soc/mastodon')
+      ENV.fetch('GITHUB_REPOSITORY', 'CompostInTraining/mastodon')
     end
 
     def source_base_url

@@ -20,8 +20,8 @@ class ResolveURLService < BaseService
   private
 
   def process_url
-    if equals_or_includes_any?(type, ActivityPub::FetchRemoteAccountService::SUPPORTED_TYPES)
-      ActivityPub::FetchRemoteAccountService.new.call(resource_url, prefetched_body: body)
+    if equals_or_includes_any?(type, ActivityPub::FetchRemoteActorService::SUPPORTED_TYPES)
+      ActivityPub::FetchRemoteActorService.new.call(resource_url, prefetched_body: body)
     elsif equals_or_includes_any?(type, ActivityPub::Activity::Create::SUPPORTED_TYPES + ActivityPub::Activity::Create::CONVERTED_TYPES)
       status = FetchRemoteStatusService.new.call(resource_url, body)
       authorize_with @on_behalf_of, status, :show? unless status.nil?
@@ -30,6 +30,11 @@ class ResolveURLService < BaseService
   end
 
   def process_url_from_db
+    if [500, 502, 503, 504, nil].include?(fetch_resource_service.response_code)
+      account = Account.find_by(uri: @url)
+      return account unless account.nil?
+    end
+
     return unless @on_behalf_of.present? && [401, 403, 404].include?(fetch_resource_service.response_code)
 
     # It may happen that the resource is a private toot, and thus not fetchable,

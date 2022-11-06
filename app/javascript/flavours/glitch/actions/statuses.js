@@ -1,8 +1,8 @@
-import api from 'flavours/glitch/util/api';
+import api from '../api';
 
 import { deleteFromTimelines } from './timelines';
 import { importFetchedStatus, importFetchedStatuses } from './importer';
-import { ensureComposeIsVisible } from './compose';
+import { ensureComposeIsVisible, setComposeToStatus } from './compose';
 
 export const STATUS_FETCH_REQUEST = 'STATUS_FETCH_REQUEST';
 export const STATUS_FETCH_SUCCESS = 'STATUS_FETCH_SUCCESS';
@@ -24,7 +24,15 @@ export const STATUS_UNMUTE_REQUEST = 'STATUS_UNMUTE_REQUEST';
 export const STATUS_UNMUTE_SUCCESS = 'STATUS_UNMUTE_SUCCESS';
 export const STATUS_UNMUTE_FAIL    = 'STATUS_UNMUTE_FAIL';
 
+export const STATUS_REVEAL   = 'STATUS_REVEAL';
+export const STATUS_HIDE     = 'STATUS_HIDE';
+export const STATUS_COLLAPSE = 'STATUS_COLLAPSE';
+
 export const REDRAFT = 'REDRAFT';
+
+export const STATUS_FETCH_SOURCE_REQUEST = 'STATUS_FETCH_SOURCE_REQUEST';
+export const STATUS_FETCH_SOURCE_SUCCESS = 'STATUS_FETCH_SOURCE_SUCCESS';
+export const STATUS_FETCH_SOURCE_FAIL    = 'STATUS_FETCH_SOURCE_FAIL';
 
 export function fetchStatusRequest(id, skipLoading) {
   return {
@@ -34,9 +42,9 @@ export function fetchStatusRequest(id, skipLoading) {
   };
 };
 
-export function fetchStatus(id) {
+export function fetchStatus(id, forceFetch = false) {
   return (dispatch, getState) => {
-    const skipLoading = getState().getIn(['statuses', id], null) !== null;
+    const skipLoading = !forceFetch && getState().getIn(['statuses', id], null) !== null;
 
     dispatch(fetchContext(id));
 
@@ -80,6 +88,37 @@ export function redraft(status, raw_text, content_type) {
     content_type,
   };
 };
+
+export const editStatus = (id, routerHistory) => (dispatch, getState) => {
+  let status = getState().getIn(['statuses', id]);
+
+  if (status.get('poll')) {
+    status = status.set('poll', getState().getIn(['polls', status.get('poll')]));
+  }
+
+  dispatch(fetchStatusSourceRequest());
+
+  api(getState).get(`/api/v1/statuses/${id}/source`).then(response => {
+    dispatch(fetchStatusSourceSuccess());
+    ensureComposeIsVisible(getState, routerHistory);
+    dispatch(setComposeToStatus(status, response.data.text, response.data.spoiler_text));
+  }).catch(error => {
+    dispatch(fetchStatusSourceFail(error));
+  });
+};
+
+export const fetchStatusSourceRequest = () => ({
+  type: STATUS_FETCH_SOURCE_REQUEST,
+});
+
+export const fetchStatusSourceSuccess = () => ({
+  type: STATUS_FETCH_SOURCE_SUCCESS,
+});
+
+export const fetchStatusSourceFail = error => ({
+  type: STATUS_FETCH_SOURCE_FAIL,
+  error,
+});
 
 export function deleteStatus(id, routerHistory, withRedraft = false) {
   return (dispatch, getState) => {
@@ -127,6 +166,9 @@ export function deleteStatusFail(id, error) {
     error: error,
   };
 };
+
+export const updateStatus = status => dispatch =>
+  dispatch(importFetchedStatus(status));
 
 export function fetchContext(id) {
   return (dispatch, getState) => {
@@ -239,3 +281,33 @@ export function unmuteStatusFail(id, error) {
     error,
   };
 };
+
+export function hideStatus(ids) {
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+
+  return {
+    type: STATUS_HIDE,
+    ids,
+  };
+};
+
+export function revealStatus(ids) {
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+
+  return {
+    type: STATUS_REVEAL,
+    ids,
+  };
+};
+
+export function toggleStatusCollapse(id, isCollapsed) {
+  return {
+    type: STATUS_COLLAPSE,
+    id,
+    isCollapsed,
+  };
+}

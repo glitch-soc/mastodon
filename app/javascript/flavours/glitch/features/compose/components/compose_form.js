@@ -5,17 +5,17 @@ import ReplyIndicatorContainer from '../containers/reply_indicator_container';
 import AutosuggestTextarea from '../../../components/autosuggest_textarea';
 import AutosuggestInput from '../../../components/autosuggest_input';
 import { defineMessages, injectIntl } from 'react-intl';
-import EmojiPicker from 'flavours/glitch/features/emoji_picker';
+import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
 import PollFormContainer from '../containers/poll_form_container';
 import UploadFormContainer from '../containers/upload_form_container';
 import WarningContainer from '../containers/warning_container';
-import { isMobile } from 'flavours/glitch/util/is_mobile';
+import { isMobile } from 'flavours/glitch/is_mobile';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { countableText } from 'flavours/glitch/util/counter';
+import { countableText } from '../util/counter';
 import OptionsContainer from '../containers/options_container';
 import Publisher from './publisher';
 import TextareaIcons from './textarea_icons';
-import { maxChars } from 'flavours/glitch/util/initial_state';
+import { maxChars } from 'flavours/glitch/initial_state';
 import CharacterCounter from './character_counter';
 import { length } from 'stringz';
 
@@ -47,6 +47,7 @@ class ComposeForm extends ImmutablePureComponent {
     preselectDate: PropTypes.instanceOf(Date),
     isSubmitting: PropTypes.bool,
     isChangingUpload: PropTypes.bool,
+    isEditing: PropTypes.bool,
     isUploading: PropTypes.bool,
     onChange: PropTypes.func,
     onSubmit: PropTypes.func,
@@ -58,6 +59,7 @@ class ComposeForm extends ImmutablePureComponent {
     onPickEmoji: PropTypes.func,
     showSearch: PropTypes.bool,
     anyMedia: PropTypes.bool,
+    isInReply: PropTypes.bool,
     singleColumn: PropTypes.bool,
 
     advancedOptions: ImmutablePropTypes.map,
@@ -141,7 +143,7 @@ class ComposeForm extends ImmutablePureComponent {
   };
 
   //  Inserts an emoji at the caret.
-  handleEmoji = (data) => {
+  handleEmojiPick = (data) => {
     const { textarea: { selectionStart } } = this;
     const { onPickEmoji } = this.props;
     if (onPickEmoji) {
@@ -199,6 +201,14 @@ class ComposeForm extends ImmutablePureComponent {
     }
   }
 
+  componentDidMount () {
+    this._updateFocusAndSelection({ });
+  }
+
+  componentDidUpdate (prevProps) {
+    this._updateFocusAndSelection(prevProps);
+  }
+
   //  This statement does several things:
   //  - If we're beginning a reply, and,
   //      - Replying to zero or one users, places the cursor at the end
@@ -206,7 +216,7 @@ class ComposeForm extends ImmutablePureComponent {
   //      - Replying to more than one user, selects any usernames past
   //        the first; this provides a convenient shortcut to drop
   //        everyone else from the conversation.
-  componentDidUpdate (prevProps) {
+   _updateFocusAndSelection = (prevProps) => {
     const {
       textarea,
       spoilerText,
@@ -225,7 +235,7 @@ class ComposeForm extends ImmutablePureComponent {
     //  Caret/selection handling.
     if (focusDate !== prevProps.focusDate) {
       switch (true) {
-      case preselectDate !== prevProps.preselectDate && preselectOnReply:
+      case preselectDate !== prevProps.preselectDate && this.props.isInReply && preselectOnReply:
         selectionStart = text.search(/\s/) + 1;
         selectionEnd = text.length;
         break;
@@ -236,9 +246,14 @@ class ComposeForm extends ImmutablePureComponent {
         selectionStart = selectionEnd = text.length;
       }
       if (textarea) {
-        textarea.setSelectionRange(selectionStart, selectionEnd);
-        textarea.focus();
-        if (!singleColumn) textarea.scrollIntoView();
+        // Because of the wicg-inert polyfill, the activeElement may not be
+        // immediately selectable, we have to wait for observers to run, as
+        // described in https://github.com/WICG/inert#performance-and-gotchas
+        Promise.resolve().then(() => {
+          textarea.setSelectionRange(selectionStart, selectionEnd);
+          textarea.focus();
+          if (!singleColumn) textarea.scrollIntoView();
+        }).catch(console.error);
       }
 
     //  Refocuses the textarea after submitting.
@@ -260,7 +275,7 @@ class ComposeForm extends ImmutablePureComponent {
 
   render () {
     const {
-      handleEmoji,
+      handleEmojiPick,
       handleSecondarySubmit,
       handleSelect,
       handleSubmit,
@@ -284,17 +299,18 @@ class ComposeForm extends ImmutablePureComponent {
       spoilerText,
       suggestions,
       spoilersAlwaysOn,
+      isEditing,
     } = this.props;
 
     const countText = this.getFulltextForCharacterCounting();
 
     return (
-      <div className='composer'>
+      <div className='compose-form'>
         <WarningContainer />
 
         <ReplyIndicatorContainer />
 
-        <div className={`composer--spoiler ${spoiler ? 'composer--spoiler--visible' : ''}`} ref={this.setRef}>
+        <div className={`spoiler-input ${spoiler ? 'spoiler-input--visible' : ''}`} ref={this.setRef}>
           <AutosuggestInput
             placeholder={intl.formatMessage(messages.spoiler_placeholder)}
             value={spoilerText}
@@ -328,7 +344,7 @@ class ComposeForm extends ImmutablePureComponent {
           onPaste={onPaste}
           autoFocus={!showSearch && !isMobile(window.innerWidth, layout)}
         >
-          <EmojiPicker onPickEmoji={handleEmoji} />
+          <EmojiPickerDropdown onPickEmoji={handleEmojiPick} />
           <TextareaIcons advancedOptions={advancedOptions} />
           <div className='compose-form__modifiers'>
             <UploadFormContainer />
@@ -336,7 +352,7 @@ class ComposeForm extends ImmutablePureComponent {
           </div>
         </AutosuggestTextarea>
 
-        <div className='composer--options-wrapper'>
+        <div className='compose-form__buttons-wrapper'>
           <OptionsContainer
             advancedOptions={advancedOptions}
             disabled={isSubmitting}
@@ -344,10 +360,11 @@ class ComposeForm extends ImmutablePureComponent {
             onToggleSpoiler={spoilersAlwaysOn ? null : onChangeSpoilerness}
             onUpload={onPaste}
             privacy={privacy}
+            isEditing={isEditing}
             sensitive={sensitive || (spoilersAlwaysOn && spoilerText && spoilerText.length > 0)}
             spoiler={spoilersAlwaysOn ? (spoilerText && spoilerText.length > 0) : spoiler}
           />
-          <div className='compose--counter-wrapper'>
+          <div className='character-counter__wrapper'>
             <CharacterCounter text={countText} max={maxChars} />
           </div>
         </div>
@@ -355,6 +372,7 @@ class ComposeForm extends ImmutablePureComponent {
         <Publisher
           countText={countText}
           disabled={!this.canSubmit()}
+          isEditing={isEditing}
           onSecondarySubmit={handleSecondarySubmit}
           onSubmit={handleSubmit}
           privacy={privacy}

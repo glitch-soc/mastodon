@@ -1,18 +1,17 @@
 import 'packs/public-path';
-import loadPolyfills from 'flavours/glitch/util/load_polyfills';
-import ready from 'flavours/glitch/util/ready';
-import loadKeyboardExtensions from 'flavours/glitch/util/load_keyboard_extensions';
+import loadPolyfills from 'flavours/glitch/load_polyfills';
+import ready from 'flavours/glitch/ready';
+import loadKeyboardExtensions from 'flavours/glitch/load_keyboard_extensions';
 
 function main() {
   const IntlMessageFormat = require('intl-messageformat').default;
   const { timeAgoString } = require('flavours/glitch/components/relative_timestamp');
   const { delegate } = require('@rails/ujs');
-  const emojify = require('flavours/glitch/util/emoji').default;
+  const emojify = require('flavours/glitch/features/emoji/emoji').default;
   const { getLocale } = require('locales');
   const { messages } = getLocale();
   const React = require('react');
   const ReactDOM = require('react-dom');
-  const Rellax = require('rellax');
   const { createBrowserHistory } = require('history');
 
   const scrollToDetailedStatus = () => {
@@ -90,16 +89,12 @@ function main() {
       scrollToDetailedStatus();
     }
 
-    const parallaxComponents = document.querySelectorAll('.parallax');
-
-    if (parallaxComponents.length > 0 ) {
-      new Rellax('.parallax', { speed: -1 });
-    }
-
     delegate(document, '#registration_user_password_confirmation,#registration_user_password', 'input', () => {
       const password = document.getElementById('registration_user_password');
       const confirmation = document.getElementById('registration_user_password_confirmation');
-      if (password.value && password.value !== confirmation.value) {
+      if (confirmation.value && confirmation.value.length > password.maxLength) {
+        confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.exceeds_maxlength'] || 'Password confirmation exceeds the maximum password length', locale)).format());
+      } else if (password.value && password.value !== confirmation.value) {
         confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.mismatching'] || 'Password confirmation does not match', locale)).format());
       } else {
         confirmation.setCustomValidity('');
@@ -111,7 +106,9 @@ function main() {
       const confirmation = document.getElementById('user_password_confirmation');
       if (!confirmation) return;
 
-      if (password.value && password.value !== confirmation.value) {
+      if (confirmation.value && confirmation.value.length > password.maxLength) {
+        confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.exceeds_maxlength'] || 'Password confirmation exceeds the maximum password length', locale)).format());
+      } else if (password.value && password.value !== confirmation.value) {
         confirmation.setCustomValidity((new IntlMessageFormat(messages['password_confirmation.mismatching'] || 'Password confirmation does not match', locale)).format());
       } else {
         confirmation.setCustomValidity('');
@@ -142,13 +139,30 @@ function main() {
     });
   });
 
-  delegate(document, '.sidebar__toggle__icon', 'click', () => {
-    const target = document.querySelector('.sidebar ul');
+  const toggleSidebar = () => {
+    const sidebar = document.querySelector('.sidebar ul');
+    const toggleButton = document.querySelector('.sidebar__toggle__icon');
 
-    if (target.style.display === 'block') {
-      target.style.display = 'none';
+    if (sidebar.classList.contains('visible')) {
+      document.body.style.overflow = null;
+      toggleButton.setAttribute('aria-expanded', false);
     } else {
-      target.style.display = 'block';
+      document.body.style.overflow = 'hidden';
+      toggleButton.setAttribute('aria-expanded', true);
+    }
+
+    toggleButton.classList.toggle('active');
+    sidebar.classList.toggle('visible');
+  };
+
+  delegate(document, '.sidebar__toggle__icon', 'click', () => {
+    toggleSidebar();
+  });
+
+  delegate(document, '.sidebar__toggle__icon', 'keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      toggleSidebar();
     }
   });
 

@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
-import { preferencesLink } from 'flavours/glitch/util/backend_links';
+import { source_url } from 'flavours/glitch/initial_state';
+import { preferencesLink } from 'flavours/glitch/utils/backend_links';
 import StackTrace from 'stacktrace-js';
+import { Helmet } from 'react-helmet';
 
 export default class ErrorBoundary extends React.PureComponent {
 
@@ -64,6 +66,11 @@ export default class ErrorBoundary extends React.PureComponent {
       debugInfo += 'React component stack\n---------------------\n\n```\n' + componentStack.toString() + '\n```';
     }
 
+    let issueTracker = source_url;
+    if (source_url.match(/^https:\/\/github\.com\/[^/]+\/[^/]+\/?$/)) {
+      issueTracker = source_url + '/issues';
+    }
+
     return (
       <div tabIndex='-1'>
         <div className='error-boundary'>
@@ -84,7 +91,7 @@ export default class ErrorBoundary extends React.PureComponent {
               <FormattedMessage
                 id='web_app_crash.report_issue'
                 defaultMessage='Report a bug in the {issuetracker}'
-                values={{ issuetracker: <a href='https://github.com/glitch-soc/mastodon/issues' rel='noopener noreferrer' target='_blank'><FormattedMessage id='web_app_crash.issue_tracker' defaultMessage='issue tracker' /></a> }}
+                values={{ issuetracker: <a href={issueTracker} rel='noopener noreferrer' target='_blank'><FormattedMessage id='web_app_crash.issue_tracker' defaultMessage='issue tracker' /></a> }}
               />
               { debugInfo !== '' && (
                 <details>
@@ -116,6 +123,10 @@ export default class ErrorBoundary extends React.PureComponent {
             )}
           </ul>
         </div>
+
+        <Helmet>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </div>
     );
   }

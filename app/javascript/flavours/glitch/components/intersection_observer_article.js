@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import scheduleIdleTask from 'flavours/glitch/util/schedule_idle_task';
-import getRectFromEntry from 'flavours/glitch/util/get_rect_from_entry';
+import scheduleIdleTask from '../features/ui/util/schedule_idle_task';
+import getRectFromEntry from '../features/ui/util/get_rect_from_entry';
 
 // Diff these props in the "unrendered" state
 const updateOnPropsForUnrendered = ['id', 'index', 'listLength', 'cachedHeight'];
@@ -94,7 +94,7 @@ export default class IntersectionObserverArticle extends React.Component {
     // When the browser gets a chance, test if we're still not intersecting,
     // and if so, set our isHidden to true to trigger an unrender. The point of
     // this is to save DOM nodes and avoid using up too much memory.
-    // See: https://github.com/tootsuite/mastodon/issues/2900
+    // See: https://github.com/mastodon/mastodon/issues/2900
     this.setState((prevState) => ({ isHidden: !prevState.isIntersecting }));
   }
 

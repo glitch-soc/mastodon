@@ -1,0 +1,56 @@
+---
+af:
+  about:
+    contact_unavailable: NVT
+    hosted_on: Mastodon gehuisves op %{domain}
+  admin:
+    announcements:
+      publish: Publiseer
+      published_msg: Aankondiging was suksesvol gepubliseer!
+      unpublish: Depubliseer
+    domain_blocks:
+      existing_domain_block: Jy het alreeds strenger perke ingelê op %{name}.
+    trends:
+      only_allowed: Slegs toegelate
+      preview_card_providers:
+        title: Publiseerders
+      trending: Gewild
+    webhooks:
+      add_new: Voeg end-punt by
+      delete: Wis uit
+      disable: Deaktiveer
+      disabled: Gedeaktiveer
+      edit: Redigeer end-punt
+      empty: Jy het tans geen opgestelde web-hoek end-punte nie.
+      enable: Aktiveer
+      enabled: Aktief
+      new: Nuwe web-hoek
+      rotate_secret: Roteer geheim
+      secret: Onderteken geheim
+      status: Status
+      title: Web-hoeke
+      webhook: Web-hoek
+  disputes:
+    strikes:
+      approve_appeal: Aanvaar appêl
+      reject_appeal: Verwerp appêl
+  errors:
+    '400': The request you submitted was invalid or malformed.
+    '403': You don't have permission to view this page.
+    '404': The page you are looking for isn't here.
+    '406': This page is not available in the requested format.
+    '410': The page you were looking for doesn't exist here anymore.
+    '422': 
+    '429': Too many requests
+    '500': 
+    '503': The page could not be served due to a temporary server failure.
+  navigation:
+    toggle_menu: Skakel-kieslys
+  rss:
+    content_warning: 'Inhoud waarskuwing:'
+    descriptions:
+      account: Publieke plasings vanaf @%{acct}
+      tag: 'Publieke plasings met die #%{hashtag} etiket'
+  strikes:
+    errors:
+      too_late: Dit is te laat om hierdie staking te appelleer

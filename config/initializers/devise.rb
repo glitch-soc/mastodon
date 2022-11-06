@@ -1,26 +1,27 @@
+require 'devise/strategies/authenticatable'
+
 Warden::Manager.after_set_user except: :fetch do |user, warden|
-  if user.session_active?(warden.cookies.signed['_session_id'] || warden.raw_session['auth_id'])
-    session_id = warden.cookies.signed['_session_id'] || warden.raw_session['auth_id']
-  else
-    session_id = user.activate_session(warden.request)
-  end
+  session_id = warden.cookies.signed['_session_id'] || warden.raw_session['auth_id']
+  session_id = user.activate_session(warden.request) unless user.session_activations.active?(session_id)
 
   warden.cookies.signed['_session_id'] = {
     value: session_id,
     expires: 1.year.from_now,
     httponly: true,
-    secure: (Rails.env.production? || ENV['LOCAL_HTTPS'] == 'true'),
     same_site: :lax,
   }
 end
 
 Warden::Manager.after_fetch do |user, warden|
-  if user.session_active?(warden.cookies.signed['_session_id'] || warden.raw_session['auth_id'])
+  session_id = warden.cookies.signed['_session_id'] || warden.raw_session['auth_id']
+
+  if session_id && (session = user.session_activations.find_by(session_id: session_id))
+    session.update(ip: warden.request.remote_ip) if session.ip != warden.request.remote_ip
+
     warden.cookies.signed['_session_id'] = {
-      value: warden.cookies.signed['_session_id'] || warden.raw_session['auth_id'],
+      value: session_id,
       expires: 1.year.from_now,
       httponly: true,
-      secure: (Rails.env.production? || ENV['LOCAL_HTTPS'] == 'true'),
       same_site: :lax,
     }
   else
@@ -72,17 +73,48 @@ module Devise
   mattr_accessor :ldap_uid_conversion_replace
   @@ldap_uid_conversion_replace = nil
 
-  class Strategies::PamAuthenticatable
-    def valid?
-      super && ::Devise.pam_authentication
+  module Strategies
+    class PamAuthenticatable
+      def valid?
+        super && ::Devise.pam_authentication
+      end
+    end
+
+    class SessionActivationRememberable < Authenticatable
+      def valid?
+        @session_cookie = nil
+        session_cookie.present?
+      end
+
+      def authenticate!
+        resource = SessionActivation.find_by(session_id: session_cookie)&.user
+
+        unless resource
+          cookies.delete('_session_id')
+          return pass
+        end
+
+        if validate(resource)
+          success!(resource)
+        end
+      end
+
+      private
+
+      def session_cookie
+        @session_cookie ||= cookies.signed['_session_id']
+      end
     end
   end
 end
+
+Warden::Strategies.add(:session_activation_rememberable, Devise::Strategies::SessionActivationRememberable)
 
 Devise.setup do |config|
   config.warden do |manager|
     manager.default_strategies(scope: :user).unshift :two_factor_ldap_authenticatable if Devise.ldap_authentication
     manager.default_strategies(scope: :user).unshift :two_factor_pam_authenticatable  if Devise.pam_authentication
+    manager.default_strategies(scope: :user).unshift :session_activation_rememberable
     manager.default_strategies(scope: :user).unshift :two_factor_authenticatable
     manager.default_strategies(scope: :user).unshift :two_factor_backupable
   end
@@ -231,7 +263,7 @@ Devise.setup do |config|
 
   # Options to be passed to the created cookie. For instance, you can set
   # secure: true in order to force SSL only cookies.
-  config.rememberable_options = { secure: true }
+  config.rememberable_options = {}
 
   # ==> Configuration for :validatable
   # Range for password length.

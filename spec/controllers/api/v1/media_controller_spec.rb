@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Api::V1::MediaController, type: :controller do
   render_views
 
-  let(:user)  { Fabricate(:user, account: Fabricate(:account, username: 'alice')) }
+  let(:user)  { Fabricate(:user) }
   let(:token) { Fabricate(:accessible_access_token, resource_owner_id: user.id, scopes: 'write:media') }
 
   before do
@@ -15,7 +15,7 @@ RSpec.describe Api::V1::MediaController, type: :controller do
       context 'when imagemagick cant identify the file type' do
         before do
           expect_any_instance_of(Account).to receive_message_chain(:media_attachments, :create!).and_raise(Paperclip::Errors::NotIdentifiedByImageMagickError)
-          post :create, params: { file: fixture_file_upload('files/attachment.jpg', 'image/jpeg') }
+          post :create, params: { file: fixture_file_upload('attachment.jpg', 'image/jpeg') }
         end
 
         it 'returns http 422' do
@@ -26,7 +26,7 @@ RSpec.describe Api::V1::MediaController, type: :controller do
       context 'when there is a generic error' do
         before do
           expect_any_instance_of(Account).to receive_message_chain(:media_attachments, :create!).and_raise(Paperclip::Error)
-          post :create, params: { file: fixture_file_upload('files/attachment.jpg', 'image/jpeg') }
+          post :create, params: { file: fixture_file_upload('attachment.jpg', 'image/jpeg') }
         end
 
         it 'returns http 422' do
@@ -37,7 +37,7 @@ RSpec.describe Api::V1::MediaController, type: :controller do
 
     context 'image/jpeg' do
       before do
-        post :create, params: { file: fixture_file_upload('files/attachment.jpg', 'image/jpeg') }
+        post :create, params: { file: fixture_file_upload('attachment.jpg', 'image/jpeg') }
       end
 
       it 'returns http success' do
@@ -59,7 +59,7 @@ RSpec.describe Api::V1::MediaController, type: :controller do
 
     context 'image/gif' do
       before do
-        post :create, params: { file: fixture_file_upload('files/attachment.gif', 'image/gif') }
+        post :create, params: { file: fixture_file_upload('attachment.gif', 'image/gif') }
       end
 
       it 'returns http success' do
@@ -81,7 +81,7 @@ RSpec.describe Api::V1::MediaController, type: :controller do
 
     context 'video/webm' do
       before do
-        post :create, params: { file: fixture_file_upload('files/attachment.webm', 'video/webm') }
+        post :create, params: { file: fixture_file_upload('attachment.webm', 'video/webm') }
       end
 
       it do
@@ -110,21 +110,24 @@ RSpec.describe Api::V1::MediaController, type: :controller do
       end
     end
 
-    context 'when not attached to a status' do
-      let(:media) { Fabricate(:media_attachment, status: nil, account: user.account) }
+    context 'when the author \'s' do
+      let(:status) { nil }
+      let(:media)  { Fabricate(:media_attachment, status: status, account: user.account) }
+
+      before do
+        put :update, params: { id: media.id, description: 'Lorem ipsum!!!' }
+      end
 
       it 'updates the description' do
-        put :update, params: { id: media.id, description: 'Lorem ipsum!!!' }
         expect(media.reload.description).to eq 'Lorem ipsum!!!'
       end
-    end
 
-    context 'when attached to a status' do
-      let(:media) { Fabricate(:media_attachment, status: Fabricate(:status), account: user.account) }
+      context 'when already attached to a status' do
+        let(:status) { Fabricate(:status, account: user.account) }
 
-      it 'returns http not found' do
-        put :update, params: { id: media.id, description: 'Lorem ipsum!!!' }
-        expect(response).to have_http_status(:not_found)
+        it 'returns http not found' do
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
   end

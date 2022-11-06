@@ -2,8 +2,8 @@ import React from 'react';
 import ColumnHeader from './column_header';
 import PropTypes from 'prop-types';
 import { debounce } from 'lodash';
-import { scrollTop } from 'flavours/glitch/util/scroll';
-import { isMobile } from 'flavours/glitch/util/is_mobile';
+import { scrollTop } from 'flavours/glitch/scroll';
+import { isMobile } from 'flavours/glitch/is_mobile';
 
 export default class Column extends React.PureComponent {
 
@@ -14,10 +14,11 @@ export default class Column extends React.PureComponent {
     active: PropTypes.bool,
     hideHeadingOnMobile: PropTypes.bool,
     name: PropTypes.string,
+    bindToDocument: PropTypes.bool,
   };
 
   handleHeaderClick = () => {
-    const scrollable = this.node.querySelector('.scrollable');
+    const scrollable = this.props.bindToDocument ? document.scrollingElement : this.node.querySelector('.scrollable');
 
     if (!scrollable) {
       return;
@@ -27,7 +28,7 @@ export default class Column extends React.PureComponent {
   }
 
   scrollTop () {
-    const scrollable = this.node.querySelector('.scrollable');
+    const scrollable = this.props.bindToDocument ? document.scrollingElement : this.node.querySelector('.scrollable');
 
     if (!scrollable) {
       return;

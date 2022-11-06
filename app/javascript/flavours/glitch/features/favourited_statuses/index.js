@@ -1,15 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import { debounce } from 'lodash';
-import { fetchFavouritedStatuses, expandFavouritedStatuses } from 'flavours/glitch/actions/favourites';
-import Column from 'flavours/glitch/features/ui/components/column';
-import ColumnHeader from 'flavours/glitch/components/column_header';
-import { addColumn, removeColumn, moveColumn } from 'flavours/glitch/actions/columns';
-import StatusList from 'flavours/glitch/components/status_list';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import PropTypes from 'prop-types';
+import React from 'react';
+import { Helmet } from 'react-helmet';
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { connect } from 'react-redux';
+import { addColumn, removeColumn, moveColumn } from 'flavours/glitch/actions/columns';
+import { fetchFavouritedStatuses, expandFavouritedStatuses } from 'flavours/glitch/actions/favourites';
+import ColumnHeader from 'flavours/glitch/components/column_header';
+import StatusList from 'flavours/glitch/components/status_list';
+import Column from 'flavours/glitch/features/ui/components/column';
 
 const messages = defineMessages({
   heading: { id: 'column.favourites', defaultMessage: 'Favourites' },
@@ -70,7 +71,7 @@ class Favourites extends ImmutablePureComponent {
     const { intl, statusIds, columnId, multiColumn, hasMore, isLoading } = this.props;
     const pinned = !!columnId;
 
-    const emptyMessage = <FormattedMessage id='empty_column.favourited_statuses' defaultMessage="You don't have any favourite toots yet. When you favourite one, it will show up here." />;
+    const emptyMessage = <FormattedMessage id='empty_column.favourited_statuses' defaultMessage="You don't have any favourite posts yet. When you favourite one, it will show up here." />;
 
     return (
       <Column bindToDocument={!multiColumn} ref={this.setRef} name='favourites' label={intl.formatMessage(messages.heading)}>
@@ -95,6 +96,11 @@ class Favourites extends ImmutablePureComponent {
           emptyMessage={emptyMessage}
           bindToDocument={!multiColumn}
         />
+
+        <Helmet>
+          <title>{intl.formatMessage(messages.heading)}</title>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

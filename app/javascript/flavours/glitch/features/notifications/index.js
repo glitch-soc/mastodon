@@ -26,8 +26,10 @@ import { debounce } from 'lodash';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import LoadGap from 'flavours/glitch/components/load_gap';
 import Icon from 'flavours/glitch/components/icon';
-import compareId from 'flavours/glitch/util/compare_id';
+import compareId from 'flavours/glitch/compare_id';
 import NotificationsPermissionBanner from './components/notifications_permission_banner';
+import NotSignedInIndicator from 'flavours/glitch/components/not_signed_in_indicator';
+import { Helmet } from 'react-helmet';
 
 import NotificationPurgeButtonsContainer from 'flavours/glitch/containers/notification_purge_buttons_container';
 
@@ -62,13 +64,13 @@ const mapStateToProps = state => ({
   showFilterBar: state.getIn(['settings', 'notifications', 'quickFilter', 'show']),
   notifications: getNotifications(state),
   localSettings:  state.get('local_settings'),
-  isLoading: state.getIn(['notifications', 'isLoading'], true),
+  isLoading: state.getIn(['notifications', 'isLoading'], 0) > 0,
   isUnread: state.getIn(['notifications', 'unread']) > 0 || state.getIn(['notifications', 'pendingItems']).size > 0,
   hasMore: state.getIn(['notifications', 'hasMore']),
   numPending: state.getIn(['notifications', 'pendingItems'], ImmutableList()).size,
   notifCleaningActive: state.getIn(['notifications', 'cleaningMode']),
-  lastReadId: state.getIn(['local_settings', 'notifications', 'show_unread']) ? state.getIn(['notifications', 'readMarkerId']) : '0',
-  canMarkAsRead: state.getIn(['local_settings', 'notifications', 'show_unread']) && state.getIn(['notifications', 'readMarkerId']) !== '0' && getNotifications(state).some(item => item !== null && compareId(item.get('id'), state.getIn(['notifications', 'readMarkerId'])) > 0),
+  lastReadId: state.getIn(['settings', 'notifications', 'showUnread']) ? state.getIn(['notifications', 'readMarkerId']) : '0',
+  canMarkAsRead: state.getIn(['settings', 'notifications', 'showUnread']) && state.getIn(['notifications', 'readMarkerId']) !== '0' && getNotifications(state).some(item => item !== null && compareId(item.get('id'), state.getIn(['notifications', 'readMarkerId'])) > 0),
   needsNotificationPermission: state.getIn(['settings', 'notifications', 'alerts']).includes(true) && state.getIn(['notifications', 'browserSupport']) && state.getIn(['notifications', 'browserPermission']) === 'default' && !state.getIn(['settings', 'notifications', 'dismissPermissionBanner']),
 });
 
@@ -94,12 +96,15 @@ export default @connect(mapStateToProps, mapDispatchToProps)
 @injectIntl
 class Notifications extends React.PureComponent {
 
+  static contextTypes = {
+    identity: PropTypes.object,
+  };
+
   static propTypes = {
     columnId: PropTypes.string,
     notifications: ImmutablePropTypes.list.isRequired,
     showFilterBar: PropTypes.bool.isRequired,
     dispatch: PropTypes.func.isRequired,
-    shouldUpdateScroll: PropTypes.func,
     intl: PropTypes.object.isRequired,
     isLoading: PropTypes.bool,
     isUnread: PropTypes.bool,
@@ -220,15 +225,16 @@ class Notifications extends React.PureComponent {
   }
 
   render () {
-    const { intl, notifications, shouldUpdateScroll, isLoading, isUnread, columnId, multiColumn, hasMore, numPending, showFilterBar, lastReadId, canMarkAsRead, needsNotificationPermission } = this.props;
+    const { intl, notifications, isLoading, isUnread, columnId, multiColumn, hasMore, numPending, showFilterBar, lastReadId, canMarkAsRead, needsNotificationPermission } = this.props;
     const { notifCleaning, notifCleaningActive } = this.props;
     const { animatingNCD } = this.state;
     const pinned = !!columnId;
-    const emptyMessage = <FormattedMessage id='empty_column.notifications' defaultMessage="You don't have any notifications yet. Interact with others to start the conversation." />;
+    const emptyMessage = <FormattedMessage id='empty_column.notifications' defaultMessage="You don't have any notifications yet. When other people interact with you, you will see it here." />;
+    const { signedIn } = this.context.identity;
 
     let scrollableContent = null;
 
-    const filterBarContainer = showFilterBar
+    const filterBarContainer = (signedIn && showFilterBar)
       ? (<FilterBarContainer />)
       : null;
 
@@ -258,40 +264,46 @@ class Notifications extends React.PureComponent {
 
     this.scrollableContent = scrollableContent;
 
-    const scrollContainer = (
-      <ScrollableList
-        scrollKey={`notifications-${columnId}`}
-        trackScroll={!pinned}
-        isLoading={isLoading}
-        showLoading={isLoading && notifications.size === 0}
-        hasMore={hasMore}
-        numPending={numPending}
-        prepend={needsNotificationPermission && <NotificationsPermissionBanner />}
-        alwaysPrepend
-        emptyMessage={emptyMessage}
-        onLoadMore={this.handleLoadOlder}
-        onLoadPending={this.handleLoadPending}
-        onScrollToTop={this.handleScrollToTop}
-        onScroll={this.handleScroll}
-        shouldUpdateScroll={shouldUpdateScroll}
-        bindToDocument={!multiColumn}
-      >
-        {scrollableContent}
-      </ScrollableList>
-    );
+    let scrollContainer;
+
+    if (signedIn) {
+      scrollContainer = (
+        <ScrollableList
+          scrollKey={`notifications-${columnId}`}
+          trackScroll={!pinned}
+          isLoading={isLoading}
+          showLoading={isLoading && notifications.size === 0}
+          hasMore={hasMore}
+          numPending={numPending}
+          prepend={needsNotificationPermission && <NotificationsPermissionBanner />}
+          alwaysPrepend
+          emptyMessage={emptyMessage}
+          onLoadMore={this.handleLoadOlder}
+          onLoadPending={this.handleLoadPending}
+          onScrollToTop={this.handleScrollToTop}
+          onScroll={this.handleScroll}
+          bindToDocument={!multiColumn}
+        >
+          {scrollableContent}
+        </ScrollableList>
+      );
+    } else {
+      scrollContainer = <NotSignedInIndicator />;
+    }
 
     const extraButtons = [];
 
     if (canMarkAsRead) {
       extraButtons.push(
         <button
+          key='mark-as-read'
           aria-label={intl.formatMessage(messages.markAsRead)}
           title={intl.formatMessage(messages.markAsRead)}
           onClick={this.handleMarkAsRead}
           className='column-header__button'
         >
           <Icon id='check' />
-        </button>
+        </button>,
       );
     }
 
@@ -308,13 +320,14 @@ class Notifications extends React.PureComponent {
 
     extraButtons.push(
       <button
+        key='notif-cleaning'
         aria-label={msgEnterNotifCleaning}
         title={msgEnterNotifCleaning}
         onClick={this.onEnterCleaningMode}
         className={notifCleaningButtonClassName}
       >
         <Icon id='eraser' />
-      </button>
+      </button>,
     );
 
     const notifCleaningDrawer = (
@@ -323,6 +336,12 @@ class Notifications extends React.PureComponent {
           {(notifCleaningActive || animatingNCD) ? (<NotificationPurgeButtonsContainer />) : null }
         </div>
       </div>
+    );
+
+    const extraButton = (
+      <>
+        {extraButtons}
+      </>
     );
 
     return (
@@ -343,13 +362,19 @@ class Notifications extends React.PureComponent {
           pinned={pinned}
           multiColumn={multiColumn}
           localSettings={this.props.localSettings}
-          extraButton={extraButtons}
+          extraButton={extraButton}
           appendContent={notifCleaningDrawer}
         >
           <ColumnSettingsContainer />
         </ColumnHeader>
+
         {filterBarContainer}
         {scrollContainer}
+
+        <Helmet>
+          <title>{intl.formatMessage(messages.title)}</title>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

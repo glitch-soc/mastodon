@@ -2,13 +2,30 @@
 
 module Admin
   class AccountsController < BaseController
-    before_action :set_account, except: [:index]
+    before_action :set_account, except: [:index, :batch]
     before_action :require_remote_account!, only: [:redownload]
     before_action :require_local_account!, only: [:enable, :memorialize, :approve, :reject]
 
     def index
       authorize :account, :index?
+
       @accounts = filtered_accounts.page(params[:page])
+      @form     = Form::AccountBatch.new
+    end
+
+    def batch
+      authorize :account, :index?
+
+      @form = Form::AccountBatch.new(form_account_batch_params)
+      @form.current_account = current_account
+      @form.action = action_from_button
+      @form.select_all_matching = params[:select_all_matching]
+      @form.query = filtered_accounts
+      @form.save
+    rescue ActionController::ParameterMissing
+      flash[:alert] = I18n.t('admin.accounts.no_account_selected')
+    ensure
+      redirect_to admin_accounts_path(filter_params)
     end
 
     def show
@@ -17,7 +34,7 @@ module Admin
       @deletion_request        = @account.deletion_request
       @account_moderation_note = current_account.account_moderation_notes.new(target_account: @account)
       @moderation_notes        = @account.targeted_moderation_notes.latest
-      @warnings                = @account.targeted_account_warnings.latest.custom
+      @warnings                = @account.strikes.includes(:target_account, :account, :appeal).latest
       @domain_block            = DomainBlock.rule_for(@account.domain)
     end
 
@@ -38,13 +55,13 @@ module Admin
     def approve
       authorize @account.user, :approve?
       @account.user.approve!
-      redirect_to admin_pending_accounts_path, notice: I18n.t('admin.accounts.approved_msg', username: @account.acct)
+      redirect_to admin_accounts_path(status: 'pending'), notice: I18n.t('admin.accounts.approved_msg', username: @account.acct)
     end
 
     def reject
       authorize @account.user, :reject?
       DeleteAccountService.new.call(@account, reserve_email: false, reserve_username: false)
-      redirect_to admin_pending_accounts_path, notice: I18n.t('admin.accounts.rejected_msg', username: @account.acct)
+      redirect_to admin_accounts_path(status: 'pending'), notice: I18n.t('admin.accounts.rejected_msg', username: @account.acct)
     end
 
     def destroy
@@ -106,6 +123,16 @@ module Admin
       redirect_to admin_account_path(@account.id), notice: I18n.t('admin.accounts.removed_header_msg', username: @account.acct)
     end
 
+    def unblock_email
+      authorize @account, :unblock_email?
+
+      CanonicalEmailBlock.where(reference_account: @account).delete_all
+
+      log_action :unblock_email, @account
+
+      redirect_to admin_account_path(@account.id), notice: I18n.t('admin.accounts.unblocked_email_msg', username: @account.acct)
+    end
+
     private
 
     def set_account
@@ -121,11 +148,25 @@ module Admin
     end
 
     def filtered_accounts
-      AccountFilter.new(filter_params).results
+      AccountFilter.new(filter_params.with_defaults(order: 'recent')).results
     end
 
     def filter_params
-      params.slice(*AccountFilter::KEYS).permit(*AccountFilter::KEYS)
+      params.slice(:page, *AccountFilter::KEYS).permit(:page, *AccountFilter::KEYS)
+    end
+
+    def form_account_batch_params
+      params.require(:form_account_batch).permit(:action, account_ids: [])
+    end
+
+    def action_from_button
+      if params[:suspend]
+        'suspend'
+      elsif params[:approve]
+        'approve'
+      elsif params[:reject]
+        'reject'
+      end
     end
   end
 end

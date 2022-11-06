@@ -1,9 +1,13 @@
-import api, { getLinks } from 'flavours/glitch/util/api';
+import api, { getLinks } from '../api';
 import { importAccount, importFetchedAccount, importFetchedAccounts } from './importer';
 
 export const ACCOUNT_FETCH_REQUEST = 'ACCOUNT_FETCH_REQUEST';
 export const ACCOUNT_FETCH_SUCCESS = 'ACCOUNT_FETCH_SUCCESS';
 export const ACCOUNT_FETCH_FAIL    = 'ACCOUNT_FETCH_FAIL';
+
+export const ACCOUNT_LOOKUP_REQUEST = 'ACCOUNT_LOOKUP_REQUEST';
+export const ACCOUNT_LOOKUP_SUCCESS = 'ACCOUNT_LOOKUP_SUCCESS';
+export const ACCOUNT_LOOKUP_FAIL    = 'ACCOUNT_LOOKUP_FAIL';
 
 export const ACCOUNT_FOLLOW_REQUEST = 'ACCOUNT_FOLLOW_REQUEST';
 export const ACCOUNT_FOLLOW_SUCCESS = 'ACCOUNT_FOLLOW_SUCCESS';
@@ -84,6 +88,8 @@ export const PINNED_ACCOUNTS_EDITOR_SUGGESTIONS_CHANGE = 'PINNED_ACCOUNTS_EDITOR
 export const PINNED_ACCOUNTS_EDITOR_RESET = 'PINNED_ACCOUNTS_EDITOR_RESET';
 
 
+export const ACCOUNT_REVEAL = 'ACCOUNT_REVEAL';
+
 export function fetchAccount(id) {
   return (dispatch, getState) => {
     dispatch(fetchRelationships([id]));
@@ -103,6 +109,34 @@ export function fetchAccount(id) {
     });
   };
 };
+
+export const lookupAccount = acct => (dispatch, getState) => {
+  dispatch(lookupAccountRequest(acct));
+
+  api(getState).get('/api/v1/accounts/lookup', { params: { acct } }).then(response => {
+    dispatch(fetchRelationships([response.data.id]));
+    dispatch(importFetchedAccount(response.data));
+    dispatch(lookupAccountSuccess());
+  }).catch(error => {
+    dispatch(lookupAccountFail(acct, error));
+  });
+};
+
+export const lookupAccountRequest = (acct) => ({
+  type: ACCOUNT_LOOKUP_REQUEST,
+  acct,
+});
+
+export const lookupAccountSuccess = () => ({
+  type: ACCOUNT_LOOKUP_SUCCESS,
+});
+
+export const lookupAccountFail = (acct, error) => ({
+  type: ACCOUNT_LOOKUP_FAIL,
+  acct,
+  error,
+  skipAlert: true,
+});
 
 export function fetchAccountRequest(id) {
   return {
@@ -519,10 +553,12 @@ export function expandFollowingFail(id, error) {
 
 export function fetchRelationships(accountIds) {
   return (dispatch, getState) => {
-    const loadedRelationships = getState().get('relationships');
+    const state = getState();
+    const loadedRelationships = state.get('relationships');
     const newAccountIds = accountIds.filter(id => loadedRelationships.get(id, null) === null);
+    const signedIn = !!state.getIn(['meta', 'me']);
 
-    if (newAccountIds.length === 0) {
+    if (!signedIn || newAccountIds.length === 0) {
       return;
     }
 
@@ -765,6 +801,11 @@ export function unpinAccountFail(error) {
     error,
   };
 };
+
+export const revealAccount = id => ({
+  type: ACCOUNT_REVEAL,
+  id,
+});
 
 export function fetchPinnedAccounts() {
   return (dispatch, getState) => {

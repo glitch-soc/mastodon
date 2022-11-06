@@ -5,16 +5,16 @@ class Api::BaseController < ApplicationController
   DEFAULT_ACCOUNTS_LIMIT = 40
 
   include RateLimitHeaders
+  include AccessTokenTrackingConcern
 
   skip_before_action :store_current_location
   skip_before_action :require_functional!, unless: :whitelist_mode?
 
   before_action :require_authenticated_user!, if: :disallow_unauthenticated_api_access?
+  before_action :require_not_suspended!
   before_action :set_cache_headers
 
   protect_from_forgery with: :null_session
-
-  skip_around_action :set_locale
 
   rescue_from ActiveRecord::RecordInvalid, Mastodon::ValidationError do |e|
     render json: { error: e.to_s }, status: 422
@@ -22,6 +22,10 @@ class Api::BaseController < ApplicationController
 
   rescue_from ActiveRecord::RecordNotUnique do
     render json: { error: 'Duplicate record' }, status: 422
+  end
+
+  rescue_from Date::Error do
+    render json: { error: 'Invalid date supplied' }, status: 422
   end
 
   rescue_from ActiveRecord::RecordNotFound do
@@ -40,7 +44,12 @@ class Api::BaseController < ApplicationController
     render json: { error: 'This action is not allowed' }, status: 403
   end
 
-  rescue_from Mastodon::RaceConditionError, Seahorse::Client::NetworkingError, Stoplight::Error::RedLight do
+  rescue_from Seahorse::Client::NetworkingError do |e|
+    Rails.logger.warn "Storage server error: #{e}"
+    render json: { error: 'There was a temporary problem serving your request, please try again' }, status: 503
+  end
+
+  rescue_from Mastodon::RaceConditionError, Stoplight::Error::RedLight do
     render json: { error: 'There was a temporary problem serving your request, please try again' }, status: 503
   end
 
@@ -93,6 +102,10 @@ class Api::BaseController < ApplicationController
     render json: { error: 'This method requires an authenticated user' }, status: 401 unless current_user
   end
 
+  def require_not_suspended!
+    render json: { error: 'Your login is currently disabled' }, status: 403 if current_user&.account&.suspended?
+  end
+
   def require_user!
     if !current_user
       render json: { error: 'This method requires an authenticated user' }, status: 422
@@ -120,6 +133,12 @@ class Api::BaseController < ApplicationController
   end
 
   def disallow_unauthenticated_api_access?
-    authorized_fetch_mode?
+    ENV['DISALLOW_UNAUTHENTICATED_API_ACCESS'] == 'true' || Rails.configuration.x.whitelist_mode
+  end
+
+  private
+
+  def respond_with_error(code)
+    render json: { error: Rack::Utils::HTTP_STATUS_CODES[code] }, status: code
   end
 end

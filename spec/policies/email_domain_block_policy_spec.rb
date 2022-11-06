@@ -5,8 +5,8 @@ require 'pundit/rspec'
 
 RSpec.describe EmailDomainBlockPolicy do
   let(:subject) { described_class }
-  let(:admin)   { Fabricate(:user, admin: true).account }
-  let(:john)    { Fabricate(:user).account }
+  let(:admin)   { Fabricate(:user, role: UserRole.find_by(name: 'Admin')).account }
+  let(:john)    { Fabricate(:account) }
 
   permissions :index?, :create?, :destroy? do
     context 'admin' do

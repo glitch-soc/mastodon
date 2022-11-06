@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class REST::StatusSerializer < ActiveModel::Serializer
+  include FormattingHelper
+
   attributes :id, :created_at, :in_reply_to_id, :in_reply_to_account_id,
              :sensitive, :spoiler_text, :visibility, :language,
              :uri, :url, :replies_count, :reblogs_count,
-             :favourites_count
+             :favourites_count, :edited_at
 
   attribute :favourited, if: :current_user?
   attribute :reblogged, if: :current_user?
@@ -12,6 +14,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attribute :bookmarked, if: :current_user?
   attribute :pinned, if: :pinnable?
   attribute :local_only if :local?
+  has_many :filtered, serializer: REST::FilterResultSerializer, if: :current_user?
 
   attribute :content, unless: :source_requested?
   attribute :text, if: :source_requested?
@@ -21,7 +24,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   belongs_to :application, if: :show_application?
   belongs_to :account, serializer: REST::AccountSerializer
 
-  has_many :media_attachments, serializer: REST::MediaAttachmentSerializer
+  has_many :ordered_media_attachments, key: :media_attachments, serializer: REST::MediaAttachmentSerializer
   has_many :ordered_mentions, key: :mentions
   has_many :tags
   has_many :emojis, serializer: REST::CustomEmojiSerializer
@@ -73,7 +76,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   end
 
   def content
-    Formatter.instance.format(object)
+    status_content_format(object)
   end
 
   def url
@@ -120,11 +123,19 @@ class REST::StatusSerializer < ActiveModel::Serializer
     end
   end
 
+  def filtered
+    if instance_options && instance_options[:relationships]
+      instance_options[:relationships].filters_map[object.id] || []
+    else
+      current_user.account.status_matches_filters(object)
+    end
+  end
+
   def pinnable?
     current_user? &&
       current_user.account_id == object.account_id &&
       !object.reblog? &&
-      %w(public unlisted).include?(object.visibility)
+      %w(public unlisted private).include?(object.visibility)
   end
 
   def source_requested?
@@ -137,6 +148,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
 
   class ApplicationSerializer < ActiveModel::Serializer
     attributes :name, :website
+
+    def website
+      object.website.presence
+    end
   end
 
   class MentionSerializer < ActiveModel::Serializer

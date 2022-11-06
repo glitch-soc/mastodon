@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
-import { ScrollContainer } from 'react-router-scroll-4';
+import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import PropTypes from 'prop-types';
 import IntersectionObserverArticleContainer from 'flavours/glitch/containers/intersection_observer_article_container';
 import LoadMore from './load_more';
 import LoadPending from './load_pending';
-import IntersectionObserverWrapper from 'flavours/glitch/util/intersection_observer_wrapper';
+import IntersectionObserverWrapper from 'flavours/glitch/features/ui/util/intersection_observer_wrapper';
 import { throttle } from 'lodash';
 import { List as ImmutableList } from 'immutable';
 import classNames from 'classnames';
-import { attachFullscreenListener, detachFullscreenListener, isFullscreen } from 'flavours/glitch/util/fullscreen';
+import { attachFullscreenListener, detachFullscreenListener, isFullscreen } from '../features/ui/util/fullscreen';
 import LoadingIndicator from './loading_indicator';
 import { connect } from 'react-redux';
 
@@ -34,7 +34,6 @@ class ScrollableList extends PureComponent {
     onScrollToTop: PropTypes.func,
     onScroll: PropTypes.func,
     trackScroll: PropTypes.bool,
-    shouldUpdateScroll: PropTypes.func,
     isLoading: PropTypes.bool,
     showLoading: PropTypes.bool,
     hasMore: PropTypes.bool,
@@ -145,7 +144,7 @@ class ScrollableList extends PureComponent {
     this.attachIntersectionObserver();
     attachFullscreenListener(this.onFullScreenChange);
 
-    // Handle initial scroll posiiton
+    // Handle initial scroll position
     this.handleScroll();
   }
 
@@ -264,11 +263,6 @@ class ScrollableList extends PureComponent {
     this.props.onLoadMore();
   }
 
-  defaultShouldUpdateScroll = (prevRouterProps, { location }) => {
-    if ((((prevRouterProps || {}).location || {}).state || {}).mastodonModalOpen) return false;
-    return !(location.state && location.state.mastodonModalOpen);
-  }
-
   handleLoadPending = e => {
     e.preventDefault();
     this.props.onLoadPending();
@@ -282,7 +276,7 @@ class ScrollableList extends PureComponent {
   }
 
   render () {
-    const { children, scrollKey, trackScroll, shouldUpdateScroll, showLoading, isLoading, hasMore, numPending, prepend, alwaysPrepend, append, emptyMessage, onLoadMore } = this.props;
+    const { children, scrollKey, trackScroll, showLoading, isLoading, hasMore, numPending, prepend, alwaysPrepend, append, emptyMessage, onLoadMore } = this.props;
     const { fullscreen } = this.state;
     const childrenCount = React.Children.count(children);
 
@@ -348,7 +342,7 @@ class ScrollableList extends PureComponent {
 
     if (trackScroll) {
       return (
-        <ScrollContainer scrollKey={scrollKey} shouldUpdateScroll={shouldUpdateScroll || this.defaultShouldUpdateScroll}>
+        <ScrollContainer scrollKey={scrollKey}>
           {scrollableArea}
         </ScrollContainer>
       );

@@ -13,6 +13,8 @@ import { fetchAnnouncements, toggleShowAnnouncements } from 'mastodon/actions/an
 import AnnouncementsContainer from 'mastodon/features/getting_started/containers/announcements_container';
 import classNames from 'classnames';
 import IconWithBadge from 'mastodon/components/icon_with_badge';
+import NotSignedInIndicator from 'mastodon/components/not_signed_in_indicator';
+import { Helmet } from 'react-helmet';
 
 const messages = defineMessages({
   title: { id: 'column.home', defaultMessage: 'Home' },
@@ -32,9 +34,12 @@ export default @connect(mapStateToProps)
 @injectIntl
 class HomeTimeline extends React.PureComponent {
 
+  static contextTypes = {
+    identity: PropTypes.object,
+  };
+
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
-    shouldUpdateScroll: PropTypes.func,
     intl: PropTypes.object.isRequired,
     hasUnread: PropTypes.bool,
     isPartial: PropTypes.bool,
@@ -73,7 +78,7 @@ class HomeTimeline extends React.PureComponent {
   }
 
   componentDidMount () {
-    this.props.dispatch(fetchAnnouncements());
+    setTimeout(() => this.props.dispatch(fetchAnnouncements()), 700);
     this._checkIfReloadNeeded(false, this.props.isPartial);
   }
 
@@ -112,14 +117,16 @@ class HomeTimeline extends React.PureComponent {
   }
 
   render () {
-    const { intl, shouldUpdateScroll, hasUnread, columnId, multiColumn, hasAnnouncements, unreadAnnouncements, showAnnouncements } = this.props;
+    const { intl, hasUnread, columnId, multiColumn, hasAnnouncements, unreadAnnouncements, showAnnouncements } = this.props;
     const pinned = !!columnId;
+    const { signedIn } = this.context.identity;
 
     let announcementsButton = null;
 
     if (hasAnnouncements) {
       announcementsButton = (
         <button
+          type='button'
           className={classNames('column-header__button', { 'active': showAnnouncements })}
           title={intl.formatMessage(showAnnouncements ? messages.hide_announcements : messages.show_announcements)}
           aria-label={intl.formatMessage(showAnnouncements ? messages.hide_announcements : messages.show_announcements)}
@@ -148,15 +155,21 @@ class HomeTimeline extends React.PureComponent {
           <ColumnSettingsContainer />
         </ColumnHeader>
 
-        <StatusListContainer
-          trackScroll={!pinned}
-          scrollKey={`home_timeline-${columnId}`}
-          onLoadMore={this.handleLoadMore}
-          timelineId='home'
-          emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Visit {public} or use search to get started and meet other users.' values={{ public: <Link to='/timelines/public'><FormattedMessage id='empty_column.home.public_timeline' defaultMessage='the public timeline' /></Link> }} />}
-          shouldUpdateScroll={shouldUpdateScroll}
-          bindToDocument={!multiColumn}
-        />
+        {signedIn ? (
+          <StatusListContainer
+            trackScroll={!pinned}
+            scrollKey={`home_timeline-${columnId}`}
+            onLoadMore={this.handleLoadMore}
+            timelineId='home'
+            emptyMessage={<FormattedMessage id='empty_column.home' defaultMessage='Your home timeline is empty! Follow more people to fill it up. {suggestions}' values={{ suggestions: <Link to='/start'><FormattedMessage id='empty_column.home.suggestions' defaultMessage='See some suggestions' /></Link> }} />}
+            bindToDocument={!multiColumn}
+          />
+        ) : <NotSignedInIndicator />}
+
+        <Helmet>
+          <title>{intl.formatMessage(messages.title)}</title>
+          <meta name='robots' content='noindex' />
+        </Helmet>
       </Column>
     );
   }

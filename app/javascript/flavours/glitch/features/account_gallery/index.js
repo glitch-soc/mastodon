@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { fetchAccount } from 'flavours/glitch/actions/accounts';
+import { lookupAccount, fetchAccount } from 'flavours/glitch/actions/accounts';
 import { expandAccountMediaTimeline } from 'flavours/glitch/actions/timelines';
 import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
 import Column from 'flavours/glitch/features/ui/components/column';
@@ -11,18 +11,30 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { getAccountGallery } from 'flavours/glitch/selectors';
 import MediaItem from './components/media_item';
 import HeaderContainer from 'flavours/glitch/features/account_timeline/containers/header_container';
-import { ScrollContainer } from 'react-router-scroll-4';
+import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import LoadMore from 'flavours/glitch/components/load_more';
 import MissingIndicator from 'flavours/glitch/components/missing_indicator';
 import { openModal } from 'flavours/glitch/actions/modal';
+import { normalizeForLookup } from 'flavours/glitch/reducers/accounts_map';
 
-const mapStateToProps = (state, props) => ({
-  isAccount: !!state.getIn(['accounts', props.params.accountId]),
-  attachments: getAccountGallery(state, props.params.accountId),
-  isLoading: state.getIn(['timelines', `account:${props.params.accountId}:media`, 'isLoading']),
-  hasMore: state.getIn(['timelines', `account:${props.params.accountId}:media`, 'hasMore']),
-  suspended: state.getIn(['accounts', props.params.accountId, 'suspended'], false),
-});
+const mapStateToProps = (state, { params: { acct, id } }) => {
+  const accountId = id || state.getIn(['accounts_map', normalizeForLookup(acct)]);
+
+  if (!accountId) {
+    return {
+      isLoading: true,
+    };
+  }
+
+  return {
+    accountId,
+    isAccount: !!state.getIn(['accounts', accountId]),
+    attachments: getAccountGallery(state, accountId),
+    isLoading: state.getIn(['timelines', `account:${accountId}:media`, 'isLoading']),
+    hasMore: state.getIn(['timelines', `account:${accountId}:media`, 'hasMore']),
+    suspended: state.getIn(['accounts', accountId, 'suspended'], false),
+  };
+};
 
 class LoadMoreMedia extends ImmutablePureComponent {
 
@@ -50,7 +62,11 @@ export default @connect(mapStateToProps)
 class AccountGallery extends ImmutablePureComponent {
 
   static propTypes = {
-    params: PropTypes.object.isRequired,
+    params: PropTypes.shape({
+      acct: PropTypes.string,
+      id: PropTypes.string,
+    }).isRequired,
+    accountId: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     attachments: ImmutablePropTypes.list.isRequired,
     isLoading: PropTypes.bool,
@@ -64,15 +80,30 @@ class AccountGallery extends ImmutablePureComponent {
     width: 323,
   };
 
-  componentDidMount () {
-    this.props.dispatch(fetchAccount(this.props.params.accountId));
-    this.props.dispatch(expandAccountMediaTimeline(this.props.params.accountId));
+  _load () {
+    const { accountId, isAccount, dispatch } = this.props;
+
+    if (!isAccount) dispatch(fetchAccount(accountId));
+    dispatch(expandAccountMediaTimeline(accountId));
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (nextProps.params.accountId !== this.props.params.accountId && nextProps.params.accountId) {
-      this.props.dispatch(fetchAccount(nextProps.params.accountId));
-      this.props.dispatch(expandAccountMediaTimeline(this.props.params.accountId));
+  componentDidMount () {
+    const { params: { acct }, accountId, dispatch } = this.props;
+
+    if (accountId) {
+      this._load();
+    } else {
+      dispatch(lookupAccount(acct));
+    }
+  }
+
+  componentDidUpdate (prevProps) {
+    const { params: { acct }, accountId, dispatch } = this.props;
+
+    if (prevProps.accountId !== accountId && accountId) {
+      this._load();
+    } else if (prevProps.params.acct !== acct) {
+      dispatch(lookupAccount(acct));
     }
   }
 
@@ -96,7 +127,7 @@ class AccountGallery extends ImmutablePureComponent {
   }
 
   handleLoadMore = maxId => {
-    this.props.dispatch(expandAccountMediaTimeline(this.props.params.accountId, { maxId }));
+    this.props.dispatch(expandAccountMediaTimeline(this.props.accountId, { maxId }));
   };
 
   handleLoadOlder = e => {
@@ -104,25 +135,23 @@ class AccountGallery extends ImmutablePureComponent {
     this.handleScrollToBottom();
   }
 
-  shouldUpdateScroll = (prevRouterProps, { location }) => {
-    if ((((prevRouterProps || {}).location || {}).state || {}).mastodonModalOpen) return false;
-    return !(location.state && location.state.mastodonModalOpen);
-  }
-
   setColumnRef = c => {
     this.column = c;
   }
 
   handleOpenMedia = attachment => {
+    const { dispatch } = this.props;
+    const statusId = attachment.getIn(['status', 'id']);
+
     if (attachment.get('type') === 'video') {
-      this.props.dispatch(openModal('VIDEO', { media: attachment, status: attachment.get('status'), options: { autoPlay: true } }));
+      dispatch(openModal('VIDEO', { media: attachment, statusId, options: { autoPlay: true } }));
     } else if (attachment.get('type') === 'audio') {
-      this.props.dispatch(openModal('AUDIO', { media: attachment, status: attachment.get('status'), options: { autoPlay: true } }));
+      dispatch(openModal('AUDIO', { media: attachment, statusId, options: { autoPlay: true } }));
     } else {
       const media = attachment.getIn(['status', 'media_attachments']);
       const index = media.findIndex(x => x.get('id') === attachment.get('id'));
 
-      this.props.dispatch(openModal('MEDIA', { media, index, status: attachment.get('status') }));
+      dispatch(openModal('MEDIA', { media, index, statusId }));
     }
   }
 
@@ -162,9 +191,9 @@ class AccountGallery extends ImmutablePureComponent {
       <Column ref={this.setColumnRef}>
         <ProfileColumnHeader onClick={this.handleHeaderClick} multiColumn={multiColumn} />
 
-        <ScrollContainer scrollKey='account_gallery' shouldUpdateScroll={this.shouldUpdateScroll}>
+        <ScrollContainer scrollKey='account_gallery'>
           <div className='scrollable scrollable--flex' onScroll={this.handleScroll}>
-            <HeaderContainer accountId={this.props.params.accountId} />
+            <HeaderContainer accountId={this.props.accountId} />
 
             {suspended ? (
               <div className='empty-column-indicator'>

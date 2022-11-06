@@ -3,11 +3,16 @@
 class Webfinger
   class Error < StandardError; end
   class GoneError < Error; end
-  class RedirectError < StandardError; end
+  class RedirectError < Error; end
 
   class Response
-    def initialize(body)
+    attr_reader :uri
+
+    def initialize(uri, body)
+      @uri  = uri
       @json = Oj.load(body, mode: :strict)
+
+      validate_response!
     end
 
     def subject
@@ -23,6 +28,10 @@ class Webfinger
     def links
       @links ||= @json['links'].index_by { |link| link['rel'] }
     end
+
+    def validate_response!
+      raise Webfinger::Error, "Missing subject in response for #{@uri}" if subject.blank?
+    end
   end
 
   def initialize(uri)
@@ -34,7 +43,7 @@ class Webfinger
   end
 
   def perform
-    Response.new(body_from_webfinger)
+    Response.new(@uri, body_from_webfinger)
   rescue Oj::ParseError
     raise Webfinger::Error, "Invalid JSON in response for #{@uri}"
   rescue Addressable::URI::InvalidURIError
@@ -46,7 +55,9 @@ class Webfinger
   def body_from_webfinger(url = standard_url, use_fallback = true)
     webfinger_request(url).perform do |res|
       if res.code == 200
-        res.body_with_limit
+        body = res.body_with_limit
+        raise Webfinger::Error, "Request for #{@uri} returned empty response" if body.empty?
+        body
       elsif res.code == 404 && use_fallback
         body_from_host_meta
       elsif res.code == 410

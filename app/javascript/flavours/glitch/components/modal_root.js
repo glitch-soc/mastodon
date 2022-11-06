@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import 'wicg-inert';
 import { createBrowserHistory } from 'history';
+import { multiply } from 'color-blend';
 
 export default class ModalRoot extends React.PureComponent {
   static contextTypes = {
@@ -11,7 +12,13 @@ export default class ModalRoot extends React.PureComponent {
   static propTypes = {
     children: PropTypes.node,
     onClose: PropTypes.func.isRequired,
+    backgroundColor: PropTypes.shape({
+      r: PropTypes.number,
+      g: PropTypes.number,
+      b: PropTypes.number,
+    }),
     noEsc: PropTypes.bool,
+    ignoreFocus: PropTypes.bool,
   };
 
   activeElement = this.props.children ? document.activeElement : null;
@@ -48,6 +55,10 @@ export default class ModalRoot extends React.PureComponent {
     window.addEventListener('keyup', this.handleKeyUp, false);
     window.addEventListener('keydown', this.handleKeyDown, false);
     this.history = this.context.router ? this.context.router.history : createBrowserHistory();
+
+    if (this.props.children) {
+      this._handleModalOpen();
+    }
   }
 
   componentWillReceiveProps (nextProps) {
@@ -66,16 +77,19 @@ export default class ModalRoot extends React.PureComponent {
       // immediately selectable, we have to wait for observers to run, as
       // described in https://github.com/WICG/inert#performance-and-gotchas
       Promise.resolve().then(() => {
-        this.activeElement.focus({ preventScroll: true });
+        if (!this.props.ignoreFocus) {
+          this.activeElement.focus({ preventScroll: true });
+        }
         this.activeElement = null;
-      }).catch((error) => {
-        console.error(error);
-      });
+      }).catch(console.error);
 
-      this.handleModalClose();
+      this._handleModalClose();
     }
     if (this.props.children && !prevProps.children) {
-      this.handleModalOpen();
+      this._handleModalOpen();
+    }
+    if (this.props.children) {
+      this._ensureHistoryBuffer();
     }
   }
 
@@ -84,22 +98,29 @@ export default class ModalRoot extends React.PureComponent {
     window.removeEventListener('keydown', this.handleKeyDown);
   }
 
-  handleModalClose () {
+  _handleModalOpen () {
+    this._modalHistoryKey = Date.now();
+    this.unlistenHistory = this.history.listen((_, action) => {
+      if (action === 'POP') {
+        this.props.onClose();
+      }
+    });
+  }
+
+  _handleModalClose () {
     this.unlistenHistory();
 
-    const state = this.history.location.state;
-    if (state && state.mastodonModalOpen) {
+    const { state } = this.history.location;
+    if (state && state.mastodonModalKey === this._modalHistoryKey) {
       this.history.goBack();
     }
   }
 
-  handleModalOpen () {
-    const history = this.history;
-    const state   = {...history.location.state, mastodonModalOpen: true};
-    history.push(history.location.pathname, state);
-    this.unlistenHistory = history.listen(() => {
-      this.props.onClose();
-    });
+  _ensureHistoryBuffer () {
+    const { pathname, state } = this.history.location;
+    if (!state || state.mastodonModalKey !== this._modalHistoryKey) {
+      this.history.push(pathname, { ...state, mastodonModalKey: this._modalHistoryKey });
+    }
   }
 
   getSiblings = () => {
@@ -120,10 +141,16 @@ export default class ModalRoot extends React.PureComponent {
       );
     }
 
+    let backgroundColor = null;
+
+    if (this.props.backgroundColor) {
+      backgroundColor = multiply({ ...this.props.backgroundColor, a: 1 }, { r: 0, g: 0, b: 0, a: 0.7 });
+    }
+
     return (
       <div className='modal-root' ref={this.setRef}>
         <div style={{ pointerEvents: visible ? 'auto' : 'none' }}>
-          <div role='presentation' className='modal-root__overlay' onClick={onClose} />
+          <div role='presentation' className='modal-root__overlay' onClick={onClose} style={{ backgroundColor: backgroundColor ? `rgba(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b}, 0.7)` : null }} />
           <div role='dialog' className='modal-root__container'>{children}</div>
         </div>
       </div>

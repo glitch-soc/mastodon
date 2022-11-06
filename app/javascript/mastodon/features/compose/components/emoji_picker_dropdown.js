@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { EmojiPicker as EmojiPickerAsync } from '../../ui/util/async-components';
 import Overlay from 'react-overlays/lib/Overlay';
 import classNames from 'classnames';
@@ -12,7 +12,6 @@ import { assetHost } from 'mastodon/utils/config';
 const messages = defineMessages({
   emoji: { id: 'emoji_button.label', defaultMessage: 'Insert emoji' },
   emoji_search: { id: 'emoji_button.search', defaultMessage: 'Search...' },
-  emoji_not_found: { id: 'emoji_button.not_found', defaultMessage: 'No emojos!! (╯°□°）╯︵ ┻━┻' },
   custom: { id: 'emoji_button.custom', defaultMessage: 'Custom' },
   recent: { id: 'emoji_button.recent', defaultMessage: 'Frequently used' },
   search_results: { id: 'emoji_button.search_results', defaultMessage: 'Search results' },
@@ -28,8 +27,25 @@ const messages = defineMessages({
 
 let EmojiPicker, Emoji; // load asynchronously
 
-const backgroundImageFn = () => `${assetHost}/emoji/sheet_10.png`;
 const listenerOptions = supportsPassiveEvents ? { passive: true } : false;
+
+const backgroundImageFn = () => `${assetHost}/emoji/sheet_13.png`;
+
+const notFoundFn = () => (
+  <div className='emoji-mart-no-results'>
+    <Emoji
+      emoji='sleuth_or_spy'
+      set='twitter'
+      size={32}
+      sheetSize={32}
+      backgroundImageFn={backgroundImageFn}
+    />
+
+    <div className='emoji-mart-no-results-label'>
+      <FormattedMessage id='emoji_button.not_found' defaultMessage='No matching emojis found' />
+    </div>
+  </div>
+);
 
 class ModifierPickerMenu extends React.PureComponent {
 
@@ -80,12 +96,12 @@ class ModifierPickerMenu extends React.PureComponent {
 
     return (
       <div className='emoji-picker-dropdown__modifiers__menu' style={{ display: active ? 'block' : 'none' }} ref={this.setRef}>
-        <button onClick={this.handleClick} data-index={1}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={1} backgroundImageFn={backgroundImageFn} /></button>
-        <button onClick={this.handleClick} data-index={2}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={2} backgroundImageFn={backgroundImageFn} /></button>
-        <button onClick={this.handleClick} data-index={3}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={3} backgroundImageFn={backgroundImageFn} /></button>
-        <button onClick={this.handleClick} data-index={4}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={4} backgroundImageFn={backgroundImageFn} /></button>
-        <button onClick={this.handleClick} data-index={5}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={5} backgroundImageFn={backgroundImageFn} /></button>
-        <button onClick={this.handleClick} data-index={6}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={6} backgroundImageFn={backgroundImageFn} /></button>
+        <button type='button' onClick={this.handleClick} data-index={1}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={1} backgroundImageFn={backgroundImageFn} /></button>
+        <button type='button' onClick={this.handleClick} data-index={2}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={2} backgroundImageFn={backgroundImageFn} /></button>
+        <button type='button' onClick={this.handleClick} data-index={3}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={3} backgroundImageFn={backgroundImageFn} /></button>
+        <button type='button' onClick={this.handleClick} data-index={4}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={4} backgroundImageFn={backgroundImageFn} /></button>
+        <button type='button' onClick={this.handleClick} data-index={5}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={5} backgroundImageFn={backgroundImageFn} /></button>
+        <button type='button' onClick={this.handleClick} data-index={6}><Emoji emoji='fist' set='twitter' size={22} sheetSize={32} skin={6} backgroundImageFn={backgroundImageFn} /></button>
       </div>
     );
   }
@@ -154,7 +170,7 @@ class EmojiPickerMenu extends React.PureComponent {
 
   state = {
     modifierOpen: false,
-    placement: null,
+    readyToFocus: false,
   };
 
   handleDocumentClick = e => {
@@ -166,6 +182,16 @@ class EmojiPickerMenu extends React.PureComponent {
   componentDidMount () {
     document.addEventListener('click', this.handleDocumentClick, false);
     document.addEventListener('touchend', this.handleDocumentClick, listenerOptions);
+
+    // Because of https://github.com/react-bootstrap/react-bootstrap/issues/2614 we need
+    // to wait for a frame before focusing
+    requestAnimationFrame(() => {
+      this.setState({ readyToFocus: true });
+      if (this.node) {
+        const element = this.node.querySelector('input[type="search"]');
+        if (element) element.focus();
+      }
+    });
   }
 
   componentWillUnmount () {
@@ -182,7 +208,6 @@ class EmojiPickerMenu extends React.PureComponent {
 
     return {
       search: intl.formatMessage(messages.emoji_search),
-      notfound: intl.formatMessage(messages.emoji_not_found),
       categories: {
         search: intl.formatMessage(messages.search_results),
         recent: intl.formatMessage(messages.recent),
@@ -263,8 +288,10 @@ class EmojiPickerMenu extends React.PureComponent {
           recent={frequentlyUsedEmojis}
           skin={skinTone}
           showPreview={false}
+          showSkinTones={false}
           backgroundImageFn={backgroundImageFn}
-          autoFocus
+          notFound={notFoundFn}
+          autoFocus={this.state.readyToFocus}
           emojiTooltip
         />
 
@@ -297,6 +324,7 @@ class EmojiPickerDropdown extends React.PureComponent {
   state = {
     active: false,
     loading: false,
+    placement: null,
   };
 
   setRef = (c) => {
@@ -362,7 +390,7 @@ class EmojiPickerDropdown extends React.PureComponent {
           {button || <img
             className={classNames('emojione', { 'pulse-loading': active && loading })}
             alt='🙂'
-            src={`${assetHost}/emoji/1f602.svg`}
+            src={`${assetHost}/emoji/2764-fe0f-200d-1f525.svg`}
           />}
         </div>
 

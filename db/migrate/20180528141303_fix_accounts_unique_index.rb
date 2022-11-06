@@ -17,6 +17,21 @@ class FixAccountsUniqueIndex < ActiveRecord::Migration[5.2]
     belongs_to :account, inverse_of: :stream_entries
   end
 
+  class Status < ApplicationRecord
+    # Dummy class, to make migration possible across version changes
+    belongs_to :account
+  end
+
+  class Mention < ApplicationRecord
+    # Dummy class, to make migration possible across version changes
+    belongs_to :account
+  end
+
+  class StatusPin < ApplicationRecord
+    # Dummy class, to make migration possible across version changes
+    belongs_to :account
+  end
+
   disable_ddl_transaction!
 
   def up
@@ -37,7 +52,7 @@ class FixAccountsUniqueIndex < ActiveRecord::Migration[5.2]
       end
     end
 
-    duplicates = Account.connection.select_all('SELECT string_agg(id::text, \',\') AS ids FROM accounts GROUP BY lower(username), lower(domain) HAVING count(*) > 1').to_hash
+    duplicates = Account.connection.select_all('SELECT string_agg(id::text, \',\') AS ids FROM accounts GROUP BY lower(username), lower(domain) HAVING count(*) > 1').to_ary
 
     duplicates.each do |row|
       deduplicate_account!(row['ids'].split(','))

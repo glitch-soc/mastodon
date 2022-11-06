@@ -9,6 +9,7 @@ module AccountInteractions
         mapping[follow.target_account_id] = {
           reblogs: follow.show_reblogs?,
           notify: follow.notify?,
+          languages: follow.languages,
         }
       end
     end
@@ -38,6 +39,7 @@ module AccountInteractions
         mapping[follow_request.target_account_id] = {
           reblogs: follow_request.show_reblogs?,
           notify: follow_request.notify?,
+          languages: follow_request.languages,
         }
       end
     end
@@ -67,7 +69,7 @@ module AccountInteractions
     private
 
     def follow_mapping(query, field)
-      query.pluck(field).each_with_object({}) { |id, mapping| mapping[id] = true }
+      query.pluck(field).index_with(true)
     end
   end
 
@@ -80,6 +82,9 @@ module AccountInteractions
 
     has_many :following, -> { order('follows.id desc') }, through: :active_relationships,  source: :target_account
     has_many :followers, -> { order('follows.id desc') }, through: :passive_relationships, source: :account
+
+    # Account notes
+    has_many :account_notes, dependent: :destroy
 
     # Block relationships
     has_many :block_relationships, class_name: 'Block', foreign_key: 'account_id', dependent: :destroy
@@ -97,12 +102,13 @@ module AccountInteractions
     has_many :announcement_mutes, dependent: :destroy
   end
 
-  def follow!(other_account, reblogs: nil, notify: nil, uri: nil, rate_limit: false, bypass_limit: false)
-    rel = active_relationships.create_with(show_reblogs: reblogs.nil? ? true : reblogs, notify: notify.nil? ? false : notify, uri: uri, rate_limit: rate_limit, bypass_follow_limit: bypass_limit)
+  def follow!(other_account, reblogs: nil, notify: nil, languages: nil, uri: nil, rate_limit: false, bypass_limit: false)
+    rel = active_relationships.create_with(show_reblogs: reblogs.nil? ? true : reblogs, notify: notify.nil? ? false : notify, languages: languages, uri: uri, rate_limit: rate_limit, bypass_follow_limit: bypass_limit)
                               .find_or_create_by!(target_account: other_account)
 
-    rel.show_reblogs = reblogs unless reblogs.nil?
-    rel.notify       = notify  unless notify.nil?
+    rel.show_reblogs = reblogs   unless reblogs.nil?
+    rel.notify       = notify    unless notify.nil?
+    rel.languages    = languages unless languages.nil?
 
     rel.save! if rel.changed?
 
@@ -111,12 +117,13 @@ module AccountInteractions
     rel
   end
 
-  def request_follow!(other_account, reblogs: nil, notify: nil, uri: nil, rate_limit: false, bypass_limit: false)
-    rel = follow_requests.create_with(show_reblogs: reblogs.nil? ? true : reblogs, notify: notify.nil? ? false : notify, uri: uri, rate_limit: rate_limit, bypass_follow_limit: bypass_limit)
+  def request_follow!(other_account, reblogs: nil, notify: nil, languages: nil, uri: nil, rate_limit: false, bypass_limit: false)
+    rel = follow_requests.create_with(show_reblogs: reblogs.nil? ? true : reblogs, notify: notify.nil? ? false : notify, uri: uri, languages: languages, rate_limit: rate_limit, bypass_follow_limit: bypass_limit)
                          .find_or_create_by!(target_account: other_account)
 
-    rel.show_reblogs = reblogs unless reblogs.nil?
-    rel.notify       = notify  unless notify.nil?
+    rel.show_reblogs = reblogs   unless reblogs.nil?
+    rel.notify       = notify    unless notify.nil?
+    rel.languages    = languages unless languages.nil?
 
     rel.save! if rel.changed?
 
@@ -184,6 +191,18 @@ module AccountInteractions
     active_relationships.where(target_account: other_account).exists?
   end
 
+  def following_anyone?
+    active_relationships.exists?
+  end
+
+  def not_following_anyone?
+    !following_anyone?
+  end
+
+  def followed_by?(other_account)
+    other_account.following?(self)
+  end
+
   def blocking?(other_account)
     block_relationships.where(target_account: other_account).exists?
   end
@@ -232,6 +251,11 @@ module AccountInteractions
     account_pins.where(target_account: account).exists?
   end
 
+  def status_matches_filters(status)
+    active_filters = CustomFilter.cached_filters_for(id)
+    CustomFilter.apply_cached_filters(active_filters, status)
+  end
+
   def followers_for_local_distribution
     followers.local
              .joins(:user)
@@ -243,10 +267,13 @@ module AccountInteractions
          .where('users.current_sign_in_at > ?', User::ACTIVE_DURATION.ago)
   end
 
-  def remote_followers_hash(url_prefix)
-    Rails.cache.fetch("followers_hash:#{id}:#{url_prefix}") do
+  def remote_followers_hash(url)
+    url_prefix = url[Account::URL_PREFIX_RE]
+    return if url_prefix.blank?
+
+    Rails.cache.fetch("followers_hash:#{id}:#{url_prefix}/") do
       digest = "\x00" * 32
-      followers.where(Account.arel_table[:uri].matches(url_prefix + '%', false, true)).pluck_each(:uri) do |uri|
+      followers.where(Account.arel_table[:uri].matches("#{Account.sanitize_sql_like(url_prefix)}/%", false, true)).or(followers.where(uri: url_prefix)).pluck_each(:uri) do |uri|
         Xorcist.xor!(digest, Digest::SHA256.digest(uri))
       end
       digest.unpack('H*')[0]
@@ -265,8 +292,7 @@ module AccountInteractions
 
   private
 
-  def remove_potential_friendship(other_account, mutual = false)
+  def remove_potential_friendship(other_account)
     PotentialFriendshipTracker.remove(id, other_account.id)
-    PotentialFriendshipTracker.remove(other_account.id, id) if mutual
   end
 end
