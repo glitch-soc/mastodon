@@ -21,6 +21,73 @@ class Sanitize
       gemini
     ).freeze
 
+    # We remove all "style" attributes. In particular we remove all color
+    # attributes and length percentages.
+    COMMON_MATH_ATTRS = %w(
+      dir
+      displaystyle
+      mathvariant
+      scriptlevel
+    ).freeze
+    MATH_TAG_ATTRS = {
+      'annotation' => %w(encoding),
+      'annotation-xml' => %w(encoding),
+      'maction' => %w(),
+      'math' => %w(display alttext),
+      'merror' => %w(),
+      # See below
+      'mfrac' => %w(linethickness),
+      'mi' => %w(),
+      'mmultiscripts' => %w(),
+      'mn' => %w(),
+      'mo' => %w(form fence separator stretchy symmetric largeop movablelimits lspace rspace minsize),
+      'mover' => %w(accent),
+      'mpadded' => %w(width height depth lspace voffset),
+      'mphantom' => %w(),
+      'mprescripts' => %w(),
+      'mroot' => %w(),
+      'mrow' => %w(),
+      'ms' => %w(),
+      'mspace' => %w(width height depth),
+      'msqrt' => %w(),
+      'mstyle' => %w(),
+      'msub' => %w(),
+      'msubsup' => %w(),
+      'msup' => %w(),
+      'mtable' => %w(),
+      'mtd' => %w(colspan rowspan),
+      'mtext' => %w(),
+      'mtr' => %w(),
+      'munder' => %w(accentunder),
+      'munderover' => %w(accent accentunder),
+      'semantics' => %w(),
+    }.transform_values { |attr_list| attr_list + COMMON_MATH_ATTRS }.freeze
+
+    # We need some special logic for some math tags.
+    #
+    # In particular, <mathfrac> contains a (usually stylistic) attribute
+    # `linethickness`, which denotes the thickness of the horizontal bar.
+    # However, `linethickness="0"`, erases the horizontal bar completely. This
+    # looks more like a two-element table, and could denote a two-element
+    # vector, or (in the MathML Core spec) the binomial coefficient!
+    # For example:
+    #   <mo>(</mo><mfrac linethickness="0"><mi>x</mi><mi>y</mi></mfrac><mo>)</mo>
+    # denotes xCy, while
+    #   <mo>(</mo><mfrac><mi>x</mi><mi>y</mi></mfrac><mo>)</mo>
+    # denotes (x/y). These two constructions are very different and the
+    # distinction needs to be mantained.
+    MATH_TRANSFORMER = lambda do |env|
+      node = env[:node]
+      return if env[:is_allowlisted] || !node.element?
+      return unless env[:node_name] == 'mfrac'
+
+      node.attribute_nodes.each do |attr|
+        attr.unlink if attr.name == 'linethickness' && attr.value != '0'
+      end
+      # we don't allowlist the node. instead we let the CleanElement transformer
+      # take care of the rest of the attributes.
+    end
+
     CLASS_WHITELIST_TRANSFORMER = lambda do |env|
       node = env[:node]
       class_list = node['class']&.split(/[\t\n\f\r ]/)
@@ -75,7 +142,7 @@ class Sanitize
     end
 
     MASTODON_STRICT ||= freeze_config(
-      elements: %w(p br span a abbr del pre blockquote code b strong u sub sup i em h1 h2 h3 h4 h5 ul ol li),
+      elements: %w(p br span a abbr del pre blockquote code b strong u sub sup i em h1 h2 h3 h4 h5 ul ol li) + MATH_TAG_ATTRS.keys,
 
       attributes: {
         'a' => %w(href rel class title translate),
@@ -84,7 +151,7 @@ class Sanitize
         'blockquote' => %w(cite),
         'ol' => %w(start reversed),
         'li' => %w(value),
-      },
+      }.merge(MATH_TAG_ATTRS),
 
       add_attributes: {
         'a' => {
@@ -103,6 +170,7 @@ class Sanitize
         IMG_TAG_TRANSFORMER,
         TRANSLATE_TRANSFORMER,
         UNSUPPORTED_HREF_TRANSFORMER,
+        MATH_TRANSFORMER,
       ]
     )
 
@@ -169,6 +237,7 @@ class Sanitize
         UNSUPPORTED_HREF_TRANSFORMER,
         LINK_REL_TRANSFORMER,
         LINK_TARGET_TRANSFORMER,
+        MATH_TRANSFORMER,
       ]
     )
   end
