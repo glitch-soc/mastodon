@@ -300,6 +300,7 @@ en:
         events: Enabled events
         url: Endpoint URL
     'no': 'No'
+    not_recommended: Not recommended
     recommended: Recommended
     required:
       mark: "*"
