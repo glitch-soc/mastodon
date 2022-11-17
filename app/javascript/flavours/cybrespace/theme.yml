@@ -1,0 +1,25 @@
+pack:
+  admin:
+    - ../glitch/packs/admin.js
+    - ../glitch/packs/public.js
+  auth: ../glitch/packs/public.js
+  common:
+    filename: ../glitch/packs/common.js
+    stylesheet: true
+  embed: ../glitch/packs/public.js
+  error: ../glitch/packs/error.js
+  home:
+    filename: ../glitch/packs/home.js
+    preload:
+    - flavours/glitch/async/compose
+    - flavours/glitch/async/getting_started
+    - flavours/glitch/async/home_timeline
+    - flavours/glitch/async/notifications
+  mailer:
+  modal:
+  public: ../glitch/packs/public.js
+  settings: ../glitch/packs/settings.js
+  share: ../glitch/packs/share.js
+
+
+locales: locales

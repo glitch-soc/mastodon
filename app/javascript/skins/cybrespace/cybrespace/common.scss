@@ -1,0 +1,16 @@
+@import 'components';
+@import 'cybre';
+@import '~flavours/glitch/styles/index';
+
+.search-popout {
+  color: $dark-text-color;
+  background-color: $ui-secondary-color;
+
+  h4 {
+    color: $dark-text-color;
+  }
+}
+
+.fa-star::before {
+  content: "\f0c7";
+}

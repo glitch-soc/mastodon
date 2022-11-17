@@ -1,0 +1,5 @@
+en:
+  flavours:
+    cybrespace:
+      description: A theme inspired by the cybre.space instance.
+      name: Cybre Edition
