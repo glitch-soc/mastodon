@@ -55,8 +55,7 @@ class LinkFooter extends React.PureComponent {
     return (
       <div className='link-footer'>
         <p>
-          <strong>{domain}</strong>:
-          {' '}
+          <strong>{domain}</strong><br/>
           <Link key='about' to='/about'><FormattedMessage id='footer.about' defaultMessage='About' /></Link>
           {canInvite && (
             <>
@@ -75,8 +74,7 @@ class LinkFooter extends React.PureComponent {
         </p>
 
         <p>
-          <strong>Mastodon</strong>:
-          {' '}
+          <strong>Mastodon - CiT</strong><br/>
           <a href='https://joinmastodon.org' target='_blank'><FormattedMessage id='footer.about' defaultMessage='About' /></a>
           {' · '}
           <a href='https://joinmastodon.org/apps' target='_blank'><FormattedMessage id='footer.get_app' defaultMessage='Get the app' /></a>
