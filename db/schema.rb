@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_04_133904) do
+ActiveRecord::Schema.define(version: 2022_11_24_114030) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -781,6 +781,16 @@ ActiveRecord::Schema.define(version: 2022_11_04_133904) do
     t.index ["status_id", "preview_card_id"], name: "index_preview_cards_statuses_on_status_id_and_preview_card_id"
   end
 
+  create_table "reactions", force: :cascade do |t|
+    t.string "emoji"
+    t.bigint "status_id", null: false
+    t.bigint "account_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_reactions_on_account_id"
+    t.index ["status_id"], name: "index_reactions_on_status_id"
+  end
+
   create_table "relays", force: :cascade do |t|
     t.string "inbox_url", default: "", null: false
     t.string "follow_activity_id"
@@ -895,6 +905,19 @@ ActiveRecord::Schema.define(version: 2022_11_04_133904) do
     t.datetime "updated_at", default: -> { "now()" }, null: false
     t.index ["account_id", "status_id"], name: "index_status_pins_on_account_id_and_status_id", unique: true
     t.index ["status_id"], name: "index_status_pins_on_status_id"
+  end
+
+  create_table "status_reactions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "status_id", null: false
+    t.string "name", default: "", null: false
+    t.bigint "custom_emoji_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id", "status_id", "name"], name: "index_status_reactions_on_account_id_and_status_id", unique: true
+    t.index ["account_id"], name: "index_status_reactions_on_account_id"
+    t.index ["custom_emoji_id"], name: "index_status_reactions_on_custom_emoji_id"
+    t.index ["status_id"], name: "index_status_reactions_on_status_id"
   end
 
   create_table "status_stats", force: :cascade do |t|
@@ -1198,6 +1221,8 @@ ActiveRecord::Schema.define(version: 2022_11_04_133904) do
   add_foreign_key "polls", "accounts", on_delete: :cascade
   add_foreign_key "polls", "statuses", on_delete: :cascade
   add_foreign_key "preview_card_trends", "preview_cards", on_delete: :cascade
+  add_foreign_key "reactions", "accounts"
+  add_foreign_key "reactions", "statuses"
   add_foreign_key "report_notes", "accounts", on_delete: :cascade
   add_foreign_key "report_notes", "reports", on_delete: :cascade
   add_foreign_key "reports", "accounts", column: "action_taken_by_account_id", name: "fk_bca45b75fd", on_delete: :nullify
@@ -1211,6 +1236,9 @@ ActiveRecord::Schema.define(version: 2022_11_04_133904) do
   add_foreign_key "status_edits", "statuses", on_delete: :cascade
   add_foreign_key "status_pins", "accounts", name: "fk_d4cb435b62", on_delete: :cascade
   add_foreign_key "status_pins", "statuses", on_delete: :cascade
+  add_foreign_key "status_reactions", "accounts"
+  add_foreign_key "status_reactions", "custom_emojis"
+  add_foreign_key "status_reactions", "statuses"
   add_foreign_key "status_stats", "statuses", on_delete: :cascade
   add_foreign_key "status_trends", "accounts", on_delete: :cascade
   add_foreign_key "status_trends", "statuses", on_delete: :cascade

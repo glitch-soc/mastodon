@@ -453,6 +453,7 @@ Rails.application.routes.draw do
 
           resource :history, only: :show
           resource :source, only: :show
+          resources :reactions, only: [:update, :destroy]
 
           post :translate, to: 'translations#create'
         end
