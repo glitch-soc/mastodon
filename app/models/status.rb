@@ -71,6 +71,7 @@ class Status < ApplicationRecord
   has_many :mentioned_accounts, through: :mentions, source: :account, class_name: 'Account'
   has_many :active_mentions, -> { active }, class_name: 'Mention', inverse_of: :status
   has_many :media_attachments, dependent: :nullify
+  has_many :status_reactions, dependent: :destroy
 
   has_and_belongs_to_many :tags
   has_and_belongs_to_many :preview_cards
@@ -261,6 +262,21 @@ class Status < ApplicationRecord
     fields += preloadable_poll.options unless preloadable_poll.nil?
 
     @emojis = CustomEmoji.from_text(fields.join(' '), account.domain)
+  end
+
+  def reactions(account = nil)
+    records = begin
+      scope = status_reactions.group(:status_id, :name, :custom_emoji_id).order(Arel.sql('MIN(created_at) ASC'))
+
+      if account.nil?
+        scope.select('name, custom_emoji_id, count(*) as count, false as me')
+      else
+        scope.select("name, custom_emoji_id, count(*) as count, exists(select 1 from status_reactions r where r.account_id = #{account.id} and r.status_id = status_reactions.status_id and r.name = status_reactions.name) as me")
+      end
+    end
+
+    ActiveRecord::Associations::Preloader.new.preload(records, :custom_emoji)
+    records
   end
 
   def ordered_media_attachments
