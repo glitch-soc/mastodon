@@ -21,6 +21,7 @@ en:
         setting_hide_followers_count: Hide your followers count
         setting_skin: Skin
         setting_system_emoji_font: Use system's default font for emojis (applies to Glitch flavour only)
+        setting_visible_reactions: Number of visible emoji reactions
       notification_emails:
         trending_link: New trending link requires review
         trending_status: New trending post requires review

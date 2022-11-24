@@ -21,7 +21,9 @@ fr:
         setting_hide_followers_count: Cacher votre nombre d'abonné·e·s
         setting_skin: Thème
         setting_system_emoji_font: Utiliser la police par défaut du système pour les émojis (s'applique uniquement au mode Glitch)
+        setting_visible_reactions: Nombre de réactions emoji visibles
       notification_emails:
         trending_link: Un nouveau lien en tendances nécessite un examen
         trending_status: Un nouveau post en tendances nécessite un examen
         trending_tag: Un nouveau tag en tendances nécessite un examen
+        setting_visible_reactions: Nombre de réactions emoji visibles

@@ -1145,6 +1145,10 @@ body > [data-popper-placement] {
       }
     }
   }
+
+  .reactions-bar--empty {
+    margin-top: 0;
+  }
 }
 
 .status__relative-time {
@@ -1268,6 +1272,16 @@ body > [data-popper-placement] {
   align-items: center;
   gap: 18px;
   margin-top: 16px;
+
+  & > .emoji-picker-dropdown > .emoji-button {
+    padding: 0;
+  }
+}
+
+.status__action-bar-button {
+  .fa-plus {
+    padding-top: 1px;
+  }
 }
 
 .detailed-status__action-bar-dropdown {
@@ -4085,6 +4099,10 @@ a.status-card.compact:hover {
 .detailed-status__button {
   flex: 1 1 auto;
   text-align: center;
+}
+
+.detailed-status__button .emoji-button {
+  padding: 0;
 }
 
 .column-settings__outer {

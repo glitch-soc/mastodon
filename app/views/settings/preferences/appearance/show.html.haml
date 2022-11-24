@@ -38,6 +38,9 @@
   .fields-group
     = f.input :setting_crop_images, as: :boolean, wrapper: :with_label
 
+  .fields-group.fields-row__column.fields-row__column-6
+    = f.input :setting_visible_reactions, wrapper: :with_label, input_html: { type: 'number', min: '0', data: { default: '6' } }, hint: false
+
   %h4= t 'appearance.discovery'
 
   .fields-group

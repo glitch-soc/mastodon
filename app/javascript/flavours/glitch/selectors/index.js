@@ -1,6 +1,6 @@
 import escapeTextContentForBrowser from 'escape-html';
 import { createSelector } from 'reselect';
-import { List as ImmutableList, Map as ImmutableMap, is } from 'immutable';
+import { List as ImmutableList, Map as ImmutableMap } from 'immutable';
 import { toServerSideType } from 'flavours/glitch/utils/filters';
 import { me } from 'flavours/glitch/initial_state';
 

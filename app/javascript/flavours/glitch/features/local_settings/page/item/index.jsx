@@ -28,7 +28,6 @@ export default class LocalSettingsPageItem extends React.PureComponent {
   handleChange = e => {
     const { target } = e;
     const { item, onChange, options, placeholder } = this.props;
-
     if (options && options.length > 0) onChange(item, target.value);
     else if (placeholder) onChange(item, target.value);
     else onChange(item, target.checked);
@@ -36,7 +35,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
 
   render () {
     const { handleChange } = this;
-    const { settings, item, id, inputProps, options, children, dependsOn, dependsOnNot, placeholder, disabled } = this.props;
+    const { settings, item, id, inputProps, options, children, dependsOn, dependsOnNot, placeholder, number, disabled } = this.props;
     let enabled = !disabled;
 
     if (dependsOn) {

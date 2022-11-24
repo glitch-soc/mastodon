@@ -41,6 +41,16 @@ export const UNBOOKMARK_REQUEST = 'UNBOOKMARKED_REQUEST';
 export const UNBOOKMARK_SUCCESS = 'UNBOOKMARKED_SUCCESS';
 export const UNBOOKMARK_FAIL    = 'UNBOOKMARKED_FAIL';
 
+export const REACTION_UPDATE = 'REACTION_UPDATE';
+
+export const REACTION_ADD_REQUEST = 'REACTION_ADD_REQUEST';
+export const REACTION_ADD_SUCCESS = 'REACTION_ADD_SUCCESS';
+export const REACTION_ADD_FAIL    = 'REACTION_ADD_FAIL';
+
+export const REACTION_REMOVE_REQUEST = 'REACTION_REMOVE_REQUEST';
+export const REACTION_REMOVE_SUCCESS = 'REACTION_REMOVE_SUCCESS';
+export const REACTION_REMOVE_FAIL    = 'REACTION_REMOVE_FAIL';
+
 export function reblog(status, visibility) {
   return function (dispatch, getState) {
     dispatch(reblogRequest(status));
@@ -412,3 +422,75 @@ export function unpinFail(status, error) {
     skipLoading: true,
   };
 }
+
+export const addReaction = (statusId, name, url) => (dispatch, getState) => {
+  const status = getState().get('statuses').get(statusId);
+  let alreadyAdded = false;
+  if (status) {
+    const reaction = status.get('reactions').find(x => x.get('name') === name);
+    if (reaction && reaction.get('me')) {
+      alreadyAdded = true;
+    }
+  }
+  if (!alreadyAdded) {
+    dispatch(addReactionRequest(statusId, name, url));
+  }
+
+  // encodeURIComponent is required for the Keycap Number Sign emoji, see:
+  // <https://github.com/glitch-soc/mastodon/pull/1980#issuecomment-1345538932>
+  api(getState).post(`/api/v1/statuses/${statusId}/react/${encodeURIComponent(name)}`).then(() => {
+    dispatch(addReactionSuccess(statusId, name));
+  }).catch(err => {
+    if (!alreadyAdded) {
+      dispatch(addReactionFail(statusId, name, err));
+    }
+  });
+};
+
+export const addReactionRequest = (statusId, name, url) => ({
+  type: REACTION_ADD_REQUEST,
+  id: statusId,
+  name,
+  url,
+});
+
+export const addReactionSuccess = (statusId, name) => ({
+  type: REACTION_ADD_SUCCESS,
+  id: statusId,
+  name,
+});
+
+export const addReactionFail = (statusId, name, error) => ({
+  type: REACTION_ADD_FAIL,
+  id: statusId,
+  name,
+  error,
+});
+
+export const removeReaction = (statusId, name) => (dispatch, getState) => {
+  dispatch(removeReactionRequest(statusId, name));
+
+  api(getState).post(`/api/v1/statuses/${statusId}/unreact/${encodeURIComponent(name)}`).then(() => {
+    dispatch(removeReactionSuccess(statusId, name));
+  }).catch(err => {
+    dispatch(removeReactionFail(statusId, name, err));
+  });
+};
+
+export const removeReactionRequest = (statusId, name) => ({
+  type: REACTION_REMOVE_REQUEST,
+  id: statusId,
+  name,
+});
+
+export const removeReactionSuccess = (statusId, name) => ({
+  type: REACTION_REMOVE_SUCCESS,
+  id: statusId,
+  name,
+});
+
+export const removeReactionFail = (statusId, name) => ({
+  type: REACTION_REMOVE_FAIL,
+  id: statusId,
+  name,
+});
