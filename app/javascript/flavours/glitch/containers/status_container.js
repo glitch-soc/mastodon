@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
-import { List as ImmutableList } from 'immutable';
 import { makeGetStatus } from 'flavours/glitch/selectors';
 import {
   replyCompose,
@@ -16,6 +15,8 @@ import {
   unbookmark,
   pin,
   unpin,
+  statusAddReaction,
+  statusRemoveReaction,
 } from 'flavours/glitch/actions/interactions';
 import {
   muteStatus,
@@ -44,6 +45,10 @@ import { showAlertForError } from '../actions/alerts';
 import AccountContainer from 'flavours/glitch/containers/account_container';
 import Spoilers from '../components/spoilers';
 import Icon from 'flavours/glitch/components/icon';
+import { createSelector } from 'reselect';
+import { Map as ImmutableMap } from 'immutable';
+
+const customEmojiMap = createSelector([state => state.get('custom_emojis')], items => items.reduce((map, emoji) => map.set(emoji.get('shortcode'), emoji), ImmutableMap()));
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -83,6 +88,7 @@ const makeMapStateToProps = () => {
       account: account || props.account,
       settings: state.get('local_settings'),
       prepend: prepend || props.prepend,
+      emojiMap: customEmojiMap(state),
 
       pictureInPicture: {
         inUse: state.getIn(['meta', 'layout']) !== 'mobile' && state.get('picture_in_picture').statusId === props.id,
@@ -164,6 +170,14 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     } else {
       dispatch(pin(status));
     }
+  },
+
+  onReactionAdd (statusId, name) {
+    dispatch(statusAddReaction(statusId, name));
+  },
+
+  onReactionRemove (statusId, name) {
+    dispatch(statusRemoveReaction(statusId, name));
   },
 
   onEmbed (status) {

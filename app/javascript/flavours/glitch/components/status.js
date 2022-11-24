@@ -6,6 +6,7 @@ import StatusHeader from './status_header';
 import StatusIcons from './status_icons';
 import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
+import StatusReactionsBar from './status_reactions_bar';
 import AttachmentList from './attachment_list';
 import Card from '../features/status/components/card';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -75,6 +76,8 @@ class Status extends ImmutablePureComponent {
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
     onMention: PropTypes.func,
+    onReactionAdd: PropTypes.func,
+    onReactionRemove: PropTypes.func,
     onPin: PropTypes.func,
     onOpenMedia: PropTypes.func,
     onOpenVideo: PropTypes.func,
@@ -102,6 +105,7 @@ class Status extends ImmutablePureComponent {
     scrollKey: PropTypes.string,
     deployPictureInPicture: PropTypes.func,
     settings: ImmutablePropTypes.map.isRequired,
+    emojiMap: ImmutablePropTypes.map.isRequired,
     pictureInPicture: PropTypes.shape({
       inUse: PropTypes.bool,
       available: PropTypes.bool,
@@ -798,6 +802,14 @@ class Status extends ImmutablePureComponent {
             disabled={!router}
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
+          />
+
+          <StatusReactionsBar
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            addReaction={this.props.onReactionAdd}
+            removeReaction={this.props.onReactionRemove}
+            emojiMap={this.props.emojiMap}
           />
 
           {!isCollapsed || !(muted || !settings.getIn(['collapsed', 'show_action_bar'])) ? (
