@@ -41,6 +41,16 @@ export const UNBOOKMARK_REQUEST = 'UNBOOKMARKED_REQUEST';
 export const UNBOOKMARK_SUCCESS = 'UNBOOKMARKED_SUCCESS';
 export const UNBOOKMARK_FAIL    = 'UNBOOKMARKED_FAIL';
 
+export const STATUS_REACTION_UPDATE = 'STATUS_REACTION_UPDATE';
+
+export const STATUS_REACTION_ADD_REQUEST = 'STATUS_REACTION_ADD_REQUEST';
+export const STATUS_REACTION_ADD_SUCCESS = 'STATUS_REACTION_ADD_SUCCESS';
+export const STATUS_REACTION_ADD_FAIL    = 'STATUS_REACTION_ADD_FAIL';
+
+export const STATUS_REACTION_REMOVE_REQUEST = 'STATUS_REACTION_REMOVE_REQUEST';
+export const STATUS_REACTION_REMOVE_SUCCESS = 'STATUS_REACTION_REMOVE_SUCCESS';
+export const STATUS_REACTION_REMOVE_FAIL    = 'STATUS_REACTION_REMOVE_FAIL';
+
 export function reblog(status, visibility) {
   return function (dispatch, getState) {
     dispatch(reblogRequest(status));
@@ -392,3 +402,78 @@ export function unpinFail(status, error) {
     error,
   };
 };
+
+export const statusAddReaction = (statusId, name) => (dispatch, getState) => {
+  const status = getState().get('statuses').get(statusId);
+  let alreadyAdded = false;
+  if (status) {
+    const reaction = status.get('reactions').find(x => x.get('name') === name);
+    if (reaction && reaction.get('me')) {
+      alreadyAdded = true;
+    }
+  }
+  if (!alreadyAdded) {
+    dispatch(statusAddReactionRequest(statusId, name, alreadyAdded));
+  }
+
+  api(getState).put(`/api/v1/statuses/${statusId}/reactions/${name}`).then(() => {
+    dispatch(statusAddReactionSuccess(statusId, name, alreadyAdded));
+  }).catch(err => {
+    if (!alreadyAdded) {
+      dispatch(statusAddReactionFail(statusId, name, err));
+    }
+  });
+};
+
+export const statusAddReactionRequest = (statusId, name) => ({
+  type: STATUS_REACTION_ADD_REQUEST,
+  id: statusId,
+  name,
+  skipLoading: true,
+});
+
+export const statusAddReactionSuccess = (statusId, name) => ({
+  type: STATUS_REACTION_ADD_SUCCESS,
+  id: statusId,
+  name,
+  skipLoading: true,
+});
+
+export const statusAddReactionFail = (statusId, name, error) => ({
+  type: STATUS_REACTION_ADD_FAIL,
+  id: statusId,
+  name,
+  error,
+  skipLoading: true,
+});
+
+export const statusRemoveReaction = (statusId, name) => (dispatch, getState) => {
+  dispatch(statusRemoveReactionRequest(statusId, name));
+
+  api(getState).delete(`/api/v1/statuses/${statusId}/reactions/${name}`).then(() => {
+    dispatch(statusRemoveReactionSuccess(statusId, name));
+  }).catch(err => {
+    dispatch(statusRemoveReactionFail(statusId, name, err));
+  });
+};
+
+export const statusRemoveReactionRequest = (statusId, name) => ({
+  type: STATUS_REACTION_REMOVE_REQUEST,
+  id: statusId,
+  name,
+  skipLoading: true,
+});
+
+export const statusRemoveReactionSuccess = (statusId, name) => ({
+  type: STATUS_REACTION_REMOVE_SUCCESS,
+  id: statusId,
+  name,
+  skipLoading: true,
+});
+
+export const statusRemoveReactionFail = (statusId, name) => ({
+  type: STATUS_REACTION_REMOVE_FAIL,
+  id: statusId,
+  name,
+  skipLoading: true,
+});
