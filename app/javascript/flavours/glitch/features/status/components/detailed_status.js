@@ -20,6 +20,7 @@ import Icon from 'flavours/glitch/components/icon';
 import AnimatedNumber from 'flavours/glitch/components/animated_number';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import EditedTimestamp from 'flavours/glitch/components/edited_timestamp';
+import StatusReactionsBar from '../../../components/status_reactions_bar';
 
 export default @injectIntl
 class DetailedStatus extends ImmutablePureComponent {
@@ -43,6 +44,9 @@ class DetailedStatus extends ImmutablePureComponent {
     showMedia: PropTypes.bool,
     usingPiP: PropTypes.bool,
     onToggleMediaVisibility: PropTypes.func,
+    onReactionAdd: PropTypes.func.isRequired,
+    onReactionRemove: PropTypes.func.isRequired,
+    emojiMap: ImmutablePropTypes.map.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
@@ -317,6 +321,14 @@ class DetailedStatus extends ImmutablePureComponent {
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
             disabled
+          />
+
+          <StatusReactionsBar
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            addReaction={this.props.onReactionAdd}
+            removeReaction={this.props.onReactionRemove}
+            emojiMap={this.props.emojiMap}
           />
 
           <div className='detailed-status__meta'>
