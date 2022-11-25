@@ -45,10 +45,7 @@ import { showAlertForError } from '../actions/alerts';
 import AccountContainer from 'flavours/glitch/containers/account_container';
 import Spoilers from '../components/spoilers';
 import Icon from 'flavours/glitch/components/icon';
-import { createSelector } from 'reselect';
-import { Map as ImmutableMap } from 'immutable';
-
-const customEmojiMap = createSelector([state => state.get('custom_emojis')], items => items.reduce((map, emoji) => map.set(emoji.get('shortcode'), emoji), ImmutableMap()));
+import buildCustomEmojiMap from '../utils/emoji_map';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -88,7 +85,7 @@ const makeMapStateToProps = () => {
       account: account || props.account,
       settings: state.get('local_settings'),
       prepend: prepend || props.prepend,
-      emojiMap: customEmojiMap(state),
+      emojiMap: buildCustomEmojiMap(state),
 
       pictureInPicture: {
         inUse: state.getIn(['meta', 'layout']) !== 'mobile' && state.get('picture_in_picture').statusId === props.id,
