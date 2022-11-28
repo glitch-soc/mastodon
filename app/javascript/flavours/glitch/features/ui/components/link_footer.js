@@ -71,6 +71,8 @@ class LinkFooter extends React.PureComponent {
           )}
           {' · '}
           <Link key='privacy-policy' to='/privacy-policy'><FormattedMessage id='footer.privacy_policy' defaultMessage='Privacy policy' /></Link>
+          {' · '}
+          <a key='cit-status' href='https://status.compostintraining.club' target='_blank'><FormattedMessage id='footer.status' defaultMessage='Status' /></a>
         </p>
 
         <p>
