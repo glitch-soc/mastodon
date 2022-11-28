@@ -8,12 +8,12 @@ class Api::V1::Statuses::ReactionsController < Api::BaseController
   before_action :set_reaction, except: :update
 
   def update
-    @status.status_reactions.create!(account: current_account, name: params[:id])
+    StatusReactionService.new.call(current_account, @status, params[:id])
     render_empty
   end
 
   def destroy
-    @reaction.destroy!
+    StatusUnreactionService.new.call(current_account, @status)
     render_empty
   end
 

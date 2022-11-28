@@ -39,6 +39,8 @@ class ActivityPub::Activity
         ActivityPub::Activity::Follow
       when 'Like'
         ActivityPub::Activity::Like
+      when 'EmojiReact'
+        ActivityPub::Activity::EmojiReact
       when 'Block'
         ActivityPub::Activity::Block
       when 'Update'
