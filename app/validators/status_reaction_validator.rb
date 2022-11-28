@@ -3,7 +3,7 @@
 class StatusReactionValidator < ActiveModel::Validator
   SUPPORTED_EMOJIS = Oj.load_file(Rails.root.join('app', 'javascript', 'mastodon', 'features', 'emoji', 'emoji_map.json').to_s).keys.freeze
 
-  LIMIT = 8
+  LIMIT = [1, (ENV['MAX_STATUS_REACTIONS'] || 1).to_i].max
 
   def validate(reaction)
     return if reaction.name.blank?
