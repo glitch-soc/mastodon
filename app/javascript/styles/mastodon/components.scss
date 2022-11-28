@@ -5783,6 +5783,7 @@ a.status-card.compact:hover {
   opacity: 0.9;
   transition: opacity 0.1s ease;
   line-height: 18px;
+  font-family: sans-serif;
 }
 
 .media-gallery__gifv {
@@ -8601,7 +8602,6 @@ noscript {
       }
 
       p {
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
