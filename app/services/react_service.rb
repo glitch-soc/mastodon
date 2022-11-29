@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class StatusReactionService < BaseService
+class ReactService < BaseService
   include Authorization
   include Payloadable
 

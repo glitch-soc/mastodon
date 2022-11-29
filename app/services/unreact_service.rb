@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class StatusUnreactionService < BaseService
+class UnreactService < BaseService
   include Payloadable
 
   def call(account, status)
