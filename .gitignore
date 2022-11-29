@@ -69,3 +69,7 @@ yarn-debug.log
 
 # Ignore Docker option files
 docker-compose.override.yml
+
+# Ignore Nix temporary files
+nixupdate.log
+result

@@ -12,3 +12,4 @@
 *.woff                        -text
 *.woff2                       -text
 spec/fixtures/requests/**     -text !eol
+nix/gemset.nix                linguist-generated=true
