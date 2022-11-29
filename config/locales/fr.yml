@@ -1285,6 +1285,10 @@ fr:
       body: "%{name} a ajouté votre message à ses favoris :"
       subject: "%{name} a ajouté votre message à ses favoris"
       title: Nouveau favori
+    reaction:
+      body: '%{name} a réagi·e à votre message:'
+      subject: '%{name} a réagi·e à votre message'
+      title: Nouvelle réaction
     follow:
       body: "%{name} vous suit !"
       subject: "%{name} vous suit"

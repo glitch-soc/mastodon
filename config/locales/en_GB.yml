@@ -707,6 +707,10 @@ en_GB:
       body: 'Your status was favourited by %{name}:'
       subject: "%{name} favourited your status"
       title: New favourite
+    reaction:
+      body: '%{name} reacted on your post with %{reaction}:'
+      subject: '%{name} reacted on your post'
+      title: New reaction
     follow:
       body: "%{name} is now following you!"
       subject: "%{name} is now following you"

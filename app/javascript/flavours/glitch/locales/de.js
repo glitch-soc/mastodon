@@ -53,6 +53,11 @@ const messages = {
   'notification_purge.btn_none': 'Keine\nauswählen',
   'notification_purge.btn_invert': 'Auswahl\numkehren',
   'notification_purge.btn_apply': 'Ausgewählte\nlöschen',
+  
+  'notification.reaction': '{name} hat auf deinen Beitrag reagiert',
+  'notifications.column_settings.reaction': 'Reaktionen:',
+
+  'tooltips.reactions': 'Reaktionen',
 
   'compose.attach.upload': 'Datei hochladen',
   'compose.attach.doodle': 'Etwas malen',
