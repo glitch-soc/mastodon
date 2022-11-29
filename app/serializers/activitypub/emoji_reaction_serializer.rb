@@ -30,7 +30,5 @@ class ActivityPub::EmojiReactionSerializer < ActivityPub::Serializer
     end
   end
 
-  def reaction
-    content
-  end
+  alias reaction content
 end
