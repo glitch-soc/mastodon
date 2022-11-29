@@ -59,6 +59,7 @@ class StatusActionBar extends ImmutablePureComponent {
     status: ImmutablePropTypes.map.isRequired,
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
+    onReactionAdd: PropTypes.func,
     onReblog: PropTypes.func,
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,

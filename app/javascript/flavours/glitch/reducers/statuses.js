@@ -6,11 +6,11 @@ import {
   UNFAVOURITE_SUCCESS,
   BOOKMARK_REQUEST,
   BOOKMARK_FAIL,
-  STATUS_REACTION_UPDATE,
-  STATUS_REACTION_ADD_FAIL,
-  STATUS_REACTION_REMOVE_FAIL,
-  STATUS_REACTION_ADD_REQUEST,
-  STATUS_REACTION_REMOVE_REQUEST,
+  REACTION_UPDATE,
+  REACTION_ADD_FAIL,
+  REACTION_REMOVE_FAIL,
+  REACTION_ADD_REQUEST,
+  REACTION_REMOVE_REQUEST,
 } from 'flavours/glitch/actions/interactions';
 import {
   STATUS_MUTE_SUCCESS,
@@ -99,13 +99,13 @@ export default function statuses(state = initialState, action) {
     return state.setIn([action.status.get('id'), 'reblogged'], true);
   case REBLOG_FAIL:
     return state.get(action.status.get('id')) === undefined ? state : state.setIn([action.status.get('id'), 'reblogged'], false);
-  case STATUS_REACTION_UPDATE:
+  case REACTION_UPDATE:
     return updateReactionCount(state, action.reaction);
-  case STATUS_REACTION_ADD_REQUEST:
-  case STATUS_REACTION_REMOVE_FAIL:
+  case REACTION_ADD_REQUEST:
+  case REACTION_REMOVE_FAIL:
     return addReaction(state, action.id, action.name);
-  case STATUS_REACTION_REMOVE_REQUEST:
-  case STATUS_REACTION_ADD_FAIL:
+  case REACTION_REMOVE_REQUEST:
+  case REACTION_ADD_FAIL:
     return removeReaction(state, action.id, action.name);
   case STATUS_MUTE_SUCCESS:
     return state.setIn([action.id, 'muted'], true);
