@@ -9,6 +9,8 @@ class ActivityPub::Activity::EmojiReact < ActivityPub::Activity
       delete_arrived_first?(@json['id']) ||
       @account.reacted?(original_status, name)
 
-    original_status.status_reactions.create!(account: @account, name: name)
+    reaction = original_status.status_reactions.create!(account: @account, name: name)
+
+    LocalNotificationWorker.perform_async(original_status.account_id, reaction.id, 'StatusReaction', 'reaction')
   end
 end
