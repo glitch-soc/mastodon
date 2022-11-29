@@ -59,6 +59,8 @@ const messages = {
 
   'tooltips.reactions': 'Reaktionen',
 
+  'status.react': 'Reagieren',
+  
   'compose.attach.upload': 'Datei hochladen',
   'compose.attach.doodle': 'Etwas malen',
   'compose.attach.gif': 'GIF anhängen',
