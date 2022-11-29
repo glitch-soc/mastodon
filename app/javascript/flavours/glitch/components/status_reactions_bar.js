@@ -18,7 +18,6 @@ export default class StatusReactionsBar extends ImmutablePureComponent {
   static propTypes = {
     statusId: PropTypes.string.isRequired,
     reactions: ImmutablePropTypes.list.isRequired,
-    reactionLimit: PropTypes.number.isRequired,
     addReaction: PropTypes.func.isRequired,
     removeReaction: PropTypes.func.isRequired,
     emojiMap: ImmutablePropTypes.map.isRequired,

@@ -14,6 +14,7 @@ class StatusReactionService < BaseService
 
     json = Oj.dump(serialize_payload(reaction, ActivityPub::EmojiReactionSerializer))
     if status.account.local?
+      NotifyService.new.call(status.account, :reaction, reaction)
       ActivityPub::RawDistributionWorker.perform_async(json, status.account.id)
     else
       ActivityPub::DeliveryWorker.perform_async(json, reaction.account_id, status.account.inbox_url)
