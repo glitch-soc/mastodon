@@ -5,13 +5,11 @@ import { reduceMotion } from '../initial_state';
 import spring from 'react-motion/lib/spring';
 import TransitionMotion from 'react-motion/lib/TransitionMotion';
 import classNames from 'classnames';
-import EmojiPickerDropdown from '../features/compose/containers/emoji_picker_dropdown_container';
-import Icon from './icon';
 import React from 'react';
 import unicodeMapping from '../features/emoji/emoji_unicode_mapping_light';
 import AnimatedNumber from './animated_number';
 import { assetHost } from '../utils/config';
-import { autoPlayGif, maxReactions } from '../initial_state';
+import { autoPlayGif } from '../initial_state';
 
 export default class StatusReactionsBar extends ImmutablePureComponent {
 
@@ -61,8 +59,6 @@ export default class StatusReactionsBar extends ImmutablePureComponent {
                 emojiMap={this.props.emojiMap}
               />
             ))}
-
-            {visibleReactions.size < maxReactions && <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} button={<Icon id='plus' />} />}
           </div>
         )}
       </TransitionMotion>

@@ -33,6 +33,7 @@ const messages = {
   'settings.wide_view': 'Wide view (Desktop mode only)',
   'settings.navbar_under': 'Navbar at the bottom (Mobile only)',
   'status.collapse': 'Collapse',
+  'status.react': 'React',
   'status.uncollapse': 'Uncollapse',
 
   'media_gallery.sensitive': 'Sensitive',

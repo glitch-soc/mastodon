@@ -5,6 +5,8 @@ const messages = {
   'notifications.column_settings.reaction': 'Reaktionen:',
 
   'tooltips.reactions': 'Reaktionen',
+
+  'status.react': 'Reagieren',
 };
 
 export default Object.assign({}, inherited, messages);
