@@ -148,4 +148,7 @@ export const pollLimits = (initialState && initialState.poll_limits);
 export const defaultContentType = getMeta('default_content_type');
 export const useSystemEmojiFont = getMeta('system_emoji_font');
 
+// nyastodon-specific settings
+export const maxReactions = (initialState && initialState.max_reactions) || 8;
+
 export default initialState;

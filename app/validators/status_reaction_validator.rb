@@ -3,13 +3,13 @@
 class StatusReactionValidator < ActiveModel::Validator
   SUPPORTED_EMOJIS = Oj.load_file(Rails.root.join('app', 'javascript', 'mastodon', 'features', 'emoji', 'emoji_map.json').to_s).keys.freeze
 
-  LIMIT = [1, (ENV['MAX_STATUS_REACTIONS'] || 1).to_i].max
+  LIMIT = [1, (ENV['MAX_REACTIONS'] || 8).to_i].max
 
   def validate(reaction)
     return if reaction.name.blank?
 
     reaction.errors.add(:name, I18n.t('reactions.errors.unrecognized_emoji')) if reaction.custom_emoji_id.blank? && !unicode_emoji?(reaction.name)
-    reaction.errors.add(:base, I18n.t('reactions.errors.limit_reached')) if new_reaction?(reaction) && limit_reached?(reaction)
+    reaction.errors.add(:base, I18n.t('reactions.errors.limit_reached')) if limit_reached?(reaction)
   end
 
   private
@@ -23,6 +23,6 @@ class StatusReactionValidator < ActiveModel::Validator
   end
 
   def limit_reached?(reaction)
-    reaction.status.status_reactions.where.not(name: reaction.name).count('distinct name') >= LIMIT
+    reaction.status.status_reactions.where(status: reaction.status, account: reaction.account).count >= LIMIT
   end
 end
