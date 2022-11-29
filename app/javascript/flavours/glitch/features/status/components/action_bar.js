@@ -144,7 +144,7 @@ class ActionBar extends React.PureComponent {
     navigator.clipboard.writeText(url);
   }
 
-  nop = () => {}
+  nop = () => {} // hack for reaction add button
 
   render () {
     const { status, intl } = this.props;

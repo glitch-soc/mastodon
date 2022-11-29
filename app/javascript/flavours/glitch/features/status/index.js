@@ -20,8 +20,8 @@ import {
   unreblog,
   pin,
   unpin,
-  statusAddReaction,
-  statusRemoveReaction,
+  addReaction,
+  removeReaction,
 } from 'flavours/glitch/actions/interactions';
 import {
   replyCompose,
@@ -58,7 +58,7 @@ import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { textForScreenReader, defaultMediaVisibility } from 'flavours/glitch/components/status';
 import Icon from 'flavours/glitch/components/icon';
 import { Helmet } from 'react-helmet';
-import buildCustomEmojiMap from '../../utils/emoji_map';
+import { makeCustomEmojiMap } from '../../selectors';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -149,7 +149,7 @@ const makeMapStateToProps = () => {
       askReplyConfirmation: state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0,
       domain: state.getIn(['meta', 'domain']),
       usingPiP: state.get('picture_in_picture').statusId === props.params.statusId,
-      emojiMap: buildCustomEmojiMap(state),
+      emojiMap: makeCustomEmojiMap(state),
     };
   };
 
@@ -300,7 +300,7 @@ class Status extends ImmutablePureComponent {
     const { signedIn } = this.context.identity;
 
     if (signedIn) {
-      dispatch(statusAddReaction(statusId, name));
+      dispatch(addReaction(statusId, name));
     } else {
       dispatch(openModal('INTERACTION', {
         type: 'reaction_add',
@@ -311,12 +311,7 @@ class Status extends ImmutablePureComponent {
   }
 
   handleReactionRemove = (statusId, name) => {
-    const { dispatch } = this.props;
-    const { signedIn } = this.context.identity;
-
-    if (signedIn) {
-      dispatch(statusRemoveReaction(statusId, name));
-    }
+    this.props.dispatch(removeReaction(statusId, name));
   }
 
   handlePin = (status) => {

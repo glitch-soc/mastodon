@@ -41,15 +41,15 @@ export const UNBOOKMARK_REQUEST = 'UNBOOKMARKED_REQUEST';
 export const UNBOOKMARK_SUCCESS = 'UNBOOKMARKED_SUCCESS';
 export const UNBOOKMARK_FAIL    = 'UNBOOKMARKED_FAIL';
 
-export const STATUS_REACTION_UPDATE = 'STATUS_REACTION_UPDATE';
+export const REACTION_UPDATE = 'REACTION_UPDATE';
 
-export const STATUS_REACTION_ADD_REQUEST = 'STATUS_REACTION_ADD_REQUEST';
-export const STATUS_REACTION_ADD_SUCCESS = 'STATUS_REACTION_ADD_SUCCESS';
-export const STATUS_REACTION_ADD_FAIL    = 'STATUS_REACTION_ADD_FAIL';
+export const REACTION_ADD_REQUEST = 'REACTION_ADD_REQUEST';
+export const REACTION_ADD_SUCCESS = 'REACTION_ADD_SUCCESS';
+export const REACTION_ADD_FAIL    = 'REACTION_ADD_FAIL';
 
-export const STATUS_REACTION_REMOVE_REQUEST = 'STATUS_REACTION_REMOVE_REQUEST';
-export const STATUS_REACTION_REMOVE_SUCCESS = 'STATUS_REACTION_REMOVE_SUCCESS';
-export const STATUS_REACTION_REMOVE_FAIL    = 'STATUS_REACTION_REMOVE_FAIL';
+export const REACTION_REMOVE_REQUEST = 'REACTION_REMOVE_REQUEST';
+export const REACTION_REMOVE_SUCCESS = 'REACTION_REMOVE_SUCCESS';
+export const REACTION_REMOVE_FAIL    = 'REACTION_REMOVE_FAIL';
 
 export function reblog(status, visibility) {
   return function (dispatch, getState) {
@@ -403,7 +403,7 @@ export function unpinFail(status, error) {
   };
 };
 
-export const statusAddReaction = (statusId, name) => (dispatch, getState) => {
+export const addReaction = (statusId, name) => (dispatch, getState) => {
   const status = getState().get('statuses').get(statusId);
   let alreadyAdded = false;
   if (status) {
@@ -413,66 +413,66 @@ export const statusAddReaction = (statusId, name) => (dispatch, getState) => {
     }
   }
   if (!alreadyAdded) {
-    dispatch(statusAddReactionRequest(statusId, name, alreadyAdded));
+    dispatch(addReactionRequest(statusId, name, alreadyAdded));
   }
 
   api(getState).put(`/api/v1/statuses/${statusId}/reactions/${name}`).then(() => {
-    dispatch(statusAddReactionSuccess(statusId, name, alreadyAdded));
+    dispatch(addReactionSuccess(statusId, name, alreadyAdded));
   }).catch(err => {
     if (!alreadyAdded) {
-      dispatch(statusAddReactionFail(statusId, name, err));
+      dispatch(addReactionFail(statusId, name, err));
     }
   });
 };
 
-export const statusAddReactionRequest = (statusId, name) => ({
-  type: STATUS_REACTION_ADD_REQUEST,
+export const addReactionRequest = (statusId, name) => ({
+  type: REACTION_ADD_REQUEST,
   id: statusId,
   name,
   skipLoading: true,
 });
 
-export const statusAddReactionSuccess = (statusId, name) => ({
-  type: STATUS_REACTION_ADD_SUCCESS,
+export const addReactionSuccess = (statusId, name) => ({
+  type: REACTION_ADD_SUCCESS,
   id: statusId,
   name,
   skipLoading: true,
 });
 
-export const statusAddReactionFail = (statusId, name, error) => ({
-  type: STATUS_REACTION_ADD_FAIL,
+export const addReactionFail = (statusId, name, error) => ({
+  type: REACTION_ADD_FAIL,
   id: statusId,
   name,
   error,
   skipLoading: true,
 });
 
-export const statusRemoveReaction = (statusId, name) => (dispatch, getState) => {
-  dispatch(statusRemoveReactionRequest(statusId, name));
+export const removeReaction = (statusId, name) => (dispatch, getState) => {
+  dispatch(removeReactionRequest(statusId, name));
 
   api(getState).delete(`/api/v1/statuses/${statusId}/reactions/${name}`).then(() => {
-    dispatch(statusRemoveReactionSuccess(statusId, name));
+    dispatch(removeReactionSuccess(statusId, name));
   }).catch(err => {
-    dispatch(statusRemoveReactionFail(statusId, name, err));
+    dispatch(removeReactionFail(statusId, name, err));
   });
 };
 
-export const statusRemoveReactionRequest = (statusId, name) => ({
-  type: STATUS_REACTION_REMOVE_REQUEST,
+export const removeReactionRequest = (statusId, name) => ({
+  type: REACTION_REMOVE_REQUEST,
   id: statusId,
   name,
   skipLoading: true,
 });
 
-export const statusRemoveReactionSuccess = (statusId, name) => ({
-  type: STATUS_REACTION_REMOVE_SUCCESS,
+export const removeReactionSuccess = (statusId, name) => ({
+  type: REACTION_REMOVE_SUCCESS,
   id: statusId,
   name,
   skipLoading: true,
 });
 
-export const statusRemoveReactionFail = (statusId, name) => ({
-  type: STATUS_REACTION_REMOVE_FAIL,
+export const removeReactionFail = (statusId, name) => ({
+  type: REACTION_REMOVE_FAIL,
   id: statusId,
   name,
   skipLoading: true,

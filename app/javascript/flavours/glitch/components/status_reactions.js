@@ -11,7 +11,7 @@ import AnimatedNumber from './animated_number';
 import { assetHost } from '../utils/config';
 import { autoPlayGif } from '../initial_state';
 
-export default class StatusReactionsBar extends ImmutablePureComponent {
+export default class StatusReactions extends ImmutablePureComponent {
 
   static propTypes = {
     statusId: PropTypes.string.isRequired,
