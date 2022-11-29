@@ -149,4 +149,7 @@ export const defaultContentType = getMeta('default_content_type');
 export const useSystemEmojiFont = getMeta('system_emoji_font');
 export const publishButtonText = (initialState && initialState.publish_button_text);  // Should be null when not set
 
+// nyastodon-specific settings
+export const maxReactions = (initialState && initialState.max_reactions) || 8;
+
 export default initialState;

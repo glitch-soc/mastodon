@@ -11,13 +11,14 @@ import React from 'react';
 import unicodeMapping from '../features/emoji/emoji_unicode_mapping_light';
 import AnimatedNumber from './animated_number';
 import { assetHost } from '../utils/config';
-import { autoPlayGif } from '../initial_state';
+import { autoPlayGif, maxReactions } from '../initial_state';
 
 export default class StatusReactionsBar extends ImmutablePureComponent {
 
   static propTypes = {
     statusId: PropTypes.string.isRequired,
     reactions: ImmutablePropTypes.list.isRequired,
+    reactionLimit: PropTypes.number.isRequired,
     addReaction: PropTypes.func.isRequired,
     removeReaction: PropTypes.func.isRequired,
     emojiMap: ImmutablePropTypes.map.isRequired,
@@ -62,7 +63,7 @@ export default class StatusReactionsBar extends ImmutablePureComponent {
               />
             ))}
 
-            {visibleReactions.size < 8 && <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} button={<Icon id='plus' />} />}
+            {visibleReactions.size < maxReactions && <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} button={<Icon id='plus' />} />}
           </div>
         )}
       </TransitionMotion>

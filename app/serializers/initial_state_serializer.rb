@@ -7,6 +7,7 @@ class InitialStateSerializer < ActiveModel::Serializer
              :media_attachments, :settings,
              :max_toot_chars, :poll_limits,
              :languages, :publish_button_text
+             :max_reactions
 
   has_one :push_subscription, serializer: REST::WebPushSubscriptionSerializer
   has_one :role, serializer: REST::RoleSerializer
@@ -17,6 +18,10 @@ class InitialStateSerializer < ActiveModel::Serializer
 
   def publish_button_text
     ENV['PUBLISH_BUTTON_TEXT']
+  end
+  
+  def max_reactions
+    StatusReactionValidator::LIMIT
   end
 
   def poll_limits
