@@ -6,6 +6,9 @@ const messages = {
 
   'tooltips.reactions': 'Réactions',
 
+  'settings.enter_amount_prompt': 'Entrez un montant',
+  'settings.num_visible_reactions': 'Nombre de réactions visibles',
+
   'status.react': 'Réagir',
 };
 

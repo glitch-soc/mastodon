@@ -1,7 +1,7 @@
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { maxReactions, reduceMotion } from '../initial_state';
+import { reduceMotion } from '../initial_state';
 import spring from 'react-motion/lib/spring';
 import TransitionMotion from 'react-motion/lib/TransitionMotion';
 import classNames from 'classnames';
@@ -16,15 +16,11 @@ export default class StatusReactions extends ImmutablePureComponent {
   static propTypes = {
     statusId: PropTypes.string.isRequired,
     reactions: ImmutablePropTypes.list.isRequired,
+    numVisible: PropTypes.number,
     addReaction: PropTypes.func.isRequired,
     removeReaction: PropTypes.func.isRequired,
     emojiMap: ImmutablePropTypes.map.isRequired,
   };
-
-  handleEmojiPick = data => {
-    const { addReaction, statusId } = this.props;
-    addReaction(statusId, data.native.replace(/:/g, ''));
-  }
 
   willEnter() {
     return { scale: reduceMotion ? 1 : 0 };
@@ -35,11 +31,18 @@ export default class StatusReactions extends ImmutablePureComponent {
   }
 
   render() {
-    const { reactions } = this.props;
-    const visibleReactions = reactions
+    const { reactions, numVisible } = this.props;
+    let visibleReactions = reactions
       .filter(x => x.get('count') > 0)
-      .sort((a, b) => b.get('count') - a.get('count'))
-      .filter((_, i) => i < maxReactions);
+      .sort((a, b) => b.get('count') - a.get('count'));
+
+    // numVisible might be NaN because it's pulled from local settings
+    // which doesn't do a whole lot of input validation, but that's okay
+    // because  NaN >= 0  evaluates false.
+    // Still, this should be improved at some point.
+    if (numVisible >= 0) {
+      visibleReactions = visibleReactions.filter((_, i) => i < numVisible);
+    }
 
     const styles = visibleReactions.map(reaction => ({
       key: reaction.get('name'),
