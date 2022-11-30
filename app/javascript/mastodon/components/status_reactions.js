@@ -36,10 +36,6 @@ export default class StatusReactions extends ImmutablePureComponent {
       .filter(x => x.get('count') > 0)
       .sort((a, b) => b.get('count') - a.get('count'));
 
-    // numVisible might be NaN because it's pulled from local settings
-    // which doesn't do a whole lot of input validation, but that's okay
-    // because  NaN >= 0  evaluates false.
-    // Still, this should be improved at some point.
     if (numVisible >= 0) {
       visibleReactions = visibleReactions.filter((_, i) => i < numVisible);
     }
