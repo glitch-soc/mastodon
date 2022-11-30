@@ -23,7 +23,6 @@ const initialState = ImmutableMap({
   show_content_type_choice: false,
   tag_misleading_links: true,
   rewrite_mentions: 'no',
-  num_visible_reactions: 6,
   content_warnings : ImmutableMap({
     filter       : null,
     media_outside: false,

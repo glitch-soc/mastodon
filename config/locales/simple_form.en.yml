@@ -213,6 +213,7 @@ en:
         setting_unfollow_modal: Show confirmation dialog before unfollowing someone
         setting_use_blurhash: Show colorful gradients for hidden media
         setting_use_pending_items: Slow mode
+        setting_visible_reactions: Number of visible emoji reactions
         severity: Severity
         sign_in_token_attempt: Security code
         title: Title

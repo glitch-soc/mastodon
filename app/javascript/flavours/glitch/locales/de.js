@@ -6,9 +6,6 @@ const messages = {
 
   'tooltips.reactions': 'Reaktionen',
 
-  'settings.enter_amount_prompt': 'Gib eine Zahl ein',
-  'settings.num_visible_reactions': 'Anzahl sichtbarer Reaktionen',
-
   'status.react': 'Reagieren',
 };
 

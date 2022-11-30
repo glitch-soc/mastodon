@@ -43,6 +43,7 @@ class UserSettingsDecorator
     user.settings['use_pending_items']   = use_pending_items_preference if change?('setting_use_pending_items')
     user.settings['trends']              = trends_preference if change?('setting_trends')
     user.settings['crop_images']         = crop_images_preference if change?('setting_crop_images')
+    user.settings['visible_reactions']   = visible_reactions_preference if change?('setting_visible_reactions')
     user.settings['always_send_emails']  = always_send_emails_preference if change?('setting_always_send_emails')
   end
 
@@ -158,12 +159,20 @@ class UserSettingsDecorator
     boolean_cast_setting 'setting_crop_images'
   end
 
+  def visible_reactions_preference
+    integer_cast_setting 'setting_visible_reactions'
+  end
+
   def always_send_emails_preference
     boolean_cast_setting 'setting_always_send_emails'
   end
 
   def boolean_cast_setting(key)
     ActiveModel::Type::Boolean.new.cast(settings[key])
+  end
+
+  def integer_cast_setting(key)
+    ActiveModel::Type::Integer.new.cast(settings[key])
   end
 
   def coerced_settings(key)
