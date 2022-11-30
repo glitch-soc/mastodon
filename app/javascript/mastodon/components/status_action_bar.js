@@ -6,11 +6,10 @@ import IconButton from './icon_button';
 import DropdownMenuContainer from '../containers/dropdown_menu_container';
 import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { me } from '../initial_state';
+import { me, maxReactions } from '../initial_state';
 import classNames from 'classnames';
 import { PERMISSION_MANAGE_USERS } from 'mastodon/permissions';
 import EmojiPickerDropdown from '../features/compose/containers/emoji_picker_dropdown_container';
-import { maxReactions } from '../../flavours/glitch/initial_state';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },

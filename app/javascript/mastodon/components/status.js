@@ -22,7 +22,7 @@ import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_
 // We use the component (and not the container) since we do not want
 // to use the progress bar to show download progress
 import Bundle from '../features/ui/components/bundle';
-import { visibleReactions } from '../../flavours/glitch/initial_state';
+import { visibleReactions } from '../initial_state';
 
 export const textForScreenReader = (intl, status, rebloggedByText = false) => {
   const displayName = status.getIn(['account', 'display_name']);
