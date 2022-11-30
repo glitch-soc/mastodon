@@ -1,7 +1,7 @@
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import PropTypes from 'prop-types';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { reduceMotion } from '../initial_state';
+import { maxReactions, reduceMotion } from '../initial_state';
 import spring from 'react-motion/lib/spring';
 import TransitionMotion from 'react-motion/lib/TransitionMotion';
 import classNames from 'classnames';
@@ -36,7 +36,10 @@ export default class StatusReactions extends ImmutablePureComponent {
 
   render() {
     const { reactions } = this.props;
-    const visibleReactions = reactions.filter(x => x.get('count') > 0);
+    const visibleReactions = reactions
+      .filter(x => x.get('count') > 0)
+      .sort((a, b) => b.get('count') - a.get('count'))
+      .filter((_, i) => i < maxReactions);
 
     const styles = visibleReactions.map(reaction => ({
       key: reaction.get('name'),
