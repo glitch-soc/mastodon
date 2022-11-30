@@ -60,7 +60,7 @@ export default class StatusPrepend extends React.PureComponent {
       return (
         <FormattedMessage
           id='notification.reaction'
-          defaultMessage='{name} reacted to your post'
+          defaultMessage='{name} reacted to your status'
           values={{ name: link }}
         />
       );

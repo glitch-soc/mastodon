@@ -6,6 +6,7 @@ import ClearColumnButton from './clear_column_button';
 import GrantPermissionButton from './grant_permission_button';
 import SettingToggle from './setting_toggle';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_REPORTS } from 'mastodon/permissions';
+import PillBarButton from '../../../../flavours/glitch/features/notifications/components/pill_bar_button';
 
 export default class ColumnSettings extends React.PureComponent {
 
@@ -112,6 +113,17 @@ export default class ColumnSettings extends React.PureComponent {
             {showPushSettings && <SettingToggle prefix='notifications_push' settings={pushSettings} settingPath={['alerts', 'favourite']} onChange={this.onPushChange} label={pushStr} />}
             <SettingToggle prefix='notifications' settings={settings} settingPath={['shows', 'favourite']} onChange={onChange} label={showStr} />
             <SettingToggle prefix='notifications' settings={settings} settingPath={['sounds', 'favourite']} onChange={onChange} label={soundStr} />
+          </div>
+        </div>
+
+        <div role='group' aria-labelledby='notifications-reaction'>
+          <span id='notifications-reaction' className='column-settings__section'><FormattedMessage id='notifications.column_settings.reaction' defaultMessage='Reactions:' /></span>
+
+          <div className='column-settings__pillbar'>
+            <SettingToggle disabled={browserPermission === 'denied'} prefix='notifications_desktop' settings={settings} settingPath={['alerts', 'reaction']} onChange={onChange} label={alertStr} />
+            {showPushSettings && <SettingToggle prefix='notifications_push' settings={pushSettings} settingPath={['alerts', 'reaction']} onChange={this.onPushChange} label={pushStr} />}
+            <SettingToggle prefix='notifications' settings={settings} settingPath={['shows', 'reaction']} onChange={onChange} label={showStr} />
+            <SettingToggle prefix='notifications' settings={settings} settingPath={['sounds', 'reaction']} onChange={onChange} label={soundStr} />
           </div>
         </div>
 
