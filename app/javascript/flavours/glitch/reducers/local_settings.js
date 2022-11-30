@@ -24,6 +24,7 @@ const initialState = ImmutableMap({
   tag_misleading_links: true,
   rewrite_mentions: 'no',
   linkify_twitter_mentions: 'yes',
+  num_visible_reactions: 6,
   content_warnings : ImmutableMap({
     filter       : null,
     media_outside: false,
