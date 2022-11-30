@@ -319,6 +319,7 @@ class EmojiPickerDropdown extends React.PureComponent {
     onSkinTone: PropTypes.func.isRequired,
     skinTone: PropTypes.number.isRequired,
     button: PropTypes.node,
+    disabled: PropTypes.bool,
   };
 
   state = {
@@ -356,7 +357,7 @@ class EmojiPickerDropdown extends React.PureComponent {
   }
 
   onToggle = (e) => {
-    if (!this.state.loading && (!e.key || e.key === 'Enter')) {
+    if (!this.state.disabled && !this.state.loading && (!e.key || e.key === 'Enter')) {
       if (this.state.active) {
         this.onHideDropdown();
       } else {
