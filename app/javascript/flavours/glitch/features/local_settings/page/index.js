@@ -29,7 +29,6 @@ const messages = defineMessages({
   rewrite_mentions_username: { id: 'settings.rewrite_mentions_username', defaultMessage:  'Rewrite with username' },
   pop_in_left: { id: 'settings.pop_in_left', defaultMessage: 'Left' },
   pop_in_right: { id: 'settings.pop_in_right', defaultMessage:  'Right' },
-  enter_amount_prompt: { id: 'settings.enter_amount_prompt', defaultMessage: 'Enter an amount' },
 });
 
 export default @injectIntl

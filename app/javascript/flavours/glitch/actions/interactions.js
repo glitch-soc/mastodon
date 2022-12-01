@@ -429,14 +429,12 @@ export const addReactionRequest = (statusId, name) => ({
   type: REACTION_ADD_REQUEST,
   id: statusId,
   name,
-  skipLoading: true,
 });
 
 export const addReactionSuccess = (statusId, name) => ({
   type: REACTION_ADD_SUCCESS,
   id: statusId,
   name,
-  skipLoading: true,
 });
 
 export const addReactionFail = (statusId, name, error) => ({
@@ -444,7 +442,6 @@ export const addReactionFail = (statusId, name, error) => ({
   id: statusId,
   name,
   error,
-  skipLoading: true,
 });
 
 export const removeReaction = (statusId, name) => (dispatch, getState) => {
@@ -461,19 +458,16 @@ export const removeReactionRequest = (statusId, name) => ({
   type: REACTION_REMOVE_REQUEST,
   id: statusId,
   name,
-  skipLoading: true,
 });
 
 export const removeReactionSuccess = (statusId, name) => ({
   type: REACTION_REMOVE_SUCCESS,
   id: statusId,
   name,
-  skipLoading: true,
 });
 
 export const removeReactionFail = (statusId, name) => ({
   type: REACTION_REMOVE_FAIL,
   id: statusId,
   name,
-  skipLoading: true,
 });
