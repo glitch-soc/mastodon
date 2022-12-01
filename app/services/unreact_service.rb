@@ -3,8 +3,8 @@
 class UnreactService < BaseService
   include Payloadable
 
-  def call(account, status)
-    reaction = StatusReaction.find_by(account: account, status: status)
+  def call(account, status, name)
+    reaction = StatusReaction.find_by(account: account, status: status, name: name)
     return if reaction.nil?
 
     reaction.destroy!
