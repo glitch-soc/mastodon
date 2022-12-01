@@ -413,11 +413,11 @@ export const addReaction = (statusId, name) => (dispatch, getState) => {
     }
   }
   if (!alreadyAdded) {
-    dispatch(addReactionRequest(statusId, name, alreadyAdded));
+    dispatch(addReactionRequest(statusId, name));
   }
 
   api(getState).post(`/api/v1/statuses/${statusId}/react/${name}`).then(() => {
-    dispatch(addReactionSuccess(statusId, name, alreadyAdded));
+    dispatch(addReactionSuccess(statusId, name));
   }).catch(err => {
     if (!alreadyAdded) {
       dispatch(addReactionFail(statusId, name, err));
