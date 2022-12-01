@@ -7,7 +7,7 @@ class Api::V1::Statuses::ReactionsController < Api::BaseController
   before_action :require_user!
   before_action :set_status
 
-  def update
+  def create
     ReactService.new.call(current_account, @status, params[:id])
     render_empty
   end

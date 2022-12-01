@@ -416,7 +416,7 @@ export const addReaction = (statusId, name) => (dispatch, getState) => {
     dispatch(addReactionRequest(statusId, name, alreadyAdded));
   }
 
-  api(getState).put(`/api/v1/statuses/${statusId}/reactions/${name}`).then(() => {
+  api(getState).post(`/api/v1/statuses/${statusId}/react/${name}`).then(() => {
     dispatch(addReactionSuccess(statusId, name, alreadyAdded));
   }).catch(err => {
     if (!alreadyAdded) {
@@ -450,7 +450,7 @@ export const addReactionFail = (statusId, name, error) => ({
 export const removeReaction = (statusId, name) => (dispatch, getState) => {
   dispatch(removeReactionRequest(statusId, name));
 
-  api(getState).delete(`/api/v1/statuses/${statusId}/reactions/${name}`).then(() => {
+  api(getState).post(`/api/v1/statuses/${statusId}/unreact/${name}`).then(() => {
     dispatch(removeReactionSuccess(statusId, name));
   }).catch(err => {
     dispatch(removeReactionFail(statusId, name, err));
