@@ -17,7 +17,7 @@ import Icon from 'mastodon/components/icon';
 import AnimatedNumber from 'mastodon/components/animated_number';
 import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
 import EditedTimestamp from 'mastodon/components/edited_timestamp';
-import StatusReactions from '../../../components/status_reactions';
+import StatusReactions from 'mastodon/components/status_reactions';
 
 const messages = defineMessages({
   public_short: { id: 'privacy.public.short', defaultMessage: 'Public' },

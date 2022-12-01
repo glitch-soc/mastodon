@@ -50,7 +50,7 @@ import { initMuteModal } from '../../actions/mutes';
 import { initBlockModal } from '../../actions/blocks';
 import { initBoostModal } from '../../actions/boosts';
 import { initReport } from '../../actions/reports';
-import { makeGetStatus, makeGetPictureInPicture } from '../../selectors';
+import { makeCustomEmojiMap, makeGetStatus, makeGetPictureInPicture } from '../../selectors';
 import ScrollContainer from 'mastodon/containers/scroll_container';
 import ColumnBackButton from '../../components/column_back_button';
 import ColumnHeader from '../../components/column_header';
@@ -64,7 +64,6 @@ import { attachFullscreenListener, detachFullscreenListener, isFullscreen } from
 import { textForScreenReader, defaultMediaVisibility } from '../../components/status';
 import Icon from 'mastodon/components/icon';
 import { Helmet } from 'react-helmet';
-import { makeCustomEmojiMap } from '../../selectors';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },

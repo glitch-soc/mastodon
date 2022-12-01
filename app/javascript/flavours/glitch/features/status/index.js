@@ -43,7 +43,7 @@ import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
 import { initBoostModal } from 'flavours/glitch/actions/boosts';
-import { makeGetStatus } from 'flavours/glitch/selectors';
+import { makeCustomEmojiMap, makeGetStatus } from 'flavours/glitch/selectors';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import ColumnHeader from '../../components/column_header';
@@ -58,7 +58,6 @@ import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { textForScreenReader, defaultMediaVisibility } from 'flavours/glitch/components/status';
 import Icon from 'flavours/glitch/components/icon';
 import { Helmet } from 'react-helmet';
-import { makeCustomEmojiMap } from '../../selectors';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
