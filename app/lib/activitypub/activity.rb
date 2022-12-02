@@ -176,4 +176,30 @@ class ActivityPub::Activity
     Rails.logger.info("Rejected #{@json['type']} activity #{@json['id']} from #{@account.uri}#{@options[:relayed_through_actor] && "via #{@options[:relayed_through_actor].uri}"}")
     nil
   end
+
+  # Ensure all emojis declared in the activity's tags are
+  # present in the database and downloaded to the local cache.
+  def process_emoji_tags
+    as_array(@object['tag']).each do |tag|
+      process_single_emoji(tag) if tag['type'] == 'Emoji'
+    end
+  end
+
+  def process_single_emoji(tag)
+    parser = ActivityPub::Parser::CustomEmojiParser.new(tag)
+    return if parser.shortcode.blank? || parser.image_remote_url.blank?
+
+    emoji = CustomEmoji.find_by(shortcode: parser.shortcode, domain: @account.domain)
+    return unless emoji.nil? ||
+                  parser.image_remote_url != emoji.image_remote_url ||
+                  (parser.updated_at && parser.updated_at >= emoji.updated_at)
+
+    begin
+      emoji ||= CustomEmoji.new(domain: @account.domain, shortcode: parser.shortcode, uri: parser.uri)
+      emoji.image_remote_url = parser.image_remote_url
+      emoji.save
+    rescue Seahorse::Client::NetworkingError => e
+      Rails.logger.warn "Error fetching emoji: #{e}"
+    end
+  end
 end
