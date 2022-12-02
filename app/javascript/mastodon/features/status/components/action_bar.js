@@ -186,7 +186,7 @@ class ActionBar extends React.PureComponent {
     navigator.clipboard.writeText(url);
   }
 
-  nop = () => {} // hack for reaction add button
+  handleNoOp = () => {} // hack for reaction add button
 
   render () {
     const { status, relationship, intl } = this.props;
@@ -263,7 +263,7 @@ class ActionBar extends React.PureComponent {
     const reactButton = (
       <IconButton
         className='plus-icon'
-        onClick={this.nop} // EmojiPickerDropdown handles that
+        onClick={this.handleNoOp} // EmojiPickerDropdown handles that
         title={intl.formatMessage(messages.react)}
         disabled={!canReact}
         icon='plus'

@@ -243,7 +243,7 @@ class StatusActionBar extends ImmutablePureComponent {
     this.props.onFilter();
   }
 
-  nop = () => {}
+  handleNoOp = () => {} // hack for reaction add button
 
   render () {
     const { status, relationship, intl, withDismiss, withCounters, scrollKey } = this.props;
@@ -368,7 +368,7 @@ class StatusActionBar extends ImmutablePureComponent {
     const reactButton = (
       <IconButton
         className='status__action-bar-button'
-        onClick={this.nop} // EmojiPickerDropdown handles that
+        onClick={this.handleNoOp} // EmojiPickerDropdown handles that
         title={intl.formatMessage(messages.react)}
         disabled={!canReact}
         icon='plus'
