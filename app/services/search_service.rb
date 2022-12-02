@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 class SearchService < BaseService
-
-  SEARCH_ALL_VISIBLE_TOOTS = ENV['SEARCH_ALL_VISIBLE_TOOTS'] == 'true'
+  SEARCH_ALL_PUBLIC_STATUSES = ENV['SEARCH_ALL_PUBLIC_STATUSES'] == 'true'
 
   def call(query, account, limit, options = {})
     @query   = query&.strip
@@ -38,8 +37,10 @@ class SearchService < BaseService
   end
 
   def perform_statuses_search!
-    statuses_index = StatusesIndex
-    statuses_index = statuses_index.filter(term: { searchable_by: @account.id }) unless SEARCH_ALL_VISIBLE_TOOTS
+    statuses_index = StatusesIndex.filter(term: { searchable_by: @account.id })
+    if SEARCH_ALL_PUBLIC_STATUSES
+      statuses_index = statuses_index.filter.or(term: { searchable_by_anyone: true })
+    end
     definition = parsed_query.apply(statuses_index)
 
     if @options[:account_id].present?
