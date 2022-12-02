@@ -160,7 +160,7 @@ class UserSettingsDecorator
   end
 
   def visible_reactions_preference
-    integer_cast_setting 'setting_visible_reactions'
+    integer_cast_setting('setting_visible_reactions', 0)
   end
 
   def always_send_emails_preference
@@ -171,8 +171,11 @@ class UserSettingsDecorator
     ActiveModel::Type::Boolean.new.cast(settings[key])
   end
 
-  def integer_cast_setting(key)
-    ActiveModel::Type::Integer.new.cast(settings[key])
+  def integer_cast_setting(key, min = nil, max = nil)
+    i = ActiveModel::Type::Integer.new.cast(settings[key])
+    return min if !min.nil? && i < min
+    return max if !max.nil? && i > max
+    i
   end
 
   def coerced_settings(key)
