@@ -179,24 +179,27 @@ class ActivityPub::Activity
 
   # Ensure all emojis declared in the activity's tags are
   # present in the database and downloaded to the local cache.
-  def process_emoji_tags
-    as_array(@object['tag']).each do |tag|
-      process_single_emoji(tag) if tag['type'] == 'Emoji'
+  # Required by EmojiReact and Like for emoji reactions.
+  def process_emoji_tags(tags)
+    as_array(tags).each do |tag|
+      process_single_emoji tag if tag['type'] == 'Emoji'
     end
   end
 
   def process_single_emoji(tag)
-    parser = ActivityPub::Parser::CustomEmojiParser.new(tag)
-    return if parser.shortcode.blank? || parser.image_remote_url.blank?
+    custom_emoji_parser = ActivityPub::Parser::CustomEmojiParser.new(tag)
+    return if custom_emoji_parser.shortcode.blank? || custom_emoji_parser.image_remote_url.blank?
 
-    emoji = CustomEmoji.find_by(shortcode: parser.shortcode, domain: @account.domain)
+    emoji = CustomEmoji.find_by(shortcode: custom_emoji_parser.shortcode, domain: @account.domain)
     return unless emoji.nil? ||
-                  parser.image_remote_url != emoji.image_remote_url ||
-                  (parser.updated_at && parser.updated_at >= emoji.updated_at)
+                  custom_emoji_parser.image_remote_url != emoji.image_remote_url ||
+                  (custom_emoji_parser.updated_at && custom_emoji_parser.updated_at >= emoji.updated_at)
 
     begin
-      emoji ||= CustomEmoji.new(domain: @account.domain, shortcode: parser.shortcode, uri: parser.uri)
-      emoji.image_remote_url = parser.image_remote_url
+      emoji ||= CustomEmoji.new(domain: @account.domain,
+                                shortcode: custom_emoji_parser.shortcode,
+                                uri: custom_emoji_parser.uri)
+      emoji.image_remote_url = custom_emoji_parser.image_remote_url
       emoji.save
     rescue Seahorse::Client::NetworkingError => e
       Rails.logger.warn "Error fetching emoji: #{e}"
