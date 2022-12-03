@@ -168,7 +168,11 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
   },
 
   onReactionAdd (statusId, name, url) {
-    dispatch(addReaction(statusId, name, url));
+    const { signedIn } = this.context.identity;
+
+    if (signedIn) {
+      dispatch(addReaction(statusId, name, url));
+    }
   },
 
   onReactionRemove (statusId, name) {
