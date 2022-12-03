@@ -3,7 +3,7 @@
 class REST::ReactionSerializer < ActiveModel::Serializer
   include RoutingHelper
 
-  attributes :name, :count
+  attributes :name, :count, :extern
 
   attribute :me, if: :current_user?
   attribute :url, if: :custom_emoji?
@@ -19,6 +19,14 @@ class REST::ReactionSerializer < ActiveModel::Serializer
 
   def custom_emoji?
     object.custom_emoji.present?
+  end
+
+  def extern
+    if custom_emoji?
+      object.custom_emoji.domain.present?
+    else
+      false
+    end
   end
 
   def url

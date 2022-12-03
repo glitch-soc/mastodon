@@ -43,7 +43,7 @@ import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { initBlockModal } from 'flavours/glitch/actions/blocks';
 import { initReport } from 'flavours/glitch/actions/reports';
 import { initBoostModal } from 'flavours/glitch/actions/boosts';
-import { makeCustomEmojiMap, makeGetStatus } from 'flavours/glitch/selectors';
+import { makeGetStatus } from 'flavours/glitch/selectors';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import ColumnHeader from '../../components/column_header';
@@ -148,7 +148,6 @@ const makeMapStateToProps = () => {
       askReplyConfirmation: state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0,
       domain: state.getIn(['meta', 'domain']),
       usingPiP: state.get('picture_in_picture').statusId === props.params.statusId,
-      emojiMap: makeCustomEmojiMap(state),
     };
   };
 
@@ -707,7 +706,6 @@ class Status extends ImmutablePureComponent {
                   showMedia={this.state.showMedia}
                   onToggleMediaVisibility={this.handleToggleMediaVisibility}
                   usingPiP={usingPiP}
-                  emojiMap={this.props.emojiMap}
                 />
 
                 <ActionBar

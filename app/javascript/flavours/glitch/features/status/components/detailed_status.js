@@ -46,7 +46,6 @@ class DetailedStatus extends ImmutablePureComponent {
     onToggleMediaVisibility: PropTypes.func,
     onReactionAdd: PropTypes.func.isRequired,
     onReactionRemove: PropTypes.func.isRequired,
-    emojiMap: ImmutablePropTypes.map.isRequired,
     intl: PropTypes.object.isRequired,
   };
 
@@ -328,7 +327,6 @@ class DetailedStatus extends ImmutablePureComponent {
             reactions={status.get('reactions')}
             addReaction={this.props.onReactionAdd}
             removeReaction={this.props.onReactionRemove}
-            emojiMap={this.props.emojiMap}
           />
 
           <div className='detailed-status__meta'>

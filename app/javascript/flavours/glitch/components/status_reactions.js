@@ -18,7 +18,6 @@ export default class StatusReactions extends ImmutablePureComponent {
     numVisible: PropTypes.number,
     addReaction: PropTypes.func.isRequired,
     removeReaction: PropTypes.func.isRequired,
-    emojiMap: ImmutablePropTypes.map.isRequired,
   };
 
   willEnter() {
@@ -57,7 +56,6 @@ export default class StatusReactions extends ImmutablePureComponent {
                 style={{ transform: `scale(${style.scale})`, position: style.scale < 0.5 ? 'absolute' : 'static' }}
                 addReaction={this.props.addReaction}
                 removeReaction={this.props.removeReaction}
-                emojiMap={this.props.emojiMap}
               />
             ))}
           </div>
@@ -75,7 +73,6 @@ class Reaction extends ImmutablePureComponent {
     reaction: ImmutablePropTypes.map.isRequired,
     addReaction: PropTypes.func.isRequired,
     removeReaction: PropTypes.func.isRequired,
-    emojiMap: ImmutablePropTypes.map.isRequired,
     style: PropTypes.object,
   };
 
@@ -86,10 +83,12 @@ class Reaction extends ImmutablePureComponent {
   handleClick = () => {
     const { reaction, statusId, addReaction, removeReaction } = this.props;
 
-    if (reaction.get('me')) {
-      removeReaction(statusId, reaction.get('name'));
-    } else {
-      addReaction(statusId, reaction.get('name'));
+    if (!reaction.get('extern')) {
+      if (reaction.get('me')) {
+        removeReaction(statusId, reaction.get('name'));
+      } else {
+        addReaction(statusId, reaction.get('name'));
+      }
     }
   }
 
@@ -109,7 +108,12 @@ class Reaction extends ImmutablePureComponent {
         style={this.props.style}
       >
         <span className='reactions-bar__item__emoji'>
-          <Emoji hovered={this.state.hovered} emoji={reaction.get('name')} emojiMap={this.props.emojiMap} />
+          <Emoji
+            hovered={this.state.hovered}
+            emoji={reaction.get('name')}
+            url={reaction.get('url')}
+            staticUrl={reaction.get('static_url')}
+          />
         </span>
         <span className='reactions-bar__item__count'>
           <AnimatedNumber value={reaction.get('count')} />
@@ -124,12 +128,13 @@ class Emoji extends React.PureComponent {
 
   static propTypes = {
     emoji: PropTypes.string.isRequired,
-    emojiMap: ImmutablePropTypes.map.isRequired,
     hovered: PropTypes.bool.isRequired,
+    url: PropTypes.string,
+    staticUrl: PropTypes.string,
   };
 
   render() {
-    const { emoji, emojiMap, hovered } = this.props;
+    const { emoji, hovered, url, staticUrl } = this.props;
 
     if (unicodeMapping[emoji]) {
       const { filename, shortCode } = unicodeMapping[this.props.emoji];
@@ -144,10 +149,8 @@ class Emoji extends React.PureComponent {
           src={`${assetHost}/emoji/${filename}.svg`}
         />
       );
-    } else if (emojiMap.get(emoji)) {
-      const filename = (autoPlayGif || hovered)
-        ? emojiMap.getIn([emoji, 'url'])
-        : emojiMap.getIn([emoji, 'static_url']);
+    } else {
+      const filename = (autoPlayGif || hovered) ? url : staticUrl;
       const shortCode = `:${emoji}:`;
 
       return (
@@ -159,8 +162,6 @@ class Emoji extends React.PureComponent {
           src={filename}
         />
       );
-    } else {
-      return null;
     }
   }
 
