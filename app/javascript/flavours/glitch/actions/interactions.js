@@ -403,7 +403,7 @@ export function unpinFail(status, error) {
   };
 };
 
-export const addReaction = (statusId, name) => (dispatch, getState) => {
+export const addReaction = (statusId, name, url) => (dispatch, getState) => {
   const status = getState().get('statuses').get(statusId);
   let alreadyAdded = false;
   if (status) {
@@ -413,7 +413,7 @@ export const addReaction = (statusId, name) => (dispatch, getState) => {
     }
   }
   if (!alreadyAdded) {
-    dispatch(addReactionRequest(statusId, name));
+    dispatch(addReactionRequest(statusId, name, url));
   }
 
   api(getState).post(`/api/v1/statuses/${statusId}/react/${name}`).then(() => {
@@ -425,10 +425,11 @@ export const addReaction = (statusId, name) => (dispatch, getState) => {
   });
 };
 
-export const addReactionRequest = (statusId, name) => ({
+export const addReactionRequest = (statusId, name, url) => ({
   type: REACTION_ADD_REQUEST,
   id: statusId,
   name,
+  url,
 });
 
 export const addReactionSuccess = (statusId, name) => ({

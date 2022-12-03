@@ -57,11 +57,17 @@ const updateReaction = (state, id, name, updater) => state.update(
 
 const updateReactionCount = (state, reaction) => updateReaction(state, reaction.status_id, reaction.name, x => x.set('count', reaction.count));
 
-const addReaction = (state, id, name) => updateReaction(
+// The url parameter is only used when adding a new custom emoji reaction
+// (one that wasn't in the reactions list before) because we don't have its
+// URL yet.  In all other cases, it's undefined.
+const addReaction = (state, id, name, url) => updateReaction(
   state,
   id,
   name,
-  x => x.set('me', true).update('count', n => n + 1),
+  x => x.set('me', true)
+    .update('count', n => n + 1)
+    .update('url', old => old ? old : url)
+    .update('static_url', old => old ? old : url),
 );
 
 const removeReaction = (state, id, name) => updateReaction(
@@ -101,7 +107,7 @@ export default function statuses(state = initialState, action) {
     return updateReactionCount(state, action.reaction);
   case REACTION_ADD_REQUEST:
   case REACTION_REMOVE_FAIL:
-    return addReaction(state, action.id, action.name);
+    return addReaction(state, action.id, action.name, action.url);
   case REACTION_REMOVE_REQUEST:
   case REACTION_ADD_FAIL:
     return removeReaction(state, action.id, action.name);

@@ -257,12 +257,12 @@ class Status extends ImmutablePureComponent {
     }
   }
 
-  handleReactionAdd = (statusId, name) => {
+  handleReactionAdd = (statusId, name, url) => {
     const { dispatch } = this.props;
     const { signedIn } = this.context.identity;
 
     if (signedIn) {
-      dispatch(addReaction(statusId, name));
+      dispatch(addReaction(statusId, name, url));
     } else {
       dispatch(openModal('INTERACTION', {
         type: 'reaction_add',
