@@ -9,14 +9,16 @@ class ActivityPub::Activity::EmojiReact < ActivityPub::Activity
               delete_arrived_first?(@json['id']) ||
               @account.reacted?(original_status, name)
 
+    custom_emoji = nil
     if name =~ /^:.*:$/
-      process_emoji_tags
+      process_emoji_tags(@json['tag'])
 
       name.delete! ':'
-      return if CustomEmoji.find_by(shortcode: name, domain: @account.domain).nil?
+      custom_emoji = CustomEmoji.find_by(shortcode: name, domain: @account.domain)
+      return if custom_emoji.nil?
     end
 
-    reaction = original_status.status_reactions.create!(account: @account, name: name)
+    reaction = original_status.status_reactions.create!(account: @account, name: name, custom_emoji: custom_emoji)
 
     LocalNotificationWorker.perform_async(original_status.account_id, reaction.id, 'StatusReaction', 'reaction')
   end
