@@ -364,7 +364,7 @@ class StatusActionBar extends ImmutablePureComponent {
       <IconButton className='status__action-bar__button' title={intl.formatMessage(messages.hide)} icon='eye' onClick={this.handleHideClick} />
     );
 
-    const canReact = status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
+    const canReact = signedIn && status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
     const reactButton = (
       <IconButton
         className='status__action-bar-button'

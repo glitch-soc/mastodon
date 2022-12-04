@@ -85,11 +85,14 @@ class Reaction extends ImmutablePureComponent {
 
   handleClick = () => {
     const { reaction, statusId, addReaction, removeReaction } = this.props;
+    const { signedIn } = this.context.identity;
 
-    if (reaction.get('me')) {
-      removeReaction(statusId, reaction.get('name'));
-    } else {
-      addReaction(statusId, reaction.get('name'));
+    if (signedIn) {
+      if (reaction.get('me')) {
+        removeReaction(statusId, reaction.get('name'));
+      } else {
+        addReaction(statusId, reaction.get('name'));
+      }
     }
   }
 
