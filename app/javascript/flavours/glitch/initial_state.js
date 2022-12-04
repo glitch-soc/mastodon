@@ -147,5 +147,6 @@ export const favouriteModal = getMeta('favourite_modal');
 export const pollLimits = (initialState && initialState.poll_limits);
 export const defaultContentType = getMeta('default_content_type');
 export const useSystemEmojiFont = getMeta('system_emoji_font');
+export const publishButtonText = (initialState && initialState.publish_button_text);  // Should be null when not set
 
 export default initialState;
