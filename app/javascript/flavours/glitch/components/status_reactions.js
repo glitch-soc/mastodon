@@ -17,6 +17,7 @@ export default class StatusReactions extends ImmutablePureComponent {
     reactions: ImmutablePropTypes.list.isRequired,
     numVisible: PropTypes.number,
     addReaction: PropTypes.func.isRequired,
+    canReact: PropTypes.bool.isRequired,
     removeReaction: PropTypes.func.isRequired,
   };
 
@@ -56,6 +57,7 @@ export default class StatusReactions extends ImmutablePureComponent {
                 style={{ transform: `scale(${style.scale})`, position: style.scale < 0.5 ? 'absolute' : 'static' }}
                 addReaction={this.props.addReaction}
                 removeReaction={this.props.removeReaction}
+                canReact={this.props.canReact}
               />
             ))}
           </div>
@@ -73,6 +75,7 @@ class Reaction extends ImmutablePureComponent {
     reaction: ImmutablePropTypes.map.isRequired,
     addReaction: PropTypes.func.isRequired,
     removeReaction: PropTypes.func.isRequired,
+    canReact: PropTypes.bool.isRequired,
     style: PropTypes.object,
   };
 
@@ -83,12 +86,10 @@ class Reaction extends ImmutablePureComponent {
   handleClick = () => {
     const { reaction, statusId, addReaction, removeReaction } = this.props;
 
-    if (!reaction.get('extern')) {
-      if (reaction.get('me')) {
-        removeReaction(statusId, reaction.get('name'));
-      } else {
-        addReaction(statusId, reaction.get('name'));
-      }
+    if (reaction.get('me')) {
+      removeReaction(statusId, reaction.get('name'));
+    } else {
+      addReaction(statusId, reaction.get('name'));
     }
   }
 
@@ -105,6 +106,7 @@ class Reaction extends ImmutablePureComponent {
         onClick={this.handleClick}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
+        disabled={!this.props.canReact}
         style={this.props.style}
       >
         <span className='reactions-bar__item__emoji'>

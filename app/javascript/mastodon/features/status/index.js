@@ -263,12 +263,6 @@ class Status extends ImmutablePureComponent {
 
     if (signedIn) {
       dispatch(addReaction(statusId, name, url));
-    } else {
-      dispatch(openModal('INTERACTION', {
-        type: 'reaction_add',
-        accountId: status.getIn(['account', 'id']),
-        url: status.get('url'),
-      }));
     }
   }
 
