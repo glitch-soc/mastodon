@@ -18,10 +18,6 @@ class StatusReactionValidator < ActiveModel::Validator
     SUPPORTED_EMOJIS.include?(name)
   end
 
-  def new_reaction?(reaction)
-    !reaction.status.status_reactions.where(name: reaction.name).exists?
-  end
-
   def limit_reached?(reaction)
     reaction.status.status_reactions.where(status: reaction.status, account: reaction.account).count >= LIMIT
   end

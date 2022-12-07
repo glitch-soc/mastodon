@@ -24,11 +24,6 @@ class StatusReaction < ApplicationRecord
   private
 
   def set_custom_emoji
-    return if name.blank?
-    self.custom_emoji = if account.local?
-                          CustomEmoji.local.find_by(disabled: false, shortcode: name)
-                        else
-                          CustomEmoji.find_by(shortcode: name, domain: account.domain)
-                        end
+    self.custom_emoji = CustomEmoji.find_by(shortcode: name, domain: account.domain) if name.blank?
   end
 end
