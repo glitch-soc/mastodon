@@ -16,6 +16,8 @@ class StatusReaction < ApplicationRecord
   belongs_to :status, inverse_of: :status_reactions
   belongs_to :custom_emoji, optional: true
 
+  has_one :notification, as: :activity, dependent: :destroy
+
   validates :name, presence: true
   validates_with StatusReactionValidator
 
