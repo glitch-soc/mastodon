@@ -1683,11 +1683,10 @@ a.sparkline {
 
   a {
     color: $highlight-text-color;
+    text-decoration: none;
 
-    &:hover,
-    &:active,
-    &:focus {
-      text-decoration: none;
+    &:hover {
+      text-decoration: underline;
     }
   }
 
