@@ -56,6 +56,14 @@ export default class StatusPrepend extends React.PureComponent {
           values={{ name : link }}
         />
       );
+    case 'reaction':
+      return (
+        <FormattedMessage
+          id='notification.reaction'
+          defaultMessage='{name} reacted to your status'
+          values={{ name: link }}
+        />
+      );
     case 'reblog':
       return (
         <FormattedMessage
@@ -109,6 +117,9 @@ export default class StatusPrepend extends React.PureComponent {
     switch(type) {
     case 'favourite':
       iconId = 'star';
+      break;
+    case 'reaction':
+      iconId = 'plus';
       break;
     case 'featured':
       iconId = 'thumb-tack';

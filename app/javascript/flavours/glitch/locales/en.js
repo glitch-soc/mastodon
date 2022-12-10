@@ -33,6 +33,7 @@ const messages = {
   'settings.wide_view': 'Wide view (Desktop mode only)',
   'settings.navbar_under': 'Navbar at the bottom (Mobile only)',
   'status.collapse': 'Collapse',
+  'status.react': 'React',
   'status.uncollapse': 'Uncollapse',
 
   'media_gallery.sensitive': 'Sensitive',
@@ -42,7 +43,9 @@ const messages = {
   'home.column_settings.show_direct': 'Show DMs',
 
   'notification.markForDeletion': 'Mark for deletion',
+  'notification.reaction': '{name} reacted to your post',
   'notifications.clear': 'Clear all my notifications',
+  'notifications.column_settings.reaction': 'Reactions:',
   'notifications.marked_clear_confirmation': 'Are you sure you want to permanently clear all selected notifications?',
   'notifications.marked_clear': 'Clear selected notifications',
 
@@ -62,6 +65,8 @@ const messages = {
   'advanced_options.threaded_mode.short': 'Threaded mode',
   'advanced_options.threaded_mode.long': 'Automatically opens a reply on posting',
   'advanced_options.threaded_mode.tooltip': 'Threaded mode enabled',
+
+  'tooltips.reactions': 'Reactions',
 };
 
 export default Object.assign({}, inherited, messages);
