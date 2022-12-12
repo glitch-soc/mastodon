@@ -55,6 +55,9 @@ class LinkFooter extends React.PureComponent {
     return (
       <div className='link-footer'>
         <p>
+          New to Mastodon and want an easier transition? Try the <a href="https://halcyon.urusai.social/">Alternative UI (Halcyon)</a> for a more "bird-like" interface!
+        </p>
+        <p>
           <strong>{domain}</strong>:
           {' '}
           <Link to='/about'><FormattedMessage id='footer.about' defaultMessage='About' /></Link>
