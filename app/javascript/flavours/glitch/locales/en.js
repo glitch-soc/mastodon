@@ -184,10 +184,6 @@ const messages = {
   'home.column_settings.filter_regex': 'Filter out by regular expressions',
   'direct.group_by_conversations': 'Group by conversation',
   'community.column_settings.allow_local_only': 'Show local-only toots',
-  'explore.trending_statuses': 'Posts',
-  'explore.trending_tags': 'Hashtags',
-  'explore.trending_links': 'News',
-  'explore.suggested_follows': 'For you',
 
   'keyboard_shortcuts.bookmark': 'to bookmark',
   'keyboard_shortcuts.toggle_collapse': 'to collapse/uncollapse toots',
