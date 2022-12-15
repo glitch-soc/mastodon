@@ -4,11 +4,28 @@ import Button from 'flavours/glitch/components/button';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import Atrament from 'atrament'; // the doodling library
 import { connect } from 'react-redux';
+import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { doodleSet, uploadCompose } from 'flavours/glitch/actions/compose';
 import IconButton from 'flavours/glitch/components/icon_button';
 import { debounce, mapValues } from 'lodash';
 import classNames from 'classnames';
+
+// translateable strings
+const messages = defineMessages({
+  discard: { id: 'doodle.discard', defaultMessage: 'Discard doodle? All changes will be lost!' },
+  canvas_size: { id: 'doodle.canvas_size', defaultMessage: 'Change canvas size? This will erase your current drawing!' },
+  canvas_clear: { id: 'doodle.canvas_clear', defaultMessage: 'Clear canvas? This will erase your current drawing!' },
+  smoothing: { id: 'doodle.smoothing', defaultMessage: 'Smoothing' },
+  adaptive: { id: 'doodle.adaptive', defaultMessage: 'Adaptive' },
+  weight: { id: 'doodle.weight', defaultMessage: 'Weight' },
+  done: { id: 'doodle.done', defaultMessage: 'Done' },
+  cancel: { id: 'doodle.cancel', defaultMessage: 'Cancel' },
+  draw: { id: 'doodle.draw', defaultMessage: 'Draw' },
+  fill: { id: 'doodle.fill', defaultMessage: 'Fill' },
+  undo: { id: 'doodle.undo', defaultMessage: 'Undo' },
+  clear: { id: 'doodle.clear', defaultMessage: 'Clear' },
+});
 
 // palette nicked from MyPaint, CC0
 const palette = [
@@ -365,7 +382,9 @@ class DoodleModal extends ImmutablePureComponent {
    * Cancel button handler
    */
   onCancelButton = () => {
-    if (this.undos.length > 1 && !confirm('Discard doodle? All changes will be lost!')) {
+    const { intl } = this.props;
+
+    if (this.undos.length > 1 && !confirm(intl.formatMessage(messages.discard))) {
       return;
     }
 
@@ -516,10 +535,12 @@ class DoodleModal extends ImmutablePureComponent {
    * @param e - event
    */
   changeSize = (e) => {
+    const { intl } = this.props;
+
     let newSize = e.target.value;
     if (newSize === this.oldSize) return;
 
-    if (this.undos.length > 1 && !confirm('Change canvas size? This will erase your current drawing!')) {
+    if (this.undos.length > 1 && !confirm(intl.formatMessage(messages.change_size))) {
       return;
     }
 
@@ -527,7 +548,9 @@ class DoodleModal extends ImmutablePureComponent {
   };
 
   handleClearBtn = () => {
-    if (this.undos.length > 1 && !confirm('Clear canvas? This will erase your current drawing!')) {
+    const { intl } = this.props;
+
+    if (this.undos.length > 1 && !confirm(intl.formatMessage(messages.canvas_clear))) {
       return;
     }
 
@@ -538,6 +561,7 @@ class DoodleModal extends ImmutablePureComponent {
    * Render the component
    */
   render () {
+    const { intl } = this.props;
     this.updateSketcherSettings();
 
     return (
@@ -548,25 +572,25 @@ class DoodleModal extends ImmutablePureComponent {
 
         <div className='doodle-modal__action-bar'>
           <div className='doodle-toolbar'>
-            <Button text='Done' onClick={this.onDoneButton} />
-            <Button text='Cancel' onClick={this.onCancelButton} />
+            <Button text={intl.formatMessage(messages.done)} onClick={this.onDoneButton} />
+            <Button text={intl.formatMessage(messages.cancel)} onClick={this.onCancelButton} />
           </div>
           <div className='filler' />
           <div className='doodle-toolbar with-inputs'>
             <div>
-              <label htmlFor='dd_smoothing'>Smoothing</label>
+              <label htmlFor='dd_smoothing'>{intl.formatMessage(messages.smoothing)}</label>
               <span className='val'>
                 <input type='checkbox' id='dd_smoothing' onChange={this.tglSmooth} checked={this.smoothing} />
               </span>
             </div>
             <div>
-              <label htmlFor='dd_adaptive'>Adaptive</label>
+              <label htmlFor='dd_adaptive'>{intl.formatMessage(messages.adaptive)}</label>
               <span className='val'>
                 <input type='checkbox' id='dd_adaptive' onChange={this.tglAdaptive} checked={this.adaptiveStroke} />
               </span>
             </div>
             <div>
-              <label htmlFor='dd_weight'>Weight</label>
+              <label htmlFor='dd_weight'>{intl.formatMessage(messages.weight)}</label>
               <span className='val'>
                 <input type='number' min={1} id='dd_weight' value={this.weight} onChange={this.setWeight} />
               </span>
@@ -580,10 +604,10 @@ class DoodleModal extends ImmutablePureComponent {
             </div>
           </div>
           <div className='doodle-toolbar'>
-            <IconButton icon='pencil' title='Draw' label='Draw' onClick={this.setModeDraw} size={18} active={this.mode === 'draw'} inverted />
-            <IconButton icon='bath' title='Fill' label='Fill' onClick={this.setModeFill} size={18} active={this.mode === 'fill'} inverted />
-            <IconButton icon='undo' title='Undo' label='Undo' onClick={this.undo} size={18} inverted />
-            <IconButton icon='trash' title='Clear' label='Clear' onClick={this.handleClearBtn} size={18} inverted />
+            <IconButton icon='pencil' title={intl.formatMessage(messages.draw)} label={intl.formatMessage(messages.draw)} onClick={this.setModeDraw} size={18} active={this.mode === 'draw'} inverted />
+            <IconButton icon='bath' title={intl.formatMessage(messages.fill)} label={intl.formatMessage(messages.fill)} onClick={this.setModeFill} size={18} active={this.mode === 'fill'} inverted />
+            <IconButton icon='undo' title={intl.formatMessage(messages.undo)} label={intl.formatMessage(messages.undo)} onClick={this.undo} size={18} inverted />
+            <IconButton icon='trash' title={intl.formatMessage(messages.clear)} label={intl.formatMessage(messages.clear)} onClick={this.handleClearBtn} size={18} inverted />
           </div>
           <div className='doodle-palette'>
             {
@@ -612,4 +636,4 @@ class DoodleModal extends ImmutablePureComponent {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DoodleModal);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(DoodleModal));
