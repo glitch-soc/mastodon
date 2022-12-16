@@ -11,6 +11,8 @@ import { connect } from 'react-redux';
 import { Icon } from 'flavours/glitch/components/icon';
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
+import { convertToChar } from 'flavours/glitch/utils/html';
+import highlightjs from 'highlight.js';
 
 import Permalink from './permalink';
 
@@ -311,6 +313,27 @@ class StatusContent extends PureComponent {
     this.contentsNode = c;
   };
 
+  /**
+   * Highlights code in code tags.\
+   * Uses highlight.js to convert content inside code tags to span elements with class attributes
+   * @param {String} content - String containing html code tags
+   * @returns content with highlighted code inside code tags, or content if not found
+   */
+  highlightCode (content) {
+    // RegEx matches every code tag or block and replaces them with highlighted code if lang defined
+    return content.replace(/((?:<pre>)?<code(?: title="(\w+)?")?>)(.+?)(<\/code>(?:<\/pre>)?)/g, (match, startTags, lang, code, endTags) => {
+      // Unknown, invalid or no language, return content with stripped title
+      if (highlightjs.getLanguage(lang) === undefined) return `${startTags.replace(/<code .+>/g, '<code>')}${code}${endTags}`;
+
+      // Construct a new string replacing content
+      // convertChar is used to convert html entities to their symbols, otherwise something like && would be shown as &amp;&amp;
+      // replace <br> tags with new line, as the highlighter sees them as part of the code
+      // run highlighter on replaced code and re-add <br> tags.
+      // the resulting string becomes: <pre><code title="lang"> + HighlightedCode + </code></pre>
+      return startTags+highlightjs.highlightAuto(convertToChar(code.replace(/<br>/g, '\n')), [lang]).value.replace(/\n/g, '<br>')+endTags;
+    });
+  }
+
   render () {
     const {
       status,
@@ -329,7 +352,7 @@ class StatusContent extends PureComponent {
     const targetLanguages = this.props.languages?.get(status.get('language') || 'und');
     const renderTranslate = this.props.onTranslate && this.context.identity.signedIn && ['public', 'unlisted'].includes(status.get('visibility')) && status.get('search_index').trim().length > 0 && targetLanguages?.includes(contentLocale);
 
-    const content = { __html: status.getIn(['translation', 'contentHtml']) || status.get('contentHtml') };
+    const content = { __html: status.getIn(['translation', 'contentHtml']) : this.highlightCode(status.get('contentHtml')) };
     const spoilerContent = { __html: status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml') };
     const language = status.getIn(['translation', 'language']) || status.get('language');
     const classNames = classnames('status__content', {
