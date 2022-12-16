@@ -1,15 +1,24 @@
 # frozen_string_literal: true
 
 class AdvancedTextFormatter < TextFormatter
+  # define own sanitation config, which allows title attributes on code blocks, just for this processor
+  OUTGOING_WITH_CODE_TITLE ||= Sanitize::Config.freeze_config Sanitize::Config::MASTODON_OUTGOING.merge(
+    attributes: {}.merge(
+      Sanitize::Config::MASTODON_OUTGOING[:attributes],
+      'code' => %w(title)
+    )
+  )
+
   class HTMLRenderer < Redcarpet::Render::HTML
     def initialize(options, &block)
       super(options)
       @format_link = block
     end
 
-    def block_code(code, _language)
+    def block_code(code, language)
+      # Looks wrong, but sets title to language correctly. One downside is, it adds an empty attribute when no lang specified.
       <<~HTML
-        <pre><code>#{ERB::Util.h(code).gsub("\n", '<br/>')}</code></pre>
+        <pre><code title="#{language}">#{ERB::Util.h(code).gsub("\n", '<br/>')}</code></pre>
       HTML
     end
 
@@ -91,8 +100,7 @@ class AdvancedTextFormatter < TextFormatter
         text_node.replace(replacement)
       end
     end
-
-    Sanitize.node!(@tree, Sanitize::Config::MASTODON_OUTGOING).to_html
+    Sanitize.node!(@tree, OUTGOING_WITH_CODE_TITLE).to_html
   end
 
   private
