@@ -803,7 +803,6 @@ class Status extends ImmutablePureComponent {
             disabled={!router}
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
-            linkifyTwitterMentions={settings.get('linkify_twitter_mentions')}
           />
 
           <StatusReactions
