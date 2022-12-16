@@ -39,8 +39,8 @@ RSpec.describe AdvancedTextFormatter do
       context 'with a block code' do
         let(:text) { "test\n\n```\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
-        it 'formats code using <pre> and <code>' do
-          expect(subject).to include '<pre><code>int main'
+        it 'formats code using <pre> and <code> with empty title' do
+          expect(subject).to include '<pre><code title="">int main'
         end
 
         it 'does not strip leading spaces' do
@@ -52,7 +52,15 @@ RSpec.describe AdvancedTextFormatter do
         end
       end
 
-      context 'with a link in inline code using backticks' do
+      context 'given a block code with language' do
+        let(:text) { "test\n\n```c++\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
+
+        it 'formats code using <pre> and <code> with set title' do
+          expect(subject).to include '<pre><code title="c++">int main'
+        end
+      end
+
+      context 'given a link in inline code using backticks' do
         let(:text) { 'test `https://foo.bar/bar` bar' }
 
         it 'does not rewrite the link' do
