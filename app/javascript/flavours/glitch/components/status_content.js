@@ -121,13 +121,11 @@ class StatusContent extends React.PureComponent {
     tagLinks: PropTypes.bool,
     rewriteMentions: PropTypes.string,
     intl: PropTypes.object,
-    linkifyTwitterMentions: PropTypes.bool,
   };
 
   static defaultProps = {
     tagLinks: true,
     rewriteMentions: 'no',
-    linkifyTwitterMentions: true,
   };
 
   state = {
@@ -201,21 +199,6 @@ class StatusContent extends React.PureComponent {
     }
   }
 
-  _linkifyTwitterMentions () {
-    const node = this.contentsNode;
-    const { linkifyTwitterMentions } = this.props;
-
-    if (!node || !linkifyTwitterMentions) {
-      return;
-    }
-
-    const re = /@([0-9A-Za-z_\-]+)@twitter.com/g;
-    node.innerHTML = node.innerHTML.replaceAll(re, function (m, a) {
-      return '<a href="https://twitter.com/'+a+'">'+m+'</a>';
-    });
-
-  }
-
   handleMouseEnter = ({ currentTarget }) => {
     if (autoPlayGif) {
       return;
@@ -243,7 +226,6 @@ class StatusContent extends React.PureComponent {
   }
 
   componentDidMount () {
-    this._linkifyTwitterMentions();
     this._updateStatusLinks();
   }
 
@@ -330,7 +312,6 @@ class StatusContent extends React.PureComponent {
       tagLinks,
       rewriteMentions,
       intl,
-      linkifyTwitterMentions,
     } = this.props;
 
     const hidden = this.props.onExpandedToggle ? !this.props.expanded : this.state.hidden;
