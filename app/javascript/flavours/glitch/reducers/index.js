@@ -17,7 +17,7 @@ import push_notifications from './push_notifications';
 import status_lists from './status_lists';
 import mutes from './mutes';
 import blocks from './blocks';
-import rules from './rules';
+import server from './server';
 import boosts from './boosts';
 import contexts from './contexts';
 import compose from './compose';
@@ -41,6 +41,7 @@ import account_notes from './account_notes';
 import picture_in_picture from './picture_in_picture';
 import accounts_map from './accounts_map';
 import history from './history';
+import tags from './tags';
 
 const reducers = {
   announcements,
@@ -63,7 +64,7 @@ const reducers = {
   push_notifications,
   mutes,
   blocks,
-  rules,
+  server,
   boosts,
   contexts,
   compose,
@@ -85,6 +86,7 @@ const reducers = {
   account_notes,
   picture_in_picture,
   history,
+  tags,
 };
 
 export default combineReducers(reducers);

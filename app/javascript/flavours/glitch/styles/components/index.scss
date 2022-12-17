@@ -15,11 +15,16 @@
   display: block;
   font-size: 15px;
   line-height: 20px;
-  color: $ui-highlight-color;
+  color: $highlight-text-color;
   border: 0;
   background: transparent;
   padding: 0;
   cursor: pointer;
+  text-decoration: none;
+
+  &--destructive {
+    color: $error-value-color;
+  }
 
   &:hover,
   &:active {
@@ -51,22 +56,16 @@
   text-align: center;
   text-decoration: none;
   text-overflow: ellipsis;
-  transition: all 100ms ease-in;
-  transition-property: background-color;
   white-space: nowrap;
   width: auto;
 
   &:active,
   &:focus,
   &:hover {
-    background-color: lighten($ui-highlight-color, 7%);
-    transition: all 200ms ease-out;
-    transition-property: background-color;
+    background-color: $ui-highlight-color;
   }
 
   &--destructive {
-    transition: none;
-
     &:active,
     &:focus,
     &:hover {
@@ -116,10 +115,55 @@
     &:hover {
       border-color: lighten($ui-primary-color, 4%);
       color: lighten($darker-text-color, 4%);
+      text-decoration: none;
     }
 
     &:disabled {
       opacity: 0.5;
+    }
+  }
+
+  &.button-tertiary {
+    background: transparent;
+    padding: 6px 17px;
+    color: $highlight-text-color;
+    border: 1px solid $highlight-text-color;
+
+    &:active,
+    &:focus,
+    &:hover {
+      background: $ui-highlight-color;
+      color: $primary-text-color;
+      border: 0;
+      padding: 7px 18px;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+    }
+
+    &.button--confirmation {
+      color: $valid-value-color;
+      border-color: $valid-value-color;
+
+      &:active,
+      &:focus,
+      &:hover {
+        background: $valid-value-color;
+        color: $primary-text-color;
+      }
+    }
+
+    &.button--destructive {
+      color: $error-value-color;
+      border-color: $error-value-color;
+
+      &:active,
+      &:focus,
+      &:hover {
+        background: $error-value-color;
+        color: $primary-text-color;
+      }
     }
   }
 
@@ -172,6 +216,15 @@
 
   &.active {
     color: $highlight-text-color;
+  }
+
+  &.copyable {
+    transition: background 300ms linear;
+  }
+
+  &.copied {
+    background: $valid-value-color;
+    transition: none;
   }
 
   &::-moz-focus-inner {
@@ -228,11 +281,12 @@
     display: inline-flex;
     align-items: center;
     width: auto !important;
+    padding: 0 4px 0 2px;
   }
 
   &__counter {
     display: inline-block;
-    width: 14px;
+    width: auto;
     margin-left: 4px;
     font-size: 12px;
     font-weight: 500;
@@ -448,8 +502,12 @@
     object-fit: contain;
   }
 
-  .loading-bar {
+  .loading-bar__container {
     position: relative;
+  }
+
+  .loading-bar {
+    position: absolute;
   }
 
   &.image-loader--amorphous .image-loader__preview-canvas {
@@ -865,6 +923,10 @@
     position: relative;
     min-height: 120px;
   }
+
+  .scrollable {
+    flex: 1 1 auto;
+  }
 }
 
 .scrollable.fullscreen {
@@ -916,11 +978,11 @@
 }
 
 .react-toggle--checked .react-toggle-track {
-  background-color: $ui-highlight-color;
+  background-color: darken($ui-highlight-color, 2%);
 }
 
 .react-toggle--checked:is(:hover, :focus-within):not(.react-toggle--disabled) .react-toggle-track {
-  background-color: lighten($ui-highlight-color, 10%);
+  background-color: $ui-highlight-color;
 }
 
 .react-toggle-track-check {
@@ -1006,43 +1068,6 @@
     color: $dark-text-color;
   }
 
-  &__footer {
-    flex: 0 0 auto;
-    padding: 10px;
-    padding-top: 20px;
-    z-index: 1;
-
-    ul {
-      margin-bottom: 10px;
-    }
-
-    ul li {
-      display: inline;
-    }
-
-    p {
-      color: $dark-text-color;
-      font-size: 13px;
-      margin-bottom: 20px;
-
-      a {
-        color: $dark-text-color;
-        text-decoration: underline;
-      }
-    }
-
-    a {
-      text-decoration: none;
-      color: $darker-text-color;
-
-      &:hover,
-      &:focus,
-      &:active {
-        text-decoration: underline;
-      }
-    }
-  }
-
   &__trends {
     flex: 0 1 auto;
     opacity: 1;
@@ -1050,12 +1075,16 @@
     margin-top: 10px;
 
     h4 {
+      border-bottom: 1px solid lighten($ui-base-color, 8%);
+      padding: 10px;
       font-size: 12px;
       text-transform: uppercase;
-      color: $darker-text-color;
-      padding: 10px;
       font-weight: 500;
-      border-bottom: 1px solid lighten($ui-base-color, 8%);
+
+      a {
+        color: $darker-text-color;
+        text-decoration: none;
+      }
     }
 
     @media screen and (max-height: 810px) {
@@ -1216,14 +1245,14 @@ button.icon-button.active i.fa-retweet {
   }
 
   a {
-    color: lighten($ui-highlight-color, 8%);
+    color: $highlight-text-color;
     text-decoration: none;
 
     &:hover,
     &:focus,
     &:active {
       text-decoration: underline;
-      color: lighten($ui-highlight-color, 12%);
+      color: lighten($highlight-text-color, 4%);
     }
   }
 }
@@ -1737,7 +1766,7 @@ noscript {
 @import 'domains';
 @import 'status';
 @import 'modal';
-@import 'composer';
+@import 'compose_form';
 @import 'columns';
 @import 'regeneration_indicator';
 @import 'directory';
@@ -1753,3 +1782,7 @@ noscript {
 @import 'error_boundary';
 @import 'single_column';
 @import 'announcements';
+@import 'explore';
+@import 'signed_out';
+@import 'privacy_policy';
+@import 'about';

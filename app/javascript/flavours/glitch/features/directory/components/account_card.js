@@ -7,9 +7,10 @@ import { makeGetAccount } from 'flavours/glitch/selectors';
 import Avatar from 'flavours/glitch/components/avatar';
 import DisplayName from 'flavours/glitch/components/display_name';
 import Permalink from 'flavours/glitch/components/permalink';
+import IconButton from 'flavours/glitch/components/icon_button';
 import Button from 'flavours/glitch/components/button';
 import { FormattedMessage, injectIntl, defineMessages } from 'react-intl';
-import { autoPlayGif, me, unfollowModal } from 'flavours/glitch/util/initial_state';
+import { autoPlayGif, me, unfollowModal } from 'flavours/glitch/initial_state';
 import ShortNumber from 'flavours/glitch/components/short_number';
 import {
   followAccount,
@@ -23,12 +24,14 @@ import classNames from 'classnames';
 const messages = defineMessages({
   unfollow: { id: 'account.unfollow', defaultMessage: 'Unfollow' },
   follow: { id: 'account.follow', defaultMessage: 'Follow' },
-  cancel_follow_request: { id: 'account.cancel_follow_request', defaultMessage: 'Cancel follow request' },
+  cancel_follow_request: { id: 'account.cancel_follow_request', defaultMessage: 'Withdraw follow request' },
+  cancelFollowRequestConfirm: { id: 'confirmations.cancel_follow_request.confirm', defaultMessage: 'Withdraw request' },
   requested: { id: 'account.requested', defaultMessage: 'Awaiting approval. Click to cancel follow request' },
   unblock: { id: 'account.unblock_short', defaultMessage: 'Unblock' },
   unmute: { id: 'account.unmute_short', defaultMessage: 'Unmute' },
   unfollowConfirm: { id: 'confirmations.unfollow.confirm', defaultMessage: 'Unfollow' },
   edit_profile: { id: 'account.edit_profile', defaultMessage: 'Edit profile' },
+  dismissSuggestion: { id: 'suggestions.dismiss', defaultMessage: 'Dismiss suggestion' },
 });
 
 const makeMapStateToProps = () => {
@@ -43,10 +46,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch, { intl }) => ({
   onFollow(account) {
-    if (
-      account.getIn(['relationship', 'following']) ||
-      account.getIn(['relationship', 'requested'])
-    ) {
+    if (account.getIn(['relationship', 'following'])) {
       if (unfollowModal) {
         dispatch(
           openModal('CONFIRM', {
@@ -61,6 +61,16 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
             onConfirm: () => dispatch(unfollowAccount(account.get('id'))),
           }),
         );
+      } else {
+        dispatch(unfollowAccount(account.get('id')));
+      }
+    } else if (account.getIn(['relationship', 'requested'])) {
+      if (unfollowModal) {
+        dispatch(openModal('CONFIRM', {
+          message: <FormattedMessage id='confirmations.cancel_follow_request.message' defaultMessage='Are you sure you want to withdraw your request to follow {name}?' values={{ name: <strong>@{account.get('acct')}</strong> }} />,
+          confirm: intl.formatMessage(messages.cancelFollowRequestConfirm),
+          onConfirm: () => dispatch(unfollowAccount(account.get('id'))),
+        }));
       } else {
         dispatch(unfollowAccount(account.get('id')));
       }
@@ -94,6 +104,7 @@ class AccountCard extends ImmutablePureComponent {
     onFollow: PropTypes.func.isRequired,
     onBlock: PropTypes.func.isRequired,
     onMute: PropTypes.func.isRequired,
+    onDismiss: PropTypes.func,
   };
 
   handleMouseEnter = ({ currentTarget }) => {
@@ -138,6 +149,14 @@ class AccountCard extends ImmutablePureComponent {
     window.open('/settings/profile', '_blank');
   }
 
+  handleDismiss = (e) => {
+    const { account, onDismiss } = this.props;
+    onDismiss(account.get('id'));
+
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
   render() {
     const { account, intl } = this.props;
 
@@ -163,6 +182,8 @@ class AccountCard extends ImmutablePureComponent {
       <div className='account-card'>
         <Permalink href={account.get('url')} to={`/@${account.get('acct')}`} className='account-card__permalink'>
           <div className='account-card__header'>
+            {this.props.onDismiss && <IconButton className='media-modal__close' title={intl.formatMessage(messages.dismissSuggestion)} icon='times' onClick={this.handleDismiss} size={20} />}
+
             <img
               src={
                 autoPlayGif ? account.get('header') : account.get('header_static')

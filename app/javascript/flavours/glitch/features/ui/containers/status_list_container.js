@@ -4,10 +4,10 @@ import { scrollTopTimeline, loadPending } from 'flavours/glitch/actions/timeline
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
 import { createSelector } from 'reselect';
 import { debounce } from 'lodash';
-import { me } from 'flavours/glitch/util/initial_state';
+import { me } from 'flavours/glitch/initial_state';
 
 const getRegex = createSelector([
-  (state, { type }) => state.getIn(['settings', type, 'regex', 'body']),
+  (state, { regex }) => regex,
 ], (rawRegex) => {
   let regex = null;
 
@@ -25,8 +25,6 @@ const makeGetStatusIds = (pending = false) => createSelector([
   (state)           => state.get('statuses'),
   getRegex,
 ], (columnSettings, statusIds, statuses, regex) => {
-  const rawRegex = columnSettings.getIn(['regex', 'body'], '').trim();
-
   return statusIds.filter(id => {
     if (id === null) return true;
 
@@ -60,8 +58,8 @@ const makeMapStateToProps = () => {
   const getStatusIds = makeGetStatusIds();
   const getPendingStatusIds = makeGetStatusIds(true);
 
-  const mapStateToProps = (state, { timelineId }) => ({
-    statusIds: getStatusIds(state, { type: timelineId }),
+  const mapStateToProps = (state, { timelineId, regex }) => ({
+    statusIds: getStatusIds(state, { type: timelineId, regex }),
     isLoading: state.getIn(['timelines', timelineId, 'isLoading'], true),
     isPartial: state.getIn(['timelines', timelineId, 'isPartial'], false),
     hasMore:   state.getIn(['timelines', timelineId, 'hasMore']),

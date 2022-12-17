@@ -31,7 +31,7 @@ if Rails.env.production?
     p.base_uri        :none
     p.default_src     :none
     p.frame_ancestors :none
-    p.script_src      :self, assets_host
+    p.script_src      :self, assets_host, "'wasm-unsafe-eval'"
     p.font_src        :self, assets_host
     p.img_src         :self, :data, :blob, *data_hosts
     p.style_src       :self, assets_host
@@ -41,6 +41,7 @@ if Rails.env.production?
     p.worker_src      :self, :blob, assets_host
     p.connect_src     :self, :blob, :data, Rails.configuration.x.streaming_api_base_url, *data_hosts
     p.manifest_src    :self, assets_host
+    p.form_action     :self
   end
 end
 

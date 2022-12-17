@@ -15,6 +15,7 @@ import {
   COMPOSE_UPLOAD_FAIL,
   COMPOSE_UPLOAD_UNDO,
   COMPOSE_UPLOAD_PROGRESS,
+  COMPOSE_UPLOAD_PROCESSING,
   THUMBNAIL_UPLOAD_REQUEST,
   THUMBNAIL_UPLOAD_SUCCESS,
   THUMBNAIL_UPLOAD_FAIL,
@@ -53,12 +54,12 @@ import { TIMELINE_DELETE } from 'flavours/glitch/actions/timelines';
 import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
 import { REDRAFT } from 'flavours/glitch/actions/statuses';
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
-import uuid from 'flavours/glitch/util/uuid';
-import { privacyPreference } from 'flavours/glitch/util/privacy_preference';
-import { me, defaultContentType } from 'flavours/glitch/util/initial_state';
-import { overwrite } from 'flavours/glitch/util/js_helpers';
-import { unescapeHTML } from 'flavours/glitch/util/html';
-import { recoverHashtags } from 'flavours/glitch/util/hashtag';
+import uuid from '../uuid';
+import { privacyPreference } from 'flavours/glitch/utils/privacy_preference';
+import { me, defaultContentType } from 'flavours/glitch/initial_state';
+import { overwrite } from 'flavours/glitch/utils/js_helpers';
+import { unescapeHTML } from 'flavours/glitch/utils/html';
+import { recoverHashtags } from 'flavours/glitch/utils/hashtag';
 
 const totalElefriends = 3;
 
@@ -221,8 +222,9 @@ function appendMedia(state, media, file) {
     if (media.get('type') === 'image') {
       media = media.set('file', file);
     }
-    map.update('media_attachments', list => list.push(media));
+    map.update('media_attachments', list => list.push(media.set('unattached', true)));
     map.set('is_uploading', false);
+    map.set('is_processing', false);
     map.set('resetFileKey', Math.floor((Math.random() * 0x10000)));
     map.set('idempotencyKey', uuid());
     map.update('pending_media_attachments', n => n - 1);
@@ -419,8 +421,10 @@ export default function compose(state = initialState, action) {
       map.set('preselectDate', new Date());
       map.set('idempotencyKey', uuid());
 
-      if (action.status.get('language')) {
+      if (action.status.get('language') && !action.status.has('translation')) {
         map.set('language', action.status.get('language'));
+      } else {
+        map.set('language', state.get('default_language'));
       }
 
       if (action.status.get('spoiler_text').length > 0) {
@@ -465,10 +469,12 @@ export default function compose(state = initialState, action) {
     return state.set('is_changing_upload', false);
   case COMPOSE_UPLOAD_REQUEST:
     return state.set('is_uploading', true).update('pending_media_attachments', n => n + 1);
+  case COMPOSE_UPLOAD_PROCESSING:
+    return state.set('is_processing', true);
   case COMPOSE_UPLOAD_SUCCESS:
     return appendMedia(state, fromJS(action.media), action.file);
   case COMPOSE_UPLOAD_FAIL:
-    return state.set('is_uploading', false).update('pending_media_attachments', n => n - 1);
+    return state.set('is_uploading', false).set('is_processing', false).update('pending_media_attachments', n => n - 1);
   case COMPOSE_UPLOAD_UNDO:
     return removeMedia(state, action.media_id);
   case COMPOSE_UPLOAD_PROGRESS:
@@ -532,6 +538,8 @@ export default function compose(state = initialState, action) {
   case TIMELINE_DELETE:
     if (action.id === state.get('in_reply_to')) {
       return state.set('in_reply_to', null);
+    } else if (action.id === state.get('id')) {
+      return state.set('id', null);
     } else {
       return state;
     }
@@ -543,7 +551,7 @@ export default function compose(state = initialState, action) {
       .setIn(['media_modal', 'dirty'], false)
       .update('media_attachments', list => list.map(item => {
         if (item.get('id') === action.media.id) {
-          return fromJS(action.media);
+          return fromJS(action.media).set('unattached', true);
         }
 
         return item;
@@ -559,7 +567,7 @@ export default function compose(state = initialState, action) {
       map.set('content_type', action.content_type || 'text/plain');
       map.set('in_reply_to', action.status.get('in_reply_to_id'));
       map.set('privacy', action.status.get('visibility'));
-      map.set('media_attachments', action.status.get('media_attachments'));
+      map.set('media_attachments', action.status.get('media_attachments').map((media) => media.set('unattached', true)));
       map.set('focusDate', new Date());
       map.set('caretPosition', null);
       map.set('idempotencyKey', uuid());
@@ -569,10 +577,15 @@ export default function compose(state = initialState, action) {
         'advanced_options',
         map => map.merge(new ImmutableMap({ do_not_federate }))
       );
+      map.set('id', null);
 
       if (action.status.get('spoiler_text').length > 0) {
         map.set('spoiler', true);
         map.set('spoiler_text', action.status.get('spoiler_text'));
+
+        if (map.get('media_attachments').size >= 1) {
+          map.set('sensitive', true);
+        }
       } else {
         map.set('spoiler', false);
         map.set('spoiler_text', '');
@@ -590,6 +603,7 @@ export default function compose(state = initialState, action) {
     return state.withMutations(map => {
       map.set('id', action.status.get('id'));
       map.set('text', action.text);
+      map.set('content_type', action.content_type || 'text/plain');
       map.set('in_reply_to', action.status.get('in_reply_to_id'));
       map.set('privacy', action.status.get('visibility'));
       map.set('media_attachments', action.status.get('media_attachments'));

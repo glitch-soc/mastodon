@@ -1,18 +1,17 @@
 import 'packs/public-path';
-import loadPolyfills from 'flavours/glitch/util/load_polyfills';
-import ready from 'flavours/glitch/util/ready';
-import loadKeyboardExtensions from 'flavours/glitch/util/load_keyboard_extensions';
+import loadPolyfills from 'flavours/glitch/load_polyfills';
+import ready from 'flavours/glitch/ready';
+import loadKeyboardExtensions from 'flavours/glitch/load_keyboard_extensions';
 
 function main() {
   const IntlMessageFormat = require('intl-messageformat').default;
   const { timeAgoString } = require('flavours/glitch/components/relative_timestamp');
   const { delegate } = require('@rails/ujs');
-  const emojify = require('flavours/glitch/util/emoji').default;
+  const emojify = require('flavours/glitch/features/emoji/emoji').default;
   const { getLocale } = require('locales');
   const { messages } = getLocale();
   const React = require('react');
   const ReactDOM = require('react-dom');
-  const Rellax = require('rellax');
   const { createBrowserHistory } = require('history');
 
   const scrollToDetailedStatus = () => {
@@ -43,6 +42,18 @@ function main() {
       minute: 'numeric',
     });
 
+    const dateFormat = new Intl.DateTimeFormat(locale, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      timeFormat: false,
+    });
+
+    const timeFormat = new Intl.DateTimeFormat(locale, {
+      timeStyle: 'short',
+      hour12: false,
+    });
+
     [].forEach.call(document.querySelectorAll('.emojify'), (content) => {
       content.innerHTML = emojify(content.innerHTML);
     });
@@ -53,6 +64,32 @@ function main() {
 
       content.title = formattedDate;
       content.textContent = formattedDate;
+    });
+
+    const isToday = date => {
+      const today = new Date();
+
+      return date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear();
+    };
+    const todayFormat = new IntlMessageFormat(messages['relative_format.today'] || 'Today at {time}', locale);
+
+    [].forEach.call(document.querySelectorAll('time.relative-formatted'), (content) => {
+      const datetime = new Date(content.getAttribute('datetime'));
+
+      let formattedContent;
+
+      if (isToday(datetime)) {
+        const formattedTime = timeFormat.format(datetime);
+
+        formattedContent = todayFormat.format({ time: formattedTime });
+      } else {
+        formattedContent = dateFormat.format(datetime);
+      }
+
+      content.title = formattedContent;
+      content.textContent = formattedContent;
     });
 
     [].forEach.call(document.querySelectorAll('time.time-ago'), (content) => {
@@ -88,12 +125,6 @@ function main() {
         });
     } else {
       scrollToDetailedStatus();
-    }
-
-    const parallaxComponents = document.querySelectorAll('.parallax');
-
-    if (parallaxComponents.length > 0 ) {
-      new Rellax('.parallax', { speed: -1 });
     }
 
     delegate(document, '#registration_user_password_confirmation,#registration_user_password', 'input', () => {
@@ -146,8 +177,31 @@ function main() {
     });
   });
 
+  const toggleSidebar = () => {
+    const sidebar = document.querySelector('.sidebar ul');
+    const toggleButton = document.querySelector('.sidebar__toggle__icon');
+
+    if (sidebar.classList.contains('visible')) {
+      document.body.style.overflow = null;
+      toggleButton.setAttribute('aria-expanded', false);
+    } else {
+      document.body.style.overflow = 'hidden';
+      toggleButton.setAttribute('aria-expanded', true);
+    }
+
+    toggleButton.classList.toggle('active');
+    sidebar.classList.toggle('visible');
+  };
+
   delegate(document, '.sidebar__toggle__icon', 'click', () => {
-    document.querySelector('.sidebar ul').classList.toggle('visible');
+    toggleSidebar();
+  });
+
+  delegate(document, '.sidebar__toggle__icon', 'keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') {
+      e.preventDefault();
+      toggleSidebar();
+    }
   });
 
   // Empty the honeypot fields in JS in case something like an extension

@@ -3,8 +3,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { autoPlayGif, me, isStaff } from 'flavours/glitch/util/initial_state';
-import { preferencesLink, profileLink, accountAdminLink } from 'flavours/glitch/util/backend_links';
+import { autoPlayGif, me, domain } from 'flavours/glitch/initial_state';
+import { preferencesLink, profileLink, accountAdminLink } from 'flavours/glitch/utils/backend_links';
 import classNames from 'classnames';
 import Icon from 'flavours/glitch/components/icon';
 import IconButton from 'flavours/glitch/components/icon_button';
@@ -13,11 +13,14 @@ import Button from 'flavours/glitch/components/button';
 import { NavLink } from 'react-router-dom';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
 import AccountNoteContainer from '../containers/account_note_container';
+import FollowRequestNoteContainer from '../containers/follow_request_note_container';
+import { PERMISSION_MANAGE_USERS } from 'flavours/glitch/permissions';
+import { Helmet } from 'react-helmet';
 
 const messages = defineMessages({
   unfollow: { id: 'account.unfollow', defaultMessage: 'Unfollow' },
   follow: { id: 'account.follow', defaultMessage: 'Follow' },
-  cancel_follow_request: { id: 'account.cancel_follow_request', defaultMessage: 'Cancel follow request' },
+  cancel_follow_request: { id: 'account.cancel_follow_request', defaultMessage: 'Withdraw follow request' },
   requested: { id: 'account.requested', defaultMessage: 'Awaiting approval. Click to cancel follow request' },
   unblock: { id: 'account.unblock', defaultMessage: 'Unblock @{name}' },
   edit_profile: { id: 'account.edit_profile', defaultMessage: 'Edit profile' },
@@ -50,7 +53,17 @@ const messages = defineMessages({
   add_or_remove_from_list: { id: 'account.add_or_remove_from_list', defaultMessage: 'Add or Remove from lists' },
   admin_account: { id: 'status.admin_account', defaultMessage: 'Open moderation interface for @{name}' },
   add_account_note: { id: 'account.add_account_note', defaultMessage: 'Add note for @{name}' },
+  languages: { id: 'account.languages', defaultMessage: 'Change subscribed languages' },
+  openOriginalPage: { id: 'account.open_original_page', defaultMessage: 'Open original page' },
 });
+
+const titleFromAccount = account => {
+  const displayName = account.get('display_name');
+  const acct = account.get('acct') === account.get('username') ? `${account.get('username')}@${domain}` : account.get('acct');
+  const prefix = displayName.trim().length === 0 ? account.get('username') : displayName;
+
+  return `${prefix} (@${acct})`;
+};
 
 const dateFormatOptions = {
   month: 'short',
@@ -63,6 +76,10 @@ const dateFormatOptions = {
 
 export default @injectIntl
 class Header extends ImmutablePureComponent {
+
+  static contextTypes = {
+    identity: PropTypes.object,
+  };
 
   static propTypes = {
     account: ImmutablePropTypes.map,
@@ -80,6 +97,9 @@ class Header extends ImmutablePureComponent {
     onEndorseToggle: PropTypes.func.isRequired,
     onAddToList: PropTypes.func.isRequired,
     onEditAccountNote: PropTypes.func.isRequired,
+    onChangeLanguages: PropTypes.func.isRequired,
+    onInteractionModal: PropTypes.func.isRequired,
+    onOpenAvatar: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
     domain: PropTypes.string.isRequired,
     hidden: PropTypes.bool,
@@ -115,8 +135,27 @@ class Header extends ImmutablePureComponent {
     }
   }
 
+  handleAvatarClick = e => {
+    if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.props.onOpenAvatar();
+    }
+  }
+
+  handleShare = () => {
+    const { account } = this.props;
+
+    navigator.share({
+      text: `${titleFromAccount(account)}\n${account.get('note_plain')}`,
+      url: account.get('url'),
+    }).catch((e) => {
+      if (e.name !== 'AbortError') console.error(e);
+    });
+  }
+
   render () {
     const { account, hidden, intl, domain } = this.props;
+    const { signedIn } = this.context.identity;
 
     if (!account) {
       return null;
@@ -124,7 +163,9 @@ class Header extends ImmutablePureComponent {
 
     const accountNote = account.getIn(['relationship', 'note']);
 
-    const suspended = account.get('suspended');
+    const suspended    = account.get('suspended');
+    const isRemote     = account.get('acct') !== account.get('username');
+    const remoteDomain = isRemote ? account.get('acct').split('@')[1] : null;
 
     let info        = [];
     let actionBtn   = '';
@@ -150,12 +191,12 @@ class Header extends ImmutablePureComponent {
     }
 
     if (me !== account.get('id')) {
-      if (!account.get('relationship')) { // Wait until the relationship is loaded
+      if (signedIn && !account.get('relationship')) { // Wait until the relationship is loaded
         actionBtn = '';
       } else if (account.getIn(['relationship', 'requested'])) {
         actionBtn = <Button className={classNames('logo-button', { 'button--with-bell': bellBtn !== '' })} text={intl.formatMessage(messages.cancel_follow_request)} title={intl.formatMessage(messages.requested)} onClick={this.props.onFollow} />;
       } else if (!account.getIn(['relationship', 'blocking'])) {
-        actionBtn = <Button className={classNames('logo-button', { 'button--destructive': account.getIn(['relationship', 'following']), 'button--with-bell': bellBtn !== '' })} text={intl.formatMessage(account.getIn(['relationship', 'following']) ? messages.unfollow : messages.follow)} onClick={this.props.onFollow} />;
+        actionBtn = <Button className={classNames('logo-button', { 'button--destructive': account.getIn(['relationship', 'following']), 'button--with-bell': bellBtn !== '' })} text={intl.formatMessage(account.getIn(['relationship', 'following']) ? messages.unfollow : messages.follow)} onClick={signedIn ? this.props.onFollow : this.props.onInteractionModal} />;
       } else if (account.getIn(['relationship', 'blocking'])) {
         actionBtn = <Button className='logo-button' text={intl.formatMessage(messages.unblock, { name: account.get('username') })} onClick={this.props.onBlock} />;
       }
@@ -175,9 +216,14 @@ class Header extends ImmutablePureComponent {
       lockedIcon = <Icon id='lock' title={intl.formatMessage(messages.account_locked)} />;
     }
 
-    if (account.get('id') !== me && !suspended) {
+    if (signedIn && account.get('id') !== me && !suspended) {
       menu.push({ text: intl.formatMessage(messages.mention, { name: account.get('username') }), action: this.props.onMention });
       menu.push({ text: intl.formatMessage(messages.direct, { name: account.get('username') }), action: this.props.onDirect });
+      menu.push(null);
+    }
+
+    if (isRemote) {
+      menu.push({ text: intl.formatMessage(messages.openOriginalPage), href: account.get('url') });
       menu.push(null);
     }
 
@@ -202,7 +248,7 @@ class Header extends ImmutablePureComponent {
       menu.push({ text: intl.formatMessage(messages.mutes), to: '/mutes' });
       menu.push({ text: intl.formatMessage(messages.blocks), to: '/blocks' });
       menu.push({ text: intl.formatMessage(messages.domain_blocks), to: '/domain_blocks' });
-    } else {
+    } else if (signedIn) {
       if (account.getIn(['relationship', 'following'])) {
         if (!account.getIn(['relationship', 'muting'])) {
           if (account.getIn(['relationship', 'showing_reblogs'])) {
@@ -210,6 +256,9 @@ class Header extends ImmutablePureComponent {
           } else {
             menu.push({ text: intl.formatMessage(messages.showReblogs, { name: account.get('username') }), action: this.props.onReblogToggle });
           }
+
+          menu.push({ text: intl.formatMessage(messages.languages), action: this.props.onChangeLanguages });
+          menu.push(null);
         }
 
         menu.push({ text: intl.formatMessage(account.getIn(['relationship', 'endorsed']) ? messages.unendorse : messages.endorse), action: this.props.onEndorseToggle });
@@ -232,19 +281,17 @@ class Header extends ImmutablePureComponent {
       menu.push({ text: intl.formatMessage(messages.report, { name: account.get('username') }), action: this.props.onReport });
     }
 
-    if (account.get('acct') !== account.get('username')) {
-      const domain = account.get('acct').split('@')[1];
-
+    if (signedIn && isRemote) {
       menu.push(null);
 
       if (account.getIn(['relationship', 'domain_blocking'])) {
-        menu.push({ text: intl.formatMessage(messages.unblockDomain, { domain }), action: this.props.onUnblockDomain });
+        menu.push({ text: intl.formatMessage(messages.unblockDomain, { domain: remoteDomain }), action: this.props.onUnblockDomain });
       } else {
-        menu.push({ text: intl.formatMessage(messages.blockDomain, { domain }), action: this.props.onBlockDomain });
+        menu.push({ text: intl.formatMessage(messages.blockDomain, { domain: remoteDomain }), action: this.props.onBlockDomain });
       }
     }
 
-    if (account.get('id') !== me && isStaff && accountAdminLink) {
+    if (account.get('id') !== me && (this.context.identity.permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS && accountAdminLink) {
       menu.push(null);
       menu.push({ text: intl.formatMessage(messages.admin_account, { name: account.get('username') }), href: accountAdminLink(account.get('id')) });
     }
@@ -252,7 +299,9 @@ class Header extends ImmutablePureComponent {
     const content          = { __html: account.get('note_emojified') };
     const displayNameHtml = { __html: account.get('display_name_html') };
     const fields          = account.get('fields');
-    const acct            = account.get('acct').indexOf('@') === -1 && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
+    const isLocal         = account.get('acct').indexOf('@') === -1;
+    const acct            = isLocal && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
+    const isIndexable     = !account.get('noindex');
 
     let badge;
 
@@ -266,6 +315,8 @@ class Header extends ImmutablePureComponent {
 
     return (
       <div className={classNames('account__header', { inactive: !!account.get('moved') })} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
+        {!(suspended || hidden || account.get('moved')) && account.getIn(['relationship', 'requested_by']) && <FollowRequestNoteContainer account={account} />}
+
         <div className='account__header__image'>
           <div className='account__header__info'>
             {info}
@@ -276,11 +327,9 @@ class Header extends ImmutablePureComponent {
 
         <div className='account__header__bar'>
           <div className='account__header__tabs'>
-            <a className='avatar' href={account.get('url')} rel='noopener noreferrer' target='_blank'>
+            <a className='avatar' href={account.get('avatar')} rel='noopener noreferrer' target='_blank' onClick={this.handleAvatarClick}>
               <Avatar account={suspended || hidden ? undefined : account} size={90} />
             </a>
-
-            <div className='spacer' />
 
             {!suspended && (
               <div className='account__header__tabs__buttons'>
@@ -291,7 +340,7 @@ class Header extends ImmutablePureComponent {
                   </React.Fragment>
                 )}
 
-                <DropdownMenuContainer items={menu} icon='ellipsis-v' size={24} direction='right' />
+                <DropdownMenuContainer disabled={menu.length === 0} items={menu} icon='ellipsis-v' size={24} direction='right' />
               </div>
             )}
           </div>
@@ -299,11 +348,13 @@ class Header extends ImmutablePureComponent {
           <div className='account__header__tabs__name'>
             <h1>
               <span dangerouslySetInnerHTML={displayNameHtml} /> {badge}
-              <small>@{acct} {lockedIcon}</small>
+              <small>
+                <span>@{acct}</span> {lockedIcon}
+              </small>
             </h1>
           </div>
 
-          <AccountNoteContainer account={account} />
+          {signedIn && <AccountNoteContainer account={account} />}
 
           {!(suspended || hidden) && (
             <div className='account__header__extra'>
@@ -329,6 +380,11 @@ class Header extends ImmutablePureComponent {
             </div>
           )}
         </div>
+
+        <Helmet>
+          <title>{titleFromAccount(account)}</title>
+          <meta name='robots' content={(isLocal && isIndexable) ? 'all' : 'noindex'} />
+        </Helmet>
       </div>
     );
   }

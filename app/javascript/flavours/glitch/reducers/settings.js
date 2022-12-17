@@ -6,7 +6,7 @@ import { EMOJI_USE } from 'flavours/glitch/actions/emojis';
 import { LANGUAGE_USE } from 'flavours/glitch/actions/languages';
 import { LIST_DELETE_SUCCESS, LIST_FETCH_FAIL } from '../actions/lists';
 import { Map as ImmutableMap, fromJS } from 'immutable';
-import uuid from 'flavours/glitch/util/uuid';
+import uuid from '../uuid';
 
 const initialState = ImmutableMap({
   saved: true,
@@ -43,6 +43,7 @@ const initialState = ImmutableMap({
       status: false,
       update: false,
       'admin.sign_up': false,
+      'admin.report': false,
     }),
 
     quickFilter: ImmutableMap({
@@ -64,6 +65,7 @@ const initialState = ImmutableMap({
       status: true,
       update: true,
       'admin.sign_up': true,
+      'admin.report': true,
     }),
 
     sounds: ImmutableMap({
@@ -76,6 +78,7 @@ const initialState = ImmutableMap({
       status: true,
       update: true,
       'admin.sign_up': true,
+      'admin.report': true,
     }),
   }),
 

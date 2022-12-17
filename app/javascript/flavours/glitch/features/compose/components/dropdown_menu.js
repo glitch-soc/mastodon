@@ -9,9 +9,9 @@ import classNames from 'classnames';
 import Icon from 'flavours/glitch/components/icon';
 
 //  Utils.
-import { withPassive } from 'flavours/glitch/util/dom_helpers';
-import Motion from 'flavours/glitch/util/optional_motion';
-import { assignHandlers } from 'flavours/glitch/util/react_helpers';
+import { withPassive } from 'flavours/glitch/utils/dom_helpers';
+import Motion from '../../ui/util/optional_motion';
+import { assignHandlers } from 'flavours/glitch/utils/react_helpers';
 
 //  The spring to use with our motion.
 const springMotion = spring(1, {
@@ -156,7 +156,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
 
     const active = (name === (this.props.value || this.state.value));
 
-    const computedClass = classNames('composer--options--dropdown--content--item', { active });
+    const computedClass = classNames('privacy-dropdown__option', { active });
 
     let contents = this.props.renderItemContents && this.props.renderItemContents(item, i);
 
@@ -165,7 +165,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
         <React.Fragment>
           {icon && <Icon className='icon' fixedWidth id={icon} />}
 
-          <div className='content'>
+          <div className='privacy-dropdown__option__content'>
             <strong>{text}</strong>
             {meta}
           </div>
@@ -218,7 +218,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
           // size will be used to determine the coordinate of the menu by
           // react-overlays
           <div
-            className='composer--options--dropdown--content'
+            className='privacy-dropdown__dropdown'
             ref={this.handleRef}
             role='listbox'
             style={{

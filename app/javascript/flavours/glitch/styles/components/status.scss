@@ -134,7 +134,7 @@
     }
 
     ul, ol {
-      margin-left: 1em;
+      margin-left: 2em;
 
       p {
         margin: 0;
@@ -187,7 +187,7 @@
   }
 
   a.unhandled-link {
-    color: lighten($ui-highlight-color, 8%);
+    color: $highlight-text-color;
 
     .link-origin-tag {
       color: $gold-star;
@@ -206,15 +206,13 @@
   }
 }
 
-.status__content__edited-label {
-  display: block;
-  cursor: default;
+.translate-button {
+  margin-top: 16px;
   font-size: 15px;
   line-height: 20px;
-  padding: 0;
-  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
   color: $dark-text-color;
-  font-weight: 500;
 }
 
 .status__content__spoiler-link {
@@ -555,12 +553,10 @@
 }
 
 .status__prepend {
-  margin-top: -10px;
-  margin-bottom: 10px;
+  margin-top: -2px;
+  margin-bottom: 8px;
   margin-left: 58px;
   color: $dark-text-color;
-  padding: 8px 0;
-  padding-bottom: 2px;
   font-size: 14px;
   position: relative;
 
@@ -661,6 +657,7 @@
   display: inline-block;
   font-weight: 500;
   font-size: 12px;
+  line-height: 17px;
   margin-left: 6px;
 }
 
@@ -1070,7 +1067,7 @@ a.status-card.compact:hover {
       pointer-events: 0;
       width: 100%;
       height: 100%;
-      border-left: 2px solid $highlight-text-color;
+      border-left: 4px solid $highlight-text-color;
       pointer-events: none;
     }
   }

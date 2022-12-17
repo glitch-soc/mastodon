@@ -6,6 +6,14 @@ en:
   skins:
     glitch:
       default: Default
+cs:
+  flavours:
+    glitch:
+      description: Výchozí rozhraní instancí GlitchSoc.
+      name: Glitch
+  skins:
+    glitch:
+      default: Výchozí
 pl:
   flavours:
     glitch:
@@ -21,3 +29,12 @@ es:
   skins:
     glitch:
       default: Predeterminado
+
+ja:
+  flavours:
+    glitch:
+      description: GlitchSocインスタンスのデフォルトフレーバーです。
+      name: Glitch Edition
+  skins:
+    glitch:
+      default: デフォルト

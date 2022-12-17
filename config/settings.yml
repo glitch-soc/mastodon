@@ -73,7 +73,6 @@ defaults: &defaults
   bootstrap_timeline_accounts: ''
   activity_api_enabled: true
   peers_api_enabled: true
-  show_known_fediverse_at_about_page: true
   show_reblogs_in_public_timelines: false
   show_replies_in_public_timelines: false
   default_content_type: 'text/plain'
@@ -82,6 +81,7 @@ defaults: &defaults
   outgoing_spoilers: ''
   require_invite_text: false
   captcha_enabled: false
+  backups_retention_period: 7
 
 development:
   <<: *defaults
