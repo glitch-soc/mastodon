@@ -202,6 +202,7 @@ module LanguagesHelper
     tok: ['Toki Pona', 'toki pona'].freeze,
     zba: ['Balaibalan', 'باليبلن'].freeze,
     zgh: ['Standard Moroccan Tamazight', 'ⵜⴰⵎⴰⵣⵉⵖⵜ'].freeze,
+    zxx: ['No linguistic content', 'Toot!'].freeze,
   }.freeze
 
   SUPPORTED_LOCALES = {}.merge(ISO_639_1).merge(ISO_639_3).freeze
