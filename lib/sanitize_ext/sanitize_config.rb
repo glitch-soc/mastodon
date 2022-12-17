@@ -82,8 +82,9 @@ class Sanitize
         'abbr' => %w(title),
         'span' => %w(class translate),
         'blockquote' => %w(cite),
-        'ol' => %w(start reversed),
-        'li' => %w(value),
+        'ol'         => %w(start reversed),
+        'li'         => %w(value),
+        'code'       => %w(title),
       },
 
       add_attributes: {

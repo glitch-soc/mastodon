@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 class AdvancedTextFormatter < TextFormatter
-  # define own sanitation config, which allows title attributes on code blocks, just for this processor
-  OUTGOING_WITH_CODE_TITLE ||= Sanitize::Config.freeze_config Sanitize::Config::MASTODON_OUTGOING.merge(
-    attributes: {}.merge(
-      Sanitize::Config::MASTODON_OUTGOING[:attributes],
-      'code' => %w(title)
-    )
-  )
-
   class HTMLRenderer < Redcarpet::Render::HTML
     def initialize(options, &block)
       super(options)
@@ -100,7 +92,7 @@ class AdvancedTextFormatter < TextFormatter
         text_node.replace(replacement)
       end
     end
-    Sanitize.node!(@tree, OUTGOING_WITH_CODE_TITLE).to_html
+    Sanitize.node!(@tree, Sanitize::Config::MASTODON_OUTGOING).to_html
   end
 
   private
