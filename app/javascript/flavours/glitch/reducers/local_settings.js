@@ -21,11 +21,12 @@ const initialState = ImmutableMap({
   inline_preview_cards: true,
   hicolor_privacy_icons: false,
   show_content_type_choice: false,
-  filtering_behavior: 'hide',
   tag_misleading_links: true,
   rewrite_mentions: 'no',
   content_warnings : ImmutableMap({
-    filter      : null,
+    filter       : null,
+    media_outside: false,
+    shared_state : false,
   }),
   collapsed : ImmutableMap({
     enabled     : true,

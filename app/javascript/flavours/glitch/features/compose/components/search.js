@@ -15,12 +15,13 @@ import Overlay from 'react-overlays/lib/Overlay';
 import Icon from 'flavours/glitch/components/icon';
 
 //  Utils.
-import { focusRoot } from 'flavours/glitch/util/dom_helpers';
-import { searchEnabled } from 'flavours/glitch/util/initial_state';
-import Motion from 'flavours/glitch/util/optional_motion';
+import { focusRoot } from 'flavours/glitch/utils/dom_helpers';
+import { searchEnabled } from 'flavours/glitch/initial_state';
+import Motion from '../../ui/util/optional_motion';
 
 const messages = defineMessages({
   placeholder: { id: 'search.placeholder', defaultMessage: 'Search' },
+  placeholderSignedIn: { id: 'search.search_or_paste', defaultMessage: 'Search or paste URL' },
 });
 
 class SearchPopout extends React.PureComponent {
@@ -62,6 +63,7 @@ class Search extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
+    identity: PropTypes.object.isRequired,
   };
 
   static propTypes = {
@@ -137,37 +139,29 @@ class Search extends React.PureComponent {
   render () {
     const { intl, value, submitted } = this.props;
     const { expanded } = this.state;
+    const { signedIn } = this.context.identity;
     const hasValue = value.length > 0 || submitted;
 
     return (
       <div className='search'>
-        <label>
-          <span style={{ display: 'none' }}>{intl.formatMessage(messages.placeholder)}</span>
-          <input
-            ref={this.setRef}
-            className='search__input'
-            type='text'
-            placeholder={intl.formatMessage(messages.placeholder)}
-            value={value || ''}
-            onChange={this.handleChange}
-            onKeyUp={this.handleKeyUp}
-            onFocus={this.handleFocus}
-            onBlur={this.handleBlur}
-          />
-        </label>
+        <input
+          ref={this.setRef}
+          className='search__input'
+          type='text'
+          placeholder={intl.formatMessage(signedIn ? messages.placeholderSignedIn : messages.placeholder)}
+          aria-label={intl.formatMessage(signedIn ? messages.placeholderSignedIn : messages.placeholder)}
+          value={value || ''}
+          onChange={this.handleChange}
+          onKeyUp={this.handleKeyUp}
+          onFocus={this.handleFocus}
+          onBlur={this.handleBlur}
+        />
 
-        <div
-          aria-label={intl.formatMessage(messages.placeholder)}
-          className='search__icon'
-          onClick={this.handleClear}
-          role='button'
-          tabIndex='0'
-        >
+        <div role='button' tabIndex='0' className='search__icon' onClick={this.handleClear}>
           <Icon id='search' className={hasValue ? '' : 'active'} />
           <Icon id='times-circle' className={hasValue ? 'active' : ''} />
         </div>
-
-        <Overlay show={expanded && !hasValue} placement='bottom' target={this}>
+        <Overlay show={expanded && !hasValue} placement='bottom' target={this} container={this}>
           <SearchPopout />
         </Overlay>
       </div>

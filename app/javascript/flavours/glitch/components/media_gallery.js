@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import { is } from 'immutable';
 import IconButton from './icon_button';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
-import { isIOS } from 'flavours/glitch/util/is_mobile';
 import classNames from 'classnames';
-import { autoPlayGif, displayMedia, useBlurhash } from 'flavours/glitch/util/initial_state';
+import { autoPlayGif, displayMedia, useBlurhash } from 'flavours/glitch/initial_state';
 import { debounce } from 'lodash';
 import Blurhash from 'flavours/glitch/components/blurhash';
 
@@ -202,7 +201,7 @@ class Item extends React.PureComponent {
         </a>
       );
     } else if (attachment.get('type') === 'gifv') {
-      const autoPlay = !isIOS() && this.getAutoPlay();
+      const autoPlay = this.getAutoPlay();
 
       thumbnail = (
         <div className={classNames('media-gallery__gifv', { autoplay: autoPlay })}>
@@ -216,6 +215,7 @@ class Item extends React.PureComponent {
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
             autoPlay={autoPlay}
+            playsInline
             loop
             muted
           />

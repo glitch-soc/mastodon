@@ -1,37 +1,46 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Motion from 'flavours/glitch/util/optional_motion';
+import Motion from '../../ui/util/optional_motion';
 import spring from 'react-motion/lib/spring';
 import Icon from 'flavours/glitch/components/icon';
+import { FormattedMessage } from 'react-intl';
 
 export default class UploadProgress extends React.PureComponent {
 
   static propTypes = {
     active: PropTypes.bool,
     progress: PropTypes.number,
-    icon: PropTypes.string.isRequired,
-    message: PropTypes.node.isRequired,
+    isProcessing: PropTypes.bool,
   };
 
   render () {
-    const { active, progress, icon, message } = this.props;
+    const { active, progress, isProcessing } = this.props;
 
     if (!active) {
       return null;
     }
 
-    return (
-      <div className='composer--upload_form--progress'>
-        <Icon id={icon} />
+    let message;
 
-        <div className='message'>
+    if (isProcessing) {
+      message = <FormattedMessage id='upload_progress.processing' defaultMessage='Processing…' />;
+    } else {
+      message = <FormattedMessage id='upload_progress.label' defaultMessage='Uploading…' />;
+    }
+
+    return (
+      <div className='upload-progress'>
+        <div className='upload-progress__icon'>
+          <Icon id='upload' />
+        </div>
+
+        <div className='upload-progress__message'>
           {message}
 
-          <div className='backdrop'>
+          <div className='upload-progress__backdrop'>
             <Motion defaultStyle={{ width: 0 }} style={{ width: spring(progress) }}>
               {({ width }) =>
-                (<div className='tracker' style={{ width: `${width}%` }}
-                />)
+                <div className='upload-progress__tracker' style={{ width: `${width}%` }} />
               }
             </Motion>
           </div>

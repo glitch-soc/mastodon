@@ -15,14 +15,14 @@ import Textarea from 'react-textarea-autosize';
 import UploadProgress from 'flavours/glitch/features/compose/components/upload_progress';
 import CharacterCounter from 'flavours/glitch/features/compose/components/character_counter';
 import { length } from 'stringz';
-import { Tesseract as fetchTesseract } from 'flavours/glitch/util/async-components';
+import { Tesseract as fetchTesseract } from 'flavours/glitch/features/ui/util/async-components';
 import GIFV from 'flavours/glitch/components/gifv';
-import { me } from 'flavours/glitch/util/initial_state';
+import { me } from 'flavours/glitch/initial_state';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import tesseractCorePath from 'tesseract.js-core/tesseract-core.wasm.js';
 // eslint-disable-next-line import/extensions
 import tesseractWorkerPath from 'tesseract.js/dist/worker.min.js';
-import { assetHost } from 'flavours/glitch/util/config';
+import { assetHost } from 'flavours/glitch/utils/config';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -291,11 +291,11 @@ class FocalPointModal extends ImmutablePureComponent {
     let descriptionLabel = null;
 
     if (media.get('type') === 'audio') {
-      descriptionLabel = <FormattedMessage id='upload_form.audio_description' defaultMessage='Describe for people with hearing loss' />;
+      descriptionLabel = <FormattedMessage id='upload_form.audio_description' defaultMessage='Describe for people who are hard of hearing' />;
     } else if (media.get('type') === 'video') {
-      descriptionLabel = <FormattedMessage id='upload_form.video_description' defaultMessage='Describe for people with hearing loss or visual impairment' />;
+      descriptionLabel = <FormattedMessage id='upload_form.video_description' defaultMessage='Describe for people who are deaf, hard of hearing, blind or have low vision' />;
     } else {
-      descriptionLabel = <FormattedMessage id='upload_form.description' defaultMessage='Describe for the visually impaired' />;
+      descriptionLabel = <FormattedMessage id='upload_form.description' defaultMessage='Describe for people who are blind or have low vision' />;
     }
 
     let ocrMessage = '';

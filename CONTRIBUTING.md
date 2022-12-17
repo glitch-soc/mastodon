@@ -27,7 +27,7 @@ See the guidelines below.
 
  - - -
 
-You should also try to follow the guidelines set out in the original `CONTRIBUTING.md` from `tootsuite/mastodon`, reproduced below.
+You should also try to follow the guidelines set out in the original `CONTRIBUTING.md` from `mastodon/mastodon`, reproduced below.
 
 <blockquote>
 
@@ -75,6 +75,8 @@ It is not always possible to phrase every change in such a manner, but it is des
 - Unit and integration tests (rspec, jest)
 - Code style rules (rubocop, eslint)
 - Normalization of locale files (i18n-tasks)
+
+**Note**: You may need to log in and authorise the GitHub account your fork of this repository belongs to with CircleCI to enable some of the automated checks to run.
 
 ## Documentation
 

@@ -13,7 +13,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import Video from 'flavours/glitch/features/video';
 import Audio from 'flavours/glitch/features/audio';
 import VisibilityIcon from 'flavours/glitch/components/status_visibility_icon';
-import scheduleIdleTask from 'flavours/glitch/util/schedule_idle_task';
+import scheduleIdleTask from '../../ui/util/schedule_idle_task';
 import classNames from 'classnames';
 import PollContainer from 'flavours/glitch/containers/poll_container';
 import Icon from 'flavours/glitch/components/icon';
@@ -34,6 +34,7 @@ class DetailedStatus extends ImmutablePureComponent {
     onOpenMedia: PropTypes.func.isRequired,
     onOpenVideo: PropTypes.func.isRequired,
     onToggleHidden: PropTypes.func,
+    onTranslate: PropTypes.func.isRequired,
     expanded: PropTypes.bool,
     measureHeight: PropTypes.bool,
     onHeightChange: PropTypes.func,
@@ -112,6 +113,11 @@ class DetailedStatus extends ImmutablePureComponent {
     window.open(href, 'mastodon-intent', 'width=445,height=600,resizable=no,menubar=no,status=no,scrollbars=yes');
   }
 
+  handleTranslate = () => {
+    const { onTranslate, status } = this.props;
+    onTranslate(status);
+  }
+
   render () {
     const status = (this.props.status && this.props.status.get('reblog')) ? this.props.status.get('reblog') : this.props.status;
     const { expanded, onToggleHidden, settings, usingPiP, intl } = this.props;
@@ -122,13 +128,26 @@ class DetailedStatus extends ImmutablePureComponent {
       return null;
     }
 
-    let media           = [];
-    let mediaIcons      = [];
     let applicationLink = '';
     let reblogLink = '';
     let reblogIcon = 'retweet';
     let favouriteLink = '';
     let edited = '';
+
+    //  Depending on user settings, some media are considered as parts of the
+    //  contents (affected by CW) while other will be displayed outside of the
+    //  CW.
+    let contentMedia = [];
+    let contentMediaIcons = [];
+    let extraMedia = [];
+    let extraMediaIcons = [];
+    let media = contentMedia;
+    let mediaIcons = contentMediaIcons;
+
+    if (settings.getIn(['content_warnings', 'media_outside'])) {
+      media = extraMedia;
+      mediaIcons = extraMediaIcons;
+    }
 
     if (this.props.measureHeight) {
       outerStyle.height = `${this.state.height}px`;
@@ -152,7 +171,11 @@ class DetailedStatus extends ImmutablePureComponent {
             backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
             foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
             accentColor={attachment.getIn(['meta', 'colors', 'accent'])}
+            sensitive={status.get('sensitive')}
+            visible={this.props.showMedia}
+            blurhash={attachment.get('blurhash')}
             height={150}
+            onToggleVisibility={this.props.onToggleMediaVisibility}
           />,
         );
         mediaIcons.push('music');
@@ -199,8 +222,8 @@ class DetailedStatus extends ImmutablePureComponent {
     }
 
     if (status.get('poll')) {
-      media.push(<PollContainer pollId={status.get('poll')} />);
-      mediaIcons.push('tasks');
+      contentMedia.push(<PollContainer pollId={status.get('poll')} />);
+      contentMediaIcons.push('tasks');
     }
 
     if (status.get('application')) {
@@ -282,11 +305,13 @@ class DetailedStatus extends ImmutablePureComponent {
 
           <StatusContent
             status={status}
-            media={media}
-            mediaIcons={mediaIcons}
+            media={contentMedia}
+            extraMedia={extraMedia}
+            mediaIcons={contentMediaIcons}
             expanded={expanded}
             collapsed={false}
             onExpandedToggle={onToggleHidden}
+            onTranslate={this.handleTranslate}
             parseClick={this.parseClick}
             onUpdate={this.handleChildUpdate}
             tagLinks={settings.get('tag_misleading_links')}

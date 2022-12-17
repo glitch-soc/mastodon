@@ -10,7 +10,7 @@ import ComposeForm from 'flavours/glitch/features/compose/components/compose_for
 import DrawerAccount from 'flavours/glitch/features/compose/components/navigation_bar';
 import Search from 'flavours/glitch/features/compose/components/search';
 import ColumnHeader from './column_header';
-import { me, source_url } from 'flavours/glitch/util/initial_state';
+import { me, source_url } from 'flavours/glitch/initial_state';
 
 const noop = () => { };
 
@@ -148,7 +148,7 @@ const PageSix = ({ admin, domain }) => {
           values={{
             domain,
             fork: <a href='https://en.wikipedia.org/wiki/Fork_(software_development)' target='_blank' rel='noopener'>fork</a>,
-            Mastodon: <a href='https://github.com/tootsuite/mastodon' target='_blank' rel='noopener'>Mastodon</a>,
+            Mastodon: <a href='https://github.com/mastodon/mastodon' target='_blank' rel='noopener'>Mastodon</a>,
             github: <a href={source_url} target='_blank' rel='noopener'>GitHub</a>,
           }}
         />

@@ -5,8 +5,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
 //  Our imports
-import { expandSpoilers, disableSwiping } from 'flavours/glitch/util/initial_state';
-import { preferenceLink } from 'flavours/glitch/util/backend_links';
+import { expandSpoilers, disableSwiping } from 'flavours/glitch/initial_state';
+import { preferenceLink } from 'flavours/glitch/utils/backend_links';
 import LocalSettingsPageItem from './item';
 import DeprecatedLocalSettingsPageItem from './deprecated_item';
 
@@ -20,14 +20,10 @@ const messages = defineMessages({
   layout_mobile: { id: 'layout.single', defaultMessage: 'Mobile' },
   layout_mobile_hint: { id: 'layout.hint.single', defaultMessage: 'Use single-column layout regardless of the “Enable advanced web interface” setting or screen size.' },
   side_arm_none: { id: 'settings.side_arm.none', defaultMessage: 'None' },
-  side_arm_keep: { id: 'settings.side_arm_reply_mode.keep', defaultMessage: 'Keep secondary toot button to set privacy' },
+  side_arm_keep: { id: 'settings.side_arm_reply_mode.keep', defaultMessage: 'Keep its set privacy' },
   side_arm_copy: { id: 'settings.side_arm_reply_mode.copy', defaultMessage: 'Copy privacy setting of the toot being replied to' },
   side_arm_restrict: { id: 'settings.side_arm_reply_mode.restrict', defaultMessage: 'Restrict privacy setting to that of the toot being replied to' },
   regexp: { id: 'settings.content_warnings.regexp', defaultMessage: 'Regular expression' },
-  filters_drop: { id: 'settings.filtering_behavior.drop', defaultMessage: 'Hide filtered toots completely' },
-  filters_upstream: { id: 'settings.filtering_behavior.upstream', defaultMessage: 'Show "filtered" like vanilla Mastodon' },
-  filters_hide: { id: 'settings.filtering_behavior.hide', defaultMessage: 'Show "filtered" and add a button to display why' },
-  filters_cw: { id: 'settings.filtering_behavior.cw', defaultMessage: 'Still display the post, and add filtered words to content warning' },
   rewrite_mentions_no: { id: 'settings.rewrite_mentions_no', defaultMessage: 'Do not rewrite mentions' },
   rewrite_mentions_acct: { id: 'settings.rewrite_mentions_acct', defaultMessage: 'Rewrite with username and domain (when the account is remote)' },
   rewrite_mentions_username: { id: 'settings.rewrite_mentions_username', defaultMessage:  'Rewrite with username' },
@@ -185,36 +181,6 @@ class LocalSettingsPage extends React.PureComponent {
             <FormattedMessage id='settings.wide_view' defaultMessage='Wide view (Desktop mode only)' />
             <span className='hint'><FormattedMessage id='settings.wide_view_hint' defaultMessage='Stretches columns to better fill the available space.' /></span>
           </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['navbar_under']}
-            id='mastodon-settings--navbar_under'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.navbar_under' defaultMessage='Navbar at the bottom (Mobile only)' />
-          </LocalSettingsPageItem>
-          <DeprecatedLocalSettingsPageItem
-            id='mastodon-settings--swipe_to_change_columns'
-            value={!disableSwiping}
-          >
-            <FormattedMessage id='settings.swipe_to_change_columns' defaultMessage='Allow swiping to change columns (Mobile only)' />
-            <span className='hint'>
-              <FormattedMessage
-                id='settings.deprecated_setting'
-                defaultMessage="This setting is now controlled from Mastodon's {settings_page_link}"
-                values={{
-                  settings_page_link: (
-                    <a href={preferenceLink('user_setting_disable_swiping')}>
-                      <FormattedMessage
-                        id='settings.shared_settings_link'
-                        defaultMessage='user preferences'
-                      />
-                    </a>
-                  )
-                }}
-              />
-            </span>
-          </DeprecatedLocalSettingsPageItem>
         </section>
       </div>
     ),
@@ -296,64 +262,66 @@ class LocalSettingsPage extends React.PureComponent {
           ]}
           onChange={onChange}
         >
-          <FormattedMessage id='settings.side_arm_reply_mode' defaultMessage='When replying to a toot:' />
+          <FormattedMessage id='settings.side_arm_reply_mode' defaultMessage='When replying to a toot, the secondary toot button should:' />
         </LocalSettingsPageItem>
       </div>
     ),
     ({ intl, onChange, settings }) => (
       <div className='glitch local-settings__page content_warnings'>
         <h1><FormattedMessage id='settings.content_warnings' defaultMessage='Content warnings' /></h1>
-        <DeprecatedLocalSettingsPageItem
-          id='mastodon-settings--content_warnings-auto_unfold'
-          value={expandSpoilers}
-        >
-          <FormattedMessage id='settings.enable_content_warnings_auto_unfold' defaultMessage='Automatically unfold content-warnings' />
-          <span className='hint'>
-            <FormattedMessage
-              id='settings.deprecated_setting'
-              defaultMessage="This setting is now controlled from Mastodon's {settings_page_link}"
-              values={{
-                settings_page_link: (
-                  <a href={preferenceLink('user_setting_expand_spoilers')}>
-                    <FormattedMessage
-                      id='settings.shared_settings_link'
-                      defaultMessage='user preferences'
-                    />
-                  </a>
-                )
-              }}
-            />
-          </span>
-        </DeprecatedLocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
-          item={['content_warnings', 'filter']}
-          id='mastodon-settings--content_warnings-auto_unfold'
+          item={['content_warnings', 'shared_state']}
+          id='mastodon-settings--content_warnings-shared_state'
           onChange={onChange}
-          placeholder={intl.formatMessage(messages.regexp)}
-          disabled={!expandSpoilers}
         >
-          <FormattedMessage id='settings.content_warnings_filter' defaultMessage='Content warnings to not automatically unfold:' />
+          <FormattedMessage id='settings.content_warnings_shared_state' defaultMessage='Show/hide content of all copies at once' />
+          <span className='hint'><FormattedMessage id='settings.content_warnings_shared_state_hint' defaultMessage='Reproduce upstream Mastodon behavior by having the Content Warning button affect all copies of a post at once. This will prevent automatic collapsing of any copy of a toot with unfolded CW' /></span>
         </LocalSettingsPageItem>
-      </div>
-    ),
-    ({ intl, onChange, settings }) => (
-      <div className='glitch local-settings__page filters'>
-        <h1><FormattedMessage id='settings.filters' defaultMessage='Filters' /></h1>
         <LocalSettingsPageItem
           settings={settings}
-          item={['filtering_behavior']}
-          id='mastodon-settings--filters-behavior'
+          item={['content_warnings', 'media_outside']}
+          id='mastodon-settings--content_warnings-media_outside'
           onChange={onChange}
-          options={[
-            { value: 'drop', message: intl.formatMessage(messages.filters_drop) },
-            { value: 'upstream', message: intl.formatMessage(messages.filters_upstream) },
-            { value: 'hide', message: intl.formatMessage(messages.filters_hide) },
-            { value: 'content_warning', message: intl.formatMessage(messages.filters_cw) }
-          ]}
         >
-          <FormattedMessage id='settings.filtering_behavior' defaultMessage='Filtering behavior' />
+          <FormattedMessage id='settings.content_warnings_media_outside' defaultMessage='Display media attachments outside content warnings' />
+          <span className='hint'><FormattedMessage id='settings.content_warnings_media_outside_hint' defaultMessage='Reproduce upstream Mastodon behavior by having the Content Warning toggle not affect media attachments' /></span>
         </LocalSettingsPageItem>
+        <section>
+          <h2><FormattedMessage id='settings.content_warnings_unfold_opts' defaultMessage='Auto-unfolding options' /></h2>
+          <DeprecatedLocalSettingsPageItem
+            id='mastodon-settings--content_warnings-auto_unfold'
+            value={expandSpoilers}
+          >
+            <FormattedMessage id='settings.enable_content_warnings_auto_unfold' defaultMessage='Automatically unfold content-warnings' />
+            <span className='hint'>
+              <FormattedMessage
+                id='settings.deprecated_setting'
+                defaultMessage="This setting is now controlled from Mastodon's {settings_page_link}"
+                values={{
+                  settings_page_link: (
+                    <a href={preferenceLink('user_setting_expand_spoilers')}>
+                      <FormattedMessage
+                        id='settings.shared_settings_link'
+                        defaultMessage='user preferences'
+                      />
+                    </a>
+                  )
+                }}
+              />
+            </span>
+          </DeprecatedLocalSettingsPageItem>
+          <LocalSettingsPageItem
+            settings={settings}
+            item={['content_warnings', 'filter']}
+            id='mastodon-settings--content_warnings-auto_unfold'
+            onChange={onChange}
+            placeholder={intl.formatMessage(messages.regexp)}
+            disabled={!expandSpoilers}
+          >
+            <FormattedMessage id='settings.content_warnings_filter' defaultMessage='Content warnings to not automatically unfold:' />
+          </LocalSettingsPageItem>
+        </section>
       </div>
     ),
     ({ onChange, settings }) => (
@@ -366,6 +334,7 @@ class LocalSettingsPage extends React.PureComponent {
           onChange={onChange}
         >
           <FormattedMessage id='settings.enable_collapsed' defaultMessage='Enable collapsed toots' />
+          <span className='hint'><FormattedMessage id='settings.enable_collapsed_hint' defaultMessage='Collapsed posts have parts of their contents hidden to take up less screen space. This is distinct from the Content Warning feature' /></span>
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
@@ -457,6 +426,7 @@ class LocalSettingsPage extends React.PureComponent {
             dependsOn={[['collapsed', 'enabled']]}
           >
             <FormattedMessage id='settings.image_backgrounds_media' defaultMessage='Preview collapsed toot media' />
+            <span className='hint'><FormattedMessage id='settings.image_backgrounds_media_hint' defaultMessage='If the post has any media attachment, use the first one as a background' /></span>
           </LocalSettingsPageItem>
         </section>
       </div>

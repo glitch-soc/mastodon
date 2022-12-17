@@ -38,13 +38,14 @@ class SilentErrorBoundary extends React.Component {
  *
  * @type {(displayNumber: JSX.Element, pluralReady: number) => JSX.Element}
  */
-const accountsCountRenderer = (displayNumber, pluralReady) => (
+export const accountsCountRenderer = (displayNumber, pluralReady) => (
   <FormattedMessage
     id='trends.counter_by_accounts'
-    defaultMessage='{count, plural, one {{counter} person} other {{counter} people}} talking'
+    defaultMessage='{count, plural, one {{counter} person} other {{counter} people}} in the past {days, plural, one {day} other {{days} days}}'
     values={{
       count: pluralReady,
       counter: <strong>{displayNumber}</strong>,
+      days: 2,
     }}
   />
 );
@@ -55,7 +56,6 @@ export const ImmutableHashtag = ({ hashtag }) => (
     href={hashtag.get('url')}
     to={`/tags/${hashtag.get('name')}`}
     people={hashtag.getIn(['history', 0, 'accounts']) * 1 + hashtag.getIn(['history', 1, 'accounts']) * 1}
-    uses={hashtag.getIn(['history', 0, 'uses']) * 1 + hashtag.getIn(['history', 1, 'uses']) * 1}
     history={hashtag.get('history').reverse().map((day) => day.get('uses')).toArray()}
   />
 );
@@ -64,27 +64,35 @@ ImmutableHashtag.propTypes = {
   hashtag: ImmutablePropTypes.map.isRequired,
 };
 
-const Hashtag = ({ name, href, to, people, uses, history, className }) => (
+const Hashtag = ({ name, href, to, people, uses, history, className, description, withGraph }) => (
   <div className={classNames('trends__item', className)}>
     <div className='trends__item__name'>
       <Permalink href={href} to={to}>
         {name ? <React.Fragment>#<span>{name}</span></React.Fragment> : <Skeleton width={50} />}
       </Permalink>
 
-      {typeof people !== 'undefined' ? <ShortNumber value={people} renderer={accountsCountRenderer} /> : <Skeleton width={100} />}
+      {description ? (
+        <span>{description}</span>
+      ) : (
+        typeof people !== 'undefined' ? <ShortNumber value={people} renderer={accountsCountRenderer} /> : <Skeleton width={100} />
+      )}
     </div>
 
-    <div className='trends__item__current'>
-      {typeof uses !== 'undefined' ? <ShortNumber value={uses} /> : <Skeleton width={42} height={36} />}
-    </div>
+    {typeof uses !== 'undefined' && (
+      <div className='trends__item__current'>
+        <ShortNumber value={uses} />
+      </div>
+    )}
 
-    <div className='trends__item__sparkline'>
-      <SilentErrorBoundary>
-        <Sparklines width={50} height={28} data={history ? history : Array.from(Array(7)).map(() => 0)}>
-          <SparklinesCurve style={{ fill: 'none' }} />
-        </Sparklines>
-      </SilentErrorBoundary>
-    </div>
+    {withGraph && (
+      <div className='trends__item__sparkline'>
+        <SilentErrorBoundary>
+          <Sparklines width={50} height={28} data={history ? history : Array.from(Array(7)).map(() => 0)}>
+            <SparklinesCurve style={{ fill: 'none' }} />
+          </Sparklines>
+        </SilentErrorBoundary>
+      </div>
+    )}
   </div>
 );
 
@@ -93,9 +101,15 @@ Hashtag.propTypes = {
   href: PropTypes.string,
   to: PropTypes.string,
   people: PropTypes.number,
+  description: PropTypes.node,
   uses: PropTypes.number,
   history: PropTypes.arrayOf(PropTypes.number),
   className: PropTypes.string,
+  withGraph: PropTypes.bool,
+};
+
+Hashtag.defaultProps = {
+  withGraph: true,
 };
 
 export default Hashtag;

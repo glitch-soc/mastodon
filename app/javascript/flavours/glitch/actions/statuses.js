@@ -1,4 +1,4 @@
-import api from 'flavours/glitch/util/api';
+import api from '../api';
 
 import { deleteFromTimelines } from './timelines';
 import { importFetchedStatus, importFetchedStatuses } from './importer';
@@ -24,11 +24,20 @@ export const STATUS_UNMUTE_REQUEST = 'STATUS_UNMUTE_REQUEST';
 export const STATUS_UNMUTE_SUCCESS = 'STATUS_UNMUTE_SUCCESS';
 export const STATUS_UNMUTE_FAIL    = 'STATUS_UNMUTE_FAIL';
 
+export const STATUS_REVEAL   = 'STATUS_REVEAL';
+export const STATUS_HIDE     = 'STATUS_HIDE';
+export const STATUS_COLLAPSE = 'STATUS_COLLAPSE';
+
 export const REDRAFT = 'REDRAFT';
 
 export const STATUS_FETCH_SOURCE_REQUEST = 'STATUS_FETCH_SOURCE_REQUEST';
 export const STATUS_FETCH_SOURCE_SUCCESS = 'STATUS_FETCH_SOURCE_SUCCESS';
 export const STATUS_FETCH_SOURCE_FAIL    = 'STATUS_FETCH_SOURCE_FAIL';
+
+export const STATUS_TRANSLATE_REQUEST = 'STATUS_TRANSLATE_REQUEST';
+export const STATUS_TRANSLATE_SUCCESS = 'STATUS_TRANSLATE_SUCCESS';
+export const STATUS_TRANSLATE_FAIL    = 'STATUS_TRANSLATE_FAIL';
+export const STATUS_TRANSLATE_UNDO    = 'STATUS_TRANSLATE_UNDO';
 
 export function fetchStatusRequest(id, skipLoading) {
   return {
@@ -38,9 +47,9 @@ export function fetchStatusRequest(id, skipLoading) {
   };
 };
 
-export function fetchStatus(id) {
+export function fetchStatus(id, forceFetch = false) {
   return (dispatch, getState) => {
-    const skipLoading = getState().getIn(['statuses', id], null) !== null;
+    const skipLoading = !forceFetch && getState().getIn(['statuses', id], null) !== null;
 
     dispatch(fetchContext(id));
 
@@ -97,7 +106,7 @@ export const editStatus = (id, routerHistory) => (dispatch, getState) => {
   api(getState).get(`/api/v1/statuses/${id}/source`).then(response => {
     dispatch(fetchStatusSourceSuccess());
     ensureComposeIsVisible(getState, routerHistory);
-    dispatch(setComposeToStatus(status, response.data.text, response.data.spoiler_text));
+    dispatch(setComposeToStatus(status, response.data.text, response.data.spoiler_text, response.data.content_type));
   }).catch(error => {
     dispatch(fetchStatusSourceFail(error));
   });
@@ -277,3 +286,65 @@ export function unmuteStatusFail(id, error) {
     error,
   };
 };
+
+export function hideStatus(ids) {
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+
+  return {
+    type: STATUS_HIDE,
+    ids,
+  };
+};
+
+export function revealStatus(ids) {
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+
+  return {
+    type: STATUS_REVEAL,
+    ids,
+  };
+};
+
+export function toggleStatusCollapse(id, isCollapsed) {
+  return {
+    type: STATUS_COLLAPSE,
+    id,
+    isCollapsed,
+  };
+};
+
+export const translateStatus = id => (dispatch, getState) => {
+  dispatch(translateStatusRequest(id));
+
+  api(getState).post(`/api/v1/statuses/${id}/translate`).then(response => {
+    dispatch(translateStatusSuccess(id, response.data));
+  }).catch(error => {
+    dispatch(translateStatusFail(id, error));
+  });
+};
+
+export const translateStatusRequest = id => ({
+  type: STATUS_TRANSLATE_REQUEST,
+  id,
+});
+
+export const translateStatusSuccess = (id, translation) => ({
+  type: STATUS_TRANSLATE_SUCCESS,
+  id,
+  translation,
+});
+
+export const translateStatusFail = (id, error) => ({
+  type: STATUS_TRANSLATE_FAIL,
+  id,
+  error,
+});
+
+export const undoStatusTranslation = id => ({
+  type: STATUS_TRANSLATE_UNDO,
+  id,
+});

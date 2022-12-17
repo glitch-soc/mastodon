@@ -11,7 +11,7 @@ import Permalink from 'flavours/glitch/components/permalink';
 import IconButton from 'flavours/glitch/components/icon_button';
 import RelativeTimestamp from 'flavours/glitch/components/relative_timestamp';
 import { HotKeys } from 'react-hotkeys';
-import { autoPlayGif } from 'flavours/glitch/util/initial_state';
+import { autoPlayGif } from 'flavours/glitch/initial_state';
 import classNames from 'classnames';
 
 const messages = defineMessages({
@@ -132,6 +132,8 @@ class Conversation extends ImmutablePureComponent {
   }
 
   handleShowMore = () => {
+    this.props.onToggleHidden(this.props.lastStatus);
+
     if (this.props.lastStatus.get('spoiler_text')) {
       this.setExpansion(!this.state.isExpanded);
     }
@@ -143,11 +145,12 @@ class Conversation extends ImmutablePureComponent {
 
   render () {
     const { accounts, lastStatus, unread, scrollKey, intl } = this.props;
-    const { isExpanded } = this.state;
 
     if (lastStatus === null) {
       return null;
     }
+
+    const isExpanded = this.props.settings.getIn(['content_warnings', 'shared_state']) ? !lastStatus.get('hidden') : this.state.isExpanded;
 
     const menu = [
       { text: intl.formatMessage(messages.open), action: this.handleClick },
