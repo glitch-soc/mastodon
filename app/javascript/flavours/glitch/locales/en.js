@@ -120,7 +120,6 @@ const messages = {
   'status.has_preview_card': 'Features an attached preview card',
   'status.has_pictures': 'Features attached pictures',
   'status.is_poll': 'This toot is a poll',
-  'status.is_thread': 'This toot is part of a thread',
   'status.has_video': 'Features attached videos',
   'status.has_audio': 'Features attached audio files',
   'status.local_only': 'Only visible from your instance',
