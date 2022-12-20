@@ -273,7 +273,7 @@ class EmojiPickerMenuImpl extends React.PureComponent {
         <EmojiPicker
           perLine={8}
           emojiSize={33}
-	  sheetSize={43}
+          sheetSize={43}
           custom={buildCustomEmojis(custom_emojis)}
           color=''
           emoji=''
