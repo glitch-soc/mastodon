@@ -11,7 +11,6 @@ import { connect } from 'react-redux';
 import { Icon } from 'flavours/glitch/components/icon';
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
-import { convertToChar } from 'flavours/glitch/utils/html';
 import highlightjs from 'highlight.js';
 
 import Permalink from './permalink';
@@ -320,18 +319,38 @@ class StatusContent extends PureComponent {
    * @returns content with highlighted code inside code tags, or content if not found
    */
   highlightCode (content) {
-    // RegEx matches every code tag or block and replaces them with highlighted code if lang defined
-    return content.replace(/((?:<pre>)?<code(?: title="(\w+)?")?>)(.+?)(<\/code>(?:<\/pre>)?)/g, (match, startTags, lang, code, endTags) => {
-      // Unknown, invalid or no language, return content with stripped title
-      if (highlightjs.getLanguage(lang) === undefined) return `${startTags.replace(/<code .+>/g, '<code>')}${code}${endTags}`;
+    // highlightJS complains when unescaped html is given
+    highlightjs.configure({ ignoreUnescapedHTML: true });
 
-      // Construct a new string replacing content
-      // convertChar is used to convert html entities to their symbols, otherwise something like && would be shown as &amp;&amp;
-      // replace <br> tags with new line, as the highlighter sees them as part of the code
-      // run highlighter on replaced code and re-add <br> tags.
-      // the resulting string becomes: <pre><code title="lang"> + HighlightedCode + </code></pre>
-      return startTags+highlightjs.highlightAuto(convertToChar(code.replace(/<br>/g, '\n')), [lang]).value.replace(/\n/g, '<br>')+endTags;
-    });
+    // Create a new temporary element to work on
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = content;
+
+    // Get code elements and run highlightJS on each.
+    wrapper.querySelectorAll('code')
+      .forEach((code) => {
+        // Get title attribute of code element
+        let title = code.getAttribute('title');
+
+        // Check if title is a valid language
+        if (highlightjs.getLanguage(title) !== undefined) {
+          // Set title as class attribute, since highlightElement cannot be given a language
+          // highlightJS will read this attribute and use it to highlight in the proper language
+          code.setAttribute('class', title);
+
+          // Replace <br> as highlightJS removes them, messing up formatting
+          code.innerHTML = code.innerHTML.replace(/<br>/g, '\n');
+
+          // Highlight the code element
+          highlightjs.highlightElement(code);
+
+          // highlightJS adds own class attribute, remove it again to not mess up styling
+          code.removeAttribute('class');
+        }
+      });
+
+    // return content with highlighted code
+    return wrapper.innerHTML;
   }
 
   render () {
