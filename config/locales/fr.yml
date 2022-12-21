@@ -1301,6 +1301,10 @@ fr:
       title: Nouvelle mention
     poll:
       subject: Un sondage de %{name} est terminé
+    reaction:
+      body: "%{name} a réagi·e à votre message:"
+      subject: "%{name} a réagi·e à votre message"
+      title: Nouvelle réaction
     reblog:
       body: 'Votre message été partagé par %{name} :'
       subject: "%{name} a partagé votre message"

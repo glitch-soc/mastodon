@@ -42,6 +42,7 @@ defaults: &defaults
   trendable_by_default: false
   trending_status_cw: true
   crop_images: true
+  visible_reactions: 6
   notification_emails:
     follow: true
     reblog: false
@@ -81,6 +82,7 @@ defaults: &defaults
   outgoing_spoilers: ''
   require_invite_text: false
   captcha_enabled: false
+  home_dms: false
   backups_retention_period: 7
 
 development:

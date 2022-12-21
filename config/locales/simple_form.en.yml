@@ -55,6 +55,7 @@ en:
         setting_display_media_hide_all: Always hide media
         setting_display_media_show_all: Always show media
         setting_hide_network: Who you follow and who follows you will be hidden on your profile
+        setting_home_dms: Hide incoming DMs in home timeline (only affects newly-received DMs)
         setting_noindex: Affects your public profile and post pages
         setting_show_application: The application you use to post will be displayed in the detailed view of your posts
         setting_use_blurhash: Gradients are based on the colors of the hidden visuals but obfuscate any details
@@ -204,6 +205,7 @@ en:
         setting_display_media_show_all: Show all
         setting_expand_spoilers: Always expand posts marked with content warnings
         setting_hide_network: Hide your social graph
+        setting_home_dms: Hide DMs in home timeline
         setting_noindex: Opt-out of search engine indexing
         setting_reduce_motion: Reduce motion in animations
         setting_show_application: Disclose application used to send posts
@@ -213,6 +215,7 @@ en:
         setting_unfollow_modal: Show confirmation dialog before unfollowing someone
         setting_use_blurhash: Show colorful gradients for hidden media
         setting_use_pending_items: Slow mode
+        setting_visible_reactions: Number of visible emoji reactions
         severity: Severity
         sign_in_token_attempt: Security code
         title: Title

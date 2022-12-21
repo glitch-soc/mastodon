@@ -1,7 +1,7 @@
 import inherited from 'mastodon/locales/en.json';
 
 const messages = {
-  'getting_started.open_source_notice': 'Glitchsoc is free open source software forked from {Mastodon}. You can contribute or report issues on GitHub at {github}.',
+  'getting_started.open_source_notice': 'We\'re running a {cit} of {glitchsoc}; free open source software forked from {Mastodon}. You can contribute or report issues on GitHub at {github}.',
   'layout.auto': 'Auto',
   'layout.current_is': 'Your current layout is:',
   'layout.desktop': 'Desktop',
@@ -115,6 +115,7 @@ const messages = {
   'settings.wide_view_hint': 'Stretches columns to better fill the available space.',
   'settings.navbar_under': 'Navbar at the bottom (Mobile only)',
   'status.collapse': 'Collapse',
+  'status.react': 'React',
   'status.uncollapse': 'Uncollapse',
   'status.in_reply_to': 'This toot is a reply',
   'status.has_preview_card': 'Features an attached preview card',
@@ -147,7 +148,9 @@ const messages = {
   'home.column_settings.show_direct': 'Show DMs',
 
   'notification.markForDeletion': 'Mark for deletion',
+  'notification.reaction': '{name} reacted to your post',
   'notifications.clear': 'Clear all my notifications',
+  'notifications.column_settings.reaction': 'Reactions:',
   'notifications.marked_clear_confirmation': 'Are you sure you want to permanently clear all selected notifications?',
   'notifications.marked_clear': 'Clear selected notifications',
 
@@ -187,6 +190,8 @@ const messages = {
   'keyboard_shortcuts.bookmark': 'to bookmark',
   'keyboard_shortcuts.toggle_collapse': 'to collapse/uncollapse toots',
   'keyboard_shortcuts.secondary_toot': 'to send toot using secondary privacy setting',
+
+  'tooltips.reactions': 'Reactions',
 };
 
 export default Object.assign({}, inherited, messages);
