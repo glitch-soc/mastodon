@@ -79,7 +79,17 @@
 
   .status__content__text,
   .e-content {
-    overflow: hidden;
+    overflow: visible;
+
+    .emojione {
+      transition-duration:0.08s;
+    }
+
+    .emojione:hover {
+      transform: scale(1.8);
+      filter: drop-shadow(0 0 3px #0c0c0c);
+      z-index:99;
+    }
 
     & > ul,
     & > ol {
