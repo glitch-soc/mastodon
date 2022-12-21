@@ -6,10 +6,12 @@ data:
   read:
     - config/locales/%{locale}.yml
     - config/locales/**/*.%{locale}.yml
+    - config/locales-glitch/%{locale}.yml
+    - config/locales-glitch/*.%{locale}.yml
 
   write:
-    - ['{devise, simple_form, doorkeeper}.*', 'config/locales/\1.%{locale}.yml']
-    - config/locales/%{locale}.yml
+    - ['{devise, simple_form, doorkeeper}.*', 'config/locales-glitch/\1.%{locale}.yml']
+    - config/locales-glitch/%{locale}.yml
 
   yaml:
     write:
