@@ -2,9 +2,6 @@
 zh-CN:
   admin:
     settings:
-      enable_keybase:
-        desc_html: 允许你的用户使用 Keybase 证明身份
-        title: 启用 Keybase 集成
       hide_followers_count:
         desc_html: 不要在用户资料中显示关注者人数
         title: 隐藏关注者人数

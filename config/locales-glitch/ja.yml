@@ -2,9 +2,6 @@
 ja:
   admin:
     settings:
-      enable_keybase:
-        desc_html: Keybaseにより身元の証明が可能となります
-        title: Keybase統合を有効にする
       hide_followers_count:
         desc_html: プロフィールページのフォロワー数を見られないようにします
         title: フォロワー数を隠す

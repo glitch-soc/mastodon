@@ -2,9 +2,6 @@
 es:
   admin:
     settings:
-      enable_keybase:
-        desc_html: Permite a tus usuarixs comprobar su identidad por medio de keybase
-        title: Habilitar la integración con keybase
       hide_followers_count:
         desc_html: No mostrar el conteo de seguidorxs en perfiles de usuarix
         title: Ocultar conteo de seguidorxs
