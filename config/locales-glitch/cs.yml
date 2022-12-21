@@ -13,15 +13,15 @@ cs:
         title: Zapnout potvrzování pomocí Keybase
       flavour_and_skin:
         title: Rozhraní a styl
+      hide_followers_count:
+        desc_html: Nezobrazovat na uživatelských profilech počet sledujících
+        title: Schovat počet sledujících
       other:
         preamble: Různá nastavení glitch-soc, která se nevešla do jiných kategorií.
         title: Jiné
       outgoing_spoilers:
         desc_html: Při federování příspěvků se přidá toto varování o obsahu příspěvkům, které žádné nemají. To může být užitečné, pokud je váš server zaměřen na specifický obsah, pro který by jiné servery mohly varování o obsahu vyžadovat. Připojená média budou označena jako citlivá.
         title: Varování o obsahu pro odesílané příspěvky
-      hide_followers_count:
-        desc_html: Nezobrazovat na uživatelských profilech počet sledujících
-        title: Schovat počet sledujících
       show_reblogs_in_public_timelines:
         desc_html: Veřejné boosty veřejných příspěvků se zobrazí na místní a federované časové ose.
         title: Zobrazovat ve veřejných časových osách boosty
