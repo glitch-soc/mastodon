@@ -1,6 +1,6 @@
 {
   "about.fork_disclaimer": "Glitch-soc is free open source software forked from Mastodon.",
-  "account.add_account_note": "Add note for @{name}",
+  "account.add_account_note": "Ajouter une note pour @{name}",
   "account.disclaimer_full": "Information below may reflect the user's profile incompletely.",
   "account.follows": "Abonnements",
   "account.joined": "Joined {date}",
