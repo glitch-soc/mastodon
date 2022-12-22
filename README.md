@@ -1,14 +1,15 @@
-#  Mastodon Glitch Edition  #
+#  Mastodon Glitch+Urusai Edition  #
 
->   Now with automated deploys!
+This is the repo for the fork of Mastodon used by [Urusai! Social](https://urusai.social/).
 
-[![Build Status](https://img.shields.io/circleci/project/github/glitch-soc/mastodon.svg)][circleci]
-[![Code Climate](https://img.shields.io/codeclimate/maintainability/glitch-soc/mastodon.svg)][code_climate]
+Added features:
 
-[circleci]: https://circleci.com/gh/glitch-soc/mastodon
-[code_climate]: https://codeclimate.com/github/glitch-soc/mastodon
+- Flavours/styles from @chikorita157@sakurajima.moe
+- Links to our [Halcyon](https://halcyon.urusai.social/) implementation
+- Larger emoji-picker for better visibility, especially on mobile
+- Enlarge emoji in post content on mouse-over/tap
+- Increased "Lengthy toot" definition so only posts larger than the instances max-length are collapsed
+- Collapsed posts show >1 line of text, to help decide if you want to expand it
 
-So here's the deal: we all work on this code, and anyone who uses that does so absolutely at their own risk. can you dig it?
-
-- You can view documentation for this project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
+- You can view documentation for the original glitch-soc project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
 - And contributing guidelines are available [here](CONTRIBUTING.md) and [here](https://glitch-soc.github.io/docs/contributing/).
