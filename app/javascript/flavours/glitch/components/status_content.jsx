@@ -339,7 +339,10 @@ class StatusContent extends PureComponent {
           code.setAttribute('class', title);
 
           // Replace <br> as highlightJS removes them, messing up formatting
-          code.innerHTML = code.innerHTML.replace(/<br>/g, '\n');
+          let brTags = Array.from(code.getElementsByTagName('br'));
+          for (let br of brTags) {
+            br.replaceWith('\n');
+          }
 
           // Highlight the code element
           highlightjs.highlightElement(code);
