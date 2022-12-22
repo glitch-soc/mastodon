@@ -591,7 +591,8 @@
 }
 
 .status__action-bar-timestamp {
-  margin: 0 0 0 auto;
+  flex-grow: 1;
+  text-align: end;
 }
 
 .detailed-status__action-bar-dropdown {
