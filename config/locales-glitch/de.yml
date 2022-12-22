@@ -1,1 +1,19 @@
+---
 de:
+  admin:
+    settings:
+      trending_status_cw:
+        desc_html: Erlaube Posts mit Inhaltswarnungen zu trenden, wenn angesagte Beiträge aktiviert sind. Änderungen an dieser Einstellung sind nicht rückwirkend.
+        title: Erlaube Posts mit Inhaltswarnungen zu trenden
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: Und auch für Glitch-Soc!
+  auth:
+    captcha_confirmation:
+      hint_html: Nur noch ein weiterer Schritt! Um dein Konto zu bestätigen, erfordert dieser Server das Lösen eines CAPTCHA von dir. Bei Fragen oder Problemen mit der Bestätigung kannst du <a href="/about/more">den Server-Administrator kontaktieren</a>.
+      title: Benutzer-Verifizierung
+  generic:
+    use_this: Benutze das
+  settings:
+    flavours: Varianten
