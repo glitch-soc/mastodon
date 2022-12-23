@@ -142,4 +142,4 @@ export default function statuses(state = initialState, action) {
   default:
     return state;
   }
-};
+}
