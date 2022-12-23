@@ -92,7 +92,7 @@
   "onboarding.page_six.apps_available": "Es gibt {apps} für iOS, Android und andere Plattformen.",
   "onboarding.page_six.github": "{domain} läuft auf glitch-soc. glitch-soc ist ein freundlicher {fork} von {Mastodon}, und ist mit jeder Mastodon-App oder -Instanz kompatibel. glitch-soc ist komplett frei und quelloffen. Auf {github} kannst du Fehler melden, Features anfragen oder Code beitragen.",
   "onboarding.page_six.guidelines": "Community-Richtlinien",
-  "onboarding.page_six.read_guidelines": "Bitte lies {domain}'s {guidelines}!",
+  "onboarding.page_six.read_guidelines": "Bitte lies die {guidelines} von {domain}!",
   "onboarding.page_six.various_app": "mobile Apps",
   "onboarding.page_three.profile": "Bearbeite dein Profil, um deinen Avatar, \"Über mich\" und den Anzeigenamen zu ändern. Dort findest du auch andere Einstellungen.",
   "onboarding.page_three.search": "Benutze die Suchleiste, um Leute zu finden und Hashtags anzusehen, wie etwa {illustration} und {introductions}. Um nach einer Person zu suchen, die nicht auf dieser Instanz ist, benutze deren vollständigen Nutzername.",
