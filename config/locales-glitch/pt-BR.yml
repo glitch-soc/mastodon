@@ -3,5 +3,5 @@ pt:
   admin:
     settings:
       show_reblogs_in_public_timelines:
-        desc_html: Mostrar boosts públicos de toots públicos nas linhas de tempo locais e públicas.
-        title: Mostrar boosts em timelines públicas
+        desc_html: Mostrar impulsos públicos de toots públicos nas linhas de tempo locais e públicas.
+        title: Mostrar impulsos em timelines públicas
