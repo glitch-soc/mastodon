@@ -130,7 +130,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
       media_attachment_ids: attachment_ids,
       ordered_media_attachment_ids: attachment_ids,
       poll: process_poll,
-      quote: quote_from_url(@object['quoteUrl']),
+      quote: process_quote,
     }
   end
 
@@ -432,10 +432,21 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
     retry
   end
 
-  def quote_from_url(url)
+  def guess_quote_url
+    if @object['quoteUrl'].present?
+      @object['quoteUrl']
+    elsif @object['_misskey_quote'].present?
+      @object['_misskey_quote']
+    end
+  end
+
+  def process_quote
+    url = guess_quote_url
     return nil if url.nil?
 
     quote = ResolveURLService.new.call(url)
     status_from_uri(quote.uri) if quote
+  rescue
+    nil
   end
 end
