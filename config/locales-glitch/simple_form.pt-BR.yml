@@ -1,6 +1,7 @@
 ---
 pt:
   simple_form:
+    glitch_only: glitch-soc
     hints:
       defaults:
         fields: Você pode ter até %{count} itens exibidos como uma tabela no seu perfil
