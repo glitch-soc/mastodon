@@ -130,6 +130,7 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
       media_attachment_ids: attachment_ids,
       ordered_media_attachment_ids: attachment_ids,
       poll: process_poll,
+      quote: quote_from_url(@object['quoteUrl']),
     }
   end
 
@@ -429,5 +430,12 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
   rescue ActiveRecord::StaleObjectError
     poll.reload
     retry
+  end
+
+  def quote_from_url(url)
+    return nil if url.nil?
+
+    quote = ResolveURLService.new.call(url)
+    status_from_uri(quote.uri) if quote
   end
 end
