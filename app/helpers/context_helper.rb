@@ -42,6 +42,7 @@ module ContextHelper
       'cipherText' => 'toot:cipherText',
     },
     suspended: { 'toot' => 'http://joinmastodon.org/ns#', 'suspended' => 'toot:suspended' },
+    quoteUrl: { 'quoteUrl' => 'as:quoteUrl' },
   }.freeze
 
   def full_context
