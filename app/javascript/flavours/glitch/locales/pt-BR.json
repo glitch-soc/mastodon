@@ -107,7 +107,7 @@
   "settings.auto_collapse_reblogs": "Boosts",
   "settings.auto_collapse_replies": "Respostas",
   "settings.close": "Fechar",
-  "settings.collapsed_statuses": "Toots colapsados",
+  "settings.collapsed_statuses": "Toots recolhidos",
   "settings.compose_box_opts": "Caixa de composição",
   "settings.confirm_before_clearing_draft": "Mostrar diálogo de confirmação antes de sobrescrever a mensagem que está sendo composta",
   "settings.confirm_boost_missing_media_description": "Mostrar diálogo antes de boostar os toots sem descrições de mídia",
@@ -120,5 +120,14 @@
   "settings.content_warnings_shared_state": "Mostrar/ocultar o conteúdo de todas as cópias de uma só vez",
   "settings.content_warnings_shared_state_hint": "Reproduzir o comportamento do Mastodonte fazendo com que o botão de Aviso de Conteúdo afete todas as cópias de um post de uma só vez. Isto evitará o colapso automático de qualquer cópia de um toon com Aviso de Conteúdo revelado",
   "settings.content_warnings_unfold_opts": "Opções de auto-revelar",
+  "settings.deprecated_setting": "Essa configuração agora é controlada pelo {settings_page_link} do Mastodon",
+  "settings.enable_collapsed": "Habilitar toots recolhidos",
+  "settings.enable_collapsed_hint": "Posts recolhidos têm partes dos seus conteúdos ocultos para ocupar menos espaço na tela. Isto é diferente do recurso 'Aviso de Conteúdo'",
+  "settings.enable_content_warnings_auto_unfold": "Revelar automaticamente os avisos de conteúdo",
+  "settings.general": "Geral",
+  "settings.hicolor_privacy_icons": "Ícones de privacidade com cores de alto contraste",
+  "settings.hicolor_privacy_icons.hint": "Exibir ícones de privacidade em cores brilhantes e facilmente distinguíveis",
+  "settings.image_backgrounds": "Fundos de imagem",
+  "settings.image_backgrounds_media": "Pré-visualização da mídia de toots colapsados",
   "settings.preferences": "Preferences"
 }
