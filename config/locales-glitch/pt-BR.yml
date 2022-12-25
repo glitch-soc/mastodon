@@ -30,6 +30,7 @@ pt:
         title: Permitir que mensagens com Avisos de Conteúdo tornem-se tendência
   appearance:
     localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
       glitch_guide_link_text: E também para glitch-soc!
   auth:
     captcha_confirmation:
