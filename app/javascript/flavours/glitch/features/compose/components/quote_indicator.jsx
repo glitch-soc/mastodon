@@ -62,7 +62,7 @@ class QuoteIndicator extends ImmutablePureComponent {
             inverted
           />
           <Icon
-            className='quote-indicator__cancel inverted'
+            className='quote-indicator__cancel icon-button inverted'
             id='quote-right' />
           {account && (
             <AccountContainer
