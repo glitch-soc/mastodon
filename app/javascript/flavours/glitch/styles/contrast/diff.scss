@@ -1,4 +1,6 @@
 .status__content a,
+.link-footer a,
+.quote-indicator__content a,
 .reply-indicator__content a,
 .edit-indicator__content a,
 .link-footer a,
@@ -30,6 +32,7 @@
 }
 
 .status__content a,
+.quote-indicator__content a,
 .reply-indicator__content a,
 .edit-indicator__content a {
   color: $highlight-text-color;
