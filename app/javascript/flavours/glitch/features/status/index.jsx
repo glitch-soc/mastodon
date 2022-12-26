@@ -28,6 +28,7 @@ import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 import { initBlockModal } from '../../actions/blocks';
 import {
   replyCompose,
+  quoteCompose,
   mentionCompose,
   directCompose,
 } from '../../actions/compose';
@@ -338,6 +339,21 @@ class Status extends ImmutablePureComponent {
           accountId: status.getIn(['account', 'id']),
           url: status.get('uri'),
         },
+      }));
+    }
+  };
+
+  handleQuoteClick = (status) => {
+    const { signedIn } = this.context.identity;
+    const { dispatch } = this.props;
+
+    if (signedIn) {
+      dispatch(quoteCompose(status, this.context.router.history));
+    } else {
+      dispatch(openModal('INTERACTION', {
+        type: 'reply',
+        accountId: status.getIn(['account', 'id']),
+        url: status.get('url'),
       }));
     }
   };
@@ -760,6 +776,7 @@ class Status extends ImmutablePureComponent {
                   onFavourite={this.handleFavouriteClick}
                   onReblog={this.handleReblogClick}
                   onBookmark={this.handleBookmarkClick}
+                  onQuote={this.handleQuoteClick}
                   onDelete={this.handleDeleteClick}
                   onEdit={this.handleEditClick}
                   onDirect={this.handleDirectClick}
