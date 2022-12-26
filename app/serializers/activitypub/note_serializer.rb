@@ -3,7 +3,7 @@
 class ActivityPub::NoteSerializer < ActivityPub::Serializer
   include FormattingHelper
 
-  context_extensions :atom_uri, :conversation, :sensitive, :voters_count, :direct_message
+  context_extensions :atom_uri, :conversation, :sensitive, :voters_count, :direct_message, :quote_uri
 
   attributes :id, :type, :summary,
              :in_reply_to, :published, :url,
