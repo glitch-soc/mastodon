@@ -19,7 +19,17 @@ module FormattingHelper
   module_function :extract_status_plain_text
 
   def status_content_format(status)
-    html_aware_format(status.text, status.local?, preloaded_accounts: [status.account] + (status.respond_to?(:active_mentions) ? status.active_mentions.map(&:account) : []), content_type: status.content_type)
+    base = html_aware_format(status.text, status.local?, preloaded_accounts: [status.account] + (status.respond_to?(:active_mentions) ? status.active_mentions.map(&:account) : []), content_type: status.content_type)
+
+    if status.quote? && status.local?
+      after_html = begin
+        "<span class=\"quote-inline\"><a href=\"#{status.quote.to_log_permalink}\" class=\"status-link unhandled-link\" target=\"_blank\">#{status.quote.to_log_permalink}</a></span>"
+      end.html_safe # rubocop:disable Rails/OutputSafety
+
+      base + after_html
+    else
+      base
+    end
   end
 
   def rss_status_content_format(status)
