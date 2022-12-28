@@ -392,11 +392,14 @@ class StatusContent extends PureComponent {
                   id='quote-right'
                   aria-hidden='true'
                   key='icon-quote-right' />
-                <strong className='display-name__html'
-                  dangerouslySetInnerHTML={quoteStatusDisplayName} />
+                <strong className={"display-name__html"}>
+                  <a onClick={this.handleAccountClick} href={quoteStatus.getIn(['account', 'url'])} dangerouslySetInnerHTML={quoteStatusDisplayName} />
+                </strong>
               </span>
             </bdi>
-            <div dangerouslySetInnerHTML={quoteStatusContent} />
+            <div>
+              <a href={quoteStatus.get('url')} target='_blank' rel='noopener noreferrer' dangerouslySetInnerHTML={quoteStatusContent} />
+            </div>
           </blockquote>
         </div>
       );
