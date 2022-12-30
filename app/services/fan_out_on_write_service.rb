@@ -132,7 +132,7 @@ class FanOutOnWriteService < BaseService
     broadcast_to = ->(channel) {
       redis.publish(channel, anonymous_payload)
       if @status.with_media?
-        redis.publish("#{channel}:media")
+        redis.publish("#{channel}:media", anonymous_payload)
       end
     }
     is_reply = @status.reply? && @status.in_reply_to_account_id != @account.id
