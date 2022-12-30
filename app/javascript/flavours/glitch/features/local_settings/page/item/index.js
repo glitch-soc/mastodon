@@ -14,6 +14,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
     id: PropTypes.string.isRequired,
     item: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
+    inputProps: PropTypes.object,
     options: PropTypes.arrayOf(PropTypes.shape({
       value: PropTypes.string.isRequired,
       message: PropTypes.string.isRequired,
@@ -27,6 +28,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
   handleChange = e => {
     const { target } = e;
     const { item, onChange, options, placeholder } = this.props;
+
     if (options && options.length > 0) onChange(item, target.value);
     else if (placeholder) onChange(item, target.value);
     else onChange(item, target.checked);
@@ -34,7 +36,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
 
   render () {
     const { handleChange } = this;
-    const { settings, item, id, options, children, dependsOn, dependsOnNot, placeholder, disabled } = this.props;
+    const { settings, item, id, inputProps, options, children, dependsOn, dependsOnNot, placeholder, disabled } = this.props;
     let enabled = !disabled;
 
     if (dependsOn) {
@@ -54,14 +56,17 @@ export default class LocalSettingsPageItem extends React.PureComponent {
         let optionId = `${id}--${opt.value}`;
         return (
           <label htmlFor={optionId}>
-            <input type='radio'
+            <input
+              type='radio'
               name={id}
               id={optionId}
+              key={optionId}
               value={opt.value}
               onBlur={handleChange}
               onChange={handleChange}
-              checked={ currentValue === opt.value }
+              checked={currentValue === opt.value}
               disabled={!enabled}
+              {...inputProps}
             />
             {opt.message}
             {opt.hint && <span className='hint'>{opt.hint}</span>}
@@ -89,6 +94,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
                 placeholder={placeholder}
                 onChange={handleChange}
                 disabled={!enabled}
+                {...inputProps}
               />
             </p>
           </label>
@@ -103,6 +109,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
             checked={settings.getIn(item)}
             onChange={handleChange}
             disabled={!enabled}
+            {...inputProps}
           />
           {children}
         </label>

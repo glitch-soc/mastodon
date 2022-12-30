@@ -251,10 +251,14 @@ class Status extends ImmutablePureComponent {
     // as it could cause surprising changes when receiving notifications
     if (settings.getIn(['content_warnings', 'shared_state']) && status.get('spoiler_text').length && !status.get('hidden')) return;
 
+    let autoCollapseHeight = parseInt(autoCollapseSettings.get('height'));
+    if (status.get('media_attachments').size && !muted) {
+      autoCollapseHeight += 250;
+    }
     if (collapse ||
       autoCollapseSettings.get('all') ||
       (autoCollapseSettings.get('notifications') && muted) ||
-      (autoCollapseSettings.get('lengthy') && node.clientHeight > ((status.get('media_attachments').size && !muted) ? 650 : 400)) ||
+      (autoCollapseSettings.get('lengthy') && node.clientHeight > autoCollapseHeight) ||
       (autoCollapseSettings.get('reblogs') && prepend === 'reblogged_by') ||
       (autoCollapseSettings.get('replies') && status.get('in_reply_to_id', null) !== null) ||
       (autoCollapseSettings.get('media') && !(status.get('spoiler_text').length) && status.get('media_attachments').size > 0)
