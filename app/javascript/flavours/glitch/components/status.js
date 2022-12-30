@@ -253,7 +253,7 @@ class Status extends ImmutablePureComponent {
 
     let autoCollapseHeight = parseInt(autoCollapseSettings.get('height'));
     if (status.get('media_attachments').size && !muted) {
-      autoCollapseHeight += 300;
+      autoCollapseHeight += 210;
     }
     if (collapse ||
       autoCollapseSettings.get('all') ||
