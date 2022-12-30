@@ -14,10 +14,16 @@
     = f.input :hide_followers_count, as: :boolean, wrapper: :with_label, label: t('admin.settings.hide_followers_count.title'), hint: t('admin.settings.hide_followers_count.desc_html'), glitch_only: true
 
   .fields-group
-    = f.input :show_reblogs_in_public_timelines, as: :boolean, wrapper: :with_label, label: t('admin.settings.show_reblogs_in_public_timelines.title'), hint: t('admin.settings.show_reblogs_in_public_timelines.desc_html'), glitch_only: true
+    = f.input :show_reblogs_in_local_timelines, as: :boolean, wrapper: :with_label, label: t('admin.settings.show_reblogs_in_local_timelines.title'), hint: t('admin.settings.show_reblogs_in_local_timelines.desc_html'), glitch_only: true
 
   .fields-group
-    = f.input :show_replies_in_public_timelines, as: :boolean, wrapper: :with_label, label: t('admin.settings.show_replies_in_public_timelines.title'), hint: t('admin.settings.show_replies_in_public_timelines.desc_html'), glitch_only: true
+    = f.input :show_replies_in_local_timelines, as: :boolean, wrapper: :with_label, label: t('admin.settings.show_replies_in_local_timelines.title'), hint: t('admin.settings.show_replies_in_local_timelines.desc_html'), glitch_only: true
+
+  .fields-group
+    = f.input :show_reblogs_in_federated_timelines, as: :boolean, wrapper: :with_label, label: t('admin.settings.show_reblogs_in_federated_timelines.title'), hint: t('admin.settings.show_reblogs_in_federated_timelines.desc_html'), glitch_only: true
+
+  .fields-group
+    = f.input :show_replies_in_federated_timelines, as: :boolean, wrapper: :with_label, label: t('admin.settings.show_replies_in_federated_timelines.title'), hint: t('admin.settings.show_replies_in_federated_timelines.desc_html'), glitch_only: true
 
   .fields-group
     = f.input :outgoing_spoilers, wrapper: :with_label, label: t('admin.settings.outgoing_spoilers.title'), hint: t('admin.settings.outgoing_spoilers.desc_html'), glitch_only: true

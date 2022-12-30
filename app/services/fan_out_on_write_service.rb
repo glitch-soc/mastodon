@@ -129,14 +129,19 @@ class FanOutOnWriteService < BaseService
   end
 
   def broadcast_to_public_streams!
-    return if @status.reply? && @status.in_reply_to_account_id != @account.id && !Setting.show_replies_in_public_timelines
+    broadcast_to = ->(channel) {
+      redis.publish(channel, anonymous_payload)
+      if @status.with_media?
+        redis.publish("#{channel}:media")
+      end
+    }
+    is_reply = @status.reply? && @status.in_reply_to_account_id != @account.id
 
-    redis.publish('timeline:public', anonymous_payload)
-    redis.publish(@status.local? ? 'timeline:public:local' : 'timeline:public:remote', anonymous_payload)
-
-    if @status.with_media?
-      redis.publish('timeline:public:media', anonymous_payload)
-      redis.publish(@status.local? ? 'timeline:public:local:media' : 'timeline:public:remote:media', anonymous_payload)
+    broadcast_to.call('timeline:public') if !is_reply || Setting.show_replies_in_federated_timelines
+    if @status.local
+      broadcast_to.call('timeline:public:local') if !is_reply || Setting.show_replies_in_local_timelines
+    else
+      broadcast_to.call('timeline:public:remote') if !is_reply || Setting.show_replies_in_federated_timelines
     end
   end
 

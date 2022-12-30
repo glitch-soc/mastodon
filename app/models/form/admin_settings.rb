@@ -25,8 +25,10 @@ class Form::AdminSettings
     flavour_and_skin
     thumbnail
     mascot
-    show_reblogs_in_public_timelines
-    show_replies_in_public_timelines
+    show_reblogs_in_local_timelines
+    show_replies_in_local_timelines
+    show_reblogs_in_federated_timelines
+    show_replies_in_federated_timelines
     trends
     trendable_by_default
     trending_status_cw
@@ -54,8 +56,10 @@ class Form::AdminSettings
     preview_sensitive_media
     profile_directory
     hide_followers_count
-    show_reblogs_in_public_timelines
-    show_replies_in_public_timelines
+    show_reblogs_in_local_timelines
+    show_replies_in_local_timelines
+    show_reblogs_in_federated_timelines
+    show_replies_in_federated_timelines
     trends
     trendable_by_default
     trending_status_cw
