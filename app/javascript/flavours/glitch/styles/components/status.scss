@@ -82,10 +82,11 @@
     overflow: visible;
 
     .emojione {
+      transition-property: transform, filter;
       transition-duration:0.08s;
     }
-
-    .emojione:hover {
+    
+    &.status__content--zoom-emojis-on-hover .emojione:hover {
       transform: scale(1.8);
       filter: drop-shadow(0 0 3px #0c0c0c);
       z-index:99;

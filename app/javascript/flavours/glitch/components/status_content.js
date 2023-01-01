@@ -121,6 +121,7 @@ class StatusContent extends React.PureComponent {
     tagLinks: PropTypes.bool,
     rewriteMentions: PropTypes.string,
     intl: PropTypes.object,
+    zoomEmojisOnHover: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -312,6 +313,7 @@ class StatusContent extends React.PureComponent {
       tagLinks,
       rewriteMentions,
       intl,
+      zoomEmojisOnHover,
     } = this.props;
 
     const hidden = this.props.onExpandedToggle ? !this.props.expanded : this.state.hidden;
@@ -323,7 +325,12 @@ class StatusContent extends React.PureComponent {
     const classNames = classnames('status__content', {
       'status__content--with-action': parseClick && !disabled,
       'status__content--with-spoiler': status.get('spoiler_text').length > 0,
+      'status__content--zoom-emojis-on-hover': zoomEmojisOnHover,
     });
+    const textClassNames = classnames('status__content__text translate', {
+      'status__content--zoom-emojis-on-hover': zoomEmojisOnHover,
+    });
+
 
     const translateButton = renderTranslate && (
       <TranslateButton onClick={this.handleTranslate} translation={status.get('translation')} />
@@ -399,7 +406,7 @@ class StatusContent extends React.PureComponent {
               key={`contents-${tagLinks}`}
               tabIndex={!hidden ? 0 : null}
               dangerouslySetInnerHTML={content}
-              className='status__content__text translate'
+              className={textClassNames}
               onMouseEnter={this.handleMouseEnter}
               onMouseLeave={this.handleMouseLeave}
               lang={lang}
@@ -423,7 +430,7 @@ class StatusContent extends React.PureComponent {
             ref={this.setContentsRef}
             key={`contents-${tagLinks}-${rewriteMentions}`}
             dangerouslySetInnerHTML={content}
-            className='status__content__text translate'
+            className={textClassNames}
             tabIndex='0'
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
@@ -437,13 +444,13 @@ class StatusContent extends React.PureComponent {
     } else {
       return (
         <div
-          className='status__content'
+          className={'status__content'}
           tabIndex='0'
         >
           <div
             ref={this.setContentsRef}
             key={`contents-${tagLinks}`}
-            className='status__content__text translate'
+            className={textClassNames}
             dangerouslySetInnerHTML={content}
             tabIndex='0'
             onMouseEnter={this.handleMouseEnter}
