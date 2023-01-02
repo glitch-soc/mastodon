@@ -352,6 +352,9 @@ class StatusContent extends PureComponent {
 
           // highlightJS adds own class attribute, remove it again to not mess up styling
           code.removeAttribute('class');
+        } else {
+          // Remove data attribute as it's not a valid language.
+          delete code.dataset.codelang;
         }
       });
 
