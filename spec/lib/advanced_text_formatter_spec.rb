@@ -39,7 +39,7 @@ RSpec.describe AdvancedTextFormatter do
       context 'with a block code' do
         let(:text) { "test\n\n```\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
-        it 'formats code using <pre> and <code> with empty title' do
+        it 'formats code using <pre> and <code> with no set language' do
           expect(subject).to include '<pre><code data-codelang="">int main'
         end
 
@@ -55,7 +55,7 @@ RSpec.describe AdvancedTextFormatter do
       context 'given a block code with language' do
         let(:text) { "test\n\n```c++\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
-        it 'formats code using <pre> and <code> with set title' do
+        it 'formats code using <pre> and <code> with data containing set language' do
           expect(subject).to include '<pre><code data-codelang="c++">int main'
         end
       end
