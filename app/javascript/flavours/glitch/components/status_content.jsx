@@ -329,14 +329,17 @@ class StatusContent extends PureComponent {
     // Get code elements and run highlightJS on each.
     wrapper.querySelectorAll('code')
       .forEach((code) => {
-        // Get title attribute of code element
-        let title = code.getAttribute('title');
+        // Get language from data attribute containing code language of code element
+        let lang = highlightjs.getLanguage(code.dataset.codelang);
 
-        // Check if title is a valid language
-        if (highlightjs.getLanguage(title) !== undefined) {
-          // Set title as class attribute, since highlightElement cannot be given a language
+        // Check if lang is a valid language
+        if (lang !== undefined) {
+          // Set codelang as class attribute, since highlightElement cannot be given a language
           // highlightJS will read this attribute and use it to highlight in the proper language
-          code.setAttribute('class', title);
+          code.setAttribute('class', code.dataset.codelang);
+
+          // Set title attribute to language name, i.e. "js" will become "Javascript"
+          code.setAttribute('title', lang.name);
 
           // Replace <br> as highlightJS removes them, messing up formatting
           let brTags = Array.from(code.getElementsByTagName('br'));

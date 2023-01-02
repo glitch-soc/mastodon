@@ -10,7 +10,7 @@ class AdvancedTextFormatter < TextFormatter
     def block_code(code, language)
       # Looks wrong, but sets title to language correctly. One downside is, it adds an empty attribute when no lang specified.
       <<~HTML
-        <pre><code title="#{language}">#{ERB::Util.h(code).gsub("\n", '<br/>')}</code></pre>
+        <pre><code data-codelang="#{language}">#{ERB::Util.h(code).gsub("\n", '<br/>')}</code></pre>
       HTML
     end
 

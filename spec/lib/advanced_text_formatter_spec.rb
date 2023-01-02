@@ -40,7 +40,7 @@ RSpec.describe AdvancedTextFormatter do
         let(:text) { "test\n\n```\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
         it 'formats code using <pre> and <code> with empty title' do
-          expect(subject).to include '<pre><code title="">int main'
+          expect(subject).to include '<pre><code data-codelang="">int main'
         end
 
         it 'does not strip leading spaces' do
@@ -56,7 +56,7 @@ RSpec.describe AdvancedTextFormatter do
         let(:text) { "test\n\n```c++\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
         it 'formats code using <pre> and <code> with set title' do
-          expect(subject).to include '<pre><code title="c++">int main'
+          expect(subject).to include '<pre><code data-codelang="c++">int main'
         end
       end
 
