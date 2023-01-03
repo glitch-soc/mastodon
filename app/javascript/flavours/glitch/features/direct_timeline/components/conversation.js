@@ -144,13 +144,13 @@ class Conversation extends ImmutablePureComponent {
   }
 
   render () {
-    const { accounts, lastStatus, unread, scrollKey, intl } = this.props;
+    const { accounts, lastStatus, unread, scrollKey, intl, settings } = this.props;
 
     if (lastStatus === null) {
       return null;
     }
 
-    const isExpanded = this.props.settings.getIn(['content_warnings', 'shared_state']) ? !lastStatus.get('hidden') : this.state.isExpanded;
+    const isExpanded = settings.getIn(['content_warnings', 'shared_state']) ? !lastStatus.get('hidden') : this.state.isExpanded;
 
     const menu = [
       { text: intl.formatMessage(messages.open), action: this.handleClick },
@@ -206,6 +206,7 @@ class Conversation extends ImmutablePureComponent {
               onExpandedToggle={this.handleShowMore}
               collapsable
               media={media}
+              zoomEmojisOnHover={settings.get('zoom_emojis_on_hover')}
             />
 
             <div className='status__action-bar'>

@@ -316,6 +316,7 @@ class DetailedStatus extends ImmutablePureComponent {
             onUpdate={this.handleChildUpdate}
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
+            zoomEmojisOnHover={settings.get('zoom_emojis_on_hover')}
             disabled
           />
 
