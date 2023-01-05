@@ -11,7 +11,6 @@ ja:
     labels:
       defaults:
         setting_default_content_type: 既定のトゥート形式
-        setting_default_content_type_html: HTML
         setting_default_content_type_markdown: マークダウン
         setting_default_content_type_plain: プレーンテキスト
         setting_favourite_modal: お気に入りをする前に確認ダイアログを表示する

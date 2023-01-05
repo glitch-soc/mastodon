@@ -11,8 +11,6 @@ zh-CN:
     labels:
       defaults:
         setting_default_content_type: 嘟文的默认格式
-        setting_default_content_type_html: HTML
-        setting_default_content_type_markdown: Markdown
         setting_default_content_type_plain: 纯文本
         setting_favourite_modal: 在喜欢嘟文前询问我 (仅限于 Glitch 风味)
         setting_hide_followers_count: 隐藏你的关注者人数
