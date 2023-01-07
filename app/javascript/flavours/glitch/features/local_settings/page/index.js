@@ -414,9 +414,9 @@ class LocalSettingsPage extends React.PureComponent {
 	    onChange={onChange}
             dependsOn={[['collapsed', 'enabled']]}
             dependsOnNot={[['collapsed', 'auto', 'all']]}
-            inputProps={{ type: 'number', min: '200', max: '999', width: '45px'}}
+            inputProps={{type: 'number', min: '200', max: '999'}}
           >
-            <FormattedMessage id='settings.auto_collapse_height' defaultMessage='Height (pixels) of lengthy toots' />
+            <FormattedMessage id='settings.auto_collapse_height' defaultMessage='Height (in pixels) for a toot to be considered lengthy' />
           </LocalSettingsPageItem>
         </section>
         <section>
