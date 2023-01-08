@@ -224,7 +224,7 @@ class Status extends ImmutablePureComponent {
   //   -  The user has decided to collapse all notifications ('muted'
   //      statuses).
   //   -  The user has decided to collapse long statuses and the status is
-  //      over 400px (without media, or 650px with).
+  //      over the user set value (default 400 without media, or 610px with).
   //   -  The status is a reply and the user has decided to collapse all
   //      replies.
   //   -  The status contains media and the user has decided to collapse all
