@@ -106,7 +106,7 @@ class Status extends ImmutablePureComponent {
     scrollKey: PropTypes.string,
     deployPictureInPicture: PropTypes.func,
     settings: ImmutablePropTypes.map.isRequired,
-    pictureInPicture: PropTypes.shape({
+    pictureInPicture: ImmutablePropTypes.contains({
       inUse: PropTypes.bool,
       available: PropTypes.bool,
     }),
@@ -607,7 +607,7 @@ class Status extends ImmutablePureComponent {
 
     attachments = status.get('media_attachments');
 
-    if (pictureInPicture.inUse) {
+    if (pictureInPicture.get('inUse')) {
       media.push(<PictureInPicturePlaceholder width={this.props.cachedMediaWidth} />);
       mediaIcons.push('video-camera');
     } else if (attachments.size > 0) {
@@ -635,7 +635,7 @@ class Status extends ImmutablePureComponent {
                 width={this.props.cachedMediaWidth}
                 height={110}
                 cacheWidth={this.props.cacheMediaWidth}
-                deployPictureInPicture={pictureInPicture.available ? this.handleDeployPictureInPicture : undefined}
+                deployPictureInPicture={pictureInPicture.get('available') ? this.handleDeployPictureInPicture : undefined}
                 sensitive={status.get('sensitive')}
                 blurhash={attachment.get('blurhash')}
                 visible={this.state.showMedia}
@@ -664,7 +664,7 @@ class Status extends ImmutablePureComponent {
               onOpenVideo={this.handleOpenVideo}
               width={this.props.cachedMediaWidth}
               cacheWidth={this.props.cacheMediaWidth}
-              deployPictureInPicture={pictureInPicture.available ? this.handleDeployPictureInPicture : undefined}
+              deployPictureInPicture={pictureInPicture.get('available') ? this.handleDeployPictureInPicture : undefined}
               visible={this.state.showMedia}
               onToggleVisibility={this.handleToggleMediaVisibility}
             />)}

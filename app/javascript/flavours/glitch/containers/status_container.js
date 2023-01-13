@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import Status from 'flavours/glitch/components/status';
-import { makeGetStatus } from 'flavours/glitch/selectors';
+import { List as ImmutableList } from 'immutable';
+import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
 import {
   replyCompose,
   mentionCompose,
@@ -61,6 +62,7 @@ const messages = defineMessages({
 
 const makeMapStateToProps = () => {
   const getStatus = makeGetStatus();
+  const getPictureInPicture = makeGetPictureInPicture();
 
   const mapStateToProps = (state, props) => {
 
@@ -84,11 +86,7 @@ const makeMapStateToProps = () => {
       account: account || props.account,
       settings: state.get('local_settings'),
       prepend: prepend || props.prepend,
-
-      pictureInPicture: {
-        inUse: state.getIn(['meta', 'layout']) !== 'mobile' && state.get('picture_in_picture').statusId === props.id,
-        available: state.getIn(['meta', 'layout']) !== 'mobile',
-      },
+      pictureInPicture: getPictureInPicture(state, props),
     };
   };
 
