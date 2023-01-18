@@ -82,6 +82,7 @@ defaults: &defaults
   require_invite_text: false
   captcha_enabled: false
   backups_retention_period: 7
+  publish_button_text: ''
 
 development:
   <<: *defaults
