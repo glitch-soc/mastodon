@@ -1333,6 +1333,10 @@ en:
       title: New mention
     poll:
       subject: A poll by %{name} has ended
+    reaction:
+      body: "%{name} reacted to your post:"
+      subject: "%{name} reacted to your post"
+      title: New reaction
     reblog:
       body: 'Your post was boosted by %{name}:'
       subject: "%{name} boosted your post"
@@ -1588,6 +1592,7 @@ en:
     contrast: Mastodon (High contrast)
     default: Mastodon (Dark)
     mastodon-light: Mastodon (Light)
+    fairy-floss: Fairy Floss (Pastel dark)
   time:
     formats:
       default: "%b %d, %Y, %H:%M"

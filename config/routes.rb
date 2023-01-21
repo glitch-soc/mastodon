@@ -447,6 +447,11 @@ Rails.application.routes.draw do
           resource :favourite, only: :create
           post :unfavourite, to: 'favourites#destroy'
 
+          # foreign custom emojis are encoded as shortcode@domain.tld
+          # the constraint prevents rails from interpreting the ".tld" as a filename extension
+          post '/react/:id', to: 'reactions#create', constraints: { id: /[^\/]+/ }
+          post '/unreact/:id', to: 'reactions#destroy', constraints: { id: /[^\/]+/ }
+
           resource :bookmark, only: :create
           post :unbookmark, to: 'bookmarks#destroy'
 

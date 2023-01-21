@@ -134,8 +134,9 @@ class User < ApplicationRecord
   delegate :auto_play_gif, :default_sensitive, :unfollow_modal, :boost_modal, :favourite_modal, :delete_modal,
            :reduce_motion, :system_font_ui, :noindex, :flavour, :skin, :display_media, :hide_followers_count,
            :expand_spoilers, :default_language, :aggregate_reblogs, :show_application,
-           :advanced_layout, :use_blurhash, :use_pending_items, :trends, :crop_images,
+           :advanced_layout, :use_blurhash, :use_pending_items, :trends, :crop_images, :visible_reactions,
            :disable_swiping, :always_send_emails, :default_content_type, :system_emoji_font,
+           :home_dms,
            to: :settings, prefix: :setting, allow_nil: false
 
   delegate :can?, to: :role
@@ -324,6 +325,10 @@ class User < ApplicationRecord
 
   def aggregates_reblogs?
     @aggregates_reblogs ||= settings.aggregate_reblogs
+  end
+
+  def home_dms?
+    @home_dms ||= settings.home_dms
   end
 
   def shows_application?

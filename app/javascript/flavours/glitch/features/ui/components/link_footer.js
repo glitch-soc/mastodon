@@ -57,8 +57,7 @@ class LinkFooter extends React.PureComponent {
     return (
       <div className='link-footer'>
         <p>
-          <strong>{domain}</strong>:
-          {' '}
+          <strong>{domain}</strong><br/>
           <Link key='about' to='/about'><FormattedMessage id='footer.about' defaultMessage='About' /></Link>
           {canInvite && (
             <>
@@ -74,11 +73,12 @@ class LinkFooter extends React.PureComponent {
           )}
           {DividingCircle}
           <Link key='privacy-policy' to='/privacy-policy'><FormattedMessage id='footer.privacy_policy' defaultMessage='Privacy policy' /></Link>
+          {' · '}
+          <a key='cit-status' href='https://status.compostintraining.club' target='_blank'><FormattedMessage id='footer.status' defaultMessage='Status' /></a>
         </p>
 
         <p>
-          <strong>Mastodon</strong>:
-          {' '}
+          <strong>Mastodon - CiT</strong><br/>
           <a href='https://joinmastodon.org' target='_blank'><FormattedMessage id='footer.about' defaultMessage='About' /></a>
           {DividingCircle}
           <a href='https://joinmastodon.org/apps' target='_blank'><FormattedMessage id='footer.get_app' defaultMessage='Get the app' /></a>
