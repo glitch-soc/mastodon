@@ -10,8 +10,6 @@ module.exports = {
     'public/packs/**/*',
     'public/packs-test/**/*',
     'vendor/**/*',
-    'app/javascript/flavours/glitch/styles/highlight.scss',
-    'app/javascript/flavours/glitch/styles/mastodon-light/highlight.scss',
   ],
   reportDescriptionlessDisables: true,
   reportInvalidScopeDisables: true,
