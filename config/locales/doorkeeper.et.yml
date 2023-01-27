@@ -122,14 +122,14 @@ et:
         admin/accounts: Kontode haldus
         admin/all: Kõik haldusfunktsioonid
         admin/reports: Raportite haldus
-        all: Kõik
+        all: Täielik ligipääs Su Mastodoni kontole
         blocks: Keelud
         bookmarks: Järjehoidjad
         conversations: Vestlused
         crypto: Otspunktkrüpteerimine
         favourites: Lemmikud
         filters: Filtrid
-        follow: Seosed
+        follow: Jälgitavad, Vaigistatud ja Blokeeritud
         follows: Jälgimised
         lists: Nimekirjad
         media: Lisatud meedia
@@ -181,7 +181,7 @@ et:
       read:statuses: näha kõiki postitusi
       write: muuta kogu konto andmeid
       write:accounts: muuta profiili
-      write:blocks: blokeerida kontosid ja domeene
+      write:blocks: kontode ja domeenide blokeerimine
       write:bookmarks: lisada postitusele järjehoidja
       write:conversations: vaigista ja kustuta vestlused
       write:favourites: lisada postitusi lemmikuks
