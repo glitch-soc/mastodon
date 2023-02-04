@@ -79,7 +79,7 @@ export default class StatusPrepend extends React.PureComponent {
         />
       );
     case 'poll':
-      if (me === account.get('id')) {
+      if (me === accounts.get(0).get('id')) {
         return (
           <FormattedMessage
             id='notification.own_poll'
