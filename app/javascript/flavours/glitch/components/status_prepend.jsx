@@ -5,35 +5,33 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { FormattedMessage } from 'react-intl';
 import Icon from 'flavours/glitch/components/icon';
 import { me } from 'flavours/glitch/initial_state';
+import NameList from './name_list';
 
 export default class StatusPrepend extends React.PureComponent {
 
   static propTypes = {
     type: PropTypes.string.isRequired,
-    account: ImmutablePropTypes.map.isRequired,
+    status: ImmutablePropTypes.map.isRequired,
+    accounts: ImmutablePropTypes.listOf(ImmutablePropTypes.map.isRequired),
     parseClick: PropTypes.func.isRequired,
     notificationId: PropTypes.number,
   };
 
-  handleClick = (e) => {
-    const { account, parseClick } = this.props;
-    parseClick(e, `/@${account.get('acct')}`);
-  };
+  handleClick = (acct, e) => {
+    const { parseClick } = this.props;
+    parseClick(e, `/@${acct.get('acct')}`);
+  }
 
   Message = () => {
-    const { type, account } = this.props;
+    const { type, accounts, status } = this.props;
     let link = (
-      <a
-        onClick={this.handleClick}
-        href={account.get('url')}
-        className='status__display-name'
-      >
-        <b
-          dangerouslySetInnerHTML={{
-            __html : account.get('display_name_html') || account.get('username'),
-          }}
+      <span>
+        <NameList
+          accounts={accounts}
+          viewMoreHref={status.get('url')}
+          onAccountClick={this.handleClick}
         />
-      </a>
+      </span>
     );
     switch (type) {
     case 'featured':

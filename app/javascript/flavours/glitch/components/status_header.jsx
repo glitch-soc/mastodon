@@ -6,14 +6,13 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 //  Mastodon imports.
 import Avatar from './avatar';
 import AvatarOverlay from './avatar_overlay';
-import AvatarComposite from './avatar_composite';
 import DisplayName from './display_name';
 
 export default class StatusHeader extends React.PureComponent {
 
   static propTypes = {
     status: ImmutablePropTypes.map.isRequired,
-    friend: ImmutablePropTypes.map,
+    friends: ImmutablePropTypes.listOf(ImmutablePropTypes.map),
     parseClick: PropTypes.func.isRequired,
   };
 
@@ -32,16 +31,16 @@ export default class StatusHeader extends React.PureComponent {
   render () {
     const {
       status,
-      friend,
+      friends,
     } = this.props;
 
     const account = status.get('account');
 
     let statusAvatar;
-    if (friend === undefined || friend === null) {
+    if (friends === undefined || friends === null || !friends.get(0)) {
       statusAvatar = <Avatar account={account} size={48} />;
     } else {
-      statusAvatar = <AvatarOverlay account={account} friend={friend} />;
+      statusAvatar = <AvatarOverlay account={account} friend={friends.get(0)} />;
     }
 
     return (

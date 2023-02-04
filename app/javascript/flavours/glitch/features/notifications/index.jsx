@@ -72,6 +72,7 @@ const mapStateToProps = state => ({
   lastReadId: state.getIn(['settings', 'notifications', 'showUnread']) ? state.getIn(['notifications', 'readMarkerId']) : '0',
   canMarkAsRead: state.getIn(['settings', 'notifications', 'showUnread']) && state.getIn(['notifications', 'readMarkerId']) !== '0' && getNotifications(state).some(item => item !== null && compareId(item.get('id'), state.getIn(['notifications', 'readMarkerId'])) > 0),
   needsNotificationPermission: state.getIn(['settings', 'notifications', 'alerts']).includes(true) && state.getIn(['notifications', 'browserSupport']) && state.getIn(['notifications', 'browserPermission']) === 'default' && !state.getIn(['settings', 'notifications', 'dismissPermissionBanner']),
+  grouping: state.getIn(['settings', 'notifications', 'grouping']),
 });
 
 /* glitch */
@@ -117,6 +118,7 @@ class Notifications extends React.PureComponent {
     lastReadId: PropTypes.string,
     canMarkAsRead: PropTypes.bool,
     needsNotificationPermission: PropTypes.bool,
+    grouping: ImmutablePropTypes.map,
   };
 
   static defaultProps = {
@@ -222,8 +224,33 @@ class Notifications extends React.PureComponent {
     this.props.onMarkAsRead();
   };
 
+  groupUpNotifications(notifications, types) {
+    const groupedNotifications = [];
+    for (const notif of notifications) {
+      const newNotif = notif.set('account', ImmutableList([notif.get('account')]));
+      if (types.includes(notif.get('type'))) {
+        const matchingNotifIdx = groupedNotifications.findIndex(
+          other => other.get('type') === notif.get('type') && other.get('status') === notif.get('status'),
+        );
+        const matchingNotif = groupedNotifications[matchingNotifIdx];
+        if (matchingNotif) {
+          groupedNotifications[matchingNotifIdx] = matchingNotif.update(
+            'account',
+            ImmutableList(),
+            accounts => accounts.push(...newNotif.get('account')),
+          );
+        } else {
+          groupedNotifications.push(newNotif);
+        }
+      } else {
+        groupedNotifications.push(newNotif);
+      }
+    }
+    return groupedNotifications.length === 1 ? groupedNotifications[0] : ImmutableList(groupedNotifications);
+  }
+
   render () {
-    const { intl, notifications, isLoading, isUnread, columnId, multiColumn, hasMore, numPending, showFilterBar, lastReadId, canMarkAsRead, needsNotificationPermission } = this.props;
+    const { intl, isLoading, isUnread, columnId, multiColumn, hasMore, numPending, showFilterBar, lastReadId, canMarkAsRead, needsNotificationPermission, grouping } = this.props;
     const { notifCleaning, notifCleaningActive } = this.props;
     const { animatingNCD } = this.state;
     const pinned = !!columnId;
@@ -235,6 +262,11 @@ class Notifications extends React.PureComponent {
     const filterBarContainer = (signedIn && showFilterBar)
       ? (<FilterBarContainer />)
       : null;
+
+    // if grouping is { "favourite": true, "reblog": false, "foo": true, "bar": false }
+    // then groupBy is [ "favourite", "foo" ]
+    const groupBy = grouping.reduce((acc, enabled, groupBy) => enabled ? acc.push(groupBy) : acc, ImmutableList.of());
+    const notifications = this.groupUpNotifications(this.props.notifications, groupBy);
 
     if (isLoading && this.scrollableContent) {
       scrollableContent = this.scrollableContent;
