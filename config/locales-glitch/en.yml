@@ -52,4 +52,4 @@ en:
       subject: "%{name} reacted to your post"
       title: New reaction
   status:
-    n_others: '%{n} others'
+    others: 'some others'

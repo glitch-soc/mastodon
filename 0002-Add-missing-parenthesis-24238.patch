@@ -1,0 +1,22 @@
+From 6e8711ff91e01212ac7c82de6349fa2b143582e2 Mon Sep 17 00:00:00 2001
+From: Yamagishi Kazutoshi <ykzts@desire.sh>
+Date: Fri, 24 Mar 2023 12:35:43 +0900
+Subject: [PATCH 2/2] Add missing parenthesis (#24238)
+
+---
+ .../mastodon/features/ui/components/compose_panel.jsx           | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/app/javascript/mastodon/features/ui/components/compose_panel.jsx b/app/javascript/mastodon/features/ui/components/compose_panel.jsx
+index 1b0a0c74a..1c6f80ad5 100644
+--- a/app/javascript/mastodon/features/ui/components/compose_panel.jsx
++++ b/app/javascript/mastodon/features/ui/components/compose_panel.jsx
+@@ -66,4 +66,4 @@ class ComposePanel extends React.PureComponent {
+ 
+ }
+ 
+-export default connect(ComposePanel);
++export default connect()(ComposePanel);
+-- 
+2.34.1
+

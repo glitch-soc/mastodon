@@ -1,0 +1,2952 @@
+From d1b057a0ac41a5756b6a416d2f290b086cb59220 Mon Sep 17 00:00:00 2001
+From: Yamagishi Kazutoshi <ykzts@desire.sh>
+Date: Fri, 24 Mar 2023 11:17:53 +0900
+Subject: [PATCH 1/2] Remove legacy decorators syntax (#18357)
+
+---
+ .eslintrc.js                                  |  24 +++-
+ .../mastodon/components/account.jsx           |   3 +-
+ .../components/admin/ReportReasonSelector.jsx |   3 +-
+ .../mastodon/components/column_header.jsx     |   3 +-
+ .../components/dismissable_banner.jsx         |   3 +-
+ app/javascript/mastodon/components/domain.jsx |   3 +-
+ .../components/edited_timestamp/index.jsx     |   4 +-
+ .../mastodon/components/inline_account.jsx    |   3 +-
+ .../mastodon/components/load_gap.jsx          |   3 +-
+ .../mastodon/components/media_gallery.jsx     |   3 +-
+ .../mastodon/components/navigation_portal.jsx |   2 +-
+ .../picture_in_picture_placeholder.jsx        |   3 +-
+ app/javascript/mastodon/components/poll.jsx   |   3 +-
+ .../components/relative_timestamp.jsx         |   3 +-
+ .../mastodon/components/scrollable_list.jsx   |   3 +-
+ .../mastodon/components/server_banner.jsx     |   4 +-
+ app/javascript/mastodon/components/status.jsx |   3 +-
+ .../mastodon/components/status_action_bar.jsx |   4 +-
+ .../mastodon/components/status_content.jsx    |   4 +-
+ .../mastodon/features/about/index.jsx         |   4 +-
+ .../account/components/account_note.jsx       |   3 +-
+ .../account/components/featured_tags.jsx      |   3 +-
+ .../features/account/components/header.jsx    |   3 +-
+ .../mastodon/features/account/navigation.jsx  |   3 +-
+ .../features/account_gallery/index.jsx        |   3 +-
+ .../components/limited_account_hint.jsx       |   3 +-
+ .../features/account_timeline/index.jsx       |   3 +-
+ .../mastodon/features/audio/index.jsx         |   3 +-
+ .../mastodon/features/blocks/index.jsx        |   4 +-
+ .../features/bookmarked_statuses/index.jsx    |   4 +-
+ .../closed_registrations_modal/index.jsx      |   3 +-
+ .../components/column_settings.jsx            |   3 +-
+ .../features/community_timeline/index.jsx     |   4 +-
+ .../compose/components/action_bar.jsx         |   3 +-
+ .../compose/components/compose_form.jsx       |   3 +-
+ .../components/emoji_picker_dropdown.jsx      |   8 +-
+ .../compose/components/language_dropdown.jsx  |   3 +-
+ .../compose/components/poll_button.jsx        |   4 +-
+ .../features/compose/components/poll_form.jsx |   9 +-
+ .../compose/components/privacy_dropdown.jsx   |   3 +-
+ .../compose/components/reply_indicator.jsx    |   3 +-
+ .../features/compose/components/search.jsx    |   3 +-
+ .../compose/components/search_results.jsx     |   3 +-
+ .../compose/components/upload_button.jsx      |   4 +-
+ .../mastodon/features/compose/index.jsx       |   4 +-
+ .../components/conversation.jsx               |   3 +-
+ .../features/direct_timeline/index.jsx        |   4 +-
+ .../directory/components/account_card.jsx     |   5 +-
+ .../mastodon/features/directory/index.jsx     |   4 +-
+ .../mastodon/features/domain_blocks/index.jsx |   4 +-
+ .../mastodon/features/explore/index.jsx       |   4 +-
+ .../mastodon/features/explore/links.jsx       |   3 +-
+ .../mastodon/features/explore/results.jsx     |   4 +-
+ .../mastodon/features/explore/statuses.jsx    |   3 +-
+ .../mastodon/features/explore/suggestions.jsx |   3 +-
+ .../mastodon/features/explore/tags.jsx        |   3 +-
+ .../features/favourited_statuses/index.jsx    |   4 +-
+ .../mastodon/features/favourites/index.jsx    |   4 +-
+ .../features/filters/added_to_filter.jsx      |   3 +-
+ .../features/filters/select_filter.jsx        |   4 +-
+ .../components/account.jsx                    |   4 +-
+ .../features/follow_recommendations/index.jsx |   3 +-
+ .../components/account_authorize.jsx          |   3 +-
+ .../features/follow_requests/index.jsx        |   4 +-
+ .../mastodon/features/followed_tags/index.jsx |   4 +-
+ .../mastodon/features/followers/index.jsx     |   3 +-
+ .../mastodon/features/following/index.jsx     |   3 +-
+ .../components/announcements.jsx              |   3 +-
+ .../features/getting_started/index.jsx        |   4 +-
+ .../components/column_settings.jsx            |   3 +-
+ .../features/hashtag_timeline/index.jsx       |   4 +-
+ .../components/column_settings.jsx            |   3 +-
+ .../mastodon/features/home_timeline/index.jsx |   4 +-
+ .../features/interaction_modal/index.jsx      |   3 +-
+ .../features/keyboard_shortcuts/index.jsx     |   3 +-
+ .../list_adder/components/account.jsx         |   5 +-
+ .../features/list_adder/components/list.jsx   |   4 +-
+ .../mastodon/features/list_adder/index.jsx    |   4 +-
+ .../list_editor/components/account.jsx        |   4 +-
+ .../list_editor/components/edit_list_form.jsx |   4 +-
+ .../list_editor/components/search.jsx         |   4 +-
+ .../mastodon/features/list_editor/index.jsx   |   4 +-
+ .../mastodon/features/list_timeline/index.jsx |   4 +-
+ .../lists/components/new_list_form.jsx        |   4 +-
+ .../mastodon/features/lists/index.jsx         |   4 +-
+ .../mastodon/features/mutes/index.jsx         |   4 +-
+ .../notifications/components/filter_bar.jsx   |   3 +-
+ .../components/follow_request.jsx             |   9 +-
+ .../notifications/components/notification.jsx |   3 +-
+ .../notifications_permission_banner.jsx       |   4 +-
+ .../notifications/components/report.jsx       |   3 +-
+ .../mastodon/features/notifications/index.jsx |   4 +-
+ .../picture_in_picture/components/footer.jsx  |   4 +-
+ .../picture_in_picture/components/header.jsx  |   4 +-
+ .../features/picture_in_picture/index.jsx     |   3 +-
+ .../features/pinned_statuses/index.jsx        |   4 +-
+ .../features/privacy_policy/index.jsx         |   3 +-
+ .../components/column_settings.jsx            |   3 +-
+ .../features/public_timeline/index.jsx        |   4 +-
+ .../mastodon/features/reblogs/index.jsx       |   4 +-
+ .../mastodon/features/report/category.jsx     |   4 +-
+ .../mastodon/features/report/comment.jsx      |   3 +-
+ .../report/components/status_check_box.jsx    |   3 +-
+ .../mastodon/features/report/rules.jsx        |   3 +-
+ .../mastodon/features/report/statuses.jsx     |   3 +-
+ .../mastodon/features/report/thanks.jsx       |   3 +-
+ .../features/status/components/action_bar.jsx |   4 +-
+ .../status/components/detailed_status.jsx     |   3 +-
+ .../mastodon/features/status/index.jsx        |   4 +-
+ .../subscribed_languages_modal/index.jsx      |   4 +-
+ .../features/ui/components/audio_modal.jsx    |   3 +-
+ .../features/ui/components/block_modal.jsx    |   4 +-
+ .../features/ui/components/boost_modal.jsx    |   4 +-
+ .../ui/components/bundle_column_error.jsx     |   3 +-
+ .../ui/components/compare_history_modal.jsx   |   3 +-
+ .../features/ui/components/compose_panel.jsx  |   3 +-
+ .../ui/components/confirmation_modal.jsx      |   3 +-
+ .../ui/components/disabled_account_banner.jsx |   4 +-
+ .../features/ui/components/embed_modal.jsx    |   3 +-
+ .../features/ui/components/filter_modal.jsx   |   4 +-
+ .../ui/components/focal_point_modal.jsx       |   6 +-
+ .../follow_requests_column_link.jsx           |   4 +-
+ .../features/ui/components/header.jsx         |   4 +-
+ .../features/ui/components/image_modal.jsx    |   3 +-
+ .../features/ui/components/link_footer.jsx    |   4 +-
+ .../features/ui/components/list_panel.jsx     |   4 +-
+ .../features/ui/components/media_modal.jsx    |   4 +-
+ .../features/ui/components/mute_modal.jsx     |   4 +-
+ .../ui/components/navigation_panel.jsx        |   3 +-
+ .../features/ui/components/report_modal.jsx   |   4 +-
+ .../features/ui/components/video_modal.jsx    |   3 +-
+ .../features/ui/components/zoomable_image.jsx |   3 +-
+ app/javascript/mastodon/features/ui/index.jsx |   5 +-
+ .../mastodon/features/video/index.jsx         |   3 +-
+ babel.config.js                               |   1 -
+ package.json                                  |   1 -
+ yarn.lock                                     | 125 ++++++++++++++----
+ 137 files changed, 396 insertions(+), 236 deletions(-)
+
+diff --git a/.eslintrc.js b/.eslintrc.js
+index 606a87e41..faed3c54a 100644
+--- a/.eslintrc.js
++++ b/.eslintrc.js
+@@ -32,10 +32,14 @@ module.exports = {
+   parserOptions: {
+     sourceType: 'module',
+     ecmaFeatures: {
+-      experimentalObjectRestSpread: true,
+       jsx: true,
+     },
+     ecmaVersion: 2021,
++    requireConfigFile: false,
++    babelOptions: {
++      configFile: false,
++      presets: ['@babel/react', '@babel/env'],
++    },
+   },
+ 
+   settings: {
+@@ -214,4 +218,22 @@ module.exports = {
+     'promise/no-nesting': 'off',
+     'promise/no-promise-in-callback': 'off',
+   },
++
++  overrides: [
++    {
++      files: [
++        '*.config.js',
++        '.*rc.js',
++        'ide-helper.js',
++      ],
++
++      env: {
++        commonjs: true,
++      },
++
++      parserOptions: {
++        sourceType: 'script',
++      },
++    },
++  ],
+ };
+diff --git a/app/javascript/mastodon/components/account.jsx b/app/javascript/mastodon/components/account.jsx
+index 7706c3f88..7aaa668fe 100644
+--- a/app/javascript/mastodon/components/account.jsx
++++ b/app/javascript/mastodon/components/account.jsx
+@@ -23,7 +23,6 @@ const messages = defineMessages({
+   block: { id: 'account.block', defaultMessage: 'Block @{name}' },
+ });
+ 
+-export default @injectIntl
+ class Account extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -155,3 +154,5 @@ class Account extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Account);
+diff --git a/app/javascript/mastodon/components/admin/ReportReasonSelector.jsx b/app/javascript/mastodon/components/admin/ReportReasonSelector.jsx
+index 1f91d2517..58a861fde 100644
+--- a/app/javascript/mastodon/components/admin/ReportReasonSelector.jsx
++++ b/app/javascript/mastodon/components/admin/ReportReasonSelector.jsx
+@@ -84,7 +84,6 @@ class Rule extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class ReportReasonSelector extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -157,3 +156,5 @@ class ReportReasonSelector extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ReportReasonSelector);
+diff --git a/app/javascript/mastodon/components/column_header.jsx b/app/javascript/mastodon/components/column_header.jsx
+index 9ba783d90..afc526f27 100644
+--- a/app/javascript/mastodon/components/column_header.jsx
++++ b/app/javascript/mastodon/components/column_header.jsx
+@@ -12,7 +12,6 @@ const messages = defineMessages({
+   moveRight: { id: 'column_header.moveRight_settings', defaultMessage: 'Move column to the right' },
+ });
+ 
+-export default @injectIntl
+ class ColumnHeader extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -209,3 +208,5 @@ class ColumnHeader extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ColumnHeader);
+diff --git a/app/javascript/mastodon/components/dismissable_banner.jsx b/app/javascript/mastodon/components/dismissable_banner.jsx
+index 47ca7e4bc..242021e76 100644
+--- a/app/javascript/mastodon/components/dismissable_banner.jsx
++++ b/app/javascript/mastodon/components/dismissable_banner.jsx
+@@ -8,7 +8,6 @@ const messages = defineMessages({
+   dismiss: { id: 'dismissable_banner.dismiss', defaultMessage: 'Dismiss' },
+ });
+ 
+-export default @injectIntl
+ class DismissableBanner extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -49,3 +48,5 @@ class DismissableBanner extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(DismissableBanner);
+diff --git a/app/javascript/mastodon/components/domain.jsx b/app/javascript/mastodon/components/domain.jsx
+index e09fa4591..85ebdbde9 100644
+--- a/app/javascript/mastodon/components/domain.jsx
++++ b/app/javascript/mastodon/components/domain.jsx
+@@ -8,7 +8,6 @@ const messages = defineMessages({
+   unblockDomain: { id: 'account.unblock_domain', defaultMessage: 'Unblock domain {domain}' },
+ });
+ 
+-export default @injectIntl
+ class Account extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -40,3 +39,5 @@ class Account extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Account);
+diff --git a/app/javascript/mastodon/components/edited_timestamp/index.jsx b/app/javascript/mastodon/components/edited_timestamp/index.jsx
+index b30d88572..1513f9361 100644
+--- a/app/javascript/mastodon/components/edited_timestamp/index.jsx
++++ b/app/javascript/mastodon/components/edited_timestamp/index.jsx
+@@ -16,8 +16,6 @@ const mapDispatchToProps = (dispatch, { statusId }) => ({
+ 
+ });
+ 
+-export default @connect(null, mapDispatchToProps)
+-@injectIntl
+ class EditedTimestamp extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -68,3 +66,5 @@ class EditedTimestamp extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(null, mapDispatchToProps)(injectIntl(EditedTimestamp));
+diff --git a/app/javascript/mastodon/components/inline_account.jsx b/app/javascript/mastodon/components/inline_account.jsx
+index a1b495590..31dc63f93 100644
+--- a/app/javascript/mastodon/components/inline_account.jsx
++++ b/app/javascript/mastodon/components/inline_account.jsx
+@@ -14,7 +14,6 @@ const makeMapStateToProps = () => {
+   return mapStateToProps;
+ };
+ 
+-export default @connect(makeMapStateToProps)
+ class InlineAccount extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -32,3 +31,5 @@ class InlineAccount extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps)(InlineAccount);
+diff --git a/app/javascript/mastodon/components/load_gap.jsx b/app/javascript/mastodon/components/load_gap.jsx
+index c50b245fc..2c91d37be 100644
+--- a/app/javascript/mastodon/components/load_gap.jsx
++++ b/app/javascript/mastodon/components/load_gap.jsx
+@@ -7,7 +7,6 @@ const messages = defineMessages({
+   load_more: { id: 'status.load_more', defaultMessage: 'Load more' },
+ });
+ 
+-export default @injectIntl
+ class LoadGap extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -32,3 +31,5 @@ class LoadGap extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(LoadGap);
+diff --git a/app/javascript/mastodon/components/media_gallery.jsx b/app/javascript/mastodon/components/media_gallery.jsx
+index f869bd62d..5be0070a3 100644
+--- a/app/javascript/mastodon/components/media_gallery.jsx
++++ b/app/javascript/mastodon/components/media_gallery.jsx
+@@ -223,7 +223,6 @@ class Item extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class MediaGallery extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -369,3 +368,5 @@ class MediaGallery extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(MediaGallery);
+diff --git a/app/javascript/mastodon/components/navigation_portal.jsx b/app/javascript/mastodon/components/navigation_portal.jsx
+index 45407be43..a100dc04a 100644
+--- a/app/javascript/mastodon/components/navigation_portal.jsx
++++ b/app/javascript/mastodon/components/navigation_portal.jsx
+@@ -15,7 +15,6 @@ const DefaultNavigation = () => (
+   </>
+ );
+ 
+-export default @withRouter
+ class NavigationPortal extends React.PureComponent {
+ 
+   render () {
+@@ -33,3 +32,4 @@ class NavigationPortal extends React.PureComponent {
+   }
+ 
+ }
++export default withRouter(NavigationPortal);
+diff --git a/app/javascript/mastodon/components/picture_in_picture_placeholder.jsx b/app/javascript/mastodon/components/picture_in_picture_placeholder.jsx
+index 0effddef9..c8aa8f757 100644
+--- a/app/javascript/mastodon/components/picture_in_picture_placeholder.jsx
++++ b/app/javascript/mastodon/components/picture_in_picture_placeholder.jsx
+@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
+ import { debounce } from 'lodash';
+ import { FormattedMessage } from 'react-intl';
+ 
+-export default @connect()
+ class PictureInPicturePlaceholder extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -67,3 +66,5 @@ class PictureInPicturePlaceholder extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect()(PictureInPicturePlaceholder);
+diff --git a/app/javascript/mastodon/components/poll.jsx b/app/javascript/mastodon/components/poll.jsx
+index 7efedfe34..360557d00 100644
+--- a/app/javascript/mastodon/components/poll.jsx
++++ b/app/javascript/mastodon/components/poll.jsx
+@@ -31,7 +31,6 @@ const makeEmojiMap = record => record.get('emojis').reduce((obj, emoji) => {
+   return obj;
+ }, {});
+ 
+-export default @injectIntl
+ class Poll extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -234,3 +233,5 @@ class Poll extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Poll);
+diff --git a/app/javascript/mastodon/components/relative_timestamp.jsx b/app/javascript/mastodon/components/relative_timestamp.jsx
+index 512480339..e6c3e0880 100644
+--- a/app/javascript/mastodon/components/relative_timestamp.jsx
++++ b/app/javascript/mastodon/components/relative_timestamp.jsx
+@@ -121,7 +121,6 @@ const timeRemainingString = (intl, date, now, timeGiven = true) => {
+   return relativeTime;
+ };
+ 
+-export default @injectIntl
+ class RelativeTimestamp extends React.Component {
+ 
+   static propTypes = {
+@@ -197,3 +196,5 @@ class RelativeTimestamp extends React.Component {
+   }
+ 
+ }
++
++export default injectIntl(RelativeTimestamp);
+diff --git a/app/javascript/mastodon/components/scrollable_list.jsx b/app/javascript/mastodon/components/scrollable_list.jsx
+index 4a6ffb149..57bc88121 100644
+--- a/app/javascript/mastodon/components/scrollable_list.jsx
++++ b/app/javascript/mastodon/components/scrollable_list.jsx
+@@ -20,7 +20,6 @@ const mapStateToProps = (state, { scrollKey }) => {
+   };
+ };
+ 
+-export default @connect(mapStateToProps, null, null, { forwardRef: true })
+ class ScrollableList extends PureComponent {
+ 
+   static contextTypes = {
+@@ -365,3 +364,5 @@ class ScrollableList extends PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, null, null, { forwardRef: true })(ScrollableList);
+diff --git a/app/javascript/mastodon/components/server_banner.jsx b/app/javascript/mastodon/components/server_banner.jsx
+index 617fdecdf..c21e414b4 100644
+--- a/app/javascript/mastodon/components/server_banner.jsx
++++ b/app/javascript/mastodon/components/server_banner.jsx
+@@ -18,8 +18,6 @@ const mapStateToProps = state => ({
+   server: state.getIn(['server', 'server']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class ServerBanner extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -91,3 +89,5 @@ class ServerBanner extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(ServerBanner));
+diff --git a/app/javascript/mastodon/components/status.jsx b/app/javascript/mastodon/components/status.jsx
+index a48230baf..2d200a55b 100644
+--- a/app/javascript/mastodon/components/status.jsx
++++ b/app/javascript/mastodon/components/status.jsx
+@@ -59,7 +59,6 @@ const messages = defineMessages({
+   edited: { id: 'status.edited', defaultMessage: 'Edited {date}' },
+ });
+ 
+-export default @injectIntl
+ class Status extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -549,3 +548,5 @@ class Status extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Status);
+diff --git a/app/javascript/mastodon/components/status_action_bar.jsx b/app/javascript/mastodon/components/status_action_bar.jsx
+index eeb376561..08e37e089 100644
+--- a/app/javascript/mastodon/components/status_action_bar.jsx
++++ b/app/javascript/mastodon/components/status_action_bar.jsx
+@@ -53,8 +53,6 @@ const mapStateToProps = (state, { status }) => ({
+   relationship: state.getIn(['relationships', status.getIn(['account', 'id'])]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class StatusActionBar extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -385,3 +383,5 @@ class StatusActionBar extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(StatusActionBar));
+diff --git a/app/javascript/mastodon/components/status_content.jsx b/app/javascript/mastodon/components/status_content.jsx
+index 67a487b00..8d3a80248 100644
+--- a/app/javascript/mastodon/components/status_content.jsx
++++ b/app/javascript/mastodon/components/status_content.jsx
+@@ -52,8 +52,6 @@ const mapStateToProps = state => ({
+   languages: state.getIn(['server', 'translationLanguages', 'items']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class StatusContent extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -311,3 +309,5 @@ class StatusContent extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(StatusContent));
+diff --git a/app/javascript/mastodon/features/about/index.jsx b/app/javascript/mastodon/features/about/index.jsx
+index dc1942c63..aa3d5b7f8 100644
+--- a/app/javascript/mastodon/features/about/index.jsx
++++ b/app/javascript/mastodon/features/about/index.jsx
+@@ -80,8 +80,6 @@ class Section extends React.PureComponent {
+ 
+ }
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class About extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -217,3 +215,5 @@ class About extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(About));
+diff --git a/app/javascript/mastodon/features/account/components/account_note.jsx b/app/javascript/mastodon/features/account/components/account_note.jsx
+index fdacc7583..5201ebd4d 100644
+--- a/app/javascript/mastodon/features/account/components/account_note.jsx
++++ b/app/javascript/mastodon/features/account/components/account_note.jsx
+@@ -43,7 +43,6 @@ class InlineAlert extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class AccountNote extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -168,3 +167,5 @@ class AccountNote extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(AccountNote);
+diff --git a/app/javascript/mastodon/features/account/components/featured_tags.jsx b/app/javascript/mastodon/features/account/components/featured_tags.jsx
+index 24a3f2171..52aa232ca 100644
+--- a/app/javascript/mastodon/features/account/components/featured_tags.jsx
++++ b/app/javascript/mastodon/features/account/components/featured_tags.jsx
+@@ -10,7 +10,6 @@ const messages = defineMessages({
+   empty: { id: 'account.featured_tags.last_status_never', defaultMessage: 'No posts' },
+ });
+ 
+-export default @injectIntl
+ class FeaturedTags extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -50,3 +49,5 @@ class FeaturedTags extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(FeaturedTags);
+diff --git a/app/javascript/mastodon/features/account/components/header.jsx b/app/javascript/mastodon/features/account/components/header.jsx
+index 539d72574..be6b17896 100644
+--- a/app/javascript/mastodon/features/account/components/header.jsx
++++ b/app/javascript/mastodon/features/account/components/header.jsx
+@@ -76,7 +76,6 @@ const dateFormatOptions = {
+   minute: '2-digit',
+ };
+ 
+-export default @injectIntl
+ class Header extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -419,3 +418,5 @@ class Header extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Header);
+diff --git a/app/javascript/mastodon/features/account/navigation.jsx b/app/javascript/mastodon/features/account/navigation.jsx
+index eb9ff9a95..07dc3757c 100644
+--- a/app/javascript/mastodon/features/account/navigation.jsx
++++ b/app/javascript/mastodon/features/account/navigation.jsx
+@@ -19,7 +19,6 @@ const mapStateToProps = (state, { match: { params: { acct } } }) => {
+   };
+ };
+ 
+-export default @connect(mapStateToProps)
+ class AccountNavigation extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -50,3 +49,5 @@ class AccountNavigation extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(AccountNavigation);
+diff --git a/app/javascript/mastodon/features/account_gallery/index.jsx b/app/javascript/mastodon/features/account_gallery/index.jsx
+index 3942b57cb..db76507db 100644
+--- a/app/javascript/mastodon/features/account_gallery/index.jsx
++++ b/app/javascript/mastodon/features/account_gallery/index.jsx
+@@ -60,7 +60,6 @@ class LoadMoreMedia extends ImmutablePureComponent {
+ 
+ }
+ 
+-export default @connect(mapStateToProps)
+ class AccountGallery extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -226,3 +225,5 @@ class AccountGallery extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(AccountGallery);
+diff --git a/app/javascript/mastodon/features/account_timeline/components/limited_account_hint.jsx b/app/javascript/mastodon/features/account_timeline/components/limited_account_hint.jsx
+index 9ee347bb5..e6a111470 100644
+--- a/app/javascript/mastodon/features/account_timeline/components/limited_account_hint.jsx
++++ b/app/javascript/mastodon/features/account_timeline/components/limited_account_hint.jsx
+@@ -14,7 +14,6 @@ const mapDispatchToProps = (dispatch, { accountId }) => ({
+ 
+ });
+ 
+-export default @connect(() => {}, mapDispatchToProps)
+ class LimitedAccountHint extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -34,3 +33,5 @@ class LimitedAccountHint extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(() => {}, mapDispatchToProps)(LimitedAccountHint);
+diff --git a/app/javascript/mastodon/features/account_timeline/index.jsx b/app/javascript/mastodon/features/account_timeline/index.jsx
+index 337977fde..d77563684 100644
+--- a/app/javascript/mastodon/features/account_timeline/index.jsx
++++ b/app/javascript/mastodon/features/account_timeline/index.jsx
+@@ -64,7 +64,6 @@ RemoteHint.propTypes = {
+   url: PropTypes.string.isRequired,
+ };
+ 
+-export default @connect(mapStateToProps)
+ class AccountTimeline extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -206,3 +205,5 @@ class AccountTimeline extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(AccountTimeline);
+diff --git a/app/javascript/mastodon/features/audio/index.jsx b/app/javascript/mastodon/features/audio/index.jsx
+index 9a9de02ae..b0c6eeee6 100644
+--- a/app/javascript/mastodon/features/audio/index.jsx
++++ b/app/javascript/mastodon/features/audio/index.jsx
+@@ -22,7 +22,6 @@ const messages = defineMessages({
+ const TICK_SIZE = 10;
+ const PADDING   = 180;
+ 
+-export default @injectIntl
+ class Audio extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -569,3 +568,5 @@ class Audio extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Audio);
+diff --git a/app/javascript/mastodon/features/blocks/index.jsx b/app/javascript/mastodon/features/blocks/index.jsx
+index e00f2b60e..38616ba84 100644
+--- a/app/javascript/mastodon/features/blocks/index.jsx
++++ b/app/javascript/mastodon/features/blocks/index.jsx
+@@ -22,8 +22,6 @@ const mapStateToProps = state => ({
+   isLoading: state.getIn(['user_lists', 'blocks', 'isLoading'], true),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Blocks extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -77,3 +75,5 @@ class Blocks extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Blocks));
+diff --git a/app/javascript/mastodon/features/bookmarked_statuses/index.jsx b/app/javascript/mastodon/features/bookmarked_statuses/index.jsx
+index 8ef7855c1..46fff856e 100644
+--- a/app/javascript/mastodon/features/bookmarked_statuses/index.jsx
++++ b/app/javascript/mastodon/features/bookmarked_statuses/index.jsx
+@@ -22,8 +22,6 @@ const mapStateToProps = state => ({
+   hasMore: !!state.getIn(['status_lists', 'bookmarks', 'next']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Bookmarks extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -106,3 +104,5 @@ class Bookmarks extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Bookmarks));
+diff --git a/app/javascript/mastodon/features/closed_registrations_modal/index.jsx b/app/javascript/mastodon/features/closed_registrations_modal/index.jsx
+index e6540e825..40df804f2 100644
+--- a/app/javascript/mastodon/features/closed_registrations_modal/index.jsx
++++ b/app/javascript/mastodon/features/closed_registrations_modal/index.jsx
+@@ -9,7 +9,6 @@ const mapStateToProps = state => ({
+   message: state.getIn(['server', 'server', 'registrations', 'message']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class ClosedRegistrationsModal extends ImmutablePureComponent {
+ 
+   componentDidMount () {
+@@ -73,3 +72,5 @@ class ClosedRegistrationsModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(ClosedRegistrationsModal);
+diff --git a/app/javascript/mastodon/features/community_timeline/components/column_settings.jsx b/app/javascript/mastodon/features/community_timeline/components/column_settings.jsx
+index 0cb6db883..d6181919a 100644
+--- a/app/javascript/mastodon/features/community_timeline/components/column_settings.jsx
++++ b/app/javascript/mastodon/features/community_timeline/components/column_settings.jsx
+@@ -4,7 +4,6 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
+ import { injectIntl, FormattedMessage } from 'react-intl';
+ import SettingToggle from '../../notifications/components/setting_toggle';
+ 
+-export default @injectIntl
+ class ColumnSettings extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -27,3 +26,5 @@ class ColumnSettings extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ColumnSettings);
+diff --git a/app/javascript/mastodon/features/community_timeline/index.jsx b/app/javascript/mastodon/features/community_timeline/index.jsx
+index 4dbd55cf2..e41d11bb5 100644
+--- a/app/javascript/mastodon/features/community_timeline/index.jsx
++++ b/app/javascript/mastodon/features/community_timeline/index.jsx
+@@ -30,8 +30,6 @@ const mapStateToProps = (state, { columnId }) => {
+   };
+ };
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class CommunityTimeline extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -158,3 +156,5 @@ class CommunityTimeline extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(CommunityTimeline));
+diff --git a/app/javascript/mastodon/features/compose/components/action_bar.jsx b/app/javascript/mastodon/features/compose/components/action_bar.jsx
+index ee584cb1b..13760582e 100644
+--- a/app/javascript/mastodon/features/compose/components/action_bar.jsx
++++ b/app/javascript/mastodon/features/compose/components/action_bar.jsx
+@@ -20,7 +20,6 @@ const messages = defineMessages({
+   bookmarks: { id: 'navigation_bar.bookmarks', defaultMessage: 'Bookmarks' },
+ });
+ 
+-export default @injectIntl
+ class ActionBar extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -65,3 +64,5 @@ class ActionBar extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ActionBar);
+diff --git a/app/javascript/mastodon/features/compose/components/compose_form.jsx b/app/javascript/mastodon/features/compose/components/compose_form.jsx
+index e641d59f4..4a8f40301 100644
+--- a/app/javascript/mastodon/features/compose/components/compose_form.jsx
++++ b/app/javascript/mastodon/features/compose/components/compose_form.jsx
+@@ -31,7 +31,6 @@ const messages = defineMessages({
+   saveChanges: { id: 'compose_form.save_changes', defaultMessage: 'Save changes' },
+ });
+ 
+-export default @injectIntl
+ class ComposeForm extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -299,3 +298,5 @@ class ComposeForm extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ComposeForm);
+diff --git a/app/javascript/mastodon/features/compose/components/emoji_picker_dropdown.jsx b/app/javascript/mastodon/features/compose/components/emoji_picker_dropdown.jsx
+index 79378454d..4fb131b47 100644
+--- a/app/javascript/mastodon/features/compose/components/emoji_picker_dropdown.jsx
++++ b/app/javascript/mastodon/features/compose/components/emoji_picker_dropdown.jsx
+@@ -144,8 +144,7 @@ class ModifierPicker extends React.PureComponent {
+ 
+ }
+ 
+-@injectIntl
+-class EmojiPickerMenu extends React.PureComponent {
++class EmojiPickerMenuImpl extends React.PureComponent {
+ 
+   static propTypes = {
+     custom_emojis: ImmutablePropTypes.list,
+@@ -305,7 +304,8 @@ class EmojiPickerMenu extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
++const EmojiPickerMenu = injectIntl(EmojiPickerMenuImpl);
++
+ class EmojiPickerDropdown extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -409,3 +409,5 @@ class EmojiPickerDropdown extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(EmojiPickerDropdown);
+diff --git a/app/javascript/mastodon/features/compose/components/language_dropdown.jsx b/app/javascript/mastodon/features/compose/components/language_dropdown.jsx
+index 82547e079..908cb61a7 100644
+--- a/app/javascript/mastodon/features/compose/components/language_dropdown.jsx
++++ b/app/javascript/mastodon/features/compose/components/language_dropdown.jsx
+@@ -237,7 +237,6 @@ class LanguageDropdownMenu extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class LanguageDropdown extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -325,3 +324,5 @@ class LanguageDropdown extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(LanguageDropdown);
+diff --git a/app/javascript/mastodon/features/compose/components/poll_button.jsx b/app/javascript/mastodon/features/compose/components/poll_button.jsx
+index ff7a104aa..6ad689ccc 100644
+--- a/app/javascript/mastodon/features/compose/components/poll_button.jsx
++++ b/app/javascript/mastodon/features/compose/components/poll_button.jsx
+@@ -13,8 +13,6 @@ const iconStyle = {
+   lineHeight: '27px',
+ };
+ 
+-export default
+-@injectIntl
+ class PollButton extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -53,3 +51,5 @@ class PollButton extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(PollButton);
+diff --git a/app/javascript/mastodon/features/compose/components/poll_form.jsx b/app/javascript/mastodon/features/compose/components/poll_form.jsx
+index bb03f6f66..c5a8f8ca7 100644
+--- a/app/javascript/mastodon/features/compose/components/poll_form.jsx
++++ b/app/javascript/mastodon/features/compose/components/poll_form.jsx
+@@ -20,8 +20,7 @@ const messages = defineMessages({
+   days: { id: 'intervals.full.days', defaultMessage: '{number, plural, one {# day} other {# days}}' },
+ });
+ 
+-@injectIntl
+-class Option extends React.PureComponent {
++class OptionIntl extends React.PureComponent {
+ 
+   static propTypes = {
+     title: PropTypes.string.isRequired,
+@@ -113,8 +112,8 @@ class Option extends React.PureComponent {
+ 
+ }
+ 
+-export default
+-@injectIntl
++const Option = injectIntl(OptionIntl);
++
+ class PollForm extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -180,3 +179,5 @@ class PollForm extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(PollForm);
+diff --git a/app/javascript/mastodon/features/compose/components/privacy_dropdown.jsx b/app/javascript/mastodon/features/compose/components/privacy_dropdown.jsx
+index ffd1094cd..6c4b1064e 100644
+--- a/app/javascript/mastodon/features/compose/components/privacy_dropdown.jsx
++++ b/app/javascript/mastodon/features/compose/components/privacy_dropdown.jsx
+@@ -132,7 +132,6 @@ class PrivacyDropdownMenu extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class PrivacyDropdown extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -285,3 +284,5 @@ class PrivacyDropdown extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(PrivacyDropdown);
+diff --git a/app/javascript/mastodon/features/compose/components/reply_indicator.jsx b/app/javascript/mastodon/features/compose/components/reply_indicator.jsx
+index 98b142ab8..81de4ea76 100644
+--- a/app/javascript/mastodon/features/compose/components/reply_indicator.jsx
++++ b/app/javascript/mastodon/features/compose/components/reply_indicator.jsx
+@@ -12,7 +12,6 @@ const messages = defineMessages({
+   cancel: { id: 'reply_indicator.cancel', defaultMessage: 'Cancel' },
+ });
+ 
+-export default @injectIntl
+ class ReplyIndicator extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -69,3 +68,5 @@ class ReplyIndicator extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ReplyIndicator);
+diff --git a/app/javascript/mastodon/features/compose/components/search.jsx b/app/javascript/mastodon/features/compose/components/search.jsx
+index 0539c6b80..5d2d8d194 100644
+--- a/app/javascript/mastodon/features/compose/components/search.jsx
++++ b/app/javascript/mastodon/features/compose/components/search.jsx
+@@ -32,7 +32,6 @@ class SearchPopout extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class Search extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -145,3 +144,5 @@ class Search extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Search);
+diff --git a/app/javascript/mastodon/features/compose/components/search_results.jsx b/app/javascript/mastodon/features/compose/components/search_results.jsx
+index 44ab43638..78da3ca27 100644
+--- a/app/javascript/mastodon/features/compose/components/search_results.jsx
++++ b/app/javascript/mastodon/features/compose/components/search_results.jsx
+@@ -14,7 +14,6 @@ const messages = defineMessages({
+   dismissSuggestion: { id: 'suggestions.dismiss', defaultMessage: 'Dismiss suggestion' },
+ });
+ 
+-export default @injectIntl
+ class SearchResults extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -138,3 +137,5 @@ class SearchResults extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(SearchResults);
+diff --git a/app/javascript/mastodon/features/compose/components/upload_button.jsx b/app/javascript/mastodon/features/compose/components/upload_button.jsx
+index 964340d82..f2e6ff85c 100644
+--- a/app/javascript/mastodon/features/compose/components/upload_button.jsx
++++ b/app/javascript/mastodon/features/compose/components/upload_button.jsx
+@@ -23,8 +23,6 @@ const iconStyle = {
+   lineHeight: '27px',
+ };
+ 
+-export default @connect(makeMapStateToProps)
+-@injectIntl
+ class UploadButton extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -81,3 +79,5 @@ class UploadButton extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps)(injectIntl(UploadButton));
+diff --git a/app/javascript/mastodon/features/compose/index.jsx b/app/javascript/mastodon/features/compose/index.jsx
+index 4b30d09ae..6cba1e9ad 100644
+--- a/app/javascript/mastodon/features/compose/index.jsx
++++ b/app/javascript/mastodon/features/compose/index.jsx
+@@ -38,8 +38,6 @@ const mapStateToProps = (state, ownProps) => ({
+   showSearch: ownProps.multiColumn ? state.getIn(['search', 'submitted']) && !state.getIn(['search', 'hidden']) : false,
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Compose extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -148,3 +146,5 @@ class Compose extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Compose));
+diff --git a/app/javascript/mastodon/features/direct_timeline/components/conversation.jsx b/app/javascript/mastodon/features/direct_timeline/components/conversation.jsx
+index fbdff1bdd..5996dd666 100644
+--- a/app/javascript/mastodon/features/direct_timeline/components/conversation.jsx
++++ b/app/javascript/mastodon/features/direct_timeline/components/conversation.jsx
+@@ -24,7 +24,6 @@ const messages = defineMessages({
+   unmuteConversation: { id: 'status.unmute_conversation', defaultMessage: 'Unmute conversation' },
+ });
+ 
+-export default @injectIntl
+ class Conversation extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -198,3 +197,5 @@ class Conversation extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Conversation);
+diff --git a/app/javascript/mastodon/features/direct_timeline/index.jsx b/app/javascript/mastodon/features/direct_timeline/index.jsx
+index a45965bb2..e2667d8e9 100644
+--- a/app/javascript/mastodon/features/direct_timeline/index.jsx
++++ b/app/javascript/mastodon/features/direct_timeline/index.jsx
+@@ -14,8 +14,6 @@ const messages = defineMessages({
+   title: { id: 'column.direct', defaultMessage: 'Direct messages' },
+ });
+ 
+-export default @connect()
+-@injectIntl
+ class DirectTimeline extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -105,3 +103,5 @@ class DirectTimeline extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect()(injectIntl(DirectTimeline));
+diff --git a/app/javascript/mastodon/features/directory/components/account_card.jsx b/app/javascript/mastodon/features/directory/components/account_card.jsx
+index 15c8ad303..1cee3a4e4 100644
+--- a/app/javascript/mastodon/features/directory/components/account_card.jsx
++++ b/app/javascript/mastodon/features/directory/components/account_card.jsx
+@@ -91,9 +91,6 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
+ 
+ });
+ 
+-export default
+-@injectIntl
+-@connect(makeMapStateToProps, mapDispatchToProps)
+ class AccountCard extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -233,3 +230,5 @@ class AccountCard extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(connect(makeMapStateToProps, mapDispatchToProps)(AccountCard));
+diff --git a/app/javascript/mastodon/features/directory/index.jsx b/app/javascript/mastodon/features/directory/index.jsx
+index bb5e021cc..afaf39b77 100644
+--- a/app/javascript/mastodon/features/directory/index.jsx
++++ b/app/javascript/mastodon/features/directory/index.jsx
+@@ -29,8 +29,6 @@ const mapStateToProps = state => ({
+   domain: state.getIn(['meta', 'domain']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Directory extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -176,3 +174,5 @@ class Directory extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Directory));
+diff --git a/app/javascript/mastodon/features/domain_blocks/index.jsx b/app/javascript/mastodon/features/domain_blocks/index.jsx
+index 43b275c2d..0c22aa239 100644
+--- a/app/javascript/mastodon/features/domain_blocks/index.jsx
++++ b/app/javascript/mastodon/features/domain_blocks/index.jsx
+@@ -23,8 +23,6 @@ const mapStateToProps = state => ({
+   hasMore: !!state.getIn(['domain_lists', 'blocks', 'next']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Blocks extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -81,3 +79,5 @@ class Blocks extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Blocks));
+diff --git a/app/javascript/mastodon/features/explore/index.jsx b/app/javascript/mastodon/features/explore/index.jsx
+index d91755ff6..569b8612c 100644
+--- a/app/javascript/mastodon/features/explore/index.jsx
++++ b/app/javascript/mastodon/features/explore/index.jsx
+@@ -24,8 +24,6 @@ const mapStateToProps = state => ({
+   isSearching: state.getIn(['search', 'submitted']) || !showTrends,
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Explore extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -105,3 +103,5 @@ class Explore extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Explore));
+diff --git a/app/javascript/mastodon/features/explore/links.jsx b/app/javascript/mastodon/features/explore/links.jsx
+index b47fc8fcf..193739916 100644
+--- a/app/javascript/mastodon/features/explore/links.jsx
++++ b/app/javascript/mastodon/features/explore/links.jsx
+@@ -13,7 +13,6 @@ const mapStateToProps = state => ({
+   isLoading: state.getIn(['trends', 'links', 'isLoading']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class Links extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -68,3 +67,5 @@ class Links extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Links);
+diff --git a/app/javascript/mastodon/features/explore/results.jsx b/app/javascript/mastodon/features/explore/results.jsx
+index b2f6c72b7..27132f132 100644
+--- a/app/javascript/mastodon/features/explore/results.jsx
++++ b/app/javascript/mastodon/features/explore/results.jsx
+@@ -42,8 +42,6 @@ const renderStatuses = (results, onLoadMore) => appendLoadMore('statuses', resul
+   <Status key={`status-${item}`} id={item} />
+ )), onLoadMore);
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Results extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -124,3 +122,5 @@ class Results extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Results));
+diff --git a/app/javascript/mastodon/features/explore/statuses.jsx b/app/javascript/mastodon/features/explore/statuses.jsx
+index b027487d5..a98a6d046 100644
+--- a/app/javascript/mastodon/features/explore/statuses.jsx
++++ b/app/javascript/mastodon/features/explore/statuses.jsx
+@@ -14,7 +14,6 @@ const mapStateToProps = state => ({
+   hasMore: !!state.getIn(['status_lists', 'trending', 'next']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class Statuses extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -62,3 +61,5 @@ class Statuses extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Statuses);
+diff --git a/app/javascript/mastodon/features/explore/suggestions.jsx b/app/javascript/mastodon/features/explore/suggestions.jsx
+index e6ad09974..53eb7ba4b 100644
+--- a/app/javascript/mastodon/features/explore/suggestions.jsx
++++ b/app/javascript/mastodon/features/explore/suggestions.jsx
+@@ -12,7 +12,6 @@ const mapStateToProps = state => ({
+   isLoading: state.getIn(['suggestions', 'isLoading']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class Suggestions extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -49,3 +48,5 @@ class Suggestions extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Suggestions);
+diff --git a/app/javascript/mastodon/features/explore/tags.jsx b/app/javascript/mastodon/features/explore/tags.jsx
+index 258dc392f..3ba813c3f 100644
+--- a/app/javascript/mastodon/features/explore/tags.jsx
++++ b/app/javascript/mastodon/features/explore/tags.jsx
+@@ -13,7 +13,6 @@ const mapStateToProps = state => ({
+   isLoadingHashtags: state.getIn(['trends', 'tags', 'isLoading']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class Tags extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -60,3 +59,5 @@ class Tags extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Tags);
+diff --git a/app/javascript/mastodon/features/favourited_statuses/index.jsx b/app/javascript/mastodon/features/favourited_statuses/index.jsx
+index 89093f682..2cbf00291 100644
+--- a/app/javascript/mastodon/features/favourited_statuses/index.jsx
++++ b/app/javascript/mastodon/features/favourited_statuses/index.jsx
+@@ -22,8 +22,6 @@ const mapStateToProps = state => ({
+   hasMore: !!state.getIn(['status_lists', 'favourites', 'next']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Favourites extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -106,3 +104,5 @@ class Favourites extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Favourites));
+diff --git a/app/javascript/mastodon/features/favourites/index.jsx b/app/javascript/mastodon/features/favourites/index.jsx
+index 7179e6470..b1e81debd 100644
+--- a/app/javascript/mastodon/features/favourites/index.jsx
++++ b/app/javascript/mastodon/features/favourites/index.jsx
+@@ -21,8 +21,6 @@ const mapStateToProps = (state, props) => ({
+   accountIds: state.getIn(['user_lists', 'favourited_by', props.params.statusId]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Favourites extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -90,3 +88,5 @@ class Favourites extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Favourites));
+diff --git a/app/javascript/mastodon/features/filters/added_to_filter.jsx b/app/javascript/mastodon/features/filters/added_to_filter.jsx
+index 3785eb3c5..d935d96e2 100644
+--- a/app/javascript/mastodon/features/filters/added_to_filter.jsx
++++ b/app/javascript/mastodon/features/filters/added_to_filter.jsx
+@@ -10,7 +10,6 @@ const mapStateToProps = (state, { filterId }) => ({
+   filter: state.getIn(['filters', filterId]),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class AddedToFilter extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -100,3 +99,5 @@ class AddedToFilter extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(AddedToFilter);
+diff --git a/app/javascript/mastodon/features/filters/select_filter.jsx b/app/javascript/mastodon/features/filters/select_filter.jsx
+index 8a21905d7..b0aede187 100644
+--- a/app/javascript/mastodon/features/filters/select_filter.jsx
++++ b/app/javascript/mastodon/features/filters/select_filter.jsx
+@@ -22,8 +22,6 @@ const mapStateToProps = (state, { contextType }) => ({
+   ]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class SelectFilter extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -190,3 +188,5 @@ class SelectFilter extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(SelectFilter));
+diff --git a/app/javascript/mastodon/features/follow_recommendations/components/account.jsx b/app/javascript/mastodon/features/follow_recommendations/components/account.jsx
+index ddd0c8baa..9cb26fe64 100644
+--- a/app/javascript/mastodon/features/follow_recommendations/components/account.jsx
++++ b/app/javascript/mastodon/features/follow_recommendations/components/account.jsx
+@@ -32,8 +32,6 @@ const getFirstSentence = str => {
+   return arr[0];
+ };
+ 
+-export default @connect(makeMapStateToProps)
+-@injectIntl
+ class Account extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -83,3 +81,5 @@ class Account extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps)(injectIntl(Account));
+diff --git a/app/javascript/mastodon/features/follow_recommendations/index.jsx b/app/javascript/mastodon/features/follow_recommendations/index.jsx
+index 436cc582b..7ba34b51f 100644
+--- a/app/javascript/mastodon/features/follow_recommendations/index.jsx
++++ b/app/javascript/mastodon/features/follow_recommendations/index.jsx
+@@ -19,7 +19,6 @@ const mapStateToProps = state => ({
+   isLoading: state.getIn(['suggestions', 'isLoading']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class FollowRecommendations extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -114,3 +113,5 @@ class FollowRecommendations extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(FollowRecommendations);
+diff --git a/app/javascript/mastodon/features/follow_requests/components/account_authorize.jsx b/app/javascript/mastodon/features/follow_requests/components/account_authorize.jsx
+index d41f331e5..0bd45592c 100644
+--- a/app/javascript/mastodon/features/follow_requests/components/account_authorize.jsx
++++ b/app/javascript/mastodon/features/follow_requests/components/account_authorize.jsx
+@@ -13,7 +13,6 @@ const messages = defineMessages({
+   reject: { id: 'follow_request.reject', defaultMessage: 'Reject' },
+ });
+ 
+-export default @injectIntl
+ class AccountAuthorize extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -47,3 +46,5 @@ class AccountAuthorize extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(AccountAuthorize);
+diff --git a/app/javascript/mastodon/features/follow_requests/index.jsx b/app/javascript/mastodon/features/follow_requests/index.jsx
+index 526ae4cde..a8875bbd3 100644
+--- a/app/javascript/mastodon/features/follow_requests/index.jsx
++++ b/app/javascript/mastodon/features/follow_requests/index.jsx
+@@ -25,8 +25,6 @@ const mapStateToProps = state => ({
+   domain: state.getIn(['meta', 'domain']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class FollowRequests extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -89,3 +87,5 @@ class FollowRequests extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(FollowRequests));
+diff --git a/app/javascript/mastodon/features/followed_tags/index.jsx b/app/javascript/mastodon/features/followed_tags/index.jsx
+index c2d0e4731..7c53542c2 100644
+--- a/app/javascript/mastodon/features/followed_tags/index.jsx
++++ b/app/javascript/mastodon/features/followed_tags/index.jsx
+@@ -22,8 +22,6 @@ const mapStateToProps = state => ({
+   hasMore: !!state.getIn(['followed_tags', 'next']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class FollowedTags extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -87,3 +85,5 @@ class FollowedTags extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(FollowedTags));
+diff --git a/app/javascript/mastodon/features/followers/index.jsx b/app/javascript/mastodon/features/followers/index.jsx
+index 277eb702f..fe86ebb3b 100644
+--- a/app/javascript/mastodon/features/followers/index.jsx
++++ b/app/javascript/mastodon/features/followers/index.jsx
+@@ -54,7 +54,6 @@ RemoteHint.propTypes = {
+   url: PropTypes.string.isRequired,
+ };
+ 
+-export default @connect(mapStateToProps)
+ class Followers extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -168,3 +167,5 @@ class Followers extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Followers);
+diff --git a/app/javascript/mastodon/features/following/index.jsx b/app/javascript/mastodon/features/following/index.jsx
+index e23d9b35c..8095d73a3 100644
+--- a/app/javascript/mastodon/features/following/index.jsx
++++ b/app/javascript/mastodon/features/following/index.jsx
+@@ -54,7 +54,6 @@ RemoteHint.propTypes = {
+   url: PropTypes.string.isRequired,
+ };
+ 
+-export default @connect(mapStateToProps)
+ class Following extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -168,3 +167,5 @@ class Following extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Following);
+diff --git a/app/javascript/mastodon/features/getting_started/components/announcements.jsx b/app/javascript/mastodon/features/getting_started/components/announcements.jsx
+index 0cae0bd1f..954f407f5 100644
+--- a/app/javascript/mastodon/features/getting_started/components/announcements.jsx
++++ b/app/javascript/mastodon/features/getting_started/components/announcements.jsx
+@@ -355,7 +355,6 @@ class Announcement extends ImmutablePureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class Announcements extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -447,3 +446,5 @@ class Announcements extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Announcements);
+diff --git a/app/javascript/mastodon/features/getting_started/index.jsx b/app/javascript/mastodon/features/getting_started/index.jsx
+index fc91070d1..ee8a009ee 100644
+--- a/app/javascript/mastodon/features/getting_started/index.jsx
++++ b/app/javascript/mastodon/features/getting_started/index.jsx
+@@ -58,8 +58,6 @@ const badgeDisplay = (number, limit) => {
+   }
+ };
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class GettingStarted extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -153,3 +151,5 @@ class GettingStarted extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(GettingStarted));
+diff --git a/app/javascript/mastodon/features/hashtag_timeline/components/column_settings.jsx b/app/javascript/mastodon/features/hashtag_timeline/components/column_settings.jsx
+index ac7863ed3..f140f2d01 100644
+--- a/app/javascript/mastodon/features/hashtag_timeline/components/column_settings.jsx
++++ b/app/javascript/mastodon/features/hashtag_timeline/components/column_settings.jsx
+@@ -12,7 +12,6 @@ const messages = defineMessages({
+   noOptions: { id: 'hashtag.column_settings.select.no_options_message', defaultMessage: 'No suggestions found' },
+ });
+ 
+-export default @injectIntl
+ class ColumnSettings extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -131,3 +130,5 @@ class ColumnSettings extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ColumnSettings);
+diff --git a/app/javascript/mastodon/features/hashtag_timeline/index.jsx b/app/javascript/mastodon/features/hashtag_timeline/index.jsx
+index e5262d70d..58423f429 100644
+--- a/app/javascript/mastodon/features/hashtag_timeline/index.jsx
++++ b/app/javascript/mastodon/features/hashtag_timeline/index.jsx
+@@ -26,8 +26,6 @@ const mapStateToProps = (state, props) => ({
+   tag: state.getIn(['tags', props.params.id]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class HashtagTimeline extends React.PureComponent {
+ 
+   disconnects = [];
+@@ -235,3 +233,5 @@ class HashtagTimeline extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(HashtagTimeline));
+diff --git a/app/javascript/mastodon/features/home_timeline/components/column_settings.jsx b/app/javascript/mastodon/features/home_timeline/components/column_settings.jsx
+index 455e21881..bd15390c0 100644
+--- a/app/javascript/mastodon/features/home_timeline/components/column_settings.jsx
++++ b/app/javascript/mastodon/features/home_timeline/components/column_settings.jsx
+@@ -4,7 +4,6 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
+ import { injectIntl, FormattedMessage } from 'react-intl';
+ import SettingToggle from '../../notifications/components/setting_toggle';
+ 
+-export default @injectIntl
+ class ColumnSettings extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -32,3 +31,5 @@ class ColumnSettings extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ColumnSettings);
+diff --git a/app/javascript/mastodon/features/home_timeline/index.jsx b/app/javascript/mastodon/features/home_timeline/index.jsx
+index 001de15d1..9aa4c6d82 100644
+--- a/app/javascript/mastodon/features/home_timeline/index.jsx
++++ b/app/javascript/mastodon/features/home_timeline/index.jsx
+@@ -30,8 +30,6 @@ const mapStateToProps = state => ({
+   showAnnouncements: state.getIn(['announcements', 'show']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class HomeTimeline extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -174,3 +172,5 @@ class HomeTimeline extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(HomeTimeline));
+diff --git a/app/javascript/mastodon/features/interaction_modal/index.jsx b/app/javascript/mastodon/features/interaction_modal/index.jsx
+index c1d346fed..5742f1104 100644
+--- a/app/javascript/mastodon/features/interaction_modal/index.jsx
++++ b/app/javascript/mastodon/features/interaction_modal/index.jsx
+@@ -74,7 +74,6 @@ class Copypaste extends React.PureComponent {
+ 
+ }
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+ class InteractionModal extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -159,3 +158,5 @@ class InteractionModal extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(InteractionModal);
+diff --git a/app/javascript/mastodon/features/keyboard_shortcuts/index.jsx b/app/javascript/mastodon/features/keyboard_shortcuts/index.jsx
+index 9a870478d..70f019712 100644
+--- a/app/javascript/mastodon/features/keyboard_shortcuts/index.jsx
++++ b/app/javascript/mastodon/features/keyboard_shortcuts/index.jsx
+@@ -10,7 +10,6 @@ const messages = defineMessages({
+   heading: { id: 'keyboard_shortcuts.heading', defaultMessage: 'Keyboard Shortcuts' },
+ });
+ 
+-export default @injectIntl
+ class KeyboardShortcuts extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -174,3 +173,5 @@ class KeyboardShortcuts extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(KeyboardShortcuts);
+diff --git a/app/javascript/mastodon/features/list_adder/components/account.jsx b/app/javascript/mastodon/features/list_adder/components/account.jsx
+index 1369aac07..786af3bb1 100644
+--- a/app/javascript/mastodon/features/list_adder/components/account.jsx
++++ b/app/javascript/mastodon/features/list_adder/components/account.jsx
+@@ -17,9 +17,6 @@ const makeMapStateToProps = () => {
+   return mapStateToProps;
+ };
+ 
+-
+-export default @connect(makeMapStateToProps)
+-@injectIntl
+ class Account extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -41,3 +38,5 @@ class Account extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps)(injectIntl(Account));
+diff --git a/app/javascript/mastodon/features/list_adder/components/list.jsx b/app/javascript/mastodon/features/list_adder/components/list.jsx
+index 60c8958a7..34ccf8451 100644
+--- a/app/javascript/mastodon/features/list_adder/components/list.jsx
++++ b/app/javascript/mastodon/features/list_adder/components/list.jsx
+@@ -23,8 +23,6 @@ const mapDispatchToProps = (dispatch, { listId }) => ({
+   onAdd: () => dispatch(addToListAdder(listId)),
+ });
+ 
+-export default @connect(MapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class List extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -67,3 +65,5 @@ class List extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(MapStateToProps, mapDispatchToProps)(injectIntl(List));
+diff --git a/app/javascript/mastodon/features/list_adder/index.jsx b/app/javascript/mastodon/features/list_adder/index.jsx
+index cb8a15e8c..45d5589f9 100644
+--- a/app/javascript/mastodon/features/list_adder/index.jsx
++++ b/app/javascript/mastodon/features/list_adder/index.jsx
+@@ -28,8 +28,6 @@ const mapDispatchToProps = dispatch => ({
+   onReset: () => dispatch(resetListAdder()),
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class ListAdder extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -71,3 +69,5 @@ class ListAdder extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ListAdder));
+diff --git a/app/javascript/mastodon/features/list_editor/components/account.jsx b/app/javascript/mastodon/features/list_editor/components/account.jsx
+index 48085af43..86209bb3c 100644
+--- a/app/javascript/mastodon/features/list_editor/components/account.jsx
++++ b/app/javascript/mastodon/features/list_editor/components/account.jsx
+@@ -31,8 +31,6 @@ const mapDispatchToProps = (dispatch, { accountId }) => ({
+   onAdd: () => dispatch(addToListEditor(accountId)),
+ });
+ 
+-export default @connect(makeMapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class Account extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -75,3 +73,5 @@ class Account extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps, mapDispatchToProps)(injectIntl(Account));
+diff --git a/app/javascript/mastodon/features/list_editor/components/edit_list_form.jsx b/app/javascript/mastodon/features/list_editor/components/edit_list_form.jsx
+index 4d7e49ec0..9c1c244cb 100644
+--- a/app/javascript/mastodon/features/list_editor/components/edit_list_form.jsx
++++ b/app/javascript/mastodon/features/list_editor/components/edit_list_form.jsx
+@@ -19,8 +19,6 @@ const mapDispatchToProps = dispatch => ({
+   onSubmit: () => dispatch(submitListEditor(false)),
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class ListForm extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -68,3 +66,5 @@ class ListForm extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ListForm));
+diff --git a/app/javascript/mastodon/features/list_editor/components/search.jsx b/app/javascript/mastodon/features/list_editor/components/search.jsx
+index 3ee26c8eb..b9745e0a8 100644
+--- a/app/javascript/mastodon/features/list_editor/components/search.jsx
++++ b/app/javascript/mastodon/features/list_editor/components/search.jsx
+@@ -20,8 +20,6 @@ const mapDispatchToProps = dispatch => ({
+   onChange: value => dispatch(changeListSuggestions(value)),
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class Search extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -74,3 +72,5 @@ class Search extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Search));
+diff --git a/app/javascript/mastodon/features/list_editor/index.jsx b/app/javascript/mastodon/features/list_editor/index.jsx
+index 48466604a..65cebbdc8 100644
+--- a/app/javascript/mastodon/features/list_editor/index.jsx
++++ b/app/javascript/mastodon/features/list_editor/index.jsx
+@@ -22,8 +22,6 @@ const mapDispatchToProps = dispatch => ({
+   onReset: () => dispatch(resetListEditor()),
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class ListEditor extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -77,3 +75,5 @@ class ListEditor extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(ListEditor));
+diff --git a/app/javascript/mastodon/features/list_timeline/index.jsx b/app/javascript/mastodon/features/list_timeline/index.jsx
+index 25dbe311a..d0ba2a186 100644
+--- a/app/javascript/mastodon/features/list_timeline/index.jsx
++++ b/app/javascript/mastodon/features/list_timeline/index.jsx
+@@ -31,8 +31,6 @@ const mapStateToProps = (state, props) => ({
+   hasUnread: state.getIn(['timelines', `list:${props.params.id}`, 'unread']) > 0,
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class ListTimeline extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -219,3 +217,5 @@ class ListTimeline extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(ListTimeline));
+diff --git a/app/javascript/mastodon/features/lists/components/new_list_form.jsx b/app/javascript/mastodon/features/lists/components/new_list_form.jsx
+index 4e00e5200..50b52518e 100644
+--- a/app/javascript/mastodon/features/lists/components/new_list_form.jsx
++++ b/app/javascript/mastodon/features/lists/components/new_list_form.jsx
+@@ -20,8 +20,6 @@ const mapDispatchToProps = dispatch => ({
+   onSubmit: () => dispatch(submitListEditor(true)),
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class NewListForm extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -75,3 +73,5 @@ class NewListForm extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(NewListForm));
+diff --git a/app/javascript/mastodon/features/lists/index.jsx b/app/javascript/mastodon/features/lists/index.jsx
+index 3a0b1373a..afd645a30 100644
+--- a/app/javascript/mastodon/features/lists/index.jsx
++++ b/app/javascript/mastodon/features/lists/index.jsx
+@@ -32,8 +32,6 @@ const mapStateToProps = state => ({
+   lists: getOrderedLists(state),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Lists extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -87,3 +85,5 @@ class Lists extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Lists));
+diff --git a/app/javascript/mastodon/features/mutes/index.jsx b/app/javascript/mastodon/features/mutes/index.jsx
+index 65df6149f..5c05d2f70 100644
+--- a/app/javascript/mastodon/features/mutes/index.jsx
++++ b/app/javascript/mastodon/features/mutes/index.jsx
+@@ -23,8 +23,6 @@ const mapStateToProps = state => ({
+   isLoading: state.getIn(['user_lists', 'mutes', 'isLoading'], true),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Mutes extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -82,3 +80,5 @@ class Mutes extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Mutes));
+diff --git a/app/javascript/mastodon/features/notifications/components/filter_bar.jsx b/app/javascript/mastodon/features/notifications/components/filter_bar.jsx
+index 368eb0b7e..88e95cf48 100644
+--- a/app/javascript/mastodon/features/notifications/components/filter_bar.jsx
++++ b/app/javascript/mastodon/features/notifications/components/filter_bar.jsx
+@@ -12,7 +12,6 @@ const tooltips = defineMessages({
+   statuses: { id: 'notifications.filter.statuses', defaultMessage: 'Updates from people you follow' },
+ });
+ 
+-export default @injectIntl
+ class FilterBar extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -108,3 +107,5 @@ class FilterBar extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(FilterBar);
+diff --git a/app/javascript/mastodon/features/notifications/components/follow_request.jsx b/app/javascript/mastodon/features/notifications/components/follow_request.jsx
+index 08de875e3..01bf67065 100644
+--- a/app/javascript/mastodon/features/notifications/components/follow_request.jsx
++++ b/app/javascript/mastodon/features/notifications/components/follow_request.jsx
+@@ -1,4 +1,4 @@
+-import React, { Fragment } from 'react';
++import React from 'react';
+ import ImmutablePropTypes from 'react-immutable-proptypes';
+ import PropTypes from 'prop-types';
+ import Avatar from 'mastodon/components/avatar';
+@@ -13,7 +13,6 @@ const messages = defineMessages({
+   reject: { id: 'follow_request.reject', defaultMessage: 'Reject' },
+ });
+ 
+-export default @injectIntl
+ class FollowRequest extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -32,10 +31,10 @@ class FollowRequest extends ImmutablePureComponent {
+ 
+     if (hidden) {
+       return (
+-        <Fragment>
++        <React.Fragment>
+           {account.get('display_name')}
+           {account.get('username')}
+-        </Fragment>
++        </React.Fragment>
+       );
+     }
+ 
+@@ -57,3 +56,5 @@ class FollowRequest extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(FollowRequest);
+diff --git a/app/javascript/mastodon/features/notifications/components/notification.jsx b/app/javascript/mastodon/features/notifications/components/notification.jsx
+index 9e2517f08..cf9d9f72c 100644
+--- a/app/javascript/mastodon/features/notifications/components/notification.jsx
++++ b/app/javascript/mastodon/features/notifications/components/notification.jsx
+@@ -33,7 +33,6 @@ const notificationForScreenReader = (intl, message, timestamp) => {
+   return output.join(', ');
+ };
+ 
+-export default @injectIntl
+ class Notification extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -447,3 +446,5 @@ class Notification extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Notification);
+diff --git a/app/javascript/mastodon/features/notifications/components/notifications_permission_banner.jsx b/app/javascript/mastodon/features/notifications/components/notifications_permission_banner.jsx
+index 3a7556c1d..c54137e60 100644
+--- a/app/javascript/mastodon/features/notifications/components/notifications_permission_banner.jsx
++++ b/app/javascript/mastodon/features/notifications/components/notifications_permission_banner.jsx
+@@ -12,8 +12,6 @@ const messages = defineMessages({
+   close: { id: 'lightbox.close', defaultMessage: 'Close' },
+ });
+ 
+-export default @connect()
+-@injectIntl
+ class NotificationsPermissionBanner extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -46,3 +44,5 @@ class NotificationsPermissionBanner extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect()(injectIntl(NotificationsPermissionBanner));
+diff --git a/app/javascript/mastodon/features/notifications/components/report.jsx b/app/javascript/mastodon/features/notifications/components/report.jsx
+index 3ce3eb9d3..4663b2359 100644
+--- a/app/javascript/mastodon/features/notifications/components/report.jsx
++++ b/app/javascript/mastodon/features/notifications/components/report.jsx
+@@ -13,7 +13,6 @@ const messages = defineMessages({
+   violation: { id: 'report_notification.categories.violation', defaultMessage: 'Rule violation' },
+ });
+ 
+-export default @injectIntl
+ class Report extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -60,3 +59,5 @@ class Report extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Report);
+diff --git a/app/javascript/mastodon/features/notifications/index.jsx b/app/javascript/mastodon/features/notifications/index.jsx
+index fee016a02..bb8852abf 100644
+--- a/app/javascript/mastodon/features/notifications/index.jsx
++++ b/app/javascript/mastodon/features/notifications/index.jsx
+@@ -67,8 +67,6 @@ const mapStateToProps = state => ({
+   needsNotificationPermission: state.getIn(['settings', 'notifications', 'alerts']).includes(true) && state.getIn(['notifications', 'browserSupport']) && state.getIn(['notifications', 'browserPermission']) === 'default' && !state.getIn(['settings', 'notifications', 'dismissPermissionBanner']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Notifications extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -288,3 +286,5 @@ class Notifications extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Notifications));
+diff --git a/app/javascript/mastodon/features/picture_in_picture/components/footer.jsx b/app/javascript/mastodon/features/picture_in_picture/components/footer.jsx
+index 0ee6d06c7..66124f331 100644
+--- a/app/javascript/mastodon/features/picture_in_picture/components/footer.jsx
++++ b/app/javascript/mastodon/features/picture_in_picture/components/footer.jsx
+@@ -37,8 +37,6 @@ const makeMapStateToProps = () => {
+   return mapStateToProps;
+ };
+ 
+-export default @connect(makeMapStateToProps)
+-@injectIntl
+ class Footer extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -190,3 +188,5 @@ class Footer extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps)(injectIntl(Footer));
+diff --git a/app/javascript/mastodon/features/picture_in_picture/components/header.jsx b/app/javascript/mastodon/features/picture_in_picture/components/header.jsx
+index e05d8c62e..100f9db7a 100644
+--- a/app/javascript/mastodon/features/picture_in_picture/components/header.jsx
++++ b/app/javascript/mastodon/features/picture_in_picture/components/header.jsx
+@@ -17,8 +17,6 @@ const mapStateToProps = (state, { accountId }) => ({
+   account: state.getIn(['accounts', accountId]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Header extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -45,3 +43,5 @@ class Header extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Header));
+diff --git a/app/javascript/mastodon/features/picture_in_picture/index.jsx b/app/javascript/mastodon/features/picture_in_picture/index.jsx
+index 01a7d43f2..ae48a1b4e 100644
+--- a/app/javascript/mastodon/features/picture_in_picture/index.jsx
++++ b/app/javascript/mastodon/features/picture_in_picture/index.jsx
+@@ -11,7 +11,6 @@ const mapStateToProps = state => ({
+   ...state.get('picture_in_picture'),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class PictureInPicture extends React.Component {
+ 
+   static propTypes = {
+@@ -83,3 +82,5 @@ class PictureInPicture extends React.Component {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(PictureInPicture);
+diff --git a/app/javascript/mastodon/features/pinned_statuses/index.jsx b/app/javascript/mastodon/features/pinned_statuses/index.jsx
+index 504fda415..24a0b6d2e 100644
+--- a/app/javascript/mastodon/features/pinned_statuses/index.jsx
++++ b/app/javascript/mastodon/features/pinned_statuses/index.jsx
+@@ -19,8 +19,6 @@ const mapStateToProps = state => ({
+   hasMore: !!state.getIn(['status_lists', 'pins', 'next']),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class PinnedStatuses extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -63,3 +61,5 @@ class PinnedStatuses extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(PinnedStatuses));
+diff --git a/app/javascript/mastodon/features/privacy_policy/index.jsx b/app/javascript/mastodon/features/privacy_policy/index.jsx
+index 3df487e8f..d5bbda6a3 100644
+--- a/app/javascript/mastodon/features/privacy_policy/index.jsx
++++ b/app/javascript/mastodon/features/privacy_policy/index.jsx
+@@ -10,7 +10,6 @@ const messages = defineMessages({
+   title: { id: 'privacy_policy.title', defaultMessage: 'Privacy Policy' },
+ });
+ 
+-export default @injectIntl
+ class PrivacyPolicy extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -59,3 +58,5 @@ class PrivacyPolicy extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(PrivacyPolicy);
+diff --git a/app/javascript/mastodon/features/public_timeline/components/column_settings.jsx b/app/javascript/mastodon/features/public_timeline/components/column_settings.jsx
+index 756b6fe06..bf8a8323e 100644
+--- a/app/javascript/mastodon/features/public_timeline/components/column_settings.jsx
++++ b/app/javascript/mastodon/features/public_timeline/components/column_settings.jsx
+@@ -4,7 +4,6 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
+ import { injectIntl, FormattedMessage } from 'react-intl';
+ import SettingToggle from '../../notifications/components/setting_toggle';
+ 
+-export default @injectIntl
+ class ColumnSettings extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -28,3 +27,5 @@ class ColumnSettings extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ColumnSettings);
+diff --git a/app/javascript/mastodon/features/public_timeline/index.jsx b/app/javascript/mastodon/features/public_timeline/index.jsx
+index aaef45c86..f89caa2c9 100644
+--- a/app/javascript/mastodon/features/public_timeline/index.jsx
++++ b/app/javascript/mastodon/features/public_timeline/index.jsx
+@@ -31,8 +31,6 @@ const mapStateToProps = (state, { columnId }) => {
+   };
+ };
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class PublicTimeline extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -160,3 +158,5 @@ class PublicTimeline extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(PublicTimeline));
+diff --git a/app/javascript/mastodon/features/reblogs/index.jsx b/app/javascript/mastodon/features/reblogs/index.jsx
+index 31e5dc1d4..35edb0d6a 100644
+--- a/app/javascript/mastodon/features/reblogs/index.jsx
++++ b/app/javascript/mastodon/features/reblogs/index.jsx
+@@ -21,8 +21,6 @@ const mapStateToProps = (state, props) => ({
+   accountIds: state.getIn(['user_lists', 'reblogged_by', props.params.statusId]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Reblogs extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -90,3 +88,5 @@ class Reblogs extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Reblogs));
+diff --git a/app/javascript/mastodon/features/report/category.jsx b/app/javascript/mastodon/features/report/category.jsx
+index c6c0a506f..492a533f2 100644
+--- a/app/javascript/mastodon/features/report/category.jsx
++++ b/app/javascript/mastodon/features/report/category.jsx
+@@ -24,8 +24,6 @@ const mapStateToProps = state => ({
+   rules: state.getIn(['server', 'server', 'rules'], ImmutableList()),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class Category extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -104,3 +102,5 @@ class Category extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(Category));
+diff --git a/app/javascript/mastodon/features/report/comment.jsx b/app/javascript/mastodon/features/report/comment.jsx
+index cde156415..ab29f6c22 100644
+--- a/app/javascript/mastodon/features/report/comment.jsx
++++ b/app/javascript/mastodon/features/report/comment.jsx
+@@ -8,7 +8,6 @@ const messages = defineMessages({
+   placeholder: { id: 'report.placeholder', defaultMessage: 'Type or paste additional comments' },
+ });
+ 
+-export default @injectIntl
+ class Comment extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -81,3 +80,5 @@ class Comment extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Comment);
+diff --git a/app/javascript/mastodon/features/report/components/status_check_box.jsx b/app/javascript/mastodon/features/report/components/status_check_box.jsx
+index 5366da90b..28d572e89 100644
+--- a/app/javascript/mastodon/features/report/components/status_check_box.jsx
++++ b/app/javascript/mastodon/features/report/components/status_check_box.jsx
+@@ -17,7 +17,6 @@ const messages = defineMessages({
+   direct_short: { id: 'privacy.direct.short', defaultMessage: 'Mentioned people only' },
+ });
+ 
+-export default @injectIntl
+ class StatusCheckBox extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -80,3 +79,5 @@ class StatusCheckBox extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(StatusCheckBox);
+diff --git a/app/javascript/mastodon/features/report/rules.jsx b/app/javascript/mastodon/features/report/rules.jsx
+index 920da68d6..b500c0503 100644
+--- a/app/javascript/mastodon/features/report/rules.jsx
++++ b/app/javascript/mastodon/features/report/rules.jsx
+@@ -10,7 +10,6 @@ const mapStateToProps = state => ({
+   rules: state.getIn(['server', 'server', 'rules']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class Rules extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -62,3 +61,5 @@ class Rules extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Rules);
+diff --git a/app/javascript/mastodon/features/report/statuses.jsx b/app/javascript/mastodon/features/report/statuses.jsx
+index d5d86034f..87163aeb8 100644
+--- a/app/javascript/mastodon/features/report/statuses.jsx
++++ b/app/javascript/mastodon/features/report/statuses.jsx
+@@ -13,7 +13,6 @@ const mapStateToProps = (state, { accountId }) => ({
+   isLoading: state.getIn(['timelines', `account:${accountId}:with_replies`, 'isLoading']),
+ });
+ 
+-export default @connect(mapStateToProps)
+ class Statuses extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -59,3 +58,5 @@ class Statuses extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Statuses);
+diff --git a/app/javascript/mastodon/features/report/thanks.jsx b/app/javascript/mastodon/features/report/thanks.jsx
+index d169b1e32..4e5b6e864 100644
+--- a/app/javascript/mastodon/features/report/thanks.jsx
++++ b/app/javascript/mastodon/features/report/thanks.jsx
+@@ -12,7 +12,6 @@ import {
+ 
+ const mapStateToProps = () => ({});
+ 
+-export default @connect(mapStateToProps)
+ class Thanks extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -82,3 +81,5 @@ class Thanks extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(Thanks);
+diff --git a/app/javascript/mastodon/features/status/components/action_bar.jsx b/app/javascript/mastodon/features/status/components/action_bar.jsx
+index 0d4767331..5cbe4984c 100644
+--- a/app/javascript/mastodon/features/status/components/action_bar.jsx
++++ b/app/javascript/mastodon/features/status/components/action_bar.jsx
+@@ -47,8 +47,6 @@ const mapStateToProps = (state, { status }) => ({
+   relationship: state.getIn(['relationships', status.getIn(['account', 'id'])]),
+ });
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+ class ActionBar extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -298,3 +296,5 @@ class ActionBar extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(ActionBar));
+diff --git a/app/javascript/mastodon/features/status/components/detailed_status.jsx b/app/javascript/mastodon/features/status/components/detailed_status.jsx
+index f9ff57261..8a2194450 100644
+--- a/app/javascript/mastodon/features/status/components/detailed_status.jsx
++++ b/app/javascript/mastodon/features/status/components/detailed_status.jsx
+@@ -25,7 +25,6 @@ const messages = defineMessages({
+   direct_short: { id: 'privacy.direct.short', defaultMessage: 'Direct' },
+ });
+ 
+-export default  @injectIntl
+ class DetailedStatus extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -289,3 +288,5 @@ class DetailedStatus extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(DetailedStatus);
+diff --git a/app/javascript/mastodon/features/status/index.jsx b/app/javascript/mastodon/features/status/index.jsx
+index 2c6728fc0..358ad14c4 100644
+--- a/app/javascript/mastodon/features/status/index.jsx
++++ b/app/javascript/mastodon/features/status/index.jsx
+@@ -176,8 +176,6 @@ const titleFromStatus = status => {
+   return `${prefix}: "${truncate(text, 30)}"`;
+ };
+ 
+-export default @injectIntl
+-@connect(makeMapStateToProps)
+ class Status extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -684,3 +682,5 @@ class Status extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(connect(makeMapStateToProps)(Status));
+diff --git a/app/javascript/mastodon/features/subscribed_languages_modal/index.jsx b/app/javascript/mastodon/features/subscribed_languages_modal/index.jsx
+index f1360613e..04fe31b5c 100644
+--- a/app/javascript/mastodon/features/subscribed_languages_modal/index.jsx
++++ b/app/javascript/mastodon/features/subscribed_languages_modal/index.jsx
+@@ -36,8 +36,6 @@ const mapDispatchToProps = (dispatch, { accountId }) => ({
+ 
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class SubscribedLanguagesModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -123,3 +121,5 @@ class SubscribedLanguagesModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(SubscribedLanguagesModal));
+diff --git a/app/javascript/mastodon/features/ui/components/audio_modal.jsx b/app/javascript/mastodon/features/ui/components/audio_modal.jsx
+index a2fa8c49c..c0ac12ba7 100644
+--- a/app/javascript/mastodon/features/ui/components/audio_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/audio_modal.jsx
+@@ -11,7 +11,6 @@ const mapStateToProps = (state, { statusId }) => ({
+   accountStaticAvatar: state.getIn(['accounts', state.getIn(['statuses', statusId, 'account']), 'avatar_static']),
+ });
+ 
+-export default @connect(mapStateToProps, null, null, { forwardRef: true })
+ class AudioModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -55,3 +54,5 @@ class AudioModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, null, null, { forwardRef: true })(AudioModal);
+diff --git a/app/javascript/mastodon/features/ui/components/block_modal.jsx b/app/javascript/mastodon/features/ui/components/block_modal.jsx
+index 6c9d2043c..a9506aa69 100644
+--- a/app/javascript/mastodon/features/ui/components/block_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/block_modal.jsx
+@@ -36,8 +36,6 @@ const mapDispatchToProps = dispatch => {
+   };
+ };
+ 
+-export default @connect(makeMapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class BlockModal extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -101,3 +99,5 @@ class BlockModal extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps, mapDispatchToProps)(injectIntl(BlockModal));
+diff --git a/app/javascript/mastodon/features/ui/components/boost_modal.jsx b/app/javascript/mastodon/features/ui/components/boost_modal.jsx
+index d6a6cea31..fe55c963a 100644
+--- a/app/javascript/mastodon/features/ui/components/boost_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/boost_modal.jsx
+@@ -38,8 +38,6 @@ const mapDispatchToProps = dispatch => {
+   };
+ };
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class BoostModal extends ImmutablePureComponent {
+ 
+   static contextTypes = {
+@@ -140,3 +138,5 @@ class BoostModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(BoostModal));
+diff --git a/app/javascript/mastodon/features/ui/components/bundle_column_error.jsx b/app/javascript/mastodon/features/ui/components/bundle_column_error.jsx
+index 9955173eb..dc9b0e539 100644
+--- a/app/javascript/mastodon/features/ui/components/bundle_column_error.jsx
++++ b/app/javascript/mastodon/features/ui/components/bundle_column_error.jsx
+@@ -92,7 +92,6 @@ class CopyButton extends React.PureComponent {
+ 
+ }
+ 
+-export default @injectIntl
+ class BundleColumnError extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -160,3 +159,5 @@ class BundleColumnError extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(BundleColumnError);
+diff --git a/app/javascript/mastodon/features/ui/components/compare_history_modal.jsx b/app/javascript/mastodon/features/ui/components/compare_history_modal.jsx
+index cbb1567b7..1802c167c 100644
+--- a/app/javascript/mastodon/features/ui/components/compare_history_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/compare_history_modal.jsx
+@@ -24,7 +24,6 @@ const mapDispatchToProps = dispatch => ({
+ 
+ });
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+ class CompareHistoryModal extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -100,3 +99,5 @@ class CompareHistoryModal extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(CompareHistoryModal);
+diff --git a/app/javascript/mastodon/features/ui/components/compose_panel.jsx b/app/javascript/mastodon/features/ui/components/compose_panel.jsx
+index 6cb352322..1b0a0c74a 100644
+--- a/app/javascript/mastodon/features/ui/components/compose_panel.jsx
++++ b/app/javascript/mastodon/features/ui/components/compose_panel.jsx
+@@ -8,7 +8,6 @@ import LinkFooter from './link_footer';
+ import ServerBanner from 'mastodon/components/server_banner';
+ import { changeComposing, mountCompose, unmountCompose } from 'mastodon/actions/compose';
+ 
+-export default @connect()
+ class ComposePanel extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -66,3 +65,5 @@ class ComposePanel extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(ComposePanel);
+diff --git a/app/javascript/mastodon/features/ui/components/confirmation_modal.jsx b/app/javascript/mastodon/features/ui/components/confirmation_modal.jsx
+index b023b00b2..4437567a1 100644
+--- a/app/javascript/mastodon/features/ui/components/confirmation_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/confirmation_modal.jsx
+@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
+ import { injectIntl, FormattedMessage } from 'react-intl';
+ import Button from '../../../components/button';
+ 
+-export default @injectIntl
+ class ConfirmationModal extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -68,3 +67,5 @@ class ConfirmationModal extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ConfirmationModal);
+diff --git a/app/javascript/mastodon/features/ui/components/disabled_account_banner.jsx b/app/javascript/mastodon/features/ui/components/disabled_account_banner.jsx
+index 35520478b..ea11cea44 100644
+--- a/app/javascript/mastodon/features/ui/components/disabled_account_banner.jsx
++++ b/app/javascript/mastodon/features/ui/components/disabled_account_banner.jsx
+@@ -28,8 +28,6 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
+   },
+ });
+ 
+-export default @injectIntl
+-@connect(mapStateToProps, mapDispatchToProps)
+ class DisabledAccountBanner extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -90,3 +88,5 @@ class DisabledAccountBanner extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(connect(mapStateToProps, mapDispatchToProps)(DisabledAccountBanner));
+diff --git a/app/javascript/mastodon/features/ui/components/embed_modal.jsx b/app/javascript/mastodon/features/ui/components/embed_modal.jsx
+index a054dd3cf..baf6be411 100644
+--- a/app/javascript/mastodon/features/ui/components/embed_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/embed_modal.jsx
+@@ -9,7 +9,6 @@ const messages = defineMessages({
+   close: { id: 'lightbox.close', defaultMessage: 'Close' },
+ });
+ 
+-export default @injectIntl
+ class EmbedModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -95,3 +94,5 @@ class EmbedModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default injectIntl(EmbedModal);
+diff --git a/app/javascript/mastodon/features/ui/components/filter_modal.jsx b/app/javascript/mastodon/features/ui/components/filter_modal.jsx
+index 376db961d..32ebaf7b7 100644
+--- a/app/javascript/mastodon/features/ui/components/filter_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/filter_modal.jsx
+@@ -13,8 +13,6 @@ const messages = defineMessages({
+   close: { id: 'lightbox.close', defaultMessage: 'Close' },
+ });
+ 
+-export default @connect(undefined)
+-@injectIntl
+ class FilterModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -132,3 +130,5 @@ class FilterModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(injectIntl(FilterModal));
+diff --git a/app/javascript/mastodon/features/ui/components/focal_point_modal.jsx b/app/javascript/mastodon/features/ui/components/focal_point_modal.jsx
+index 6e8d017ee..11c4c5237 100644
+--- a/app/javascript/mastodon/features/ui/components/focal_point_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/focal_point_modal.jsx
+@@ -100,8 +100,6 @@ class ImageLoader extends React.PureComponent {
+ 
+ }
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps, null, { forwardRef: true })
+-@(component => injectIntl(component, { withRef: true }))
+ class FocalPointModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -428,3 +426,7 @@ class FocalPointModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps, null, {
++  forwardRef: true,
++})(injectIntl(FocalPointModal, { withRef: true }));
+diff --git a/app/javascript/mastodon/features/ui/components/follow_requests_column_link.jsx b/app/javascript/mastodon/features/ui/components/follow_requests_column_link.jsx
+index 8d4057782..1cd1b79bc 100644
+--- a/app/javascript/mastodon/features/ui/components/follow_requests_column_link.jsx
++++ b/app/javascript/mastodon/features/ui/components/follow_requests_column_link.jsx
+@@ -15,8 +15,6 @@ const mapStateToProps = state => ({
+   count: state.getIn(['user_lists', 'follow_requests', 'items'], ImmutableList()).size,
+ });
+ 
+-export default @injectIntl
+-@connect(mapStateToProps)
+ class FollowRequestsColumnLink extends React.Component {
+ 
+   static propTypes = {
+@@ -49,3 +47,5 @@ class FollowRequestsColumnLink extends React.Component {
+   }
+ 
+ }
++
++export default injectIntl(connect(mapStateToProps)(FollowRequestsColumnLink));
+diff --git a/app/javascript/mastodon/features/ui/components/header.jsx b/app/javascript/mastodon/features/ui/components/header.jsx
+index 92adc47a9..c14c6faa7 100644
+--- a/app/javascript/mastodon/features/ui/components/header.jsx
++++ b/app/javascript/mastodon/features/ui/components/header.jsx
+@@ -22,8 +22,6 @@ const mapDispatchToProps = (dispatch) => ({
+   },
+ });
+ 
+-export default @withRouter
+-@connect(null, mapDispatchToProps)
+ class Header extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -85,3 +83,5 @@ class Header extends React.PureComponent {
+   }
+ 
+ }
++
++export default withRouter(connect(null, mapDispatchToProps)(Header));
+diff --git a/app/javascript/mastodon/features/ui/components/image_modal.jsx b/app/javascript/mastodon/features/ui/components/image_modal.jsx
+index 7522c3da5..ca93d7b4e 100644
+--- a/app/javascript/mastodon/features/ui/components/image_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/image_modal.jsx
+@@ -9,7 +9,6 @@ const messages = defineMessages({
+   close: { id: 'lightbox.close', defaultMessage: 'Close' },
+ });
+ 
+-export default @injectIntl
+ class ImageModal extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -57,3 +56,5 @@ class ImageModal extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ImageModal);
+diff --git a/app/javascript/mastodon/features/ui/components/link_footer.jsx b/app/javascript/mastodon/features/ui/components/link_footer.jsx
+index be2111207..68ef015ab 100644
+--- a/app/javascript/mastodon/features/ui/components/link_footer.jsx
++++ b/app/javascript/mastodon/features/ui/components/link_footer.jsx
+@@ -24,8 +24,6 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
+   },
+ });
+ 
+-export default @injectIntl
+-@connect(null, mapDispatchToProps)
+ class LinkFooter extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -100,3 +98,5 @@ class LinkFooter extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(connect(null, mapDispatchToProps)(LinkFooter));
+diff --git a/app/javascript/mastodon/features/ui/components/list_panel.jsx b/app/javascript/mastodon/features/ui/components/list_panel.jsx
+index 2f92a9254..fcff4e37d 100644
+--- a/app/javascript/mastodon/features/ui/components/list_panel.jsx
++++ b/app/javascript/mastodon/features/ui/components/list_panel.jsx
+@@ -20,8 +20,6 @@ const mapStateToProps = state => ({
+   lists: getOrderedLists(state),
+ });
+ 
+-export default @withRouter
+-@connect(mapStateToProps)
+ class ListPanel extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -53,3 +51,5 @@ class ListPanel extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default withRouter(connect(mapStateToProps)(ListPanel));
+diff --git a/app/javascript/mastodon/features/ui/components/media_modal.jsx b/app/javascript/mastodon/features/ui/components/media_modal.jsx
+index 086da8cf5..aa179a965 100644
+--- a/app/javascript/mastodon/features/ui/components/media_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/media_modal.jsx
+@@ -25,8 +25,6 @@ const mapStateToProps = (state, { statusId }) => ({
+   language: state.getIn(['statuses', statusId, 'language']),
+ });
+ 
+-export default @connect(mapStateToProps, null, null, { forwardRef: true })
+-@injectIntl
+ class MediaModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -257,3 +255,5 @@ class MediaModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, null, null, { forwardRef: true })(injectIntl(MediaModal));
+diff --git a/app/javascript/mastodon/features/ui/components/mute_modal.jsx b/app/javascript/mastodon/features/ui/components/mute_modal.jsx
+index b3e0ef56b..fa64bf0f4 100644
+--- a/app/javascript/mastodon/features/ui/components/mute_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/mute_modal.jsx
+@@ -43,8 +43,6 @@ const mapDispatchToProps = dispatch => {
+   };
+ };
+ 
+-export default @connect(mapStateToProps, mapDispatchToProps)
+-@injectIntl
+ class MuteModal extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -138,3 +136,5 @@ class MuteModal extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(MuteModal));
+diff --git a/app/javascript/mastodon/features/ui/components/navigation_panel.jsx b/app/javascript/mastodon/features/ui/components/navigation_panel.jsx
+index 755b19349..90a3fcdf7 100644
+--- a/app/javascript/mastodon/features/ui/components/navigation_panel.jsx
++++ b/app/javascript/mastodon/features/ui/components/navigation_panel.jsx
+@@ -28,7 +28,6 @@ const messages = defineMessages({
+   search: { id: 'navigation_bar.search', defaultMessage: 'Search' },
+ });
+ 
+-export default @injectIntl
+ class NavigationPanel extends React.Component {
+ 
+   static contextTypes = {
+@@ -105,3 +104,5 @@ class NavigationPanel extends React.Component {
+   }
+ 
+ }
++
++export default injectIntl(NavigationPanel);
+diff --git a/app/javascript/mastodon/features/ui/components/report_modal.jsx b/app/javascript/mastodon/features/ui/components/report_modal.jsx
+index 22c31eb52..8b505b8bd 100644
+--- a/app/javascript/mastodon/features/ui/components/report_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/report_modal.jsx
+@@ -30,8 +30,6 @@ const makeMapStateToProps = () => {
+   return mapStateToProps;
+ };
+ 
+-export default @connect(makeMapStateToProps)
+-@injectIntl
+ class ReportModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -217,3 +215,5 @@ class ReportModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(makeMapStateToProps)(injectIntl(ReportModal));
+diff --git a/app/javascript/mastodon/features/ui/components/video_modal.jsx b/app/javascript/mastodon/features/ui/components/video_modal.jsx
+index 1737d52db..99359a58c 100644
+--- a/app/javascript/mastodon/features/ui/components/video_modal.jsx
++++ b/app/javascript/mastodon/features/ui/components/video_modal.jsx
+@@ -11,7 +11,6 @@ const mapStateToProps = (state, { statusId }) => ({
+   language: state.getIn(['statuses', statusId, 'language']),
+ });
+ 
+-export default @connect(mapStateToProps, null, null, { forwardRef: true })
+ class VideoModal extends ImmutablePureComponent {
+ 
+   static propTypes = {
+@@ -68,3 +67,5 @@ class VideoModal extends ImmutablePureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps, null, null, { forwardRef: true })(VideoModal);
+diff --git a/app/javascript/mastodon/features/ui/components/zoomable_image.jsx b/app/javascript/mastodon/features/ui/components/zoomable_image.jsx
+index 7faba4c10..b41d0fe31 100644
+--- a/app/javascript/mastodon/features/ui/components/zoomable_image.jsx
++++ b/app/javascript/mastodon/features/ui/components/zoomable_image.jsx
+@@ -91,7 +91,6 @@ const normalizeWheel = event => {
+   };
+ };
+ 
+-export default @injectIntl
+ class ZoomableImage extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -451,3 +450,5 @@ class ZoomableImage extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(ZoomableImage);
+diff --git a/app/javascript/mastodon/features/ui/index.jsx b/app/javascript/mastodon/features/ui/index.jsx
+index 083707220..0e73f4c09 100644
+--- a/app/javascript/mastodon/features/ui/index.jsx
++++ b/app/javascript/mastodon/features/ui/index.jsx
+@@ -229,9 +229,6 @@ class SwitchingColumnsArea extends React.PureComponent {
+ 
+ }
+ 
+-export default @connect(mapStateToProps)
+-@injectIntl
+-@withRouter
+ class UI extends React.PureComponent {
+ 
+   static contextTypes = {
+@@ -588,3 +585,5 @@ class UI extends React.PureComponent {
+   }
+ 
+ }
++
++export default connect(mapStateToProps)(injectIntl(withRouter(UI)));
+diff --git a/app/javascript/mastodon/features/video/index.jsx b/app/javascript/mastodon/features/video/index.jsx
+index dc722a7a7..58bb45908 100644
+--- a/app/javascript/mastodon/features/video/index.jsx
++++ b/app/javascript/mastodon/features/video/index.jsx
+@@ -94,7 +94,6 @@ export const fileNameFromURL = str => {
+   return pathname.slice(index + 1);
+ };
+ 
+-export default @injectIntl
+ class Video extends React.PureComponent {
+ 
+   static propTypes = {
+@@ -655,3 +654,5 @@ class Video extends React.PureComponent {
+   }
+ 
+ }
++
++export default injectIntl(Video);
+diff --git a/babel.config.js b/babel.config.js
+index b040cc159..3ff98802c 100644
+--- a/babel.config.js
++++ b/babel.config.js
+@@ -17,7 +17,6 @@ module.exports = (api) => {
+       ['@babel/env', envOptions],
+     ],
+     plugins: [
+-      ['@babel/proposal-decorators', { legacy: true }],
+       ['react-intl', { messagesDir: './build/messages' }],
+       'preval',
+     ],
+diff --git a/package.json b/package.json
+index ed9f72e8c..045db8d14 100644
+--- a/package.json
++++ b/package.json
+@@ -25,7 +25,6 @@
+   "private": true,
+   "dependencies": {
+     "@babel/core": "^7.21.3",
+-    "@babel/plugin-proposal-decorators": "^7.21.0",
+     "@babel/plugin-transform-react-inline-elements": "^7.21.0",
+     "@babel/plugin-transform-runtime": "^7.21.0",
+     "@babel/preset-env": "^7.20.2",
+diff --git a/yarn.lock b/yarn.lock
+index 3d6379246..d2be342c9 100644
+--- a/yarn.lock
++++ b/yarn.lock
+@@ -24,7 +24,7 @@
+     jsonpointer "^5.0.0"
+     leven "^3.1.0"
+ 
+-"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6":
++"@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.7", "@babel/code-frame@^7.18.6":
+   version "7.18.6"
+   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.18.6.tgz#3b25d38c89600baa2dcc219edfa88a74eb2c427a"
+   integrity sha512-TDCmlK5eOvH+eH7cdAFlNXeVJqWIQ7gW9tY1GJIpUtFb6CmjVyq2VM3u71bOyR8CRihcCgMUYoDNyLXao3+70Q==
+@@ -71,7 +71,16 @@
+     eslint-visitor-keys "^2.1.0"
+     semver "^6.3.0"
+ 
+-"@babel/generator@^7.21.3", "@babel/generator@^7.7.2":
++"@babel/generator@^7.17.10":
++  version "7.18.6"
++  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.18.6.tgz#9ab2d46d3cbf631f0e80f72e72874a04c3fc12a9"
++  integrity sha512-AIwwoOS8axIC5MZbhNHRLKi3D+DMpvDf9XUcu3pIVAfOHFT45f4AoDAltRbHIQomCipkCZxrNkfpOEHhJz/VKw==
++  dependencies:
++    "@babel/types" "^7.18.6"
++    "@jridgewell/gen-mapping" "^0.3.0"
++    jsesc "^2.5.1"
++
++"@babel/generator@^7.21.3":
+   version "7.21.3"
+   resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.21.3.tgz#232359d0874b392df04045d72ce2fd9bb5045fce"
+   integrity sha512-QS3iR1GYC/YGUnW7IdggFeN5c1poPUurnGttOV/bZgPGV+izC/D8HnD6DLwod0fsatNyVn1G3EVWMYIF0nHbeA==
+@@ -81,6 +90,15 @@
+     "@jridgewell/trace-mapping" "^0.3.17"
+     jsesc "^2.5.1"
+ 
++"@babel/generator@^7.7.2":
++  version "7.17.10"
++  resolved "https://registry.yarnpkg.com/@babel/generator/-/generator-7.17.10.tgz#c281fa35b0c349bbe9d02916f4ae08fc85ed7189"
++  integrity sha512-46MJZZo9y3o4kmhBVc7zW7i8dtR1oIK/sdO5NcfcZRhTGYi+KKJRtHNgsU6c4VUcJmUNV/LQdebD/9Dlv4K+Tg==
++  dependencies:
++    "@babel/types" "^7.17.10"
++    "@jridgewell/gen-mapping" "^0.1.0"
++    jsesc "^2.5.1"
++
+ "@babel/helper-annotate-as-pure@^7.18.6":
+   version "7.18.6"
+   resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.18.6.tgz#eaa49f6f80d5a33f9a5dd2276e6d6e451be0a6bb"
+@@ -115,7 +133,7 @@
+     lru-cache "^5.1.1"
+     semver "^6.3.0"
+ 
+-"@babel/helper-create-class-features-plugin@^7.18.6", "@babel/helper-create-class-features-plugin@^7.21.0":
++"@babel/helper-create-class-features-plugin@^7.18.6":
+   version "7.21.0"
+   resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.21.0.tgz#64f49ecb0020532f19b1d014b03bccaa1ab85fb9"
+   integrity sha512-Q8wNiMIdwsv5la5SPxNYzzkPnjgC0Sy0i7jLkVOCdllu/xcVNkr3TeZzbHBJrj+XXRqzX5uCyCoV9eu6xUG7KQ==
+@@ -149,6 +167,11 @@
+     resolve "^1.14.2"
+     semver "^6.1.2"
+ 
++"@babel/helper-environment-visitor@^7.16.7":
++  version "7.18.6"
++  resolved "https://registry.yarnpkg.com/@babel/helper-environment-visitor/-/helper-environment-visitor-7.18.6.tgz#b7eee2b5b9d70602e59d1a6cad7dd24de7ca6cd7"
++  integrity sha512-8n6gSfn2baOY+qlp+VSzsosjCVGFqWKmDF0cCWOybh52Dw3SEyoWR1KrhMJASjLwIEkkAufZ0xvr+SxLHSpy2Q==
++
+ "@babel/helper-environment-visitor@^7.18.9":
+   version "7.18.9"
+   resolved "https://registry.yarnpkg.com/@babel/helper-environment-visitor/-/helper-environment-visitor-7.18.9.tgz#0c0cee9b35d2ca190478756865bb3528422f51be"
+@@ -161,6 +184,14 @@
+   dependencies:
+     "@babel/types" "^7.18.6"
+ 
++"@babel/helper-function-name@^7.17.9":
++  version "7.18.6"
++  resolved "https://registry.yarnpkg.com/@babel/helper-function-name/-/helper-function-name-7.18.6.tgz#8334fecb0afba66e6d87a7e8c6bb7fed79926b83"
++  integrity sha512-0mWMxV1aC97dhjCah5U5Ua7668r5ZmSC2DLfH2EZnf9c3/dHZKiFa5pRLMH5tjSl471tY6496ZWk/kjNONBxhw==
++  dependencies:
++    "@babel/template" "^7.18.6"
++    "@babel/types" "^7.18.6"
++
+ "@babel/helper-function-name@^7.18.9", "@babel/helper-function-name@^7.19.0":
+   version "7.19.0"
+   resolved "https://registry.yarnpkg.com/@babel/helper-function-name/-/helper-function-name-7.19.0.tgz#941574ed5390682e872e52d3f38ce9d1bef4648c"
+@@ -177,7 +208,7 @@
+     "@babel/template" "^7.20.7"
+     "@babel/types" "^7.21.0"
+ 
+-"@babel/helper-hoist-variables@^7.18.6":
++"@babel/helper-hoist-variables@^7.16.7", "@babel/helper-hoist-variables@^7.18.6":
+   version "7.18.6"
+   resolved "https://registry.yarnpkg.com/@babel/helper-hoist-variables/-/helper-hoist-variables-7.18.6.tgz#d4d2c8fb4baeaa5c68b99cc8245c56554f926678"
+   integrity sha512-UlJQPkFqFULIcyW5sbzgbkxn2FKRgwWiRexcuaR8RNJRy8+LLveqPjwZV/bwrLZCN0eUHD/x8D0heK1ozuoo6Q==
+@@ -274,7 +305,7 @@
+   dependencies:
+     "@babel/types" "^7.20.0"
+ 
+-"@babel/helper-split-export-declaration@^7.18.6":
++"@babel/helper-split-export-declaration@^7.16.7", "@babel/helper-split-export-declaration@^7.18.6":
+   version "7.18.6"
+   resolved "https://registry.yarnpkg.com/@babel/helper-split-export-declaration/-/helper-split-export-declaration-7.18.6.tgz#7367949bc75b20c6d5a5d4a97bba2824ae8ef075"
+   integrity sha512-bde1etTx6ZyTmobl9LLMMQsaizFVZrquTEHOqKeQESMKo4PlObf+8+JA25ZsIpZhT/WEd39+vOdLXAFG/nELpA==
+@@ -286,7 +317,12 @@
+   resolved "https://registry.yarnpkg.com/@babel/helper-string-parser/-/helper-string-parser-7.19.4.tgz#38d3acb654b4701a9b77fb0615a96f775c3a9e63"
+   integrity sha512-nHtDoQcuqFmwYNYPz3Rah5ph2p8PFeFCsZk9A/48dPc/rGocJ5J3hAAZ7pb76VWX3fZKu+uEr/FhH5jLx7umrw==
+ 
+-"@babel/helper-validator-identifier@^7.18.6", "@babel/helper-validator-identifier@^7.19.1":
++"@babel/helper-validator-identifier@^7.16.7", "@babel/helper-validator-identifier@^7.18.6":
++  version "7.18.6"
++  resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.18.6.tgz#9c97e30d31b2b8c72a1d08984f2ca9b574d7a076"
++  integrity sha512-MmetCkz9ej86nJQV+sFCxoGGrUbU3q02kgLciwkrt9QqEB7cP39oKEY0PakknEO0Gu20SskMRi+AYZ3b1TpN9g==
++
++"@babel/helper-validator-identifier@^7.19.1":
+   version "7.19.1"
+   resolved "https://registry.yarnpkg.com/@babel/helper-validator-identifier/-/helper-validator-identifier-7.19.1.tgz#7eea834cf32901ffdc1a7ee555e2f9c27e249ca2"
+   integrity sha512-awrNfaMtnHUr653GgGEs++LlAvW6w+DcPrOliSMXWCKo597CwL5Acf/wWdNkf/tfEQE3mjkeD1YOVZOUV/od1w==
+@@ -324,7 +360,17 @@
+     chalk "^2.0.0"
+     js-tokens "^4.0.0"
+ 
+-"@babel/parser@^7.1.0", "@babel/parser@^7.14.7", "@babel/parser@^7.20.7", "@babel/parser@^7.21.3":
++"@babel/parser@^7.1.0", "@babel/parser@^7.14.7", "@babel/parser@^7.16.7":
++  version "7.17.10"
++  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.17.10.tgz#873b16db82a8909e0fbd7f115772f4b739f6ce78"
++  integrity sha512-n2Q6i+fnJqzOaq2VkdXxy2TCPCWQZHiCo0XqmrCvDWcZQKRyZzYi4Z0yxlBuN0w+r2ZHmre+Q087DSrw3pbJDQ==
++
++"@babel/parser@^7.17.10":
++  version "7.18.6"
++  resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.18.6.tgz#845338edecad65ebffef058d3be851f1d28a63bc"
++  integrity sha512-uQVSa9jJUe/G/304lXspfWVpKpK4euFLgGiMQFOCpM/bgcAdeoHwi/OQz23O9GK2osz26ZiXRRV9aV+Yl1O8tw==
++
++"@babel/parser@^7.20.7", "@babel/parser@^7.21.3":
+   version "7.21.3"
+   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.21.3.tgz#1d285d67a19162ff9daa358d4cb41d50c06220b3"
+   integrity sha512-lobG0d7aOfQRXh8AyklEAgZGvA4FShxo6xQbUrrT/cNBPUdIDojlokwJsQyCC/eKia7ifqM0yP+2DRZ4WKw2RQ==
+@@ -372,17 +418,6 @@
+     "@babel/helper-plugin-utils" "^7.18.6"
+     "@babel/plugin-syntax-class-static-block" "^7.14.5"
+ 
+-"@babel/plugin-proposal-decorators@^7.21.0":
+-  version "7.21.0"
+-  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.21.0.tgz#70e0c89fdcd7465c97593edb8f628ba6e4199d63"
+-  integrity sha512-MfgX49uRrFUTL/HvWtmx3zmpyzMMr4MTj3d527MLlr/4RTT9G/ytFFP7qet2uM2Ve03b+BkpWUpK+lRXnQ+v9w==
+-  dependencies:
+-    "@babel/helper-create-class-features-plugin" "^7.21.0"
+-    "@babel/helper-plugin-utils" "^7.20.2"
+-    "@babel/helper-replace-supers" "^7.20.7"
+-    "@babel/helper-split-export-declaration" "^7.18.6"
+-    "@babel/plugin-syntax-decorators" "^7.21.0"
+-
+ "@babel/plugin-proposal-dynamic-import@^7.18.6":
+   version "7.18.6"
+   resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-dynamic-import/-/plugin-proposal-dynamic-import-7.18.6.tgz#72bcf8d408799f547d759298c3c27c7e7faa4d94"
+@@ -513,13 +548,6 @@
+   dependencies:
+     "@babel/helper-plugin-utils" "^7.14.5"
+ 
+-"@babel/plugin-syntax-decorators@^7.21.0":
+-  version "7.21.0"
+-  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-decorators/-/plugin-syntax-decorators-7.21.0.tgz#d2b3f31c3e86fa86e16bb540b7660c55bd7d0e78"
+-  integrity sha512-tIoPpGBR8UuM4++ccWN3gifhVvQu7ZizuR1fklhRJrd5ewgbkUS+0KVFeWWxELtn18NTLoW32XV7zyOgIAiz+w==
+-  dependencies:
+-    "@babel/helper-plugin-utils" "^7.20.2"
+-
+ "@babel/plugin-syntax-dynamic-import@^7.8.3":
+   version "7.8.3"
+   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-dynamic-import/-/plugin-syntax-dynamic-import-7.8.3.tgz#62bf98b2da3cd21d626154fc96ee5b3cb68eacb3"
+@@ -1054,7 +1082,7 @@
+   dependencies:
+     regenerator-runtime "^0.13.11"
+ 
+-"@babel/template@^7.18.10", "@babel/template@^7.20.7", "@babel/template@^7.3.3":
++"@babel/template@^7.18.10", "@babel/template@^7.20.7":
+   version "7.20.7"
+   resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.20.7.tgz#a15090c2839a83b02aa996c0b4994005841fd5a8"
+   integrity sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw==
+@@ -1063,7 +1091,16 @@
+     "@babel/parser" "^7.20.7"
+     "@babel/types" "^7.20.7"
+ 
+-"@babel/traverse@^7.18.10", "@babel/traverse@^7.20.7", "@babel/traverse@^7.21.0", "@babel/traverse@^7.21.2", "@babel/traverse@^7.21.3", "@babel/traverse@^7.7.2":
++"@babel/template@^7.3.3":
++  version "7.16.7"
++  resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.16.7.tgz#8d126c8701fde4d66b264b3eba3d96f07666d155"
++  integrity sha512-I8j/x8kHUrbYRTUxXrrMbfCa7jxkE7tZre39x3kjr9hvI82cK1FfqLygotcWN5kdPGWcLdWMHpSBavse5tWw3w==
++  dependencies:
++    "@babel/code-frame" "^7.16.7"
++    "@babel/parser" "^7.16.7"
++    "@babel/types" "^7.16.7"
++
++"@babel/traverse@^7.18.10", "@babel/traverse@^7.20.7", "@babel/traverse@^7.21.0", "@babel/traverse@^7.21.2", "@babel/traverse@^7.21.3":
+   version "7.21.3"
+   resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.21.3.tgz#4747c5e7903d224be71f90788b06798331896f67"
+   integrity sha512-XLyopNeaTancVitYZe2MlUEvgKb6YVVPXzofHgqHijCImG33b/uTurMS488ht/Hbsb2XK3U2BnSTxKVNGV3nGQ==
+@@ -1079,7 +1116,39 @@
+     debug "^4.1.0"
+     globals "^11.1.0"
+ 
+-"@babel/types@^7.0.0", "@babel/types@^7.0.0-beta.49", "@babel/types@^7.18.10", "@babel/types@^7.18.6", "@babel/types@^7.18.9", "@babel/types@^7.19.0", "@babel/types@^7.20.0", "@babel/types@^7.20.2", "@babel/types@^7.20.7", "@babel/types@^7.21.0", "@babel/types@^7.21.2", "@babel/types@^7.21.3", "@babel/types@^7.3.0", "@babel/types@^7.3.3", "@babel/types@^7.4.4":
++"@babel/traverse@^7.7.2":
++  version "7.17.10"
++  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.17.10.tgz#1ee1a5ac39f4eac844e6cf855b35520e5eb6f8b5"
++  integrity sha512-VmbrTHQteIdUUQNTb+zE12SHS/xQVIShmBPhlNP12hD5poF2pbITW1Z4172d03HegaQWhLffdkRJYtAzp0AGcw==
++  dependencies:
++    "@babel/code-frame" "^7.16.7"
++    "@babel/generator" "^7.17.10"
++    "@babel/helper-environment-visitor" "^7.16.7"
++    "@babel/helper-function-name" "^7.17.9"
++    "@babel/helper-hoist-variables" "^7.16.7"
++    "@babel/helper-split-export-declaration" "^7.16.7"
++    "@babel/parser" "^7.17.10"
++    "@babel/types" "^7.17.10"
++    debug "^4.1.0"
++    globals "^11.1.0"
++
++"@babel/types@^7.0.0", "@babel/types@^7.0.0-beta.49", "@babel/types@^7.16.7", "@babel/types@^7.3.0", "@babel/types@^7.3.3", "@babel/types@^7.4.4":
++  version "7.17.10"
++  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.17.10.tgz#d35d7b4467e439fcf06d195f8100e0fea7fc82c4"
++  integrity sha512-9O26jG0mBYfGkUYCYZRnBwbVLd1UZOICEr2Em6InB6jVfsAv1GKgwXHmrSg+WFWDmeKTA6vyTZiN8tCSM5Oo3A==
++  dependencies:
++    "@babel/helper-validator-identifier" "^7.16.7"
++    to-fast-properties "^2.0.0"
++
++"@babel/types@^7.17.10", "@babel/types@^7.18.6":
++  version "7.18.6"
++  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.18.6.tgz#5d781dd10a3f0c9f1f931bd19de5eb26ec31acf0"
++  integrity sha512-NdBNzPDwed30fZdDQtVR7ZgaO4UKjuaQFH9VArS+HMnurlOY0JWN+4ROlu/iapMFwjRQU4pOG4StZfDmulEwGA==
++  dependencies:
++    "@babel/helper-validator-identifier" "^7.18.6"
++    to-fast-properties "^2.0.0"
++
++"@babel/types@^7.18.10", "@babel/types@^7.18.9", "@babel/types@^7.19.0", "@babel/types@^7.20.0", "@babel/types@^7.20.2", "@babel/types@^7.20.7", "@babel/types@^7.21.0", "@babel/types@^7.21.2", "@babel/types@^7.21.3":
+   version "7.21.3"
+   resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.21.3.tgz#4865a5357ce40f64e3400b0f3b737dc6d4f64d05"
+   integrity sha512-sBGdETxC+/M4o/zKC0sl6sjWv62WFR/uzxrJ6uYyMLZOUlPnwzw0tKgVHOXxaAd5l2g8pEDM5RZ495GPQI77kg==
+-- 
+2.34.1
+

@@ -17,22 +17,50 @@ export default class StatusPrepend extends React.PureComponent {
     notificationId: PropTypes.number,
   };
 
-  handleClick = (acct, e) => {
+  handleAcctClick = (acct, e) => {
     const { parseClick } = this.props;
     parseClick(e, `/@${acct.get('acct')}`);
   }
 
+  handleViewMoreClick = (e) => {
+    const { status, parseClick } = this.props;
+
+    if (!acct) {
+      const originalAuthor = status.getIn(['reblog', 'account', 'acct'], status.getIn(['account', 'acct']));
+      const originalStatusId = status.getIn(['reblog', 'id'], status.get('id'));
+      parseClick(e, `/@${originalAuthor}/${originalStatusId}` + this.getUrlSuffix());
+    } else {
+      parseClick(e, `/@${acct.get('acct')}`);
+    }
+  };
+
+  getUrlSuffix = () => {
+    const { type } = this.props;
+    switch (type) {
+    case 'reblog':
+      return '/reblogs';
+    case 'favourite':
+      return '/favourites';
+    default:
+      return '';
+    }
+  };
+
   Message = () => {
     const { type, accounts, status } = this.props;
-    let link = (
+
+    const viewMoreHref = status.get('url') + this.getUrlSuffix();
+
+    const linkifiedAccounts = (
       <span>
         <NameList
           accounts={accounts}
-          viewMoreHref={status.get('url')}
-          onAccountClick={this.handleClick}
+          viewMoreHref={viewMoreHref}
+          onClick={this.handleClick}
         />
       </span>
     );
+
     switch (type) {
     case 'featured':
       return (
@@ -43,7 +71,7 @@ export default class StatusPrepend extends React.PureComponent {
         <FormattedMessage
           id='status.reblogged_by'
           defaultMessage='{name} boosted'
-          values={{ name : link }}
+          values={{ name : linkifiedAccounts }}
         />
       );
     case 'favourite':
@@ -51,7 +79,7 @@ export default class StatusPrepend extends React.PureComponent {
         <FormattedMessage
           id='notification.favourite'
           defaultMessage='{name} favourited your status'
-          values={{ name : link }}
+          values={{ name : linkifiedAccounts }}
         />
       );
     case 'reaction':
@@ -67,7 +95,7 @@ export default class StatusPrepend extends React.PureComponent {
         <FormattedMessage
           id='notification.reblog'
           defaultMessage='{name} boosted your status'
-          values={{ name : link }}
+          values={{ name : linkifiedAccounts }}
         />
       );
     case 'status':
@@ -75,7 +103,7 @@ export default class StatusPrepend extends React.PureComponent {
         <FormattedMessage
           id='notification.status'
           defaultMessage='{name} just posted'
-          values={{ name: link }}
+          values={{ name: linkifiedAccounts }}
         />
       );
     case 'poll':
@@ -99,7 +127,7 @@ export default class StatusPrepend extends React.PureComponent {
         <FormattedMessage
           id='notification.update'
           defaultMessage='{name} edited a post'
-          values={{ name: link }}
+          values={{ name: linkifiedAccounts }}
         />
       );
     }

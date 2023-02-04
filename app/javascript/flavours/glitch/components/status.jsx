@@ -759,17 +759,10 @@ class Status extends ImmutablePureComponent {
     let rebloggedByText;
 
     if (this.props.prepend === 'reblog') {
-      if (Intl.ListFormat) {
-        rebloggedByText = intl.formatMessage(
-          { id: 'status.reblogged_by', defaultMessage: '{name} boosted' },
-          { name: new Intl.ListFormat(intl.locale, { type: 'conjunction' }).format(accounts.map(acct => acct.get('acct'))) },
-        );
-      } else {
-        rebloggedByText = intl.formatMessage(
-          { id: 'status.reblogged_by', defaultMessage: '{name} boosted' },
-          { name: accounts.get(0).get('acct') },
-        );
-      }
+      rebloggedByText = intl.formatMessage(
+        { id: 'status.reblogged_by', defaultMessage: '{name} boosted' },
+        { name: new Intl.ListFormat(intl.locale, { type: 'conjunction' }).format(accounts.map(acct => acct.get('acct'))) },
+      );
     }
 
     const computedClass = classNames('status', `status-${status.get('visibility')}`, {
