@@ -83,6 +83,12 @@ const initialState = ImmutableMap({
       'admin.sign_up': true,
       'admin.report': true,
     }),
+
+    grouping: ImmutableMap({
+      reaction: true,
+      favourite: true,
+      reblog: true,
+    }),
   }),
 
   community: ImmutableMap({
