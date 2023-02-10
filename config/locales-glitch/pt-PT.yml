@@ -1,1 +1,14 @@
-pt-PT:
+---
+pt:
+  admin:
+    custom_emojis:
+      batch_copy_error: 'Houve um erro ao copiar alguns dos emoji selecionados: %{message}'
+      batch_error: 'Houve um erro: %{message}'
+    settings:
+      captcha_enabled:
+        desc_html: Isto depende de scripts externos da hCaptcha, o que pode ser uma preocupação de segurança e privacidade. Além disso, <strong>isto pode tornar o processo de registo menos acessível para algumas pessoas (especialmente as com limitações físicas)</strong>. Por isto, considera medidas alternativas tais como registo mediante aprovação ou sob convite.<br>Pessoas que se registam com um convite não precisam de resolver um CAPTCHA
+        title: Exigir que novas contas resolvam um CAPTCHA para validar o registo
+      flavour_and_skin:
+        title: Sabor e tema
+      hide_followers_count:
+        desc_html: Não mostrar o número de seguidores nos perfis
