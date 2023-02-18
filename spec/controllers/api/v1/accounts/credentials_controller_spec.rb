@@ -78,7 +78,7 @@ describe Api::V1::Accounts::CredentialsController do
       describe 'with invalid data' do
         before do
           note = 'This is too long. '
-          note = note + 'a' * (Account::MAX_NOTE_LENGTH - note.length + 1)
+          note = note + ('a' * (Account::MAX_NOTE_LENGTH - note.length + 1))
           patch :update, params: { note: note }
         end
 
