@@ -59,9 +59,7 @@ class Themes
         pack = ['common']
       end
 
-      if skin != 'default'
-        result[name]['skin'][skin] = pack
-      end
+      result[name]['skin'][skin] = pack if skin != 'default'
     end
 
     @core = core
