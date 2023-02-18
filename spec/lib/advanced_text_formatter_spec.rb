@@ -219,7 +219,7 @@ RSpec.describe AdvancedTextFormatter do
       end
 
       context 'given a URL containing unsafe code (XSS attack, invisible part)' do
-        let(:text) { %q{http://example.com/blahblahblahblah/a<script>alert("Hello")</script>} }
+        let(:text) { 'http://example.com/blahblahblahblah/a<script>alert("Hello")</script>' }
 
         it 'does not include the HTML in the URL' do
           is_expected.to include '"http://example.com/blahblahblahblah/a"'
