@@ -65,6 +65,7 @@ class Api::V1::StatusesController < Api::BaseController
       poll: status_params[:poll],
       content_type: status_params[:content_type],
       idempotency: request.headers['Idempotency-Key'],
+      local_only: status_params[:local_only],
       with_rate_limit: true
     )
 
@@ -131,6 +132,7 @@ class Api::V1::StatusesController < Api::BaseController
       :language,
       :scheduled_at,
       :content_type,
+      :local_only,
       media_ids: [],
       media_attributes: [
         :id,
