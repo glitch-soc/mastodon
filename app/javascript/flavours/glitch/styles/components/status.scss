@@ -390,11 +390,19 @@
       text-decoration: none;
     }
 
+    .status__content,
+    .status__content p,
+    .status__content a,
+    .status__content__text {
+      color: $darker-text-color;
+    }
+
     .status__content {
       height: 20px;
       overflow: hidden;
       text-overflow: ellipsis;
       padding-top: 0;
+      mix-blend-mode: hard-light;
 
       &:after {
         content: "";
@@ -403,19 +411,13 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(rgba($ui-base-color, 0), rgba($ui-base-color, 1));
+        background: linear-gradient(transparent, gray);
         pointer-events: none;
       }
       
       a:hover {
         text-decoration: none;
       }
-    }
-    &:focus > .status__content:after {
-      background: linear-gradient(rgba(lighten($ui-base-color, 4%), 0), rgba(lighten($ui-base-color, 4%), 1));
-    }
-    &.status-direct > .status__content:after {
-      background: linear-gradient(rgba(lighten($ui-base-color, 8%), 0), rgba(lighten($ui-base-color, 8%), 1));
     }
 
     .notification__message {
