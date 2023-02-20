@@ -138,5 +138,6 @@ export const statusPageUrl = getMeta('status_page_url');
 
 // Glitch-soc-specific settings
 export const maxChars = (initialState && initialState.max_toot_chars) || 500;
+export const publishButtonText = (initialState && initialState.publish_button_text);  // Should be null when not set
 
 export default initialState;
