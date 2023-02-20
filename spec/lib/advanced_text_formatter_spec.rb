@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe AdvancedTextFormatter do
   describe '#to_s' do
+    subject { described_class.new(text, preloaded_accounts: preloaded_accounts, content_type: content_type).to_s }
     let(:preloaded_accounts) { nil }
     let(:content_type) { 'text/markdown' }
 
-    subject { described_class.new(text, preloaded_accounts: preloaded_accounts, content_type: content_type).to_s }
 
     context 'given a markdown source' do
       let(:content_type) { 'text/markdown' }

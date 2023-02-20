@@ -206,10 +206,10 @@ RSpec.describe Status, type: :model do
   end
 
   describe 'on create' do
+    subject { Status.new }
     let(:local_account) { Fabricate(:account, username: 'local', domain: nil) }
     let(:remote_account) { Fabricate(:account, username: 'remote', domain: 'example.com') }
 
-    subject { Status.new }
 
     describe 'on a status that ends with the local-only emoji' do
       before do
