@@ -55,6 +55,14 @@ class LocalSettingsPage extends React.PureComponent {
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
+          item={['zoom_emojis_on_hover']}
+          id='mastodon-settings--zoom-on-hover'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.zoom_emojis_on_hover' defaultMessage='Zoom in on emojis when hovering over them' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
           item={['hicolor_privacy_icons']}
           id='mastodon-settings--hicolor_privacy_icons'
           onChange={onChange}
