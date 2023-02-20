@@ -51,6 +51,7 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
     # step.
     confirmation_token = params[:confirmation_token]
     return if confirmation_token.nil?
+
     @confirmation_user = User.find_first_by_auth_conditions(confirmation_token: confirmation_token)
   end
 

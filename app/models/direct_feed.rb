@@ -23,6 +23,7 @@ class DirectFeed < Feed
     loop do
       statuses = Status.as_direct_timeline(@account, limit, max_id, since_id, min_id)
       return statuses if statuses.empty?
+
       max_id = statuses.last.id
       statuses = statuses.reject { |status| FeedManager.instance.filter?(:direct, status, @account) }
       return statuses unless statuses.empty?
