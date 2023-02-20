@@ -64,7 +64,7 @@ RSpec.describe PublicFeed, type: :model do
         end
 
         it 'does not include local-only statuses' do
-          expect(subject).not_to include(local_only_status.id)
+          expect(subject).to_not include(local_only_status.id)
         end
       end
 
@@ -80,7 +80,7 @@ RSpec.describe PublicFeed, type: :model do
         end
 
         it 'does not include local-only statuses' do
-          expect(subject).not_to include(local_only_status.id)
+          expect(subject).to_not include(local_only_status.id)
         end
       end
     end
@@ -108,7 +108,7 @@ RSpec.describe PublicFeed, type: :model do
         end
 
         it 'does not include local-only statuses' do
-          expect(subject).not_to include(local_only_status.id)
+          expect(subject).to_not include(local_only_status.id)
         end
       end
 
@@ -147,7 +147,7 @@ RSpec.describe PublicFeed, type: :model do
         end
 
         it 'does not include local-only statuses' do
-          expect(subject).not_to include(local_only_status.id)
+          expect(subject).to_not include(local_only_status.id)
         end
       end
 

@@ -22,7 +22,7 @@ RSpec.describe AdvancedTextFormatter do
         let(:text) { "line\nfeed" }
 
         it 'removes line feeds' do
-          expect(subject).not_to include "\n"
+          expect(subject).to_not include "\n"
         end
       end
 
