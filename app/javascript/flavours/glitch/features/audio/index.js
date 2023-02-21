@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { formatTime } from 'flavours/glitch/features/video';
+import { formatTime, getPointerPosition, fileNameFromURL } from 'flavours/glitch/features/video';
 import Icon from 'flavours/glitch/components/icon';
 import classNames from 'classnames';
-import { throttle } from 'lodash';
-import { getPointerPosition, fileNameFromURL } from 'flavours/glitch/features/video';
-import { debounce } from 'lodash';
+import { throttle, debounce } from 'lodash';
 import Visualizer from './visualizer';
 import { displayMedia, useBlurhash } from 'flavours/glitch/initial_state';
 import Blurhash from 'flavours/glitch/components/blurhash';
@@ -75,7 +73,7 @@ class Audio extends React.PureComponent {
     if (this.player) {
       this._setDimensions();
     }
-  }
+  };
 
   _pack() {
     return {
@@ -107,11 +105,11 @@ class Audio extends React.PureComponent {
 
   setSeekRef = c => {
     this.seek = c;
-  }
+  };
 
   setVolumeRef = c => {
     this.volume = c;
-  }
+  };
 
   setAudioRef = c => {
     this.audio = c;
@@ -120,14 +118,14 @@ class Audio extends React.PureComponent {
       this.audio.volume = 1;
       this.audio.muted = false;
     }
-  }
+  };
 
   setCanvasRef = c => {
     this.canvas = c;
 
     this.visualizer.setCanvas(c);
-  }
- 
+  };
+
   componentDidMount () {
     window.addEventListener('scroll', this.handleScroll);
     window.addEventListener('resize', this.handleResize, { passive: true });
@@ -169,7 +167,7 @@ class Audio extends React.PureComponent {
     } else {
       this.setState({ paused: true }, () => this.audio.pause());
     }
-  }
+  };
 
   handleResize = debounce(() => {
     if (this.player) {
@@ -187,7 +185,7 @@ class Audio extends React.PureComponent {
     }
 
     this._renderCanvas();
-  }
+  };
 
   handlePause = () => {
     this.setState({ paused: true });
@@ -195,7 +193,7 @@ class Audio extends React.PureComponent {
     if (this.audioContext) {
       this.audioContext.suspend();
     }
-  }
+  };
 
   handleProgress = () => {
     const lastTimeRange = this.audio.buffered.length - 1;
@@ -203,7 +201,7 @@ class Audio extends React.PureComponent {
     if (lastTimeRange > -1) {
       this.setState({ buffer: Math.ceil(this.audio.buffered.end(lastTimeRange) / this.audio.duration * 100) });
     }
-  }
+  };
 
   toggleMute = () => {
     const muted = !this.state.muted;
@@ -213,7 +211,7 @@ class Audio extends React.PureComponent {
         this.gainNode.gain.value = muted ? 0 : this.state.volume;
       }
     });
-  }
+  };
 
   toggleReveal = () => {
     if (this.props.onToggleVisibility) {
@@ -221,7 +219,7 @@ class Audio extends React.PureComponent {
     } else {
       this.setState({ revealed: !this.state.revealed });
     }
-  }
+  };
 
   handleVolumeMouseDown = e => {
     document.addEventListener('mousemove', this.handleMouseVolSlide, true);
@@ -233,14 +231,14 @@ class Audio extends React.PureComponent {
 
     e.preventDefault();
     e.stopPropagation();
-  }
+  };
 
   handleVolumeMouseUp = () => {
     document.removeEventListener('mousemove', this.handleMouseVolSlide, true);
     document.removeEventListener('mouseup', this.handleVolumeMouseUp, true);
     document.removeEventListener('touchmove', this.handleMouseVolSlide, true);
     document.removeEventListener('touchend', this.handleVolumeMouseUp, true);
-  }
+  };
 
   handleMouseDown = e => {
     document.addEventListener('mousemove', this.handleMouseMove, true);
@@ -254,7 +252,7 @@ class Audio extends React.PureComponent {
 
     e.preventDefault();
     e.stopPropagation();
-  }
+  };
 
   handleMouseUp = () => {
     document.removeEventListener('mousemove', this.handleMouseMove, true);
@@ -264,7 +262,7 @@ class Audio extends React.PureComponent {
 
     this.setState({ dragging: false });
     this.audio.play();
-  }
+  };
 
   handleMouseMove = throttle(e => {
     const { x } = getPointerPosition(this.seek, e);
@@ -282,7 +280,7 @@ class Audio extends React.PureComponent {
       currentTime: this.audio.currentTime,
       duration: this.audio.duration,
     });
-  }
+  };
 
   handleMouseVolSlide = throttle(e => {
     const { x } = getPointerPosition(this.volume, e);
@@ -317,11 +315,11 @@ class Audio extends React.PureComponent {
 
   handleMouseEnter = () => {
     this.setState({ hovered: true });
-  }
+  };
 
   handleMouseLeave = () => {
     this.setState({ hovered: false });
-  }
+  };
 
   handleLoadedData = () => {
     const { autoPlay, currentTime } = this.props;
@@ -333,7 +331,7 @@ class Audio extends React.PureComponent {
     if (autoPlay) {
       this.togglePlay();
     }
-  }
+  };
 
   _initAudioContext () {
     const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -367,7 +365,7 @@ class Audio extends React.PureComponent {
     }).catch(err => {
       console.error(err);
     });
-  }
+  };
 
   _renderCanvas () {
     requestAnimationFrame(() => {
@@ -438,7 +436,7 @@ class Audio extends React.PureComponent {
       e.stopPropagation();
       this.togglePlay();
     }
-  }
+  };
 
   handleKeyDown = e => {
     switch(e.key) {
@@ -463,7 +461,7 @@ class Audio extends React.PureComponent {
       this.seekBy(10);
       break;
     }
-  }
+  };
 
   render () {
     const { src, intl, alt, editable, autoPlay, sensitive, blurhash } = this.props;

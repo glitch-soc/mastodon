@@ -51,15 +51,8 @@
 *~
 *.swp
 
-# Ignore npm debug log
-npm-debug.log
-
-# Ignore yarn log files
-yarn-error.log
-yarn-debug.log
-
-# Ignore vagrant log files
-*-cloudimg-console.log
+# Ignore log files
+*.log
 
 # Ignore Docker option files
 docker-compose.override.yml
@@ -71,9 +64,27 @@ docker-compose.override.yml
 /app/javascript/mastodon/locales
 /config/locales
 
+# Ignore vendored CSS reset
+app/javascript/styles/mastodon/reset.scss
+
+# Ignore Javascript pending https://github.com/mastodon/mastodon/pull/23631
+*.js
+
+# Ignore Markdownlint pending https://github.com/mastodon/mastodon/pull/21972
+*.md
+
+# Ignore HTML till cleaned and included in CI
+*.html
+
+# Ignore glitch-soc emoji map file
+/app/javascript/flavours/glitch/features/emoji/emoji_map.json
+
 # Ignore glitch-soc locale files
 /app/javascript/flavours/glitch/locales
 /config/locales-glitch
 
-# Ignore glitch-soc emoji map file
-/app/javascript/flavours/glitch/features/emoji/emoji_map.json
+# Ignore glitch-soc vendored CSS reset
+app/javascript/flavours/glitch/styles/reset.scss
+
+# Ignore win95 theme
+app/javascript/styles/win95.scss
