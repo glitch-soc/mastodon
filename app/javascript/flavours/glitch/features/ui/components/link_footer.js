@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { domain, version, source_url, profile_directory as profileDirectory } from 'flavours/glitch/initial_state';
+import { domain, version, source_url, statusPageUrl, profile_directory as profileDirectory } from 'flavours/glitch/initial_state';
 import { logOut } from 'flavours/glitch/utils/log_out';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { PERMISSION_INVITE_USERS } from 'flavours/glitch/permissions';
@@ -44,7 +44,7 @@ class LinkFooter extends React.PureComponent {
     this.props.onLogout();
 
     return false;
-  }
+  };
 
   render () {
     const { signedIn, permissions } = this.context.identity;
@@ -58,17 +58,23 @@ class LinkFooter extends React.PureComponent {
       <div className='link-footer'>
         <p>
           <strong>{domain}</strong><br/>
-          <Link key='about' to='/about'><FormattedMessage id='footer.about' defaultMessage='About' /></Link>
+          <Link to='/about'><FormattedMessage id='footer.about' defaultMessage='About' /></Link>
+          {statusPageUrl && (
+            <>
+              {DividingCircle}
+              <a href={statusPageUrl} target='_blank' rel='noopener'><FormattedMessage id='footer.status' defaultMessage='Status' /></a>
+            </>
+          )}
           {canInvite && (
             <>
               {DividingCircle}
-              <a key='invites' href='/invites' target='_blank'><FormattedMessage id='footer.invite' defaultMessage='Invite people' /></a>
+              <a href='/invites' target='_blank'><FormattedMessage id='footer.invite' defaultMessage='Invite people' /></a>
             </>
           )}
           {canProfileDirectory && (
             <>
               {DividingCircle}
-              <Link key='directory' to='/directory'><FormattedMessage id='footer.directory' defaultMessage='Profiles directory' /></Link>
+              <Link to='/directory'><FormattedMessage id='footer.directory' defaultMessage='Profiles directory' /></Link>
             </>
           )}
           {DividingCircle}
@@ -93,4 +99,4 @@ class LinkFooter extends React.PureComponent {
     );
   }
 
-};
+}

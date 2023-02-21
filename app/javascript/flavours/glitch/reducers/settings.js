@@ -179,4 +179,4 @@ export default function settings(state = initialState, action) {
   default:
     return state;
   }
-};
+}
