@@ -50,7 +50,7 @@ class Sanitize
         url = node['href']
         prefix = url.match(/\Ahttps?:\/\/(www\.)?/).to_s
         text   = url[prefix.length, 30]
-        text   = text + '…' if url[prefix.length..-1].length > 30
+        text   = "#{text}…" if url[prefix.length..-1].length > 30
         node.content = "[🖼  #{text}]"
       end
     end

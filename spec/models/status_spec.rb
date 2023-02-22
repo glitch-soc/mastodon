@@ -213,7 +213,7 @@ RSpec.describe Status, type: :model do
 
     describe 'on a status that ends with the local-only emoji' do
       before do
-        subject.text = 'A toot ' + subject.local_only_emoji
+        subject.text = "A toot #{subject.local_only_emoji}"
       end
 
       context 'if the status originates from this instance' do
