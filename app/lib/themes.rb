@@ -12,7 +12,7 @@ class Themes
     core['pack'] = Hash.new unless core['pack']
 
     result = Hash.new
-    Dir.glob(Rails.root.join('app', 'javascript', 'flavours', '*', 'theme.yml')) do |path|
+    Rails.root.glob('app/javascript/flavours/*/theme.yml') do |path|
       data = YAML.load_file(path)
       next unless data['pack']
 
@@ -43,7 +43,7 @@ class Themes
       result[name] = data
     end
 
-    Dir.glob(Rails.root.join('app', 'javascript', 'skins', '*', '*')) do |path|
+    Rails.root.glob('app/javascript/skins/*/*') do |path|
       ext = File.extname(path)
       skin = File.basename(path)
       name = File.basename(File.dirname(path))
