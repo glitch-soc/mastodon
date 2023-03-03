@@ -84,7 +84,7 @@ class Sanitize
         'blockquote' => %w(cite),
         'ol'         => %w(start reversed),
         'li'         => %w(value),
-        'code'       => [:data],
+        'code'       => %w(data-codelang),
       },
 
       add_attributes: {
