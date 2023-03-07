@@ -33,6 +33,7 @@ class Form::AdminSettings
     trends_as_landing_page
     trendable_by_default
     trending_status_cw
+    trending_status_sensitive
     show_domain_blocks
     show_domain_blocks_rationale
     noindex
@@ -66,6 +67,7 @@ class Form::AdminSettings
     trends_as_landing_page
     trendable_by_default
     trending_status_cw
+    trending_status_sensitive
     noindex
     require_invite_text
     captcha_enabled
