@@ -1,5 +1,5 @@
 ---
-pt-PT:
+pt:
   admin:
     custom_emojis:
       batch_copy_error: 'Houve um erro ao copiar alguns dos emoji selecionados: %{message}'
