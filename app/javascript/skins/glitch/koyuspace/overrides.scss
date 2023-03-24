@@ -1,0 +1,78 @@
+.fa-home:before {
+    content: "\f10c" !important;
+}
+
+.fa-unlock:before {
+    content: "" !important;
+}
+
+.fa-at::before {
+    content: "" !important;
+}
+
+@font-face {
+    font-family: 'Titan One';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Titan One'), local('TitanOne'), url(https://koyu.space/fonts/titan-one.woff2) format('woff2');
+}
+
+.fa {
+    font-family:'FontAwesome' !important;
+}
+
+.form_admin_settings_closed_registrations_message textarea,
+.form_admin_settings_custom_css textarea,
+.form_admin_settings_site_description textarea,
+.form_admin_settings_site_extended_description textarea,
+.form_admin_settings_site_short_description textarea,
+.form_admin_settings_site_terms textarea {
+    font-family: "mastodon-font-monospace",monospace !important;
+}
+
+*,
+*:before,
+*:after {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.endorsements-widget,
+.placeholder-widget,
+.public-account-bio {
+    background: #223 !important;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.public-layout .public-account-header__bar {
+    background: #223;
+    border-radius: 0 0 4px 4px;
+    padding-top: 15px;
+}
+
+.public-layout .footer {
+    background: #223;
+    padding-left: 20px;
+    padding-bottom: 30px !important;
+    margin-top: 30px;
+    border-radius: 20px 20px 0 0;
+}
+
+@media(min-width:800px) {
+    .search__input,
+    .drawer--header,
+    .drawer__inner {
+        border-radius: 5px;
+    }
+
+    .column-header {
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
+
+    .column > .scrollable {
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+}

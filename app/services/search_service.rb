@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class SearchService < BaseService
+  SEARCH_ALL_PUBLIC_STATUSES = ENV['SEARCH_ALL_PUBLIC_STATUSES'] == 'true'
+
   def call(query, account, limit, options = {})
     @query   = query&.strip
     @account = account
@@ -35,7 +37,11 @@ class SearchService < BaseService
   end
 
   def perform_statuses_search!
-    definition = parsed_query.apply(StatusesIndex.filter(term: { searchable_by: @account.id }))
+    statuses_index = StatusesIndex.filter(term: { searchable_by: @account.id })
+    if SEARCH_ALL_PUBLIC_STATUSES
+      statuses_index = statuses_index.filter.or(term: { searchable_by_anyone: true })
+    end
+    definition = parsed_query.apply(statuses_index)
 
     definition = definition.filter(term: { account_id: @options[:account_id] }) if @options[:account_id].present?
 

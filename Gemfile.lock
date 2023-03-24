@@ -839,6 +839,7 @@ DEPENDENCIES
   omniauth-saml (~> 1.10)
   omniauth_openid_connect (~> 0.6.1)
   ox (~> 2.14)
+  parallel (~> 1.22)
   parslet
   pg (~> 1.4)
   pghero

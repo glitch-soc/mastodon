@@ -60,7 +60,7 @@ class FeedManager
   # @param [Boolean] update
   # @return [Boolean]
   def push_to_home(account, status, update: false)
-    return false unless add_to_feed(:home, account.id, status, aggregate_reblogs: account.user&.aggregates_reblogs?)
+    return false unless add_to_feed(:home, account.id, status, aggregate_reblogs: account.user&.aggregates_reblogs?, home_dms: account.user&.home_dms?)
 
     trim(:home, account.id)
     PushUpdateWorker.perform_async(account.id, status.id, "timeline:#{account.id}", { 'update' => update }) if push_update_required?("timeline:#{account.id}")
@@ -73,7 +73,7 @@ class FeedManager
   # @param [Boolean] update
   # @return [Boolean]
   def unpush_from_home(account, status, update: false)
-    return false unless remove_from_feed(:home, account.id, status, aggregate_reblogs: account.user&.aggregates_reblogs?)
+    return false unless remove_from_feed(:home, account.id, status, aggregate_reblogs: account.user&.aggregates_reblogs?, home_dms: account.user&.home_dms?)
 
     redis.publish("timeline:#{account.id}", Oj.dump(event: :delete, payload: status.id.to_s)) unless update
     true
@@ -85,7 +85,7 @@ class FeedManager
   # @param [Boolean] update
   # @return [Boolean]
   def push_to_list(list, status, update: false)
-    return false if filter_from_list?(status, list) || !add_to_feed(:list, list.id, status, aggregate_reblogs: list.account.user&.aggregates_reblogs?)
+    return false if filter_from_list?(status, list) || !add_to_feed(:list, list.id, status, aggregate_reblogs: list.account.user&.aggregates_reblogs?, home_dms: list.account.user&.home_dms?)
 
     trim(:list, list.id)
     PushUpdateWorker.perform_async(list.account_id, status.id, "timeline:list:#{list.id}", { 'update' => update }) if push_update_required?("timeline:list:#{list.id}")
@@ -98,7 +98,7 @@ class FeedManager
   # @param [Boolean] update
   # @return [Boolean]
   def unpush_from_list(list, status, update: false)
-    return false unless remove_from_feed(:list, list.id, status, aggregate_reblogs: list.account.user&.aggregates_reblogs?)
+    return false unless remove_from_feed(:list, list.id, status, aggregate_reblogs: list.account.user&.aggregates_reblogs?, home_dms: list.account.user&.home_dms?)
 
     redis.publish("timeline:list:#{list.id}", Oj.dump(event: :delete, payload: status.id.to_s)) unless update
     true
@@ -134,6 +134,7 @@ class FeedManager
   def merge_into_home(from_account, into_account)
     timeline_key = key(:home, into_account.id)
     aggregate    = into_account.user&.aggregates_reblogs?
+    home_dms     = into_account.user&.home_dms?
     query        = from_account.statuses.where(visibility: [:public, :unlisted, :private]).includes(:preloadable_poll, :media_attachments, reblog: :account).limit(FeedManager::MAX_ITEMS / 4)
 
     if redis.zcard(timeline_key) >= FeedManager::MAX_ITEMS / 4
@@ -147,7 +148,7 @@ class FeedManager
     statuses.each do |status|
       next if filter_from_home?(status, into_account.id, crutches)
 
-      add_to_feed(:home, into_account.id, status, aggregate_reblogs: aggregate)
+      add_to_feed(:home, into_account.id, status, aggregate_reblogs: aggregate, home_dms: home_dms)
     end
 
     trim(:home, into_account.id)
@@ -160,6 +161,7 @@ class FeedManager
   def merge_into_list(from_account, list)
     timeline_key = key(:list, list.id)
     aggregate    = list.account.user&.aggregates_reblogs?
+    home_dms     = list.account.user&.home_dms?
     query        = from_account.statuses.where(visibility: [:public, :unlisted, :private]).includes(:preloadable_poll, :media_attachments, reblog: :account).limit(FeedManager::MAX_ITEMS / 4)
 
     if redis.zcard(timeline_key) >= FeedManager::MAX_ITEMS / 4
@@ -173,7 +175,7 @@ class FeedManager
     statuses.each do |status|
       next if filter_from_home?(status, list.account_id, crutches) || filter_from_list?(status, list)
 
-      add_to_feed(:list, list.id, status, aggregate_reblogs: aggregate)
+      add_to_feed(:list, list.id, status, aggregate_reblogs: aggregate, home_dms: home_dms)
     end
 
     trim(:list, list.id)
@@ -188,7 +190,7 @@ class FeedManager
     timeline_status_ids = redis.zrange(timeline_key, 0, -1)
 
     from_account.statuses.select('id, reblog_of_id').where(id: timeline_status_ids).reorder(nil).find_each do |status|
-      remove_from_feed(:home, into_account.id, status, aggregate_reblogs: into_account.user&.aggregates_reblogs?)
+      remove_from_feed(:home, into_account.id, status, aggregate_reblogs: into_account.user&.aggregates_reblogs?, home_dms: into_account.user&.home_dms?)
     end
   end
 
@@ -201,7 +203,7 @@ class FeedManager
     timeline_status_ids = redis.zrange(timeline_key, 0, -1)
 
     from_account.statuses.select('id, reblog_of_id').where(id: timeline_status_ids).reorder(nil).find_each do |status|
-      remove_from_feed(:list, list.id, status, aggregate_reblogs: list.account.user&.aggregates_reblogs?)
+      remove_from_feed(:list, list.id, status, aggregate_reblogs: list.account.user&.aggregates_reblogs?, home_dms: list.account.user&.home_dms?)
     end
   end
 
@@ -261,10 +263,11 @@ class FeedManager
   def populate_home(account)
     limit        = FeedManager::MAX_ITEMS / 2
     aggregate    = account.user&.aggregates_reblogs?
+    home_dms     = account.user&.home_dms?
     timeline_key = key(:home, account.id)
 
     account.statuses.limit(limit).each do |status|
-      add_to_feed(:home, account.id, status, aggregate_reblogs: aggregate)
+      add_to_feed(:home, account.id, status, aggregate_reblogs: aggregate, home_dms: home_dms)
     end
 
     account.following.includes(:account_stat).find_each do |target_account|
@@ -401,7 +404,8 @@ class FeedManager
   # @param [Hash] crutches
   # @return [Boolean]
   def filter_from_home?(status, receiver_id, crutches)
-    return false if receiver_id == status.account_id
+    return false if receiver_id == status.account_id unless status.direct_visibility?
+    return true  if receiver_id == status.account_id && status.direct_visibility?
     return true  if status.reply? && (status.in_reply_to_id.nil? || status.in_reply_to_account_id.nil?)
     return true  if crutches[:languages][status.account_id].present? && status.language.present? && !crutches[:languages][status.account_id].include?(status.language)
 
@@ -496,8 +500,9 @@ class FeedManager
   # @param [Integer] account_id
   # @param [Status] status
   # @param [Boolean] aggregate_reblogs
+  # @param [Boolean] home_dms
   # @return [Boolean]
-  def add_to_feed(timeline_type, account_id, status, aggregate_reblogs: true)
+  def add_to_feed(timeline_type, account_id, status, aggregate_reblogs: true, home_dms: false)
     timeline_key = key(timeline_type, account_id)
     reblog_key   = key(timeline_type, account_id, 'reblogs')
 
@@ -533,6 +538,10 @@ class FeedManager
       redis.zadd(timeline_key, status.id, status.id)
     end
 
+    if status.direct_visibility? && (home_dms.nil? || home_dms)
+      return false
+    end
+
     true
   end
 
@@ -544,8 +553,9 @@ class FeedManager
   # @param [Integer] account_id
   # @param [Status] status
   # @param [Boolean] aggregate_reblogs
+  # @param [Boolean] home_dms
   # @return [Boolean]
-  def remove_from_feed(timeline_type, account_id, status, aggregate_reblogs: true)
+  def remove_from_feed(timeline_type, account_id, status, aggregate_reblogs: true, home_dms: false)
     timeline_key = key(timeline_type, account_id)
     reblog_key   = key(timeline_type, account_id, 'reblogs')
 
@@ -574,6 +584,10 @@ class FeedManager
       # If the original is getting deleted, no use for reblog references
       redis.del(key(timeline_type, account_id, "reblogs:#{status.id}"))
       redis.zrem(reblog_key, status.id)
+    end
+
+    if status.direct_visibility? && (home_dms.nil? || home_dms)
+      return true
     end
 
     redis.zrem(timeline_key, status.id)

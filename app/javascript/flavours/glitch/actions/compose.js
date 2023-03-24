@@ -67,6 +67,7 @@ export const COMPOSE_UPLOAD_CHANGE_SUCCESS     = 'COMPOSE_UPLOAD_UPDATE_SUCCESS'
 export const COMPOSE_UPLOAD_CHANGE_FAIL        = 'COMPOSE_UPLOAD_UPDATE_FAIL';
 
 export const COMPOSE_DOODLE_SET        = 'COMPOSE_DOODLE_SET';
+export const COMPOSE_TENOR_SET         = 'COMPOSE_TENOR_SET';
 
 export const COMPOSE_POLL_ADD             = 'COMPOSE_POLL_ADD';
 export const COMPOSE_POLL_REMOVE          = 'COMPOSE_POLL_REMOVE';
@@ -294,7 +295,14 @@ export function doodleSet(options) {
   };
 }
 
-export function uploadCompose(files) {
+export function tenorSet(options) {
+  return {
+    type: COMPOSE_TENOR_SET,
+    options: options,
+  };
+};
+
+export function uploadCompose(files, alt = '') {
   return function (dispatch, getState) {
     const uploadLimit = 4;
     const media  = getState().getIn(['compose', 'media_attachments']);
@@ -320,6 +328,7 @@ export function uploadCompose(files) {
       resizeImage(f).then(file => {
         const data = new FormData();
         data.append('file', file);
+        data.append('description', alt);
         // Account for disparity in size of original image and resized data
         total += file.size - f.size;
 

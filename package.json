@@ -108,6 +108,7 @@
     "react-select": "^5.7.1",
     "react-sparklines": "^1.7.0",
     "react-swipeable-views": "^0.14.0",
+    "react-tenor": "^2.2.0",
     "react-textarea-autosize": "^8.4.0",
     "react-toggle": "^4.1.3",
     "redis": "^4.6.5",

@@ -4,10 +4,11 @@ import IconButton from 'flavours/glitch/components/icon_button';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
 import { defineMessages, injectIntl } from 'react-intl';
-import { me } from 'flavours/glitch/initial_state';
+import { me, maxReactions } from 'flavours/glitch/initial_state';
 import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend_links';
 import classNames from 'classnames';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'flavours/glitch/permissions';
+import EmojiPickerDropdown from '../../compose/containers/emoji_picker_dropdown_container';
 
 const messages = defineMessages({
   delete: { id: 'status.delete', defaultMessage: 'Delete' },
@@ -21,6 +22,7 @@ const messages = defineMessages({
   cancel_reblog_private: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
   cannot_reblog: { id: 'status.cannot_reblog', defaultMessage: 'This post cannot be boosted' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favourite' },
+  react: { id: 'status.react', defaultMessage: 'React' },
   bookmark: { id: 'status.bookmark', defaultMessage: 'Bookmark' },
   more: { id: 'status.more', defaultMessage: 'More' },
   mute: { id: 'status.mute', defaultMessage: 'Mute @{name}' },
@@ -52,6 +54,7 @@ class ActionBar extends React.PureComponent {
     onReply: PropTypes.func.isRequired,
     onReblog: PropTypes.func.isRequired,
     onFavourite: PropTypes.func.isRequired,
+    onReactionAdd: PropTypes.func.isRequired,
     onBookmark: PropTypes.func.isRequired,
     onMute: PropTypes.func,
     onMuteConversation: PropTypes.func,
@@ -77,6 +80,10 @@ class ActionBar extends React.PureComponent {
   handleFavouriteClick = (e) => {
     this.props.onFavourite(this.props.status, e);
   };
+
+  handleEmojiPick = data => {
+    this.props.onReactionAdd(this.props.status.get('id'), data.native.replace(/:/g, ''), data.imageUrl);
+  }
 
   handleBookmarkClick = (e) => {
     this.props.onBookmark(this.props.status, e);
@@ -138,6 +145,8 @@ class ActionBar extends React.PureComponent {
     navigator.clipboard.writeText(url);
   };
 
+  handleNoOp = () => {} // hack for reaction add button
+
   render () {
     const { status, intl } = this.props;
     const { signedIn, permissions } = this.context.identity;
@@ -195,6 +204,17 @@ class ActionBar extends React.PureComponent {
       }
     }
 
+    const canReact = signedIn && status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
+    const reactButton = (
+      <IconButton
+        className='plus-icon'
+        onClick={this.handleNoOp} // EmojiPickerDropdown handles that
+        title={intl.formatMessage(messages.react)}
+        disabled={!canReact}
+        icon='plus'
+      />
+    );
+
     const shareButton = ('share' in navigator) && publicStatus && (
       <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.share)} icon='share-alt' onClick={this.handleShare} /></div>
     );
@@ -217,6 +237,13 @@ class ActionBar extends React.PureComponent {
         <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.reply)} icon={status.get('in_reply_to_id', null) === null ? 'reply' : 'reply-all'} onClick={this.handleReplyClick} /></div>
         <div className='detailed-status__button'><IconButton className={classNames({ reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} title={reblogTitle} icon='retweet' onClick={this.handleReblogClick} /></div>
         <div className='detailed-status__button'><IconButton className='star-icon' animate active={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} /></div>
+        <div className='detailed-status__button'>
+          {
+            signedIn
+              ? <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} button={reactButton} disabled={!canReact} />
+              : reactButton
+          }
+        </div>
         {shareButton}
         <div className='detailed-status__button'><IconButton className='bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' onClick={this.handleBookmarkClick} /></div>
 

@@ -379,6 +379,10 @@
   .notification__message {
     margin: -10px 0 10px;
   }
+
+  .reactions-bar--empty {
+    display: none;
+  }
 }
 
 .notification-favourite {
@@ -523,6 +527,10 @@
   align-items: center;
   display: flex;
   margin-top: 8px;
+
+  & > .emoji-picker-dropdown > .emoji-button {
+    padding: 0;
+  }
 }
 
 .status__action-bar-button {
@@ -530,6 +538,10 @@
 
   &.icon-button--with-counter {
     margin-right: 14px;
+  }
+
+  .fa-plus {
+    padding-top: 1px;
   }
 }
 
@@ -597,6 +609,10 @@
   display: flex;
   flex-direction: row;
   padding: 10px 0;
+
+  .fa-plus {
+    padding-top: 2px;
+  }
 }
 
 .detailed-status__link {

@@ -40,6 +40,10 @@ class REST::V1::InstanceSerializer < ActiveModel::Serializer
     StatusLengthValidator::MAX_CHARS
   end
 
+  def publish_button_text
+    ENV['PUBLISH_BUTTON_TEXT']
+  end
+
   def poll_limits
     {
       max_options: PollValidator::MAX_OPTIONS,
@@ -96,6 +100,10 @@ class REST::V1::InstanceSerializer < ActiveModel::Serializer
         max_characters_per_option: PollValidator::MAX_OPTION_CHARS,
         min_expiration: PollValidator::MIN_EXPIRATION,
         max_expiration: PollValidator::MAX_EXPIRATION,
+      },
+
+      reactions: {
+        max_reactions: StatusReactionValidator::LIMIT,
       },
     }
   end

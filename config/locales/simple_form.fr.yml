@@ -217,6 +217,7 @@ fr:
         setting_unfollow_modal: Demander confirmation avant de vous désabonner d’un compte
         setting_use_blurhash: Afficher des dégradés colorés pour les médias cachés
         setting_use_pending_items: Mode lent
+        setting_visible_reactions: Nombre de réactions emoji visibles
         severity: Sévérité
         sign_in_token_attempt: Code de sécurité
         title: Nom

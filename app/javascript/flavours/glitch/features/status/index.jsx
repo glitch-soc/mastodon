@@ -30,6 +30,8 @@ import {
   unreblog,
   pin,
   unpin,
+  addReaction,
+  removeReaction,
 } from 'flavours/glitch/actions/interactions';
 import {
   replyCompose,
@@ -295,6 +297,19 @@ class Status extends ImmutablePureComponent {
       }));
     }
   };
+
+  handleReactionAdd = (statusId, name, url) => {
+    const { dispatch } = this.props;
+    const { signedIn } = this.context.identity;
+
+    if (signedIn) {
+      dispatch(addReaction(statusId, name, url));
+    }
+  }
+
+  handleReactionRemove = (statusId, name) => {
+    this.props.dispatch(removeReaction(statusId, name));
+  }
 
   handlePin = (status) => {
     if (status.get('pinned')) {
@@ -681,6 +696,8 @@ class Status extends ImmutablePureComponent {
                   settings={settings}
                   onOpenVideo={this.handleOpenVideo}
                   onOpenMedia={this.handleOpenMedia}
+                  onReactionAdd={this.handleReactionAdd}
+                  onReactionRemove={this.handleReactionRemove}
                   expanded={isExpanded}
                   onToggleHidden={this.handleToggleHidden}
                   onTranslate={this.handleTranslate}
@@ -695,6 +712,7 @@ class Status extends ImmutablePureComponent {
                   status={status}
                   onReply={this.handleReplyClick}
                   onFavourite={this.handleFavouriteClick}
+                  onReactionAdd={this.handleReactionAdd}
                   onReblog={this.handleReblogClick}
                   onBookmark={this.handleBookmarkClick}
                   onDelete={this.handleDeleteClick}
