@@ -1196,8 +1196,6 @@ hu:
       index:
         hint: Ez a szűrő egyedi bejegyzések kiválasztására vonatkozik a megadott kritériumoktól függetlenül. Újabb bejegyzéseket adhatsz hozzá ehhez a szűrőhöz a webes felületen keresztül.
         title: Megszűrt bejegyzések
-  footer:
-    trending_now: Most felkapott
   generic:
     all: Mind
     all_items_on_page_selected_html:
@@ -1407,6 +1405,7 @@ hu:
     confirm_remove_selected_followers: Biztos, hogy el szeretnéd távolítani a kiválasztott követőket?
     confirm_remove_selected_follows: Biztos, hogy el szeretnéd távolítani a kiválasztott követéseket?
     dormant: Elhagyott
+    follow_failure: Nem sikerült bekövetni néhányat a kiválasztott fiókok közül.
     follow_selected_followers: Kiválasztott követők bekövetése
     followers: Követők
     following: Követve
@@ -1446,6 +1445,7 @@ hu:
       electron: Electron
       firefox: Firefox
       generic: Ismeretlen böngésző
+      huawei_browser: Huawei Böngésző
       ie: Internet Explorer
       micro_messenger: MicroMessenger
       nokia: Nokia S40 Ovi Böngésző
@@ -1455,6 +1455,7 @@ hu:
       qq: QQ Browser
       safari: Safari
       uc_browser: UC Browser
+      unknown_browser: Ismeretlen böngésző
       weibo: Weibo
     current_session: Jelenlegi munkamenet
     description: "%{browser} az alábbi platformon: %{platform}"
@@ -1467,9 +1468,10 @@ hu:
       chrome_os: ChromeOS
       firefox_os: Firefox OS
       ios: iOS
+      kai_os: KaiOS
       linux: Linux
       mac: Mac
-      other: ismeretlen platform
+      unknown_platform: Ismeretlen platform
       windows: Windows
       windows_mobile: Windows Mobile
       windows_phone: Windows Phone

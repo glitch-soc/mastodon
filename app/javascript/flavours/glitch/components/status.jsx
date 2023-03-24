@@ -634,6 +634,7 @@ class Status extends ImmutablePureComponent {
               <Component
                 src={attachment.get('url')}
                 alt={attachment.get('description')}
+                lang={status.get('language')}
                 poster={attachment.get('preview_url') || status.getIn(['account', 'avatar_static'])}
                 backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
                 foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
@@ -663,6 +664,7 @@ class Status extends ImmutablePureComponent {
               blurhash={attachment.get('blurhash')}
               src={attachment.get('url')}
               alt={attachment.get('description')}
+              lang={status.get('language')}
               inline
               sensitive={status.get('sensitive')}
               letterbox={settings.getIn(['media', 'letterbox'])}
@@ -684,6 +686,7 @@ class Status extends ImmutablePureComponent {
             {Component => (
               <Component
                 media={attachments}
+                lang={status.get('language')}
                 sensitive={status.get('sensitive')}
                 letterbox={settings.getIn(['media', 'letterbox'])}
                 fullwidth={settings.getIn(['media', 'fullwidth'])}
@@ -718,7 +721,7 @@ class Status extends ImmutablePureComponent {
     }
 
     if (status.get('poll')) {
-      contentMedia.push(<PollContainer pollId={status.get('poll')} />);
+      contentMedia.push(<PollContainer pollId={status.get('poll')} lang={status.get('language')} />);
       contentMediaIcons.push('tasks');
     }
 

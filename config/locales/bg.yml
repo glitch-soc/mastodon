@@ -105,7 +105,7 @@ bg:
       not_subscribed: Без абонамент
       pending: Изчаква преглед
       perform_full_suspension: Спиране
-      previous_strikes: Предишни нарушения
+      previous_strikes: Предишни предупреждения
       previous_strikes_description_html:
         one: Този акаунт има <strong>едно</strong> нарушение.
         other: Този акунт има <strong>%{count}</strong> нарушения.
@@ -231,7 +231,7 @@ bg:
       actions:
         approve_appeal_html: "%{name} одобри обжалването на решение за модериране от %{target}"
         approve_user_html: "%{name} одобри регистрирането от %{target}"
-        assigned_to_self_report_html: "%{name} назначете доклада %{target} на себе си"
+        assigned_to_self_report_html: "%{name} възложи на себе си доклад %{target}"
         change_email_user_html: "%{name} промени адреса на имейла на потребителя %{target}"
         change_role_user_html: "%{name} промени ролята на %{target}"
         confirm_user_html: "%{name} потвърди адреса на имейла на потребителя %{target}"
@@ -613,6 +613,7 @@ bg:
         placeholder: Опишете какви действия са били предприети или всякакви други свързани нови неща...
         title: Бележки
       notes_description_html: Прегледайте и оставете бележки за други модератори и за вас самите след време
+      processed_msg: Доклад №%{id} успешно обработен
       quick_actions_description_html: 'Предприемете бързо действие или превъртете надолу, за да видите докладваното съдържание:'
       remote_user_placeholder: отдалеченият потребител от %{instance}
       reopen: Отваряне пак на доклад
@@ -633,10 +634,14 @@ bg:
           suspend_html: 'На път сте да <strong>спрете</strong> акаунта на <strong>@%{acct}</strong>. Това ще:'
         actions:
           delete_html: Премахване на обидните публикации
+          mark_as_sensitive_html: Означаване на мултимедийните обидни публикации като деликатни
           silence_html: Силно ограничаване достигането на <strong>@%{acct}</strong>, което прави профилът и съдържанието на това лице видимо само до хората, които са го последвали или ръчно търсещите профила
+          suspend_html: Спирането на <strong>@%{acct}</strong> ще направи профилът и съдържанието недостъпни и невъзможни за взаимодействие
         close_report: Отбелязване на доклад №%{id} като решен
         close_reports_html: Означаване на <strong>всички</strong> доклади срещу <strong>@%{acct}</strong> като решени
+        delete_data_html: Изтриване на профила и съдържанието на <strong>@%{acct}</strong> за 30 дни от сега, освен ако междувременно не получи спиране
         preview_preamble_html: "<strong>@%{acct}</strong> ще получи предупреждение със следното съдържание:"
+        record_strike_html: Запис на предупреждение против <strong>@%{acct}</strong>, за да ви помогне при изострянето на бъдещи нарушения от този акаунт
         send_email_html: Изпращане на предупредително е-писмо на <strong>@%{acct}</strong>
         warning_placeholder: Незадължителни допълнителни причини за модераторско действие.
       target_origin: Произход на докладвания акаунт
@@ -930,7 +935,7 @@ bg:
       new_trending_tags:
         no_approved_tags: Сега няма одобрени налагащи се хаштагове.
         requirements: 'Всеки от тези кандидати може да надмине #%{rank} одобрен актуален хаштаг, който в момента е #%{lowest_tag_name} с резултат %{lowest_tag_score}.'
-        title: Нашумели хаштагове
+        title: Налагащи се хаштагове
       subject: Нови нашумели, готови за преглед в %{instance}
   aliases:
     add_new: Създаване на псевдоним
@@ -1020,7 +1025,7 @@ bg:
       functional: Вашият акаунт е в изправност.
       pending: Вашето приложение чака преглед от нашия екип. Това може да отнеме време. Ще получите имейл, ако приложението е одобрено.
       redirecting_to: Вашият акаунт е бездеен, защото сега се пренасочва към %{acct}.
-      view_strikes: Преглед на предишните нарушения за вашия акаунт
+      view_strikes: Преглед на предишните предупреждения против акаунта ви
     too_fast: Образецът подаден пребързо, опитайте пак.
     use_security_key: Употреба на ключ за сигурност
   authorize_follow:
@@ -1083,7 +1088,7 @@ bg:
     strikes:
       action_taken: Предприето действие
       appeal: Обжалване
-      appeal_approved: Това нарушение беше успешно обжалвано и е вече невалидно
+      appeal_approved: Това предупреждение беше успешно обжалвано и е вече невалидно
       appeal_rejected: Обжалването е отхвърлено
       appeal_submitted_at: Подадено обжалване
       appealed_msg: Вашето обжалване е отхвърлено. Ако е одобрено, то ще бъдете известени.
@@ -1191,8 +1196,6 @@ bg:
       index:
         hint: Този филтър се прилага за избор на отделни публикации, независимо от други критерии. Може да добавите още публикации в този филтър от уебинтерфейса.
         title: Филтрирани публикации
-  footer:
-    trending_now: Налагащи се сега
   generic:
     all: Всичко
     all_items_on_page_selected_html:
@@ -1402,6 +1405,7 @@ bg:
     confirm_remove_selected_followers: Наистина ли искате да премахнете избраните последователи?
     confirm_remove_selected_follows: Наистина ли искате да премахнете избраните последвания?
     dormant: Неактивен
+    follow_failure: Не може да се последват някои от избраните акаунти.
     follow_selected_followers: Последване на избраните последователи
     followers: Последователи
     following: Последвани
@@ -1441,6 +1445,7 @@ bg:
       electron: Electron
       firefox: Firefox
       generic: Неизвестен браузър
+      huawei_browser: Браузър Хуауей
       ie: Internet Explorer
       micro_messenger: MicroMessenger
       nokia: Браузър Nokia S40 Ovi
@@ -1450,6 +1455,7 @@ bg:
       qq: Браузър QQ
       safari: Safari
       uc_browser: Браузър UC
+      unknown_browser: Неизвестен браузър
       weibo: Weibo
     current_session: Текуща сесия
     description: "%{browser} на %{platform}"
@@ -1462,9 +1468,10 @@ bg:
       chrome_os: ChromeOS
       firefox_os: Оп. сист. Firefox
       ios: iOS
+      kai_os: KaiOS
       linux: Линукс
       mac: macOS
-      other: неизвестна платформа
+      unknown_platform: Неизвестна платформа
       windows: Windows
       windows_mobile: Windows Mobile
       windows_phone: Windows Phone
@@ -1492,7 +1499,7 @@ bg:
     profile: Профил
     relationships: Последвания и последователи
     statuses_cleanup: Автоматично изтриване на публикации
-    strikes: Нарушения
+    strikes: Модериране на предупреждения
     two_factor_authentication: Двустепенно удостоверяване
     webauthn_authentication: Ключове за сигурност
   statuses:
@@ -1586,7 +1593,7 @@ bg:
     sensitive_content: Деликатно съдържание
   strikes:
     errors:
-      too_late: Късно е за обжалване на това нарушение
+      too_late: Твърде късно е за обжалване на това предупреждение
   tags:
     does_not_match_previous_name: не съвпада с предишното име
   themes:

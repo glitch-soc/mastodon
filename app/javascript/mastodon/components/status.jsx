@@ -422,6 +422,7 @@ class Status extends ImmutablePureComponent {
               <Component
                 src={attachment.get('url')}
                 alt={attachment.get('description')}
+                lang={status.get('language')}
                 poster={attachment.get('preview_url') || status.getIn(['account', 'avatar_static'])}
                 backgroundColor={attachment.getIn(['meta', 'colors', 'background'])}
                 foregroundColor={attachment.getIn(['meta', 'colors', 'foreground'])}
@@ -451,6 +452,7 @@ class Status extends ImmutablePureComponent {
                 blurhash={attachment.get('blurhash')}
                 src={attachment.get('url')}
                 alt={attachment.get('description')}
+                lang={status.get('language')}
                 width={this.props.cachedMediaWidth}
                 height={110}
                 inline
@@ -470,6 +472,7 @@ class Status extends ImmutablePureComponent {
             {Component => (
               <Component
                 media={status.get('media_attachments')}
+                lang={status.get('language')}
                 sensitive={status.get('sensitive')}
                 height={110}
                 onOpenMedia={this.handleOpenMedia}

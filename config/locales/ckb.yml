@@ -744,8 +744,6 @@ ckb:
       title: فلتەرەکان
     new:
       title: زیادکردنی فلتەری نوێ
-  footer:
-    trending_now: هەوادارانی ئێستا
   generic:
     all: هەموو
     changes_saved_msg: گۆڕانکاریەکان بە سەرکەوتوویی هەڵگیرا!
@@ -943,7 +941,6 @@ ckb:
       firefox_os: سیستەمی کارگێڕی فایەرفۆکس
       linux: لینۆکس
       mac: ماک
-      other: سیستەمیکارگێڕی نەناسراو
       windows: ویندۆز
       windows_mobile: ویندۆزموبایل
       windows_phone: ویندۆزفۆن

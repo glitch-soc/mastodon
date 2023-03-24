@@ -1151,6 +1151,8 @@ pt-PT:
     storage: Armazenamento de media
   featured_tags:
     add_new: Adicionar nova
+    errors:
+      limit: Já destacou o número máximo de hashtags permitido
     hint_html: "<strong>O que são etiquetas em destaque?</strong> Exibidas de forma bem visível no seu perfil público, permitem que as pessoas consultem as suas publicações públicas especificamente sob essas etiquetas. São uma óptima ferramenta para dar seguimento a trabalhos criativos ou projectos de longo prazo."
   filters:
     contexts:
@@ -1194,8 +1196,6 @@ pt-PT:
       index:
         hint: Este filtro aplica-se a publicações individuais selecionadas independentemente de outros critérios. Pode adicionar mais publicações a este filtro através da interface web.
         title: Publicações filtradas
-  footer:
-    trending_now: Em alta neste momento
   generic:
     all: Tudo
     all_items_on_page_selected_html:
@@ -1258,6 +1258,9 @@ pt-PT:
       expires_at: Expira
       uses: Usos
     title: Convidar pessoas
+  lists:
+    errors:
+      limit: Atingiu o número máximo de listas permitido
   login_activities:
     authentication_methods:
       otp: aplicação de autenticação em duas etapas
@@ -1402,6 +1405,7 @@ pt-PT:
     confirm_remove_selected_followers: Tem a certeza que deseja seguir os seguidores selecionados?
     confirm_remove_selected_follows: Tem certeza que deseja remover os seguidores selecionados?
     dormant: Inativo
+    follow_failure: Não foi possível seguir algumas das contas selecionadas.
     follow_selected_followers: Seguir seguidores selecionados
     followers: Seguidores
     following: A seguir
@@ -1441,6 +1445,7 @@ pt-PT:
       electron: Electron
       firefox: Firefox
       generic: Navegador desconhecido
+      huawei_browser: Navegador Huawei
       ie: Internet Explorer
       micro_messenger: MicroMessenger
       nokia: Navegador Nokia S40 Ovi
@@ -1450,6 +1455,7 @@ pt-PT:
       qq: QQ Browser
       safari: Safari
       uc_browser: Navegador UC
+      unknown_browser: Navegador Desconhecido
       weibo: Weibo
     current_session: Sessão atual
     description: "%{browser} em %{platform}"
@@ -1462,9 +1468,10 @@ pt-PT:
       chrome_os: ChromeOS
       firefox_os: SO Firefox
       ios: iOS
+      kai_os: KaiOS
       linux: Linux
       mac: macOS
-      other: plataforma desconhecida
+      unknown_platform: Plataforma Desconhecida
       windows: Windows
       windows_mobile: Windows Mobile
       windows_phone: Windows Phone
@@ -1577,6 +1584,7 @@ pt-PT:
       '7889238': 3 meses
     min_age_label: Limite de idade
     min_favs: Manter pelo menos as publicações dos marcadores
+    min_favs_hint: Não elimina nenhuma das suas publicações que tenha recebido pelo menos este número de favoritos. Deixe em branco para eliminar publicações, independentemente do seu número de favoritos
     min_reblogs: Manter as publicações reforçadas mais de
     min_reblogs_hint: Não apaga nenhuma das suas publicações que tenha sido partilhada mais do que este número de vezes. Deixe em branco para apagar as publicações, independentemente do número de partilhas
   stream_entries:

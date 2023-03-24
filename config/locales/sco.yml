@@ -1146,8 +1146,6 @@ sco:
       index:
         hint: This filter applies tae select individual posts regairdless o ither criteria. Ye kin add mair posts tae this filter fae the wab interface.
         title: Filtert posts
-  footer:
-    trending_now: Trendin the noo
   generic:
     all: Aw
     all_items_on_page_selected_html:
@@ -1413,7 +1411,6 @@ sco:
       ios: iOS
       linux: Linux
       mac: macOS
-      other: unkent platform
       windows: Windows
       windows_mobile: Windows Mobile
       windows_phone: Windows Phone

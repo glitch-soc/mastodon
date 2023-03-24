@@ -704,8 +704,6 @@ co:
       title: Filtri
     new:
       title: Aghjunghje un novu filtru
-  footer:
-    trending_now: Tindenze d'avà
   generic:
     all: Tuttu
     changes_saved_msg: Cambiamenti salvati!
@@ -930,7 +928,6 @@ co:
       ios: iOS
       linux: Linux
       mac: macOS
-      other: piattaforma scunnisciuta
       windows: Windows
       windows_mobile: Windows Mobile
       windows_phone: Windows Phone
