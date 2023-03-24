@@ -3,6 +3,7 @@
 class FetchLinkCardService < BaseService
   include Redisable
   include Lockable
+  include FormattingHelper
 
   URL_PATTERN = %r{
     (#{Twitter::TwitterText::Regex[:valid_url_preceding_chars]})                                                                #   $1 preceding chars
@@ -68,11 +69,15 @@ class FetchLinkCardService < BaseService
     Trends.links.register(@status)
   end
 
+  # Returns the first valid url in a toot
   def parse_urls
-    urls = if @status.local?
+    # When toot is local and not posted with markdown, extract URLs from plain text
+    # Otherwise when a toot is local, format the toot first and then extract URLs.
+    # Remote toots are already formatted
+    urls = if @status.local? && @status.content_type != 'text/markdown'
              @status.text.scan(URL_PATTERN).map { |array| Addressable::URI.parse(array[1]).normalize }
            else
-             document = Nokogiri::HTML(@status.text)
+             document = Nokogiri::HTML(@status.local? ? status_content_format(@status) : @status.text)
              links = document.css('a')
 
              links.filter_map { |a| Addressable::URI.parse(a['href']) unless skip_link?(a) }.filter_map(&:normalize)
