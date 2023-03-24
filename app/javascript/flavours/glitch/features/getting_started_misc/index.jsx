@@ -22,8 +22,6 @@ const messages = defineMessages({
   featured_users: { id: 'navigation_bar.featured_users', defaultMessage: 'Featured users' },
 });
 
-export default @connect()
-@injectIntl
 class gettingStartedMisc extends ImmutablePureComponent {
 
   static contextTypes = {
@@ -68,3 +66,5 @@ class gettingStartedMisc extends ImmutablePureComponent {
   }
 
 }
+
+export default connect()(injectIntl(gettingStartedMisc));
