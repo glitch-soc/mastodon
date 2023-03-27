@@ -71,10 +71,7 @@ export default class ColumnSettings extends React.PureComponent {
           </span>
 
           <div className='column-settings__row'>
-<<<<<<< HEAD:app/javascript/flavours/glitch/features/notifications/components/column_settings.jsx
             <SettingToggle id='group-reactions' prefix='notifications' settings={settings} settingPath={['grouping', 'reaction']} onChange={onChange} label={groupReactions} />
-=======
->>>>>>> 22a661df1 (Collapse favorite/boost notifications into a single notification on the frontend):app/javascript/flavours/glitch/features/notifications/components/column_settings.js
             <SettingToggle id='group-favourites' prefix='notifications' settings={settings} settingPath={['grouping', 'favourite']} onChange={onChange} label={groupFavorites} />
             <SettingToggle id='group-boosts' prefix='notifications' settings={settings} settingPath={['grouping', 'reblog']} onChange={onChange} label={groupBoosts} />
           </div>
