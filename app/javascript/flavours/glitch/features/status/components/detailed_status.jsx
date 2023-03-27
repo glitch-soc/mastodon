@@ -20,6 +20,7 @@ import AnimatedNumber from 'flavours/glitch/components/animated_number';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import EditedTimestamp from 'flavours/glitch/components/edited_timestamp';
 import StatusReactions from 'flavours/glitch/components/status_reactions';
+import { injectIntl } from 'react-intl';
 
 class DetailedStatus extends ImmutablePureComponent {
 
@@ -48,7 +49,6 @@ class DetailedStatus extends ImmutablePureComponent {
     onToggleMediaVisibility: PropTypes.func,
     onReactionAdd: PropTypes.func.isRequired,
     onReactionRemove: PropTypes.func.isRequired,
-    intl: PropTypes.object.isRequired,
   };
 
   state = {

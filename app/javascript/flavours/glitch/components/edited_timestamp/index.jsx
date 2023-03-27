@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import Icon from 'flavours/glitch/components/icon';
 import DropdownMenu from './containers/dropdown_menu_container';
 import { connect } from 'react-redux';
