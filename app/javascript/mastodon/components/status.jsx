@@ -7,6 +7,7 @@ import RelativeTimestamp from './relative_timestamp';
 import DisplayName from './display_name';
 import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
+import StatusReactions from './status_reactions';
 import AttachmentList from './attachment_list';
 import Card from '../features/status/components/card';
 import { injectIntl, defineMessages, FormattedMessage } from 'react-intl';
@@ -15,7 +16,7 @@ import { MediaGallery, Video, Audio } from '../features/ui/util/async-components
 import { HotKeys } from 'react-hotkeys';
 import classNames from 'classnames';
 import Icon from 'mastodon/components/icon';
-import { displayMedia } from '../initial_state';
+import { displayMedia, visibleReactions } from '../initial_state';
 import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
 
 // We use the component (and not the container) since we do not want
@@ -28,7 +29,7 @@ export const textForScreenReader = (intl, status, rebloggedByText = false) => {
   const values = [
     displayName.length === 0 ? status.getIn(['account', 'acct']).split('@')[0] : displayName,
     status.get('spoiler_text') && status.get('hidden') ? status.get('spoiler_text') : status.get('search_index').slice(status.get('spoiler_text').length),
-    intl.formatDate(status.get('created_at'), { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
+    new Date(status.get('created_at')).toLocaleString(undefined, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
     status.getIn(['account', 'acct']),
   ];
 
@@ -63,6 +64,7 @@ class Status extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
+    identity: PropTypes.object,
   };
 
   static propTypes = {
@@ -75,6 +77,8 @@ class Status extends ImmutablePureComponent {
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
     onMention: PropTypes.func,
+    onReactionAdd: PropTypes.func,
+    onReactionRemove: PropTypes.func,
     onPin: PropTypes.func,
     onOpenMedia: PropTypes.func,
     onOpenVideo: PropTypes.func,
@@ -98,6 +102,7 @@ class Status extends ImmutablePureComponent {
     cachedMediaWidth: PropTypes.number,
     scrollKey: PropTypes.string,
     deployPictureInPicture: PropTypes.func,
+    emojiMap: ImmutablePropTypes.map.isRequired,
     pictureInPicture: ImmutablePropTypes.contains({
       inUse: PropTypes.bool,
       available: PropTypes.bool,
@@ -516,7 +521,7 @@ class Status extends ImmutablePureComponent {
             <div onClick={this.handleClick} className='status__info'>
               <a href={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`} className='status__relative-time' target='_blank' rel='noopener noreferrer'>
                 <span className='status__visibility-icon'><Icon id={visibilityIcon.icon} title={visibilityIcon.text} /></span>
-                <RelativeTimestamp timestamp={status.get('created_at')} />{status.get('edited_at') && <abbr title={intl.formatMessage(messages.edited, { date: intl.formatDate(status.get('edited_at'), { hour12: false, year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }) })}> *</abbr>}
+                <RelativeTimestamp timestamp={status.get('created_at')} />{status.get('edited_at') && <abbr title={intl.formatMessage(messages.edited, { date: new Date(status.get('edited_at')).toLocaleString(undefined, { hourCycle: 'h23', year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }) })}> *</abbr>}
               </a>
 
               <a onClick={this.handleAccountClick} href={`/@${status.getIn(['account', 'acct'])}`} title={status.getIn(['account', 'acct'])} className='status__display-name' target='_blank' rel='noopener noreferrer'>
@@ -539,6 +544,15 @@ class Status extends ImmutablePureComponent {
             />
 
             {media}
+
+            <StatusReactions
+              statusId={status.get('id')}
+              reactions={status.get('reactions')}
+              numVisible={visibleReactions}
+              addReaction={this.props.onReactionAdd}
+              removeReaction={this.props.onReactionRemove}
+              canReact={this.context.identity.signedIn}
+            />
 
             <StatusActionBar scrollKey={scrollKey} status={status} account={account} onFilter={matchedFilters ? this.handleFilterClick : null} {...other} />
           </div>

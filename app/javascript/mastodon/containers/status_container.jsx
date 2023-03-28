@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Status from '../components/status';
-import { makeGetStatus, makeGetPictureInPicture } from '../selectors';
+import { makeGetStatus, makeGetPictureInPicture, makeCustomEmojiMap } from '../selectors';
 import {
   replyCompose,
   mentionCompose,
@@ -16,6 +16,8 @@ import {
   unbookmark,
   pin,
   unpin,
+  addReaction,
+  removeReaction,
 } from '../actions/interactions';
 import {
   muteStatus,
@@ -68,6 +70,7 @@ const makeMapStateToProps = () => {
   const mapStateToProps = (state, props) => ({
     status: getStatus(state, props),
     pictureInPicture: getPictureInPicture(state, props),
+    emojiMap: makeCustomEmojiMap(state),
   });
 
   return mapStateToProps;
@@ -129,6 +132,14 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     } else {
       dispatch(pin(status));
     }
+  },
+
+  onReactionAdd (statusId, name, url) {
+    dispatch(addReaction(statusId, name, url));
+  },
+
+  onReactionRemove (statusId, name) {
+    dispatch(removeReaction(statusId, name));
   },
 
   onEmbed (status) {

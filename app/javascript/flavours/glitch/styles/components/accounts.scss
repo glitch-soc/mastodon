@@ -311,6 +311,10 @@
   text-align: center;
 }
 
+.detailed-status__button .emoji-button {
+  padding: 0;
+}
+
 .relationship-tag {
   color: $primary-text-color;
   margin-bottom: 4px;

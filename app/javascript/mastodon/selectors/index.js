@@ -135,3 +135,11 @@ export const getAccountHidden = createSelector([
 ], (hidden, followingOrRequested, isSelf) => {
   return hidden && !(isSelf || followingOrRequested);
 });
+
+export const makeCustomEmojiMap = createSelector(
+  [state => state.get('custom_emojis')],
+  items => items.reduce(
+    (map, emoji) => map.set(emoji.get('shortcode'), emoji),
+    ImmutableMap(),
+  ),
+);

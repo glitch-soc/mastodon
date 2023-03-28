@@ -217,6 +217,7 @@ de:
         setting_unfollow_modal: Bestätigungsdialog anzeigen, bevor jemandem entfolgt wird
         setting_use_blurhash: Farbverlauf für verborgene Medien anzeigen
         setting_use_pending_items: Langsamer Modus
+        setting_visible_reactions: Anzahl der sichtbaren Emoji-Reaktionen
         severity: Einschränkung
         sign_in_token_attempt: Sicherheitsschlüssel
         title: Titel

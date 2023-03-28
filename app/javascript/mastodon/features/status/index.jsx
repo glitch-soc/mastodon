@@ -30,6 +30,8 @@ import {
   unreblog,
   pin,
   unpin,
+  addReaction,
+  removeReaction,
 } from '../../actions/interactions';
 import {
   replyCompose,
@@ -48,7 +50,7 @@ import { initMuteModal } from '../../actions/mutes';
 import { initBlockModal } from '../../actions/blocks';
 import { initBoostModal } from '../../actions/boosts';
 import { initReport } from '../../actions/reports';
-import { makeGetStatus, makeGetPictureInPicture } from '../../selectors';
+import { makeCustomEmojiMap, makeGetStatus, makeGetPictureInPicture } from '../../selectors';
 import ScrollContainer from 'mastodon/containers/scroll_container';
 import ColumnBackButton from '../../components/column_back_button';
 import ColumnHeader from '../../components/column_header';
@@ -153,6 +155,7 @@ const makeMapStateToProps = () => {
       askReplyConfirmation: state.getIn(['compose', 'text']).trim().length !== 0,
       domain: state.getIn(['meta', 'domain']),
       pictureInPicture: getPictureInPicture(state, { id: props.params.statusId }),
+      emojiMap: makeCustomEmojiMap(state),
     };
   };
 
@@ -251,6 +254,19 @@ class Status extends ImmutablePureComponent {
       }));
     }
   };
+
+  handleReactionAdd = (statusId, name, url) => {
+    const { dispatch } = this.props;
+    const { signedIn } = this.context.identity;
+
+    if (signedIn) {
+      dispatch(addReaction(statusId, name, url));
+    }
+  }
+
+  handleReactionRemove = (statusId, name) => {
+    this.props.dispatch(removeReaction(statusId, name));
+  }
 
   handlePin = (status) => {
     if (status.get('pinned')) {
@@ -636,12 +652,15 @@ class Status extends ImmutablePureComponent {
                   status={status}
                   onOpenVideo={this.handleOpenVideo}
                   onOpenMedia={this.handleOpenMedia}
+                  onReactionAdd={this.handleReactionAdd}
+                  onReactionRemove={this.handleReactionRemove}
                   onToggleHidden={this.handleToggleHidden}
                   onTranslate={this.handleTranslate}
                   domain={domain}
                   showMedia={this.state.showMedia}
                   onToggleMediaVisibility={this.handleToggleMediaVisibility}
                   pictureInPicture={pictureInPicture}
+                  emojiMap={this.props.emojiMap}
                 />
 
                 <ActionBar
@@ -649,6 +668,7 @@ class Status extends ImmutablePureComponent {
                   status={status}
                   onReply={this.handleReplyClick}
                   onFavourite={this.handleFavouriteClick}
+                  onReactionAdd={this.handleReactionAdd}
                   onReblog={this.handleReblogClick}
                   onBookmark={this.handleBookmarkClick}
                   onDelete={this.handleDeleteClick}

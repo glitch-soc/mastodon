@@ -16,6 +16,8 @@ import {
   unbookmark,
   pin,
   unpin,
+  addReaction,
+  removeReaction,
 } from 'flavours/glitch/actions/interactions';
 import {
   muteStatus,
@@ -83,7 +85,7 @@ const makeMapStateToProps = () => {
     return {
       containerId: props.containerId || props.id,  //  Should match reblogStatus's id for reblogs
       status: status,
-      account: account || props.account,
+      account: props.account || account,
       settings: state.get('local_settings'),
       prepend: prepend || props.prepend,
       pictureInPicture: getPictureInPicture(state, props),
@@ -163,6 +165,14 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
     } else {
       dispatch(pin(status));
     }
+  },
+
+  onReactionAdd (statusId, name, url) {
+    dispatch(addReaction(statusId, name, url));
+  },
+
+  onReactionRemove (statusId, name) {
+    dispatch(removeReaction(statusId, name));
   },
 
   onEmbed (status) {

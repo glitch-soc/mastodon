@@ -54,6 +54,14 @@ class LocalSettingsPage extends React.PureComponent {
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
+          item={['zoom_emojis_on_hover']}
+          id='mastodon-settings--zoom-on-hover'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.zoom_emojis_on_hover' defaultMessage='Zoom in on emojis when hovering over them' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
           item={['hicolor_privacy_icons']}
           id='mastodon-settings--hicolor_privacy_icons'
           onChange={onChange}
@@ -409,11 +417,11 @@ class LocalSettingsPage extends React.PureComponent {
             settings={settings}
             item={['collapsed', 'auto', 'height']}
             id='mastodon-settings--collapsed-auto-height'
-            placeholder='400'
+            placeholder='500'
             onChange={onChange}
             dependsOn={[['collapsed', 'enabled']]}
             dependsOnNot={[['collapsed', 'auto', 'all']]}
-            inputProps={{ type: 'number', min: '200', max: '999' }}
+            inputProps={{type: 'number', min: '200', max: '999'}}
           >
             <FormattedMessage id='settings.auto_collapse_height' defaultMessage='Height (in pixels) for a toot to be considered lengthy' />
           </LocalSettingsPageItem>

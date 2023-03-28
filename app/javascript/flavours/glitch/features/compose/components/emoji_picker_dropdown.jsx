@@ -318,6 +318,7 @@ class EmojiPickerDropdown extends React.PureComponent {
     onSkinTone: PropTypes.func.isRequired,
     skinTone: PropTypes.number.isRequired,
     button: PropTypes.node,
+    disabled: PropTypes.bool,
   };
 
   state = {
@@ -351,7 +352,7 @@ class EmojiPickerDropdown extends React.PureComponent {
   };
 
   onToggle = (e) => {
-    if (!this.state.loading && (!e.key || e.key === 'Enter')) {
+    if (!this.state.disabled && !this.state.loading && (!e.key || e.key === 'Enter')) {
       if (this.state.active) {
         this.onHideDropdown();
       } else {
@@ -389,7 +390,7 @@ class EmojiPickerDropdown extends React.PureComponent {
           />}
         </div>
 
-        <Overlay show={active} placement={'bottom'} target={this.findTarget} popperConfig={{ strategy: 'fixed' }}>
+        <Overlay show={active} placement={'bottom'} flip target={this.findTarget} popperConfig={{ strategy: 'fixed' }}>
           {({ props, placement })=> (
             <div {...props} style={{ ...props.style, width: 299 }}>
               <div className={`dropdown-animation ${placement}`}>

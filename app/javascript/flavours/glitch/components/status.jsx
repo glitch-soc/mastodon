@@ -6,6 +6,7 @@ import StatusHeader from './status_header';
 import StatusIcons from './status_icons';
 import StatusContent from './status_content';
 import StatusActionBar from './status_action_bar';
+import StatusReactions from './status_reactions';
 import AttachmentList from './attachment_list';
 import Card from '../features/status/components/card';
 import { injectIntl, FormattedMessage } from 'react-intl';
@@ -16,8 +17,9 @@ import NotificationOverlayContainer from 'flavours/glitch/features/notifications
 import classNames from 'classnames';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import PollContainer from 'flavours/glitch/containers/poll_container';
-import { displayMedia } from 'flavours/glitch/initial_state';
+import { displayMedia, visibleReactions } from 'flavours/glitch/initial_state';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
+import { List as ImmutableList } from 'immutable';
 
 // We use the component (and not the container) since we do not want
 // to use the progress bar to show download progress
@@ -60,13 +62,14 @@ class Status extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
+    identity: PropTypes.object,
   };
 
   static propTypes = {
     containerId: PropTypes.string,
     id: PropTypes.string,
     status: ImmutablePropTypes.map,
-    account: ImmutablePropTypes.map,
+    account: PropTypes.oneOfType([ImmutablePropTypes.map, ImmutablePropTypes.listOf(ImmutablePropTypes.map)]),
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
     onReblog: PropTypes.func,
@@ -74,6 +77,8 @@ class Status extends ImmutablePureComponent {
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
     onMention: PropTypes.func,
+    onReactionAdd: PropTypes.func,
+    onReactionRemove: PropTypes.func,
     onPin: PropTypes.func,
     onOpenMedia: PropTypes.func,
     onOpenVideo: PropTypes.func,
@@ -499,7 +504,6 @@ class Status extends ImmutablePureComponent {
     const {
       handleRef,
       parseClick,
-      setExpansion,
       setCollapsed,
     } = this;
     const { router } = this.context;
@@ -533,6 +537,8 @@ class Status extends ImmutablePureComponent {
     let extraMediaIcons = [];
     let media = contentMedia;
     let mediaIcons = contentMediaIcons;
+
+    const accounts = ImmutableList.isList(account) ? account : ImmutableList.of(account);
 
     if (settings.getIn(['content_warnings', 'media_outside'])) {
       media = extraMedia;
@@ -728,20 +734,22 @@ class Status extends ImmutablePureComponent {
 
     let prepend;
 
-    if (this.props.prepend && account) {
+    if (this.props.prepend && accounts) {
       const notifKind = {
         favourite: 'favourited',
+        reaction: 'reacted',
         reblog: 'boosted',
         reblogged_by: 'boosted',
         status: 'posted',
       }[this.props.prepend];
 
-      selectorAttribs[`data-${notifKind}-by`] = `@${account.get('acct')}`;
+      selectorAttribs[`data-${notifKind}-by`] = accounts.map(acct => `@${acct.get('acct')}`).join(',');
 
       prepend = (
         <StatusPrepend
           type={this.props.prepend}
-          account={account}
+          status={status}
+          accounts={accounts}
           parseClick={parseClick}
           notificationId={this.props.notificationId}
         />
@@ -751,7 +759,10 @@ class Status extends ImmutablePureComponent {
     let rebloggedByText;
 
     if (this.props.prepend === 'reblog') {
-      rebloggedByText = intl.formatMessage({ id: 'status.reblogged_by', defaultMessage: '{name} boosted' }, { name: account.get('acct') });
+      rebloggedByText = intl.formatMessage(
+        { id: 'status.reblogged_by', defaultMessage: '{name} boosted' },
+        { name: new Intl.ListFormat(intl.locale, { type: 'conjunction' }).format(accounts.map(acct => acct.get('acct'))) },
+      );
     }
 
     const computedClass = classNames('status', `status-${status.get('visibility')}`, {
@@ -780,7 +791,7 @@ class Status extends ImmutablePureComponent {
               {!muted || !isCollapsed ? (
                 <StatusHeader
                   status={status}
-                  friend={account}
+                  friends={accounts}
                   collapsed={isCollapsed}
                   parseClick={parseClick}
                 />
@@ -807,6 +818,16 @@ class Status extends ImmutablePureComponent {
             disabled={!router}
             tagLinks={settings.get('tag_misleading_links')}
             rewriteMentions={settings.get('rewrite_mentions')}
+            zoomEmojisOnHover={settings.get('zoom_emojis_on_hover')}
+          />
+
+          <StatusReactions
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            numVisible={visibleReactions}
+            addReaction={this.props.onReactionAdd}
+            removeReaction={this.props.onReactionRemove}
+            canReact={this.context.identity.signedIn}
           />
 
           {!isCollapsed || !(muted || !settings.getIn(['collapsed', 'show_action_bar'])) ? (

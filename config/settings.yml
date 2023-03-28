@@ -43,6 +43,7 @@ defaults: &defaults
   trendable_by_default: false
   trending_status_cw: true
   crop_images: true
+  visible_reactions: 6
   notification_emails:
     follow: true
     reblog: false

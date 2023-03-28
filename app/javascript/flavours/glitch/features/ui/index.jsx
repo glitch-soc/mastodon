@@ -268,7 +268,7 @@ class UI extends React.Component {
     dropdownMenuIsOpen: PropTypes.bool,
     unreadNotifications: PropTypes.number,
     showFaviconBadge: PropTypes.bool,
-    moved: PropTypes.map,
+    moved: ImmutablePropTypes.map,
     layout: PropTypes.string.isRequired,
     firstLaunch: PropTypes.bool,
     username: PropTypes.string,

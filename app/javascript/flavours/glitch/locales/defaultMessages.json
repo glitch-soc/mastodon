@@ -595,6 +595,10 @@
         "id": "settings.show_reply_counter"
       },
       {
+        "defaultMessage": "Zoom in on emojis when hovering over them",
+        "id": "settings.zoom_emojis_on_hover"
+      },
+      {
         "defaultMessage": "High color privacy icons",
         "id": "settings.hicolor_privacy_icons"
       },

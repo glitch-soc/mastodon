@@ -6,13 +6,17 @@ class InitialStateSerializer < ActiveModel::Serializer
   attributes :meta, :compose, :accounts,
              :media_attachments, :settings,
              :max_toot_chars, :poll_limits,
-             :languages
+             :languages, :max_reactions
 
   has_one :push_subscription, serializer: REST::WebPushSubscriptionSerializer
   has_one :role, serializer: REST::RoleSerializer
 
   def max_toot_chars
     StatusLengthValidator::MAX_CHARS
+  end
+
+  def max_reactions
+    StatusReactionValidator::LIMIT
   end
 
   def poll_limits
@@ -66,6 +70,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:default_content_type] = object.current_account.user.setting_default_content_type
       store[:system_emoji_font] = object.current_account.user.setting_system_emoji_font
       store[:crop_images]       = object.current_account.user.setting_crop_images
+      store[:visible_reactions] = object.current_account.user.setting_visible_reactions
     else
       store[:auto_play_gif] = Setting.auto_play_gif
       store[:display_media] = Setting.display_media

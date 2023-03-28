@@ -1,6 +1,6 @@
 import escapeTextContentForBrowser from 'escape-html';
 import { createSelector } from 'reselect';
-import { List as ImmutableList, Map as ImmutableMap, is } from 'immutable';
+import { List as ImmutableList, Map as ImmutableMap } from 'immutable';
 import { toServerSideType } from 'flavours/glitch/utils/filters';
 import { me } from 'flavours/glitch/initial_state';
 
@@ -105,9 +105,20 @@ export const getAlerts = createSelector([getAlertsBase], (base) => {
   return arr;
 });
 
+/**
+ * Turns an accountId (or list of account ids) into an account (or list of accounts)
+ */
 export const makeGetNotification = () => createSelector([
   (_, base)             => base,
-  (state, _, accountId) => state.getIn(['accounts', accountId]),
+  (state, _, accountId) => {
+    let account;
+    if (ImmutableList.isList(accountId)) {
+      account = ImmutableList(accountId.map(each => state.getIn(['accounts', each])));
+    } else {
+      account = state.getIn(['accounts', accountId]);
+    }
+    return account;
+  },
 ], (base, account) => base.set('account', account));
 
 export const makeGetReport = () => createSelector([
@@ -137,3 +148,11 @@ export const getAccountHidden = createSelector([
 ], (hidden, followingOrRequested, isSelf) => {
   return hidden && !(isSelf || followingOrRequested);
 });
+
+export const makeCustomEmojiMap = createSelector(
+  [state => state.get('custom_emojis')],
+  items => items.reduce(
+    (map, emoji) => map.set(emoji.get('shortcode'), emoji),
+    ImmutableMap(),
+  ),
+);
