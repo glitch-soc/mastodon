@@ -1,5 +1,12 @@
 ---
 pl:
+  admin:
+    custom_emojis:
+      batch_copy_error: 'Podczas kopiowania niektórych zaznaczonych emotikon wystąpił następujący problem: %{message}'
+      batch_error: 'Wystąpił problem: %{message}'
+    settings:
+      captcha_enabled:
+        title: W celu potwierdzenia ich kont wymagaj rozwiązania zadania CAPTCHA przez nowych użytkowników
   generic:
     use_this: Użyj tego
   settings:
