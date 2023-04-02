@@ -1,6 +1,7 @@
 ---
 pl:
   simple_form:
+    glitch_only: glitch-soc
     hints:
       defaults:
         setting_skin: Zmienia wygląd używanej odmiany Mastodona
