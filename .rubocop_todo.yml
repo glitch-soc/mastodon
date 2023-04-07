@@ -473,6 +473,7 @@ RSpec/ContextWording:
     - 'spec/lib/activitypub/activity/create_spec.rb'
     - 'spec/lib/activitypub/activity/follow_spec.rb'
     - 'spec/lib/activitypub/activity/reject_spec.rb'
+    - 'spec/lib/advanced_text_formatter_spec.rb'
     - 'spec/lib/emoji_formatter_spec.rb'
     - 'spec/lib/entity_cache_spec.rb'
     - 'spec/lib/feed_manager_spec.rb'
