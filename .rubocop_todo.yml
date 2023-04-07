@@ -1321,6 +1321,7 @@ Rails/FilePath:
     - 'app/models/setting.rb'
     - 'app/validators/reaction_validator.rb'
     - 'config/environments/test.rb'
+    - 'config/initializers/locale.rb'
     - 'db/migrate/20170716191202_add_hide_notifications_to_mute.rb'
     - 'db/migrate/20171005171936_add_disabled_to_custom_emojis.rb'
     - 'db/migrate/20171028221157_add_reblogs_to_follows.rb'
