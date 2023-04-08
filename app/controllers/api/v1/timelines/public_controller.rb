@@ -39,8 +39,8 @@ class Api::V1::Timelines::PublicController < Api::BaseController
       remote: truthy_param?(:remote),
       only_media: truthy_param?(:only_media),
       allow_local_only: truthy_param?(:allow_local_only),
-      with_replies: Setting.show_replies_in_public_timelines,
-      with_reblogs: Setting.show_reblogs_in_public_timelines,
+      with_replies: truthy_param?(:local) ? Setting.show_replies_in_local_timelines : Setting.show_replies_in_federated_timelines,
+      with_reblogs: truthy_param?(:local) ? Setting.show_reblogs_in_local_timelines : Setting.show_reblogs_in_federated_timelines,
     )
   end
 

@@ -19,12 +19,18 @@ en:
       outgoing_spoilers:
         desc_html: When federating toots, add this content warning to toots that do not have one. It is useful if your server is specialized in content other servers might want to have under a Content Warning. Media will also be marked as sensitive.
         title: Content warning for outgoing toots
-      show_reblogs_in_public_timelines:
-        desc_html: Show public boosts of public toots in local and public timelines.
-        title: Show boosts in public timelines
-      show_replies_in_public_timelines:
-        desc_html: In addition to public self-replies (threads), show public replies in local and public timelines.
-        title: Show replies in public timelines
+      show_reblogs_in_federated_timelines:
+        desc_html: Show public boosts of public toots in the federated timeline.
+        title: Show boosts in the federated timeline
+      show_reblogs_in_local_timelines:
+        desc_html: Show public boosts in the instance's local timeline.
+        title: Show boosts in the local timeline
+      show_replies_in_federated_timelines:
+        desc_html: In addition to public self-replies (threads), show public replies in the federated timeline.
+        title: Show replies in the federated timeline
+      show_replies_in_local_timelines:
+        desc_html: In addition to public self-replies (threads), show public replies in the instance's local timeline.
+        title: Show replies in the local timeline
       trending_status_cw:
         desc_html: When trending posts are enabled, allow posts with Content Warnings to be eligible. Changes to this setting are not retroactive.
         title: Allow posts with Content Warnings to trend
