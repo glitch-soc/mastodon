@@ -435,7 +435,8 @@ class Status < ApplicationRecord
   end
 
   def local_only_emoji
-    '👁'
+    ':dmo:'
+    # 로컬이모지👁
   end
 
   def status_stat
