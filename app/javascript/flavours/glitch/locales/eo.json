@@ -42,6 +42,8 @@
   "onboarding.page_six.apps_available": "Estas {apps} disponeblaj por iOS, Android kaj aliaj sistemoj.",
   "onboarding.page_six.github": "{domain} runs on Glitchsoc. Glitchsoc is a friendly {fork} of {Mastodon}. Glitchsoc is fully compatible with all Mastodon apps and instances. Glitchsoc is free open-source software. You can report bugs, request features, or contribute to the code on {github}.",
   "onboarding.page_six.various_app": "poŝtelefonaj aplikaĵoj",
+  "search_popout.search_format": "Detala serĉformato",
+  "search_popout.tips.hashtag": "kradvorto",
   "settings.auto_collapse_all": "Ĉiuj",
   "settings.auto_collapse_lengthy": "Longaj afiŝoj",
   "settings.auto_collapse_media": "Afiŝoj kun aŭdovidaĵoj",
