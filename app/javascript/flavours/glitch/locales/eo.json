@@ -1,4 +1,5 @@
 {
+  "about.fork_disclaimer": "Glitch-soc estas libera malfermitkoda programo forkigita el Mastodon.",
   "account.add_account_note": "Aldoni noton por @{name}",
   "account.disclaimer_full": "Subaj informoj povas nekomplete prezenti la profilon de la uzanto.",
   "account.follows": "Sekvatoj",
@@ -7,6 +8,7 @@
   "account.view_full_profile": "Vidi plenan profilon",
   "account_note.cancel": "Nuligi",
   "account_note.edit": "Redakti",
+  "account_note.glitch_placeholder": "Neniu komento provizita",
   "account_note.save": "Konservi",
   "advanced_options.icon_title": "Pliaj opcioj",
   "advanced_options.local-only.long": "Ne afiŝi al aliaj instancoj",
