@@ -9,16 +9,15 @@ import LoadingIndicator from '../../components/loading_indicator';
 import Column from '../ui/components/column';
 import ProfileColumnHeader from 'flavours/glitch/features/account/components/profile_column_header';
 import HeaderContainer from './containers/header_container';
-import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import { List as ImmutableList } from 'immutable';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { FormattedMessage } from 'react-intl';
-import MissingIndicator from 'flavours/glitch/components/missing_indicator';
 import TimelineHint from 'flavours/glitch/components/timeline_hint';
 import LimitedAccountHint from './components/limited_account_hint';
 import { getAccountHidden } from 'flavours/glitch/selectors';
 import { normalizeForLookup } from 'flavours/glitch/reducers/accounts_map';
 import { fetchFeaturedTags } from '../../actions/featured_tags';
+import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
 
 const emptyList = ImmutableList();
 
@@ -160,10 +159,7 @@ class AccountTimeline extends ImmutablePureComponent {
       );
     } else if (!isLoading && !isAccount) {
       return (
-        <Column>
-          <ColumnBackButton multiColumn={multiColumn} />
-          <MissingIndicator />
-        </Column>
+        <BundleColumnError multiColumn={multiColumn} errorType='routing' />
       );
     }
 
