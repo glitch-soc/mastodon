@@ -6,6 +6,7 @@ import classNames from 'classnames';
 
 const ColumnLink = ({ icon, text, to, onClick, href, method, badge, transparent, ...other }) => {
   const className = classNames('column-link', { 'column-link--transparent': transparent });
+  const classNameButton = classNames('column-link', { 'column-link--transparent': transparent }, 'column-link__button');
   const badgeElement = typeof badge !== 'undefined' ? <span className='column-link__badge'>{badge}</span> : null;
   const iconElement = typeof icon === 'string' ? <Icon id={icon} fixedWidth className='column-link__icon' /> : icon;
 
@@ -32,11 +33,11 @@ const ColumnLink = ({ icon, text, to, onClick, href, method, badge, transparent,
       return onClick(e);
     };
     return (
-      <a href='#' onClick={onClick && handleOnClick} className={className} title={text} {...other} tabIndex={0}>
+      <button href='#' onClick={onClick && handleOnClick} className={classNameButton} title={text} {...other} tabIndex={0}>
         {iconElement}
         <span>{text}</span>
         {badgeElement}
-      </a>
+      </button>
     );
   }
 };

@@ -109,7 +109,7 @@ export default class ErrorBoundary extends React.PureComponent {
               <FormattedMessage
                 id='web_app_crash.reload_page'
                 defaultMessage='{reload} the current page'
-                values={{ reload: <a href='#' onClick={this.handleReload}><FormattedMessage id='web_app_crash.reload' defaultMessage='Reload' /></a> }}
+                values={{ reload: <button onClick={this.handleReload}><FormattedMessage id='web_app_crash.reload' defaultMessage='Reload' /></button> }}
               />
             </li>
             { preferencesLink !== undefined && (

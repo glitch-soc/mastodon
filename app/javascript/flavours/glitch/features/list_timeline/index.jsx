@@ -10,7 +10,6 @@ import { openModal } from 'flavours/glitch/actions/modal';
 import { connectListStream } from 'flavours/glitch/actions/streaming';
 import { expandListTimeline } from 'flavours/glitch/actions/timelines';
 import Column from 'flavours/glitch/components/column';
-import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import ColumnHeader from 'flavours/glitch/components/column_header';
 import Icon from 'flavours/glitch/components/icon';
 import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
@@ -134,7 +133,6 @@ class ListTimeline extends React.PureComponent {
   };
 
   handleRepliesPolicyChange = ({ target }) => {
-    const { dispatch, list } = this.props;
     const { id } = this.props.params;
     this.props.dispatch(updateList(id, undefined, false, target.value));
   };

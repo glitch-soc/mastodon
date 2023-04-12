@@ -40,7 +40,7 @@ PageOne.propTypes = {
   domain: PropTypes.string.isRequired,
 };
 
-const PageTwo = ({ intl, myAccount }) => (
+const PageTwo = ({ myAccount }) => (
   <div className='onboarding-modal__page onboarding-modal__page-two'>
     <div className='figure non-interactive'>
       <div className='pseudo-drawer'>
@@ -63,7 +63,7 @@ PageTwo.propTypes = {
   myAccount: ImmutablePropTypes.map.isRequired,
 };
 
-const PageThree = ({ intl, myAccount }) => (
+const PageThree = ({ myAccount }) => (
   <div className='onboarding-modal__page onboarding-modal__page-three'>
     <div className='figure non-interactive'>
       <Search
@@ -187,11 +187,11 @@ class OnboardingModal extends React.PureComponent {
   componentWillMount() {
     const { myAccount, admin, domain, intl } = this.props;
     this.pages = [
-      <PageOne acct={myAccount.get('acct')} domain={domain} />,
-      <PageTwo myAccount={myAccount} intl={intl} />,
-      <PageThree myAccount={myAccount} intl={intl} />,
-      <PageFour domain={domain} intl={intl} />,
-      <PageSix admin={admin} domain={domain} />,
+      <PageOne key='pageOne' acct={myAccount.get('acct')} domain={domain} />,
+      <PageTwo key='pageTwo' myAccount={myAccount} intl={intl} />,
+      <PageThree key='pageThree' myAccount={myAccount} intl={intl} />,
+      <PageFour key='pageFour' domain={domain} intl={intl} />,
+      <PageSix key='pageSix' admin={admin} domain={domain} />,
     ];
   }
 

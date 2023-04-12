@@ -54,11 +54,14 @@
 .glitch.local-settings__navigation__item {
   display: block;
   padding: 15px 20px;
+  width: -webkit-fill-available;
   color: inherit;
   background: lighten($ui-secondary-color, 8%);
+  border: none;
   border-bottom: 1px $ui-secondary-color solid;
   cursor: pointer;
   text-decoration: none;
+  text-align: left;
   outline: none;
   transition: background 0.3s;
 

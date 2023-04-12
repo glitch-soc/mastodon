@@ -261,6 +261,12 @@ $ui-header-height: 55px;
   }
 }
 
+.column-link__button {
+  width: 100%;
+  border: none;
+  text-align: left;
+}
+
 .column-link__icon {
   display: inline-block;
   margin-right: 5px;
@@ -427,7 +433,7 @@ $ui-header-height: 55px;
   justify-content: space-around;
 
   button {
-    @extend .column-header__button;
+    @extend .column-header__button; // stylelint-disable-line scss/at-extend-no-missing-placeholder
 
     background: transparent;
     text-align: center;

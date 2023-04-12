@@ -35,14 +35,14 @@ class Spoilers extends React.PureComponent {
       />);
 
     return ([
-      <p className='spoiler__text'>
+      <p key='toggleText_button' className='spoiler__text'>
         {spoilerText}
         {' '}
         <button tabIndex={0} className='status__content__spoiler-link' onClick={this.handleSpoilerClick}>
           {toggleText}
         </button>
       </p>,
-      <div className={`status__content__spoiler ${!hidden ? 'status__content__spoiler--visible' : ''}`}>
+      <div key='content_div' className={`status__content__spoiler ${!hidden ? 'status__content__spoiler--visible' : ''}`}>
         {children}
       </div>,
     ]);
