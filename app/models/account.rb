@@ -381,6 +381,10 @@ class Account < ApplicationRecord
     Rails.cache.fetch("exclude_domains_for:#{id}") { domain_blocks.pluck(:domain) }
   end
 
+  def muted_from_timeline_domains
+    Rails.cache.fetch("mute_domains_for:#{id}") { domain_mutes.pluck(:domain) }
+  end
+
   def preferred_inbox_url
     shared_inbox_url.presence || inbox_url
   end

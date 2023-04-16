@@ -641,6 +641,7 @@ const startWorker = async (workerId) => {
       const unpackedPayload = payload;
       const targetAccountIds = [unpackedPayload.account.id].concat(unpackedPayload.mentions.map(item => item.id));
       const accountDomain = unpackedPayload.account.acct.split('@')[1];
+      const statusAccountId = unpackedPayload.account.id;
 
       if (Array.isArray(req.chosenLanguages) && unpackedPayload.language !== null && req.chosenLanguages.indexOf(unpackedPayload.language) === -1) {
         log.silly(req.requestId, `Message ${unpackedPayload.id} filtered by language (${unpackedPayload.language})`);
@@ -672,7 +673,11 @@ const startWorker = async (workerId) => {
         ];
 
         if (accountDomain) {
-          queries.push(client.query('SELECT 1 FROM account_domain_blocks WHERE account_id = $1 AND domain = $2', [req.accountId, accountDomain]));
+          queries.push(client.query(
+            `SELECT 1 FROM account_domain_blocks WHERE account_id = $1 AND domain = $2
+             UNION
+             SELECT 1 FROM account_domain_mutes WHERE account_id = $1 AND domain = $2
+             AND NOT EXISTS (SELECT 1 FROM follows where account_id = $1 and target_account_id = $3)`, [req.accountId, accountDomain, statusAccountId]));
         }
 
         if (!unpackedPayload.filtered && !req.cachedFilters) {

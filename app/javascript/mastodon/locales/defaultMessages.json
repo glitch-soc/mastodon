@@ -369,6 +369,23 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "Unmute domain {domain}",
+        "id": "account.unmute_domain"
+      },
+      {
+        "defaultMessage": "Exclude domain {domain} from home timeline",
+        "id": "account.exclude_domain_from_home_timeline"
+      },
+      {
+        "defaultMessage": "Include domain {domain} from home timeline",
+        "id": "account.include_domain_from_home_timeline"
+      }
+    ],
+    "path": "app/javascript/mastodon/components/muted_domain.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "You need to sign in to access this resource.",
         "id": "not_signed_in_indicator.not_signed_in"
       }
@@ -676,6 +693,14 @@
         "id": "account.unblock_domain"
       },
       {
+        "defaultMessage": "Mute domain {domain}",
+        "id": "account.mute_domain"
+      },
+      {
+        "defaultMessage": "Unmute domain {domain}",
+        "id": "account.unmute_domain"
+      },
+      {
         "defaultMessage": "Unmute @{name}",
         "id": "account.unmute"
       },
@@ -805,11 +830,24 @@
         "id": "confirmations.domain_block.confirm"
       },
       {
+        "defaultMessage": "Mute entire domain",
+        "id": "confirmations.domain_mute.confirm"
+      },
+      {
         "defaultMessage": "Are you really, really sure you want to block the entire {domain}? In most cases a few targeted blocks or mutes are sufficient and preferable.",
         "id": "confirmations.domain_block.message"
       }
     ],
     "path": "app/javascript/mastodon/containers/domain_container.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Mute entire domain",
+        "id": "confirmations.domain_mute.confirm"
+      }
+    ],
+    "path": "app/javascript/mastodon/containers/muted_domain_container.json"
   },
   {
     "descriptors": [
@@ -1149,6 +1187,14 @@
         "id": "account.unblock_domain"
       },
       {
+        "defaultMessage": "Mute domain {domain}",
+        "id": "account.mute_domain"
+      },
+      {
+        "defaultMessage": "Unmute domain {domain}",
+        "id": "account.unmute_domain"
+      },
+      {
         "defaultMessage": "Hide boosts from @{name}",
         "id": "account.hide_reblogs"
       },
@@ -1197,6 +1243,10 @@
         "id": "navigation_bar.domain_blocks"
       },
       {
+        "defaultMessage": "Muted domains",
+        "id": "navigation_bar.domain_mutes"
+      },
+      {
         "defaultMessage": "Muted users",
         "id": "navigation_bar.mutes"
       },
@@ -1243,6 +1293,10 @@
       {
         "defaultMessage": "Domain blocked",
         "id": "account.domain_blocked"
+      },
+      {
+        "defaultMessage": "Domain muted",
+        "id": "account.domain_muted"
       },
       {
         "defaultMessage": "Bot",
@@ -1418,6 +1472,10 @@
       {
         "defaultMessage": "Hidden domains",
         "id": "navigation_bar.domain_blocks"
+      },
+      {
+        "defaultMessage": "Muted domains",
+        "id": "navigation_bar.domain_mutes"
       },
       {
         "defaultMessage": "Muted users",
@@ -2061,6 +2119,23 @@
   {
     "descriptors": [
       {
+        "defaultMessage": "Muted domains",
+        "id": "column.domain_mutes"
+      },
+      {
+        "defaultMessage": "Unmute domain {domain}",
+        "id": "account.unmute_domain"
+      },
+      {
+        "defaultMessage": "There are no muted domains yet.",
+        "id": "empty_column.domain_mutes"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/domain_mutes/index.json"
+  },
+  {
+    "descriptors": [
+      {
         "defaultMessage": "Explore",
         "id": "explore.title"
       },
@@ -2470,6 +2545,10 @@
       {
         "defaultMessage": "Hidden domains",
         "id": "navigation_bar.domain_blocks"
+      },
+      {
+        "defaultMessage": "Muted domains",
+        "id": "navigation_bar.domain_mutes"
       },
       {
         "defaultMessage": "Muted users",
@@ -3662,6 +3741,14 @@
         "id": "account.unblock_domain"
       },
       {
+        "defaultMessage": "Mute domain {domain}",
+        "id": "account.mute_domain"
+      },
+      {
+        "defaultMessage": "Unmute domain {domain}",
+        "id": "account.unmute_domain"
+      },
+      {
         "defaultMessage": "Unmute @{name}",
         "id": "account.unmute"
       },
@@ -3942,6 +4029,31 @@
       }
     ],
     "path": "app/javascript/mastodon/features/ui/components/disabled_account_banner.json"
+  },
+  {
+    "descriptors": [
+      {
+        "defaultMessage": "Are you sure you want to mute entire domain {domain}?",
+        "id": "confirmations.domain_mute.message"
+      },
+      {
+        "defaultMessage": "This will hide posts from {domain} from public timeline except you followed",
+        "id": "confirmations.domain_mute.explanation"
+      },
+      {
+        "defaultMessage": "Hide from home timeline?",
+        "id": "domain_mute_modal.hide_from_home"
+      },
+      {
+        "defaultMessage": "Cancel",
+        "id": "confirmation_modal.cancel"
+      },
+      {
+        "defaultMessage": "Mute domain",
+        "id": "confirmations.domain_mute.confirm"
+      }
+    ],
+    "path": "app/javascript/mastodon/features/ui/components/domain_mute_modal.json"
   },
   {
     "descriptors": [

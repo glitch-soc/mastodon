@@ -44,6 +44,10 @@ import {
   blockDomain,
   unblockDomain,
 } from '../../actions/domain_blocks';
+import {
+  initDomainMuteModal,
+  unmuteDomain,
+} from '../../actions/domain_mutes';
 import { initMuteModal } from '../../actions/mutes';
 import { initBlockModal } from '../../actions/blocks';
 import { initBoostModal } from '../../actions/boosts';
@@ -370,6 +374,10 @@ class Status extends ImmutablePureComponent {
     this.props.dispatch(initMuteModal(account));
   };
 
+  handleMuteDomainClick = (domain) => {
+    this.props.dispatch(initDomainMuteModal(domain));
+  }
+
   handleConversationMuteClick = (status) => {
     if (status.get('muted')) {
       this.props.dispatch(unmuteStatus(status.get('id')));
@@ -424,6 +432,10 @@ class Status extends ImmutablePureComponent {
   handleUnmuteClick = account => {
     this.props.dispatch(unmuteAccount(account.get('id')));
   };
+
+  handleUnmuteDomainClick = account => {
+    this.props.dispatch(unmuteDomain(account.get('domain')));
+  }
 
   handleUnblockClick = account => {
     this.props.dispatch(unblockAccount(account.get('id')));
@@ -662,6 +674,8 @@ class Status extends ImmutablePureComponent {
                   onUnblock={this.handleUnblockClick}
                   onBlockDomain={this.handleBlockDomainClick}
                   onUnblockDomain={this.handleUnblockDomainClick}
+                  onMuteDomain={this.handleMuteDomainClick}
+                  onUnmuteDomain={this.handleUnmuteDomainClick}
                   onReport={this.handleReport}
                   onPin={this.handlePin}
                   onEmbed={this.handleEmbed}

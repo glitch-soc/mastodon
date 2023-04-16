@@ -19,6 +19,7 @@ import { initBlockModal } from '../../../actions/blocks';
 import { initReport } from '../../../actions/reports';
 import { openModal } from '../../../actions/modal';
 import { blockDomain, unblockDomain } from '../../../actions/domain_blocks';
+import { initDomainMuteModal, unmuteDomain } from '../../../actions/domain_mutes';
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { unfollowModal } from '../../../initial_state';
 
@@ -138,6 +139,14 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
 
   onUnblockDomain (domain) {
     dispatch(unblockDomain(domain));
+  },
+
+  onMuteDomain (domain) {
+    dispatch(initDomainMuteModal(domain));
+  },
+
+  onUnmuteDomain (domain) {
+    dispatch(unmuteDomain(domain));
   },
 
   onAddToList (account) {

@@ -37,6 +37,8 @@ const messages = defineMessages({
   media: { id: 'account.media', defaultMessage: 'Media' },
   blockDomain: { id: 'account.block_domain', defaultMessage: 'Block domain {domain}' },
   unblockDomain: { id: 'account.unblock_domain', defaultMessage: 'Unblock domain {domain}' },
+  muteDomain: { id: 'account.mute_domain', defaultMessage: 'Mute domain {domain}' },
+  unmuteDomain: { id: 'account.unmute_domain', defaultMessage: 'Unmute domain {domain}' },
   hideReblogs: { id: 'account.hide_reblogs', defaultMessage: 'Hide boosts from @{name}' },
   showReblogs: { id: 'account.show_reblogs', defaultMessage: 'Show boosts from @{name}' },
   enableNotifications: { id: 'account.enable_notifications', defaultMessage: 'Notify me when @{name} posts' },
@@ -49,6 +51,7 @@ const messages = defineMessages({
   followed_tags: { id: 'navigation_bar.followed_tags', defaultMessage: 'Followed hashtags' },
   blocks: { id: 'navigation_bar.blocks', defaultMessage: 'Blocked users' },
   domain_blocks: { id: 'navigation_bar.domain_blocks', defaultMessage: 'Blocked domains' },
+  domain_mutes: { id: 'navigation_bar.domain_mutes', defaultMessage: 'Muted domains' },
   mutes: { id: 'navigation_bar.mutes', defaultMessage: 'Muted users' },
   endorse: { id: 'account.endorse', defaultMessage: 'Feature on profile' },
   unendorse: { id: 'account.unendorse', defaultMessage: 'Don\'t feature on profile' },
@@ -95,6 +98,8 @@ class Header extends ImmutablePureComponent {
     onMute: PropTypes.func.isRequired,
     onBlockDomain: PropTypes.func.isRequired,
     onUnblockDomain: PropTypes.func.isRequired,
+    onMuteDomain: PropTypes.func.isRequired,
+    onUnmuteDomain: PropTypes.func.isRequired,
     onEndorseToggle: PropTypes.func.isRequired,
     onAddToList: PropTypes.func.isRequired,
     onEditAccountNote: PropTypes.func.isRequired,
@@ -192,6 +197,10 @@ class Header extends ImmutablePureComponent {
       info.push(<span key='domain_blocked' className='relationship-tag'><FormattedMessage id='account.domain_blocked' defaultMessage='Domain blocked' /></span>);
     }
 
+    if (me !== account.get('id') && account.getIn(['relationship', 'domain_muting'])) {
+      info.push(<span key='domain_muted' clasName='relationship-tag'><FormattedMessage id='account.domain_muted' defaultMessage='Domain muted' /></span>);
+    }
+
     if (account.getIn(['relationship', 'requested']) || account.getIn(['relationship', 'following'])) {
       bellBtn = <IconButton icon={account.getIn(['relationship', 'notifying']) ? 'bell' : 'bell-o'} size={24} active={account.getIn(['relationship', 'notifying'])} title={intl.formatMessage(account.getIn(['relationship', 'notifying']) ? messages.disableNotifications : messages.enableNotifications, { name: account.get('username') })} onClick={this.props.onNotifyToggle} />;
     }
@@ -247,6 +256,7 @@ class Header extends ImmutablePureComponent {
       menu.push({ text: intl.formatMessage(messages.mutes), to: '/mutes' });
       menu.push({ text: intl.formatMessage(messages.blocks), to: '/blocks' });
       menu.push({ text: intl.formatMessage(messages.domain_blocks), to: '/domain_blocks' });
+      menu.push({ text: intl.formatMessage(messages.domain_mutes), to: '/domain_mutes' });
     } else if (signedIn) {
       if (account.getIn(['relationship', 'following'])) {
         if (!account.getIn(['relationship', 'muting'])) {
@@ -287,6 +297,12 @@ class Header extends ImmutablePureComponent {
         menu.push({ text: intl.formatMessage(messages.unblockDomain, { domain: remoteDomain }), action: this.props.onUnblockDomain });
       } else {
         menu.push({ text: intl.formatMessage(messages.blockDomain, { domain: remoteDomain }), action: this.props.onBlockDomain });
+      }
+
+      if (account.getIn(['relationship', 'domain_muting'])) {
+        menu.push({ text: intl.formatMessage(messages.unmuteDomain, { domain: remoteDomain }), action: this.props.onUnmuteDomain });
+      } else {
+        menu.push({ text: intl.formatMessage(messages.muteDomain, { domain: remoteDomain }), action: this.props.onMuteDomain });
       }
     }
 

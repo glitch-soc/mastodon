@@ -16,6 +16,7 @@ import local_settings from './local_settings';
 import push_notifications from './push_notifications';
 import status_lists from './status_lists';
 import mutes from './mutes';
+import domain_mutes from './domain_mutes';
 import blocks from './blocks';
 import server from './server';
 import boosts from './boosts';
@@ -64,6 +65,7 @@ const reducers = {
   local_settings,
   push_notifications,
   mutes,
+  domain_mutes,
   blocks,
   server,
   boosts,

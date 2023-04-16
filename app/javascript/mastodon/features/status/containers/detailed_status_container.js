@@ -22,6 +22,7 @@ import {
   revealStatus,
 } from '../../../actions/statuses';
 import { initMuteModal } from '../../../actions/mutes';
+import { initDomainMuteModal } from '../../../actions/domain_mutes';
 import { initBlockModal } from '../../../actions/blocks';
 import { initBoostModal } from '../../../actions/boosts';
 import { initReport } from '../../../actions/reports';
@@ -147,6 +148,13 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
 
   onMute (account) {
     dispatch(initMuteModal(account));
+  },
+
+  onMuteDomain () {
+    const domain = this.props.account.get('acct').split('@')[1];
+
+    if (!domain) return;
+    dispatch(initDomainMuteModal(domain));
   },
 
   onMuteConversation (status) {

@@ -105,6 +105,7 @@ class PublicFeed
   def account_filters_scope
     Status.not_excluded_by_account(account).tap do |scope|
       scope.merge!(Status.not_domain_blocked_by_account(account)) unless local_only?
+      scope.merge!(Status.not_domain_muted_by_account(account)) unless local_only?
     end
   end
 end

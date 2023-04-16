@@ -114,6 +114,14 @@ export function DomainBlocks () {
   return import(/* webpackChunkName: "flavours/glitch/async/domain_blocks" */'flavours/glitch/features/domain_blocks');
 }
 
+export function DomainMutes () {
+  return import(/* webpackChunkName: "features/domain_mutes" */'../../domain_mutes');
+}
+
+export function DomainMuteModal () {
+  return import(/* webpackChunkName: "modals/domain_mute_modal" */'../components/domain_mute_modal');
+}
+
 export function Mutes () {
   return import(/* webpackChunkName: "flavours/glitch/async/mutes" */'flavours/glitch/features/mutes');
 }

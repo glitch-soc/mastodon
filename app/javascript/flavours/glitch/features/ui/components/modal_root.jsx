@@ -18,6 +18,7 @@ import DeprecatedSettingsModal from './deprecated_settings_modal';
 import ImageModal from './image_modal';
 import {
   OnboardingModal,
+  DomainMuteModal,
   MuteModal,
   BlockModal,
   ReportModal,
@@ -44,6 +45,7 @@ const MODAL_COMPONENTS = {
   'FAVOURITE': () => Promise.resolve({ default: FavouriteModal }),
   'DOODLE': () => Promise.resolve({ default: DoodleModal }),
   'CONFIRM': () => Promise.resolve({ default: ConfirmationModal }),
+  'DOMAIN_MUTE': DomainMuteModal,
   'MUTE': MuteModal,
   'BLOCK': BlockModal,
   'REPORT': ReportModal,

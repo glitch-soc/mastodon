@@ -38,6 +38,8 @@ const messages = defineMessages({
   copy: { id: 'status.copy', defaultMessage: 'Copy link to status' },
   blockDomain: { id: 'account.block_domain', defaultMessage: 'Block domain {domain}' },
   unblockDomain: { id: 'account.unblock_domain', defaultMessage: 'Unblock domain {domain}' },
+  muteDomain: { id: 'account.mute_domain', defaultMessage: 'Mute domain {domain}' },
+  unmuteDomain: { id: 'account.unmute_domain', defaultMessage: 'Unmute domain {domain}' },
   unmute: { id: 'account.unmute', defaultMessage: 'Unmute @{name}' },
   unblock: { id: 'account.unblock', defaultMessage: 'Unblock @{name}' },
   openOriginalPage: { id: 'account.open_original_page', defaultMessage: 'Open original page' },
@@ -71,6 +73,8 @@ class ActionBar extends React.PureComponent {
     onUnblock: PropTypes.func,
     onBlockDomain: PropTypes.func,
     onUnblockDomain: PropTypes.func,
+    onMuteDomain: PropTypes.func,
+    onUnmuteDomain: PropTypes.func,
     onMuteConversation: PropTypes.func,
     onReport: PropTypes.func,
     onPin: PropTypes.func,
@@ -148,6 +152,20 @@ class ActionBar extends React.PureComponent {
     const account = status.get('account');
 
     onUnblockDomain(account.get('acct').split('@')[1]);
+  };
+
+  handleMuteDomain = () => {
+    const { status, onMuteDomain } = this.props;
+    const account = status.get('account');
+
+    onMuteDomain(account.get('acct').split('@')[1]);
+  };
+
+  handleUnmuteDomain = () => {
+    const { status, onUnmuteDomain } = this.props;
+    const account = status.get('account');
+
+    onUnmuteDomain(account.get('acct').split('@')[1]);
   };
 
   handleConversationMuteClick = () => {
@@ -239,6 +257,12 @@ class ActionBar extends React.PureComponent {
           menu.push({ text: intl.formatMessage(messages.unblockDomain, { domain }), action: this.handleUnblockDomain });
         } else {
           menu.push({ text: intl.formatMessage(messages.blockDomain, { domain }), action: this.handleBlockDomain });
+        }
+
+        if (relationship && relationship.get('domain_muting')) {
+          menu.push({ text: intl.formatMessage(messages.unmuteDomain, { domain }), action: this.handleUnmuteDomain });
+        } else {
+          menu.push({ text: intl.formatMessage(messages.muteDomain, { domain }), action: this.handleMuteDomain });
         }
       }
 

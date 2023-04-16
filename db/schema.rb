@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_15_074424) do
+ActiveRecord::Schema.define(version: 2023_02_21_054049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,15 @@ ActiveRecord::Schema.define(version: 2023_02_15_074424) do
     t.datetime "updated_at", null: false
     t.bigint "account_id"
     t.index ["account_id", "domain"], name: "index_account_domain_blocks_on_account_id_and_domain", unique: true
+  end
+
+  create_table "account_domain_mutes", force: :cascade do |t|
+    t.string "domain"
+    t.bigint "account_id"
+    t.boolean "hide_from_home"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id", "domain"], name: "index_account_domain_mutes_on_account_id_and_domain", unique: true
   end
 
   create_table "account_migrations", force: :cascade do |t|

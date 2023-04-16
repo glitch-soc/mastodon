@@ -14,6 +14,7 @@ import ConfirmationModal from './confirmation_modal';
 import FocalPointModal from './focal_point_modal';
 import ImageModal from './image_modal';
 import {
+  DomainMuteModal,
   MuteModal,
   BlockModal,
   ReportModal,
@@ -35,6 +36,7 @@ const MODAL_COMPONENTS = {
   'IMAGE': () => Promise.resolve({ default: ImageModal }),
   'BOOST': () => Promise.resolve({ default: BoostModal }),
   'CONFIRM': () => Promise.resolve({ default: ConfirmationModal }),
+  'DOMAIN_MUTE': DomainMuteModal,
   'MUTE': MuteModal,
   'BLOCK': BlockModal,
   'REPORT': ReportModal,

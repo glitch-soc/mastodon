@@ -20,6 +20,8 @@ export default class Header extends ImmutablePureComponent {
     onMute: PropTypes.func.isRequired,
     onBlockDomain: PropTypes.func.isRequired,
     onUnblockDomain: PropTypes.func.isRequired,
+    onMuteDomain: PropTypes.func.isRequired,
+    onUnmuteDomain: PropTypes.func.isRequired,
     onEndorseToggle: PropTypes.func.isRequired,
     onAddToList: PropTypes.func.isRequired,
     onChangeLanguages: PropTypes.func.isRequired,
@@ -82,6 +84,22 @@ export default class Header extends ImmutablePureComponent {
     this.props.onUnblockDomain(domain);
   };
 
+  handleMuteDomain = () => {
+    const domain = this.props.account.get('acct').split('@')[1];
+
+    if (!domain) return;
+
+    this.props.onMuteDomain(domain);
+  };
+
+  handleUnmuteDomain = () => {
+    const domain = this.props.account.get('acct').split('@')[1];
+
+    if (!domain) return;
+
+    this.props.onUnmuteDomain(domain);
+  };
+
   handleEndorseToggle = () => {
     this.props.onEndorseToggle(this.props.account);
   };
@@ -129,6 +147,8 @@ export default class Header extends ImmutablePureComponent {
           onMute={this.handleMute}
           onBlockDomain={this.handleBlockDomain}
           onUnblockDomain={this.handleUnblockDomain}
+          onMuteDomain={this.handleMuteDomain}
+          onUnmuteDomain={this.handleUnmuteDomain}
           onEndorseToggle={this.handleEndorseToggle}
           onAddToList={this.handleAddToList}
           onEditAccountNote={this.handleEditAccountNote}
