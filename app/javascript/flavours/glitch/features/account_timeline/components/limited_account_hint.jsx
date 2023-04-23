@@ -34,4 +34,4 @@ class LimitedAccountHint extends React.PureComponent {
 
 }
 
-export default connect(() => {}, mapDispatchToProps)(LimitedAccountHint);
+export default connect(null, mapDispatchToProps)(LimitedAccountHint);
