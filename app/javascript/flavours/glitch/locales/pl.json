@@ -37,6 +37,7 @@
   "compose_form.spoiler": "Ukryj tekst za ostrzeżeniem",
   "confirmation_modal.do_not_ask_again": "Więcej nie pytaj się o potwierdzenie",
   "confirmations.deprecated_settings.confirm": "Użyj preferencji Mastodonu",
+  "confirmations.deprecated_settings.message": "Niektóre używane przez Ciebie {app_settings} glitch-soc zostały zastąpione przez {preferences} Mastodona:",
   "confirmations.missing_media_description.confirm": "Zignoruj i wyślij",
   "confirmations.missing_media_description.edit": "Edytuj załącznik multimedialny",
   "confirmations.missing_media_description.message": "Co najmniej jednemu załącznikowi multimedialnemu brakuje opisu. Z uwagi na osoby z zaburzeniami widzenia rozważ opisanie wszystkich załączników przed opublikowaniem wpisu.",
