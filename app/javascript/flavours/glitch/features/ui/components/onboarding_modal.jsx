@@ -170,8 +170,6 @@ const mapStateToProps = state => ({
   domain: state.getIn(['meta', 'domain']),
 });
 
-export default @connect(mapStateToProps)
-@injectIntl
 class OnboardingModal extends React.PureComponent {
 
   static propTypes = {
@@ -301,7 +299,7 @@ class OnboardingModal extends React.PureComponent {
                 <div
                   key={`dot-${i}`}
                   role='button'
-                  tabIndex='0'
+                  tabIndex={0}
                   data-index={i}
                   onClick={this.handleDot}
                   className={className}
@@ -319,3 +317,5 @@ class OnboardingModal extends React.PureComponent {
   }
 
 }
+
+export default connect(mapStateToProps)(injectIntl(OnboardingModal));

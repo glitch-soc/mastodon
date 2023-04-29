@@ -21,8 +21,6 @@ const mapDispatchToProps = dispatch => ({
   onReset: () => dispatch(resetPinnedAccountsEditor()),
 });
 
-export default @connect(mapStateToProps, mapDispatchToProps)
-@injectIntl
 class PinnedAccountsEditor extends ImmutablePureComponent {
 
   static propTypes = {
@@ -61,7 +59,7 @@ class PinnedAccountsEditor extends ImmutablePureComponent {
             {accountIds.map(accountId => <AccountContainer key={accountId} accountId={accountId} added />)}
           </div>
 
-          {showSearch && <div role='button' tabIndex='-1' className='drawer__backdrop' onClick={onClear} />}
+          {showSearch && <div role='button' tabIndex={-1} className='drawer__backdrop' onClick={onClear} />}
 
           <Motion defaultStyle={{ x: -100 }} style={{ x: spring(showSearch ? 0 : -100, { stiffness: 210, damping: 20 }) }}>
             {({ x }) =>
@@ -76,3 +74,5 @@ class PinnedAccountsEditor extends ImmutablePureComponent {
   }
 
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(PinnedAccountsEditor));

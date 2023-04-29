@@ -354,7 +354,7 @@ class Status < ApplicationRecord
       visibilities.keys - %w(direct limited)
     end
 
-    def as_direct_timeline(account, limit = 20, max_id = nil, since_id = nil, cache_ids = false)
+    def as_direct_timeline(account, limit = 20, max_id = nil, since_id = nil)
       # direct timeline is mix of direct message from_me and to_me.
       # 2 queries are executed with pagination.
       # constant expression using arel_table is required for partial index
@@ -385,14 +385,9 @@ class Status < ApplicationRecord
         query_to_me = query_to_me.where('mentions.status_id > ?', since_id)
       end
 
-      if cache_ids
-        # returns array of cache_ids object that have id and updated_at
-        (query_from_me.cache_ids.to_a + query_to_me.cache_ids.to_a).uniq(&:id).sort_by(&:id).reverse.take(limit)
-      else
-        # returns ActiveRecord.Relation
-        items = (query_from_me.select(:id).to_a + query_to_me.select(:id).to_a).uniq(&:id).sort_by(&:id).reverse.take(limit)
-        Status.where(id: items.map(&:id))
-      end
+      # returns ActiveRecord.Relation
+      items = (query_from_me.select(:id).to_a + query_to_me.select(:id).to_a).uniq(&:id).sort_by(&:id).reverse.take(limit)
+      Status.where(id: items.map(&:id))
     end
 
     def favourites_map(status_ids, account_id)
@@ -463,33 +458,41 @@ class Status < ApplicationRecord
     super || build_status_stat
   end
 
-  # Hack to use a "INSERT INTO ... SELECT ..." query instead of "INSERT INTO ... VALUES ..." query
+  # This is a hack to ensure that no reblogs of discarded statuses are created,
+  # as this cannot be enforced through database constraints the same way we do
+  # for reblogs of deleted statuses.
+  #
+  # To achieve this, we redefine the internal method responsible for issuing
+  # the "INSERT" statement and replace the "INSERT INTO ... VALUES ..." query
+  # with an "INSERT INTO ... SELECT ..." query with a "WHERE deleted_at IS NULL"
+  # clause on the reblogged status to ensure consistency at the database level.
+  #
+  # Otherwise, the code is kept as close as possible to ActiveRecord::Persistence
+  # code, and actually calls it if we are not handling a reblog.
   def self._insert_record(values)
-    if values.is_a?(Hash) && values['reblog_of_id'].present?
-      primary_key = self.primary_key
-      primary_key_value = nil
+    return super unless values.is_a?(Hash) && values['reblog_of_id'].present?
 
-      if primary_key
-        primary_key_value = values[primary_key]
+    primary_key = self.primary_key
+    primary_key_value = nil
 
-        if !primary_key_value && prefetch_primary_key?
-          primary_key_value = next_sequence_value
-          values[primary_key] = primary_key_value
-        end
+    if primary_key
+      primary_key_value = values[primary_key]
+
+      if !primary_key_value && prefetch_primary_key?
+        primary_key_value = next_sequence_value
+        values[primary_key] = primary_key_value
       end
-
-      # The following line is where we differ from stock ActiveRecord implementation
-      im = _compile_reblog_insert(values)
-
-      # Since we are using SELECT instead of VALUES, a non-error `nil` return is possible.
-      # For our purposes, it's equivalent to a foreign key constraint violation
-      result = connection.insert(im, "#{self} Create", primary_key || false, primary_key_value)
-      raise ActiveRecord::InvalidForeignKey, "(reblog_of_id)=(#{values['reblog_of_id']}) is not present in table \"statuses\"" if result.nil?
-
-      result
-    else
-      super
     end
+
+    # The following line is where we differ from stock ActiveRecord implementation
+    im = _compile_reblog_insert(values)
+
+    # Since we are using SELECT instead of VALUES, a non-error `nil` return is possible.
+    # For our purposes, it's equivalent to a foreign key constraint violation
+    result = connection.insert(im, "#{self} Create", primary_key || false, primary_key_value)
+    raise ActiveRecord::InvalidForeignKey, "(reblog_of_id)=(#{values['reblog_of_id']}) is not present in table \"statuses\"" if result.nil?
+
+    result
   end
 
   def self._compile_reblog_insert(values)
@@ -569,9 +572,9 @@ class Status < ApplicationRecord
   end
 
   def set_locality
-    if account.domain.nil? && !attribute_changed?(:local_only)
-      self.local_only = marked_local_only?
-    end
+    return unless account.domain.nil? && !attribute_changed?(:local_only)
+
+    self.local_only = marked_local_only?
   end
 
   def set_conversation

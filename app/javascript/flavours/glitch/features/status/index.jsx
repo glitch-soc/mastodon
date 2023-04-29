@@ -16,7 +16,6 @@ import {
   translateStatus,
   undoStatusTranslation,
 } from 'flavours/glitch/actions/statuses';
-import MissingIndicator from 'flavours/glitch/components/missing_indicator';
 import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
 import DetailedStatus from './components/detailed_status';
 import ActionBar from './components/action_bar';
@@ -45,7 +44,6 @@ import { initReport } from 'flavours/glitch/actions/reports';
 import { initBoostModal } from 'flavours/glitch/actions/boosts';
 import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
-import ColumnBackButton from 'flavours/glitch/components/column_back_button';
 import ColumnHeader from '../../components/column_header';
 import StatusContainer from 'flavours/glitch/containers/status_container';
 import { openModal } from 'flavours/glitch/actions/modal';
@@ -58,6 +56,7 @@ import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { textForScreenReader, defaultMediaVisibility } from 'flavours/glitch/components/status';
 import Icon from 'flavours/glitch/components/icon';
 import { Helmet } from 'react-helmet';
+import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -66,6 +65,7 @@ const messages = defineMessages({
   redraftMessage: { id: 'confirmations.redraft.message', defaultMessage: 'Are you sure you want to delete this status and re-draft it? You will lose all replies, boosts and favourites to it.' },
   revealAll: { id: 'status.show_more_all', defaultMessage: 'Show more for all' },
   hideAll: { id: 'status.show_less_all', defaultMessage: 'Show less for all' },
+  statusTitleWithAttachments: { id: 'status.title.with_attachments', defaultMessage: '{user} posted {attachmentCount, plural, one {an attachment} other {{attachmentCount} attachments}}' },
   detailedStatus: { id: 'status.detailed_status', defaultMessage: 'Detailed conversation view' },
   replyConfirm: { id: 'confirmations.reply.confirm', defaultMessage: 'Reply' },
   replyMessage: { id: 'confirmations.reply.message', defaultMessage: 'Replying now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
@@ -164,17 +164,16 @@ const truncate = (str, num) => {
   }
 };
 
-const titleFromStatus = status => {
+const titleFromStatus = (intl, status) => {
   const displayName = status.getIn(['account', 'display_name']);
   const username = status.getIn(['account', 'username']);
-  const prefix = displayName.trim().length === 0 ? username : displayName;
+  const user = displayName.trim().length === 0 ? username : displayName;
   const text = status.get('search_index');
+  const attachmentCount = status.get('media_attachments').size;
 
-  return `${prefix}: "${truncate(text, 30)}"`;
+  return text ? `${user}: "${truncate(text, 30)}"` : intl.formatMessage(messages.statusTitleWithAttachments, { user, attachmentCount });
 };
 
-export default @injectIntl
-@connect(makeMapStateToProps)
 class Status extends ImmutablePureComponent {
 
   static contextTypes = {
@@ -637,21 +636,18 @@ class Status extends ImmutablePureComponent {
 
     if (status === null) {
       return (
-        <Column>
-          <ColumnBackButton multiColumn={multiColumn} />
-          <MissingIndicator />
-        </Column>
+        <BundleColumnError multiColumn={multiColumn} errorType='routing' />
       );
     }
 
     const isExpanded = settings.getIn(['content_warnings', 'shared_state']) ? !status.get('hidden') : this.state.isExpanded;
 
     if (ancestorsIds && ancestorsIds.size > 0) {
-      ancestors = <div>{this.renderChildren(ancestorsIds)}</div>;
+      ancestors = <>{this.renderChildren(ancestorsIds)}</>;
     }
 
     if (descendantsIds && descendantsIds.size > 0) {
-      descendants = <div>{this.renderChildren(descendantsIds)}</div>;
+      descendants = <>{this.renderChildren(descendantsIds)}</>;
     }
 
     const isLocal = status.getIn(['account', 'acct'], '').indexOf('@') === -1;
@@ -689,7 +685,7 @@ class Status extends ImmutablePureComponent {
             {ancestors}
 
             <HotKeys handlers={handlers}>
-              <div className='focusable' tabIndex='0' aria-label={textForScreenReader(intl, status, false, isExpanded)}>
+              <div className='focusable' tabIndex={0} aria-label={textForScreenReader(intl, status, false, isExpanded)}>
                 <DetailedStatus
                   key={`details-${status.get('id')}`}
                   status={status}
@@ -734,7 +730,7 @@ class Status extends ImmutablePureComponent {
         </ScrollContainer>
 
         <Helmet>
-          <title>{titleFromStatus(status)}</title>
+          <title>{titleFromStatus(intl, status)}</title>
           <meta name='robots' content={(isLocal && isIndexable) ? 'all' : 'noindex'} />
         </Helmet>
       </Column>
@@ -742,3 +738,5 @@ class Status extends ImmutablePureComponent {
   }
 
 }
+
+export default injectIntl(connect(makeMapStateToProps)(Status));

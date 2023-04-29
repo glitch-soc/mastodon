@@ -45,7 +45,6 @@ class SearchPopout extends React.PureComponent {
 }
 
 //  The component.
-export default @injectIntl
 class Search extends React.PureComponent {
 
   static contextTypes = {
@@ -148,7 +147,7 @@ class Search extends React.PureComponent {
           onBlur={this.handleBlur}
         />
 
-        <div role='button' tabIndex='0' className='search__icon' onClick={this.handleClear}>
+        <div role='button' tabIndex={0} className='search__icon' onClick={this.handleClear}>
           <Icon id='search' className={hasValue ? '' : 'active'} />
           <Icon id='times-circle' className={hasValue ? 'active' : ''} />
         </div>
@@ -166,3 +165,5 @@ class Search extends React.PureComponent {
   }
 
 }
+
+export default injectIntl(Search);
