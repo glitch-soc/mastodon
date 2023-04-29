@@ -11,10 +11,6 @@
     .fields-group
       = ff.input :noindex, wrapper: :with_label, label: I18n.t('simple_form.labels.defaults.setting_noindex'), hint: I18n.t('simple_form.hints.defaults.setting_noindex')
 
-  .fields-group
-    = f.input :setting_home_dms, as: :boolean, wrapper: :with_label
-
-  - unless Setting.hide_followers_count
     .fields-group
       = ff.input :aggregate_reblogs, wrapper: :with_label, recommended: true, label: I18n.t('simple_form.labels.defaults.setting_aggregate_reblogs'), hint: I18n.t('simple_form.hints.defaults.setting_aggregate_reblogs')
 
