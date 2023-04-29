@@ -38,8 +38,6 @@ const mapDispatchToProps = dispatch => ({
   submit: (file, alt) => dispatch(uploadCompose([file], alt)),
 });
 
-export default @connect(mapStateToProps, mapDispatchToProps)
-@injectIntl
 class GIFModal extends ImmutablePureComponent {
 
   static propTypes = {
@@ -59,7 +57,7 @@ class GIFModal extends ImmutablePureComponent {
       return response.blob();
     }).then(function(blob) {
       const reader = new FileReader();
-      reader.readAsDataURL(blob); 
+      reader.readAsDataURL(blob);
       reader.onloadend = function() {
         var dataUrl = reader.result;
         const file = dataURLtoFile(dataUrl, 'tenor.mp4');
@@ -76,7 +74,7 @@ class GIFModal extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal tenor-modal'>
         <div className='tenor-modal__container'>
-        <IconButton title={intl.formatMessage(messages.close)} icon='close' size="16" onClick={this.props.onClose}  style={{ float: 'right' }} />
+          <IconButton title={intl.formatMessage(messages.close)} icon='close' size='16' onClick={this.props.onClose}  style={{ float: 'right' }} />
           <Tenor
             token='FJBKNQSVF2DD'
             // eslint-disable-next-line react/jsx-no-bind
@@ -95,3 +93,5 @@ class GIFModal extends ImmutablePureComponent {
   }
 
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(GIFModal));
