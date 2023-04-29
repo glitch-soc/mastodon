@@ -20,13 +20,13 @@ class Notification < ApplicationRecord
   include Paginable
 
   LEGACY_TYPE_CLASS_MAP = {
-    'Mention' => :mention,
-    'Status' => :reblog,
-    'Follow' => :follow,
-    'FollowRequest' => :follow_request,
-    'Favourite' => :favourite,
+    'Mention'        => :mention,
+    'Status'         => :reblog,
+    'Follow'         => :follow,
+    'FollowRequest'  => :follow_request,
+    'Favourite'      => :favourite,
     'StatusReaction' => :reaction,
-    'Poll' => :poll,
+    'Poll'           => :poll,
   }.freeze
 
   TYPES = %i(

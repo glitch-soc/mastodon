@@ -18,6 +18,7 @@ class UserSettings
   setting :default_privacy, default: nil
   setting :default_content_type, default: 'text/plain'
   setting :hide_followers_count, default: false
+  setting :visible_reactions, default: 6
 
   namespace :web do
     setting :crop_images, default: true

@@ -421,7 +421,7 @@ export function unpinFail(status, error) {
     error,
     skipLoading: true,
   };
-};
+}
 
 export const addReaction = (statusId, name, url) => (dispatch, getState) => {
   const status = getState().get('statuses').get(statusId);

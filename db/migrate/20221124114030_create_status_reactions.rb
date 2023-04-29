@@ -1,10 +1,10 @@
 class CreateStatusReactions < ActiveRecord::Migration[6.1]
   def change
     create_table :status_reactions do |t|
-      t.references :account, null: false, foreign_key: true
-      t.references :status, null: false, foreign_key: true
+      t.references :account, null: false, foreign_key: { on_delete: :cascade }
+      t.references :status, null: false, foreign_key: { on_delete: :cascade }
       t.string :name, null: false, default: ''
-      t.references :custom_emoji, null: true, foreign_key: true
+      t.references :custom_emoji, null: true, foreign_key: { on_delete: :cascade }
 
       t.timestamps
     end

@@ -40,3 +40,8 @@ fr:
     use_this: Utiliser ceci
   settings:
     flavours: Thèmes
+  notification_mailer:
+    reaction:
+      body: "%{name} a réagi·e à votre message:"
+      subject: "%{name} a réagi·e à votre message"
+      title: Nouvelle réaction
