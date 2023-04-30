@@ -10,6 +10,8 @@ $doodle-background: #d9e1e8;
   background: $doodle-background;
   text-align: center;
   line-height: 0; // remove weird gap under canvas
+  overflow: auto;
+
   canvas {
     border: 5px solid $doodle-background;
   }
@@ -17,6 +19,9 @@ $doodle-background: #d9e1e8;
 
 .doodle-modal__action-bar {
   @extend .boost-modal__action-bar;
+
+  flex-wrap: wrap;
+  flex: 0 0 auto;
 
   .filler {
     flex-grow: 1;
