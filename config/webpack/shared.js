@@ -50,7 +50,7 @@ const entries = Object.assign(
   { locales: resolve('app', 'javascript', 'locales') },
   localePacks,
   reducePacks(core),
-  Object.values(flavours).reduce((map, data) => reducePacks(data, map), {})
+  Object.values(flavours).reduce((map, data) => reducePacks(data, map), {}),
 );
 
 
