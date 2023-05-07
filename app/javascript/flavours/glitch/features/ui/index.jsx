@@ -60,7 +60,6 @@ import { HotKeys } from 'react-hotkeys';
 import initialState, { me, owner, singleUserMode, showTrends, trendsAsLanding } from '../../initial_state';
 import { closeOnboarding, INTRODUCTION_VERSION } from 'flavours/glitch/actions/onboarding';
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
-import { Helmet } from 'react-helmet';
 import Header from './components/header';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
