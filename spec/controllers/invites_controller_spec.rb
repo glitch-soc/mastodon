@@ -54,7 +54,19 @@ describe InvitesController do
       it 'succeeds to create a invite' do
         expect { subject }.to change(Invite, :count).by(1)
         expect(subject).to redirect_to invites_path
-        expect(Invite.last).to have_attributes(user_id: user.id, max_uses: 10)
+        expect(Invite.last).to have_attributes(user_id: user.id, max_uses: 1)
+      end
+
+      context 'without restrictions' do
+        before do
+          UserRole.everyone.update(permissions: UserRole.everyone.permissions | UserRole::FLAGS[:invite_users] | UserRole::FLAGS[:bypass_invite_limits])
+        end
+
+        it 'succeeds to create an invite' do
+          expect { subject }.to change(Invite, :count).by(1)
+          expect(subject).to redirect_to invites_path
+          expect(Invite.last).to have_attributes(user_id: user.id, max_uses: 10)
+        end
       end
     end
 
