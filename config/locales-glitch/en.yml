@@ -42,5 +42,9 @@ en:
       title: User verification
   generic:
     use_this: Use this
+  invites:
+    errors:
+      daily_limit_reached: Daily limit of created invites reached
+      limit_reached: Maximum amount of active invites reached
   settings:
     flavours: Flavours
