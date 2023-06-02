@@ -1,7 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import { toShortNumber, pluralReady, DECIMAL_UNITS } from '../utils/numbers';
+import { memo } from 'react';
+
 import { FormattedMessage, FormattedNumber } from 'react-intl';
+
+import { toShortNumber, pluralReady, DECIMAL_UNITS } from '../utils/numbers';
+
 // @ts-check
 
 /**
@@ -24,7 +27,6 @@ import { FormattedMessage, FormattedNumber } from 'react-intl';
 
 /**
  * Component that renders short big number to a shorter version
- *
  * @param {ShortNumberProps} param0 Props for the component
  * @returns {JSX.Element} Rendered number
  */
@@ -58,7 +60,6 @@ ShortNumber.propTypes = {
 
 /**
  * Renders short number into corresponding localizable react fragment
- *
  * @param {ShortNumberCounterProps} param0 Props for the component
  * @returns {JSX.Element} FormattedMessage ready to be embedded in code
  */
@@ -111,4 +112,4 @@ ShortNumberCounter.propTypes = {
   value: PropTypes.arrayOf(PropTypes.number),
 };
 
-export default React.memo(ShortNumber);
+export default memo(ShortNumber);

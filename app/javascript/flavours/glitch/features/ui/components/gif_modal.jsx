@@ -4,7 +4,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { tenorSet, uploadCompose } from 'flavours/glitch/actions/compose';
-import IconButton from 'flavours/glitch/components/icon_button';
+import { IconButton } from 'flavours/glitch/components/icon_button';
 import Tenor from 'react-tenor';
 import { defineMessages, injectIntl } from 'react-intl';
 

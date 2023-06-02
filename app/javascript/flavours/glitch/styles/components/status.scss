@@ -711,7 +711,6 @@ a.status__display-name,
   margin-inline-end: 10px;
   height: 48px;
   width: 48px;
-  box-shadow: 0 0 0 2px $ui-base-color;
 }
 
 .muted {
@@ -829,6 +828,10 @@ a.status-card {
 }
 
 .status-card-video {
+  // Firefox has a bug where frameborder=0 iframes add some extra blank space
+  // see https://bugzilla.mozilla.org/show_bug.cgi?id=155174
+  overflow: hidden;
+
   iframe {
     width: 100%;
     height: 100%;
@@ -1067,12 +1070,12 @@ a.status-card.compact:hover {
   }
 
   &__line {
-    height: 16px - 4px;
+    height: 10px - 4px;
     border-inline-start: 2px solid lighten($ui-base-color, 8%);
     width: 0;
     position: absolute;
     top: 0;
-    inset-inline-start: 16px + ((46px - 2px) * 0.5);
+    inset-inline-start: 14px + ((48px - 2px) * 0.5);
 
     &--full {
       top: 0;
@@ -1082,8 +1085,8 @@ a.status-card.compact:hover {
         content: '';
         display: block;
         position: absolute;
-        top: 16px - 4px;
-        height: 46px + 4px + 4px;
+        top: 10px - 4px;
+        height: 48px + 4px + 4px;
         width: 2px;
         background: $ui-base-color;
         inset-inline-start: -2px;
@@ -1091,8 +1094,8 @@ a.status-card.compact:hover {
     }
 
     &--first {
-      top: 16px + 46px + 4px;
-      height: calc(100% - (16px + 46px + 4px));
+      top: 10px + 48px + 4px;
+      height: calc(100% - (10px + 48px + 4px));
 
       &::before {
         display: none;
@@ -1174,6 +1177,7 @@ a.status-card.compact:hover {
   font-weight: 500;
   cursor: pointer;
   color: $darker-text-color;
+  aspect-ratio: 16 / 9;
 
   i {
     display: block;

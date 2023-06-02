@@ -11,8 +11,10 @@
 
 const { existsSync, readdirSync, writeFileSync } = require('fs');
 const { join, resolve } = require('path');
+
+const { mkdirp } = require('mkdirp');
 const rimraf = require('rimraf');
-const mkdirp = require('mkdirp');
+
 const { flavours } = require('./configuration');
 
 module.exports = Object.keys(flavours).reduce(function (map, entry) {

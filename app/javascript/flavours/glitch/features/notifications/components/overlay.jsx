@@ -4,12 +4,14 @@
 
 
 //  Package imports.
-import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import ImmutablePureComponent from 'react-immutable-pure-component';
+
 import { defineMessages, injectIntl } from 'react-intl';
-import Icon from 'flavours/glitch/components/icon';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePureComponent from 'react-immutable-pure-component';
+
+import { Icon } from 'flavours/glitch/components/icon';
 
 const messages = defineMessages({
   markForDeletion: { id: 'notification.markForDeletion', defaultMessage: 'Mark for deletion' },

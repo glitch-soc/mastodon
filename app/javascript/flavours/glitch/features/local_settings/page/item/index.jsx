@@ -1,11 +1,11 @@
 //  Package imports
-import React from 'react';
 import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+import { PureComponent } from 'react';
 
+import ImmutablePropTypes from 'react-immutable-proptypes';
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-export default class LocalSettingsPageItem extends React.PureComponent {
+export default class LocalSettingsPageItem extends PureComponent {
 
   static propTypes = {
     children: PropTypes.node.isRequired,
@@ -54,12 +54,11 @@ export default class LocalSettingsPageItem extends React.PureComponent {
       const optionElems = options && options.length > 0 && options.map((opt) => {
         let optionId = `${id}--${opt.value}`;
         return (
-          <label htmlFor={optionId}>
+          <label key={optionId} htmlFor={optionId}>
             <input
               type='radio'
               name={id}
               id={optionId}
-              key={optionId}
               value={opt.value}
               onBlur={handleChange}
               onChange={handleChange}
@@ -93,7 +92,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
                 placeholder={placeholder}
                 onChange={handleChange}
                 disabled={!enabled}
-	        {...inputProps}
+                {...inputProps}
               />
             </p>
           </label>

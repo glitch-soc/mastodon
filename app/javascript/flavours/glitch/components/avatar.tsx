@@ -1,10 +1,12 @@
 import * as React from 'react';
-import classNames from 'classnames';
-import { autoPlayGif } from 'flavours/glitch/initial_state';
-import { useHovering } from 'hooks/useHovering';
-import type { Account } from 'types/resources';
 
-type Props = {
+import classNames from 'classnames';
+
+import { useHovering } from 'flavours/glitch/hooks/useHovering';
+import { autoPlayGif } from 'flavours/glitch/initial_state';
+import type { Account } from 'flavours/glitch/types/resources';
+
+interface Props {
   account: Account | undefined;
   className?: string;
   size: number;
@@ -19,7 +21,8 @@ export const Avatar: React.FC<Props> = ({
   inline = false,
   style: styleFromParent,
 }) => {
-  const { hovering, handleMouseEnter, handleMouseLeave } = useHovering(autoPlayGif);
+  const { hovering, handleMouseEnter, handleMouseLeave } =
+    useHovering(autoPlayGif);
 
   const style = {
     ...styleFromParent,
@@ -29,12 +32,18 @@ export const Avatar: React.FC<Props> = ({
   };
 
   if (account) {
-    style.backgroundImage = `url(${account.get(hovering ? 'avatar' : 'avatar_static')})`;
+    style.backgroundImage = `url(${account.get(
+      hovering ? 'avatar' : 'avatar_static'
+    )})`;
   }
 
   return (
     <div
-      className={classNames('account__avatar', { 'account__avatar-inline': inline }, className)}
+      className={classNames(
+        'account__avatar',
+        { 'account__avatar-inline': inline },
+        className
+      )}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={style}
@@ -44,5 +53,3 @@ export const Avatar: React.FC<Props> = ({
     />
   );
 };
-
-export default Avatar;

@@ -1,21 +1,18 @@
-import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import Video from 'flavours/glitch/features/video';
-import { connect } from 'react-redux';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import Footer from 'flavours/glitch/features/picture_in_picture/components/footer';
+import { connect } from 'react-redux';
+
 import { getAverageFromBlurhash } from 'flavours/glitch/blurhash';
+import Footer from 'flavours/glitch/features/picture_in_picture/components/footer';
+import Video from 'flavours/glitch/features/video';
 
 const mapStateToProps = (state, { statusId }) => ({
   language: state.getIn(['statuses', statusId, 'language']),
 });
 
 class VideoModal extends ImmutablePureComponent {
-
-  static contextTypes = {
-    router: PropTypes.object,
-  };
 
   static propTypes = {
     media: ImmutablePropTypes.map.isRequired,
@@ -31,7 +28,7 @@ class VideoModal extends ImmutablePureComponent {
   };
 
   componentDidMount () {
-    const { media, onChangeBackgroundColor, onClose } = this.props;
+    const { media, onChangeBackgroundColor } = this.props;
 
     const backgroundColor = getAverageFromBlurhash(media.get('blurhash'));
 

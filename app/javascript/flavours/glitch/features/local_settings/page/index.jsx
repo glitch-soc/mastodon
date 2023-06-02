@@ -1,14 +1,18 @@
 //  Package imports
-import React from 'react';
 import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+import { PureComponent } from 'react';
+
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
+
 
 //  Our imports
 import { expandSpoilers } from 'flavours/glitch/initial_state';
 import { preferenceLink } from 'flavours/glitch/utils/backend_links';
-import LocalSettingsPageItem from './item';
+
 import DeprecatedLocalSettingsPageItem from './deprecated_item';
+import LocalSettingsPageItem from './item';
 
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -29,9 +33,13 @@ const messages = defineMessages({
   rewrite_mentions_username: { id: 'settings.rewrite_mentions_username', defaultMessage:  'Rewrite with username' },
   pop_in_left: { id: 'settings.pop_in_left', defaultMessage: 'Left' },
   pop_in_right: { id: 'settings.pop_in_right', defaultMessage:  'Right' },
+  public: { id: 'privacy.public.short', defaultMessage: 'Public' },
+  unlisted: { id: 'privacy.unlisted.short', defaultMessage: 'Unlisted' },
+  private: { id: 'privacy.private.short', defaultMessage: 'Followers only' },
+  direct: { id: 'privacy.direct.short', defaultMessage: 'Mentioned people only' },
 });
 
-class LocalSettingsPage extends React.PureComponent {
+class LocalSettingsPage extends PureComponent {
 
   static propTypes = {
     index    : PropTypes.number,
@@ -241,10 +249,10 @@ class LocalSettingsPage extends React.PureComponent {
           id='mastodon-settings--side_arm'
           options={[
             { value: 'none', message: intl.formatMessage(messages.side_arm_none) },
-            { value: 'direct', message: intl.formatMessage({ id: 'privacy.direct.short' }) },
-            { value: 'private', message: intl.formatMessage({ id: 'privacy.private.short' }) },
-            { value: 'unlisted', message: intl.formatMessage({ id: 'privacy.unlisted.short' }) },
-            { value: 'public', message: intl.formatMessage({ id: 'privacy.public.short' }) },
+            { value: 'direct', message: intl.formatMessage(messages.direct) },
+            { value: 'private', message: intl.formatMessage(messages.private) },
+            { value: 'unlisted', message: intl.formatMessage(messages.unlisted) },
+            { value: 'public', message: intl.formatMessage(messages.public) },
           ]}
           onChange={onChange}
         >

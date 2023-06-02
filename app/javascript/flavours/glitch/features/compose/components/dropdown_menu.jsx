@@ -1,18 +1,18 @@
 //  Package imports.
 import PropTypes from 'prop-types';
-import React from 'react';
-import ImmutablePureComponent from 'react-immutable-pure-component';
+import { PureComponent } from 'react';
+
 import classNames from 'classnames';
 
-//  Components.
-import Icon from 'flavours/glitch/components/icon';
+import { supportsPassiveEvents } from 'detect-passive-events';
 
-//  Utils.
-import { withPassive } from 'flavours/glitch/utils/dom_helpers';
-import { assignHandlers } from 'flavours/glitch/utils/react_helpers';
+//  Components.
+import { Icon } from 'flavours/glitch/components/icon';
+
+const listenerOptions = supportsPassiveEvents ? { passive: true, capture: true } : true;
 
 //  The component.
-export default class ComposerOptionsDropdownContent extends React.PureComponent {
+export default class ComposerOptionsDropdownContent extends PureComponent {
 
   static propTypes = {
     items: PropTypes.arrayOf(PropTypes.shape({
@@ -43,6 +43,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
   handleDocumentClick = (e) => {
     if (this.node && !this.node.contains(e.target)) {
       this.props.onClose();
+      e.stopPropagation();
     }
   };
 
@@ -53,8 +54,8 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
 
   //  On mounting, we add our listeners.
   componentDidMount () {
-    document.addEventListener('click', this.handleDocumentClick, false);
-    document.addEventListener('touchend', this.handleDocumentClick, withPassive);
+    document.addEventListener('click', this.handleDocumentClick, { capture: true });
+    document.addEventListener('touchend', this.handleDocumentClick, listenerOptions);
     if (this.focusedItem) {
       this.focusedItem.focus({ preventScroll: true });
     } else {
@@ -64,8 +65,8 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
 
   //  On unmounting, we remove our listeners.
   componentWillUnmount () {
-    document.removeEventListener('click', this.handleDocumentClick, false);
-    document.removeEventListener('touchend', this.handleDocumentClick, withPassive);
+    document.removeEventListener('click', this.handleDocumentClick, { capture: true });
+    document.removeEventListener('touchend', this.handleDocumentClick, listenerOptions);
   }
 
   handleClick = (e) => {
@@ -78,7 +79,8 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
       items,
     } = this.props;
 
-    const { name } = this.props.items[i];
+    const { name } = items[i];
+
     e.preventDefault();  //  Prevents change in focus on click
     if (closeOnChange) {
       onClose();
@@ -131,7 +133,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
 
     if (element) {
       element.focus();
-      this.handleChange(this.props.items[Number(element.getAttribute('data-index'))].name);
+      this.handleChange(items[Number(element.getAttribute('data-index'))].name);
       e.preventDefault();
       e.stopPropagation();
     }
@@ -152,14 +154,14 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
 
     if (!contents) {
       contents = (
-        <React.Fragment>
+        <>
           {icon && <Icon className='icon' fixedWidth id={icon} />}
 
           <div className='privacy-dropdown__option__content'>
             <strong>{text}</strong>
             {meta}
           </div>
-        </React.Fragment>
+        </>
       );
     }
 
@@ -169,6 +171,7 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
         onClick={this.handleClick}
         onKeyDown={this.handleKeyDown}
         role='option'
+        aria-selected={active}
         tabIndex={0}
         key={name}
         data-index={i}
@@ -183,8 +186,6 @@ export default class ComposerOptionsDropdownContent extends React.PureComponent 
   render () {
     const {
       items,
-      onChange,
-      onClose,
       style,
     } = this.props;
 

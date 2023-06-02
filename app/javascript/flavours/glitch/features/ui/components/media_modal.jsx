@@ -1,28 +1,28 @@
-import React from 'react';
-import ReactSwipeableViews from 'react-swipeable-views';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import Video from 'flavours/glitch/features/video';
-import { connect } from 'react-redux';
-import classNames from 'classnames';
+
 import { defineMessages, injectIntl } from 'react-intl';
-import IconButton from 'flavours/glitch/components/icon_button';
+
+import classNames from 'classnames';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import ImageLoader from './image_loader';
-import Icon from 'flavours/glitch/components/icon';
-import GIFV from 'flavours/glitch/components/gifv';
-import Footer from 'flavours/glitch/features/picture_in_picture/components/footer';
+
+import ReactSwipeableViews from 'react-swipeable-views';
+
 import { getAverageFromBlurhash } from 'flavours/glitch/blurhash';
+import { GIFV } from 'flavours/glitch/components/gifv';
+import { Icon } from 'flavours/glitch/components/icon';
+import { IconButton } from 'flavours/glitch/components/icon_button';
+import Footer from 'flavours/glitch/features/picture_in_picture/components/footer';
+import Video from 'flavours/glitch/features/video';
 import { disableSwiping } from 'flavours/glitch/initial_state';
+
+import ImageLoader from './image_loader';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
   previous: { id: 'lightbox.previous', defaultMessage: 'Previous' },
   next: { id: 'lightbox.next', defaultMessage: 'Next' },
-});
-
-const mapStateToProps = (state, { statusId }) => ({
-  language: state.getIn(['statuses', statusId, 'language']),
 });
 
 class MediaModal extends ImmutablePureComponent {
@@ -34,6 +34,7 @@ class MediaModal extends ImmutablePureComponent {
   static propTypes = {
     media: ImmutablePropTypes.list.isRequired,
     statusId: PropTypes.string,
+    lang: PropTypes.string,
     index: PropTypes.number.isRequired,
     onClose: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
@@ -135,7 +136,7 @@ class MediaModal extends ImmutablePureComponent {
   }
 
   render () {
-    const { media, language, statusId, intl, onClose } = this.props;
+    const { media, statusId, lang, intl, onClose } = this.props;
     const { navigationHidden } = this.state;
 
     const index = this.getIndex();
@@ -155,7 +156,7 @@ class MediaModal extends ImmutablePureComponent {
             width={width}
             height={height}
             alt={image.get('description')}
-            lang={language}
+            lang={lang}
             key={image.get('url')}
             onClick={this.toggleNavigation}
             zoomButtonHidden={this.state.zoomButtonHidden}
@@ -178,7 +179,7 @@ class MediaModal extends ImmutablePureComponent {
             onCloseVideo={onClose}
             detailed
             alt={image.get('description')}
-            lang={language}
+            lang={lang}
             key={image.get('url')}
           />
         );
@@ -190,7 +191,7 @@ class MediaModal extends ImmutablePureComponent {
             height={height}
             key={image.get('url')}
             alt={image.get('description')}
-            lang={language}
+            lang={lang}
             onClick={this.toggleNavigation}
           />
         );
@@ -258,4 +259,4 @@ class MediaModal extends ImmutablePureComponent {
 
 }
 
-export default connect(mapStateToProps, null, null, { forwardRef: true })(injectIntl(MediaModal));
+export default injectIntl(MediaModal);

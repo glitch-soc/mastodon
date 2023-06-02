@@ -1,10 +1,10 @@
 //  Package imports
-import React from 'react';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 
 //  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-export default class LocalSettingsPageItem extends React.PureComponent {
+export default class LocalSettingsPageItem extends PureComponent {
 
   static propTypes = {
     children: PropTypes.node.isRequired,
@@ -26,7 +26,7 @@ export default class LocalSettingsPageItem extends React.PureComponent {
       const optionElems = options && options.length > 0 && options.map((opt) => {
         let optionId = `${id}--${opt.value}`;
         return (
-          <label htmlFor={optionId}>
+          <label key={id} htmlFor={optionId}>
             <input
               type='radio'
               name={id}

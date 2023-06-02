@@ -1,10 +1,10 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import { Component } from 'react';
 
 const emptyComponent = () => null;
 const noop = () => { };
 
-class Bundle extends React.Component {
+class Bundle extends Component {
 
   static propTypes = {
     fetchComponent: PropTypes.func.isRequired,
@@ -33,11 +33,11 @@ class Bundle extends React.Component {
     forceRender: false,
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.load(this.props);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.fetchComponent !== this.props.fetchComponent) {
       this.load(nextProps);
     }

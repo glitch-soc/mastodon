@@ -1,7 +1,7 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 
-export default class Permalink extends React.PureComponent {
+export default class Permalink extends PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
@@ -24,9 +24,7 @@ export default class Permalink extends React.PureComponent {
 
       if (this.context.router) {
         e.preventDefault();
-        let state = { ...this.context.router.history.location.state };
-        state.mastodonBackSteps = (state.mastodonBackSteps || 0) + 1;
-        this.context.router.history.push(this.props.to, state);
+        this.context.router.history.push(this.props.to);
       }
     }
   };

@@ -136,6 +136,10 @@ code {
     line-height: 22px;
     color: $secondary-text-color;
     margin-bottom: 30px;
+
+    a {
+      color: $highlight-text-color;
+    }
   }
 
   .rules-list {
@@ -722,7 +726,7 @@ code {
     }
   }
 
-  @media screen and (max-width: 740px) and (min-width: 441px) {
+  @media screen and (440px < width <= 740px) {
     margin-top: 40px;
   }
 
@@ -1037,6 +1041,10 @@ code {
   &:not(.field_with_errors) {
     display: none;
   }
+}
+
+.simple_form .h-captcha {
+  text-align: center;
 }
 
 .permissions-list {
