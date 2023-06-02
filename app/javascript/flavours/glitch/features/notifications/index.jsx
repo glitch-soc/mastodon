@@ -1,37 +1,47 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
+
+import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+
+import classNames from 'classnames';
+import { Helmet } from 'react-helmet';
+
+import { List as ImmutableList } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import Column from 'flavours/glitch/components/column';
-import ColumnHeader from 'flavours/glitch/components/column_header';
+import { connect } from 'react-redux';
+import { createSelector } from 'reselect';
+
+import { debounce } from 'lodash';
+
+import { addColumn, removeColumn, moveColumn } from 'flavours/glitch/actions/columns';
+import { submitMarkers } from 'flavours/glitch/actions/markers';
 import {
   enterNotificationClearingMode,
   expandNotifications,
   scrollTopNotifications,
+  loadPending,
   mountNotifications,
   unmountNotifications,
-  loadPending,
   markNotificationsAsRead,
 } from 'flavours/glitch/actions/notifications';
-import { addColumn, removeColumn, moveColumn } from 'flavours/glitch/actions/columns';
-import { submitMarkers } from 'flavours/glitch/actions/markers';
-import NotificationContainer from './containers/notification_container';
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { compareId } from 'flavours/glitch/compare_id';
+import Column from 'flavours/glitch/components/column';
+import ColumnHeader from 'flavours/glitch/components/column_header';
+import { Icon } from 'flavours/glitch/components/icon';
+import { LoadGap } from 'flavours/glitch/components/load_gap';
+import { NotSignedInIndicator } from 'flavours/glitch/components/not_signed_in_indicator';
+import ScrollableList from 'flavours/glitch/components/scrollable_list';
+import NotificationPurgeButtonsContainer from 'flavours/glitch/containers/notification_purge_buttons_container';
+
+import NotificationsPermissionBanner from './components/notifications_permission_banner';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import FilterBarContainer from './containers/filter_bar_container';
-import { createSelector } from 'reselect';
-import { List as ImmutableList } from 'immutable';
-import { debounce } from 'lodash';
-import ScrollableList from 'flavours/glitch/components/scrollable_list';
-import LoadGap from 'flavours/glitch/components/load_gap';
-import Icon from 'flavours/glitch/components/icon';
-import compareId from 'flavours/glitch/compare_id';
-import NotificationsPermissionBanner from './components/notifications_permission_banner';
-import NotSignedInIndicator from 'flavours/glitch/components/not_signed_in_indicator';
-import { Helmet } from 'react-helmet';
+import NotificationContainer from './containers/notification_container';
 
-import NotificationPurgeButtonsContainer from 'flavours/glitch/containers/notification_purge_buttons_container';
+
+
+
+
 
 const messages = defineMessages({
   title: { id: 'column.notifications', defaultMessage: 'Notifications' },
@@ -79,20 +89,10 @@ const mapDispatchToProps = dispatch => ({
   onEnterCleaningMode(yes) {
     dispatch(enterNotificationClearingMode(yes));
   },
-  onMarkAsRead() {
-    dispatch(markNotificationsAsRead());
-    dispatch(submitMarkers({ immediate: true }));
-  },
-  onMount() {
-    dispatch(mountNotifications());
-  },
-  onUnmount() {
-    dispatch(unmountNotifications());
-  },
   dispatch,
 });
 
-class Notifications extends React.PureComponent {
+class Notifications extends PureComponent {
 
   static contextTypes = {
     identity: PropTypes.object,
@@ -112,8 +112,6 @@ class Notifications extends React.PureComponent {
     localSettings: ImmutablePropTypes.map,
     notifCleaningActive: PropTypes.bool,
     onEnterCleaningMode: PropTypes.func,
-    onMount: PropTypes.func,
-    onUnmount: PropTypes.func,
     lastReadId: PropTypes.string,
     canMarkAsRead: PropTypes.bool,
     needsNotificationPermission: PropTypes.bool,
@@ -126,6 +124,18 @@ class Notifications extends React.PureComponent {
   state = {
     animatingNCD: false,
   };
+
+  componentDidMount() {
+    this.props.dispatch(mountNotifications());
+  }
+
+  componentWillUnmount () {
+    this.handleLoadOlder.cancel();
+    this.handleScrollToTop.cancel();
+    this.handleScroll.cancel();
+    // this.props.dispatch(scrollTopNotifications(false));
+    this.props.dispatch(unmountNotifications());
+  }
 
   handleLoadGap = (maxId) => {
     this.props.dispatch(expandNotifications({ maxId }));
@@ -195,20 +205,6 @@ class Notifications extends React.PureComponent {
     }
   }
 
-  componentDidMount () {
-    const { onMount } = this.props;
-    if (onMount) {
-      onMount();
-    }
-  }
-
-  componentWillUnmount () {
-    const { onUnmount } = this.props;
-    if (onUnmount) {
-      onUnmount();
-    }
-  }
-
   handleTransitionEndNCD = () => {
     this.setState({ animatingNCD: false });
   };
@@ -219,12 +215,13 @@ class Notifications extends React.PureComponent {
   };
 
   handleMarkAsRead = () => {
-    this.props.onMarkAsRead();
+    this.props.dispatch(markNotificationsAsRead());
+    this.props.dispatch(submitMarkers({ immediate: true }));
   };
 
   render () {
     const { intl, notifications, isLoading, isUnread, columnId, multiColumn, hasMore, numPending, showFilterBar, lastReadId, canMarkAsRead, needsNotificationPermission } = this.props;
-    const { notifCleaning, notifCleaningActive } = this.props;
+    const { notifCleaningActive } = this.props;
     const { animatingNCD } = this.state;
     const pinned = !!columnId;
     const emptyMessage = <FormattedMessage id='empty_column.notifications' defaultMessage="You don't have any notifications yet. When other people interact with you, you will see it here." />;
@@ -336,12 +333,6 @@ class Notifications extends React.PureComponent {
       </div>
     );
 
-    const extraButton = (
-      <>
-        {extraButtons}
-      </>
-    );
-
     return (
       <Column
         bindToDocument={!multiColumn}
@@ -360,7 +351,7 @@ class Notifications extends React.PureComponent {
           pinned={pinned}
           multiColumn={multiColumn}
           localSettings={this.props.localSettings}
-          extraButton={extraButton}
+          extraButton={extraButtons}
           appendContent={notifCleaningDrawer}
         >
           <ColumnSettingsContainer />

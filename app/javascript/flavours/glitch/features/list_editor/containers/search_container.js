@@ -1,6 +1,7 @@
-import React from 'react';
-import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
+
+import { connect } from 'react-redux';
+
 import { fetchListSuggestions, clearListSuggestions, changeListSuggestions } from '../../../actions/lists';
 import Search from '../components/search';
 

@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
+import * as React from 'react';
 
-type Props = {
+interface Props {
   src: string;
   key: string;
   alt?: string;
@@ -17,19 +18,23 @@ export const GIFV: React.FC<Props> = ({
   width,
   height,
   onClick,
-})=> {
+}) => {
   const [loading, setLoading] = useState(true);
 
-  const handleLoadedData: React.ReactEventHandler<HTMLVideoElement> = useCallback(() => {
-    setLoading(false);
-  }, [setLoading]);
+  const handleLoadedData: React.ReactEventHandler<HTMLVideoElement> =
+    useCallback(() => {
+      setLoading(false);
+    }, [setLoading]);
 
-  const handleClick: React.MouseEventHandler = useCallback((e) => {
-    if (onClick) {
-      e.stopPropagation();
-      onClick();
-    }
-  }, [onClick]);
+  const handleClick: React.MouseEventHandler = useCallback(
+    (e) => {
+      if (onClick) {
+        e.stopPropagation();
+        onClick();
+      }
+    },
+    [onClick]
+  );
 
   return (
     <div className='gifv' style={{ position: 'relative' }}>
@@ -64,5 +69,3 @@ export const GIFV: React.FC<Props> = ({
     </div>
   );
 };
-
-export default GIFV;

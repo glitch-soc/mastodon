@@ -1,14 +1,18 @@
 //  Package imports.
-import React from 'react';
 import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+import { PureComponent } from 'react';
+
 import { defineMessages, injectIntl } from 'react-intl';
 
+import ImmutablePropTypes from 'react-immutable-proptypes';
+
+
 //  Mastodon imports.
-import IconButton from './icon_button';
-import VisibilityIcon from './status_visibility_icon';
-import Icon from 'flavours/glitch/components/icon';
+import { Icon } from 'flavours/glitch/components/icon';
 import { languages } from 'flavours/glitch/initial_state';
+
+import { IconButton } from './icon_button';
+import VisibilityIcon from './status_visibility_icon';
 
 //  Messages for use with internationalization stuff.
 const messages = defineMessages({
@@ -40,7 +44,7 @@ LanguageIcon.propTypes = {
   language: PropTypes.string.isRequired,
 };
 
-class StatusIcons extends React.PureComponent {
+class StatusIcons extends PureComponent {
 
   static propTypes = {
     status: ImmutablePropTypes.map.isRequired,
@@ -64,18 +68,15 @@ class StatusIcons extends React.PureComponent {
   mediaIconTitleText (mediaIcon) {
     const { intl } = this.props;
 
-    switch (mediaIcon) {
-    case 'link':
-      return intl.formatMessage(messages.previewCard);
-    case 'picture-o':
-      return intl.formatMessage(messages.pictures);
-    case 'tasks':
-      return intl.formatMessage(messages.poll);
-    case 'video-camera':
-      return intl.formatMessage(messages.video);
-    case 'music':
-      return intl.formatMessage(messages.audio);
-    }
+    const message = {
+      'link': messages.previewCard,
+      'picture-o': messages.pictures,
+      'tasks': messages.poll,
+      'video-camera': messages.video,
+      'music': messages.audio,
+    }[mediaIcon];
+
+    return message && intl.formatMessage(message);
   }
 
   renderIcon (mediaIcon) {

@@ -17,11 +17,11 @@ module Mastodon
     end
 
     def flags
-      ''
+      ENV.fetch('MASTODON_VERSION_FLAGS', '')
     end
 
     def suffix
-      '+glitch+CiT'
+      "+glitch#{ENV.fetch('MASTODON_VERSION_SUFFIX', '')}"
     end
 
     def to_a
@@ -33,7 +33,7 @@ module Mastodon
     end
 
     def repository
-      ENV.fetch('GITHUB_REPOSITORY', 'CompostInTraining/mastodon')
+      ENV.fetch('GITHUB_REPOSITORY', 'glitch-soc/mastodon')
     end
 
     def source_base_url

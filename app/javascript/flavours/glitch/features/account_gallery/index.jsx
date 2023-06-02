@@ -1,21 +1,25 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { lookupAccount, fetchAccount } from 'flavours/glitch/actions/accounts';
-import { expandAccountMediaTimeline } from 'flavours/glitch/actions/timelines';
-import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
-import Column from 'flavours/glitch/features/ui/components/column';
-import ProfileColumnHeader from 'flavours/glitch/features/account/components/profile_column_header';
+
+import { FormattedMessage } from 'react-intl';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { getAccountGallery } from 'flavours/glitch/selectors';
-import MediaItem from './components/media_item';
-import HeaderContainer from 'flavours/glitch/features/account_timeline/containers/header_container';
-import ScrollContainer from 'flavours/glitch/containers/scroll_container';
-import LoadMore from 'flavours/glitch/components/load_more';
+import { connect } from 'react-redux';
+
+import { lookupAccount, fetchAccount } from 'flavours/glitch/actions/accounts';
 import { openModal } from 'flavours/glitch/actions/modal';
-import { normalizeForLookup } from 'flavours/glitch/reducers/accounts_map';
+import { expandAccountMediaTimeline } from 'flavours/glitch/actions/timelines';
+import LoadMore from 'flavours/glitch/components/load_more';
+import LoadingIndicator from 'flavours/glitch/components/loading_indicator';
+import ScrollContainer from 'flavours/glitch/containers/scroll_container';
+import ProfileColumnHeader from 'flavours/glitch/features/account/components/profile_column_header';
+import HeaderContainer from 'flavours/glitch/features/account_timeline/containers/header_container';
 import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
+import Column from 'flavours/glitch/features/ui/components/column';
+import { normalizeForLookup } from 'flavours/glitch/reducers/accounts_map';
+import { getAccountGallery } from 'flavours/glitch/selectors';
+
+import MediaItem from './components/media_item';
 
 const mapStateToProps = (state, { params: { acct, id } }) => {
   const accountId = id || state.getIn(['accounts_map', normalizeForLookup(acct)]);
@@ -71,8 +75,8 @@ class AccountGallery extends ImmutablePureComponent {
     isLoading: PropTypes.bool,
     hasMore: PropTypes.bool,
     isAccount: PropTypes.bool,
-    multiColumn: PropTypes.bool,
     suspended: PropTypes.bool,
+    multiColumn: PropTypes.bool,
   };
 
   state = {
@@ -141,16 +145,26 @@ class AccountGallery extends ImmutablePureComponent {
   handleOpenMedia = attachment => {
     const { dispatch } = this.props;
     const statusId = attachment.getIn(['status', 'id']);
+    const lang = attachment.getIn(['status', 'language']);
 
     if (attachment.get('type') === 'video') {
-      dispatch(openModal('VIDEO', { media: attachment, statusId, options: { autoPlay: true } }));
+      dispatch(openModal({
+        modalType: 'VIDEO',
+        modalProps: { media: attachment, statusId, lang, options: { autoPlay: true } },
+      }));
     } else if (attachment.get('type') === 'audio') {
-      dispatch(openModal('AUDIO', { media: attachment, statusId, options: { autoPlay: true } }));
+      dispatch(openModal({
+        modalType: 'AUDIO',
+        modalProps: { media: attachment, statusId, lang, options: { autoPlay: true } },
+      }));
     } else {
       const media = attachment.getIn(['status', 'media_attachments']);
       const index = media.findIndex(x => x.get('id') === attachment.get('id'));
 
-      dispatch(openModal('MEDIA', { media, index, statusId }));
+      dispatch(openModal({
+        modalType: 'MEDIA',
+        modalProps: { media, index, statusId, lang },
+      }));
     }
   };
 

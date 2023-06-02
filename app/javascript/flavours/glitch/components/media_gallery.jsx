@@ -1,13 +1,19 @@
-import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import { is } from 'immutable';
-import IconButton from './icon_button';
+import { PureComponent } from 'react';
+
 import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+
 import classNames from 'classnames';
-import { autoPlayGif, displayMedia, useBlurhash } from 'flavours/glitch/initial_state';
+
+import { is } from 'immutable';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+
 import { debounce } from 'lodash';
-import Blurhash from 'flavours/glitch/components/blurhash';
+
+import { Blurhash } from 'flavours/glitch/components/blurhash';
+import { autoPlayGif, displayMedia, useBlurhash } from 'flavours/glitch/initial_state';
+
+import { IconButton } from './icon_button';
 
 const messages = defineMessages({
   hidden: {
@@ -32,7 +38,7 @@ const messages = defineMessages({
   },
 });
 
-class Item extends React.PureComponent {
+class Item extends PureComponent {
 
   static propTypes = {
     attachment: ImmutablePropTypes.map.isRequired,
@@ -101,12 +107,10 @@ class Item extends React.PureComponent {
   render () {
     const { attachment, lang, index, size, standalone, letterbox, displayWidth, visible } = this.props;
 
+    let badges = [], thumbnail;
+
     let width  = 50;
     let height = 100;
-    let top    = 'auto';
-    let left   = 'auto';
-    let bottom = 'auto';
-    let right  = 'auto';
 
     if (size === 1) {
       width = 100;
@@ -116,45 +120,13 @@ class Item extends React.PureComponent {
       height = 50;
     }
 
-    if (size === 2) {
-      if (index === 0) {
-        right = '2px';
-      } else {
-        left = '2px';
-      }
-    } else if (size === 3) {
-      if (index === 0) {
-        right = '2px';
-      } else if (index > 0) {
-        left = '2px';
-      }
-
-      if (index === 1) {
-        bottom = '2px';
-      } else if (index > 1) {
-        top = '2px';
-      }
-    } else if (size === 4) {
-      if (index === 0 || index === 2) {
-        right = '2px';
-      }
-
-      if (index === 1 || index === 3) {
-        left = '2px';
-      }
-
-      if (index < 2) {
-        bottom = '2px';
-      } else {
-        top = '2px';
-      }
+    if (attachment.get('description')?.length > 0) {
+      badges.push(<span key='alt' className='media-gallery__gifv__label'>ALT</span>);
     }
-
-    let thumbnail = '';
 
     if (attachment.get('type') === 'unknown') {
       return (
-        <div className={classNames('media-gallery__item', { standalone })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
+        <div className={classNames('media-gallery__item', { standalone, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
           <a className='media-gallery__item-thumbnail' href={attachment.get('remote_url') || attachment.get('url')} style={{ cursor: 'pointer' }} title={attachment.get('description')} lang={lang} target='_blank' rel='noopener noreferrer'>
             <Blurhash
               hash={attachment.get('blurhash')}
@@ -205,6 +177,8 @@ class Item extends React.PureComponent {
     } else if (attachment.get('type') === 'gifv') {
       const autoPlay = this.getAutoPlay();
 
+      badges.push(<span key='gif' className='media-gallery__gifv__label'>GIF</span>);
+
       thumbnail = (
         <div className={classNames('media-gallery__gifv', { autoplay: autoPlay })}>
           <video
@@ -222,14 +196,12 @@ class Item extends React.PureComponent {
             loop
             muted
           />
-
-          <span className='media-gallery__gifv__label'>GIF</span>
         </div>
       );
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone, letterbox })} key={attachment.get('id')} style={{ left: left, top: top, right: right, bottom: bottom, width: `${width}%`, height: `${height}%` }}>
+      <div className={classNames('media-gallery__item', { standalone, letterbox, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
         <Blurhash
           hash={attachment.get('blurhash')}
           dummy={!useBlurhash}
@@ -237,14 +209,21 @@ class Item extends React.PureComponent {
             'media-gallery__preview--hidden': visible && this.state.loaded,
           })}
         />
+
         {visible && thumbnail}
+
+        {badges && (
+          <div className='media-gallery__item__badges'>
+            {badges}
+          </div>
+        )}
       </div>
     );
   }
 
 }
 
-class MediaGallery extends React.PureComponent {
+class MediaGallery extends PureComponent {
 
   static propTypes = {
     sensitive: PropTypes.bool,
@@ -281,7 +260,7 @@ class MediaGallery extends React.PureComponent {
     window.removeEventListener('resize', this.handleResize);
   }
 
-  componentWillReceiveProps (nextProps) {
+  UNSAFE_componentWillReceiveProps (nextProps) {
     if (!is(nextProps.media, this.props.media) && nextProps.visible === undefined) {
       this.setState({ visible: displayMedia !== 'hide_all' && !nextProps.sensitive || displayMedia === 'show_all' });
     } else if (!is(nextProps.visible, this.props.visible) && nextProps.visible !== undefined) {
@@ -289,7 +268,7 @@ class MediaGallery extends React.PureComponent {
     }
   }
 
-  componentDidUpdate (prevProps) {
+  componentDidUpdate () {
     if (this.node) {
       this.handleResize();
     }
@@ -313,7 +292,7 @@ class MediaGallery extends React.PureComponent {
   };
 
   handleClick = (index) => {
-    this.props.onOpenMedia(this.props.media, index);
+    this.props.onOpenMedia(this.props.media, index, this.props.lang);
   };
 
   handleRef = (node) => {
@@ -327,7 +306,7 @@ class MediaGallery extends React.PureComponent {
   _setDimensions () {
     const width = this.node.offsetWidth;
 
-    if (width && width != this.state.width) {
+    if (width && width !== this.state.width) {
       // offsetWidth triggers a layout, so only calculate when we need to
       if (this.props.cacheWidth) {
         this.props.cacheWidth(width);
@@ -358,12 +337,10 @@ class MediaGallery extends React.PureComponent {
 
     const computedClass = classNames('media-gallery', { 'full-width': fullwidth });
 
-    if (this.isStandaloneEligible() && width) {
-      style.height = width / this.props.media.getIn([0, 'meta', 'small', 'aspect']);
-    } else if (width) {
-      style.height = width / (16/9);
+    if (this.isStandaloneEligible()) { // TODO: cropImages setting
+      style.aspectRatio = `${this.props.media.getIn([0, 'meta', 'small', 'aspect'])}`;
     } else {
-      return (<div className={computedClass} ref={this.handleRef} />);
+      style.aspectRatio = '16 / 9';
     }
 
     if (this.isStandaloneEligible()) {
