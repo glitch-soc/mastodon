@@ -1,3 +1,5 @@
+import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
+
 import {
   COMPOSE_MOUNT,
   COMPOSE_UNMOUNT,
@@ -51,16 +53,16 @@ import {
   COMPOSE_CHANGE_MEDIA_FOCUS,
   COMPOSE_SET_STATUS,
 } from 'flavours/glitch/actions/compose';
-import { TIMELINE_DELETE } from 'flavours/glitch/actions/timelines';
-import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
 import { REDRAFT } from 'flavours/glitch/actions/statuses';
-import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
-import uuid from '../uuid';
-import { privacyPreference } from 'flavours/glitch/utils/privacy_preference';
+import { STORE_HYDRATE } from 'flavours/glitch/actions/store';
+import { TIMELINE_DELETE } from 'flavours/glitch/actions/timelines';
 import { me, defaultContentType } from 'flavours/glitch/initial_state';
-import { overwrite } from 'flavours/glitch/utils/js_helpers';
-import { unescapeHTML } from 'flavours/glitch/utils/html';
 import { recoverHashtags } from 'flavours/glitch/utils/hashtag';
+import { unescapeHTML } from 'flavours/glitch/utils/html';
+import { overwrite } from 'flavours/glitch/utils/js_helpers';
+import { privacyPreference } from 'flavours/glitch/utils/privacy_preference';
+
+import { uuid } from '../uuid';
 
 const totalElefriends = 3;
 
@@ -448,6 +450,7 @@ export default function compose(state = initialState, action) {
     });
   case COMPOSE_REPLY_CANCEL:
     state = state.setIn(['advanced_options', 'threaded_mode'], false);
+    // eslint-disable-next-line no-fallthrough -- fall-through to `COMPOSE_RESET` is intended
   case COMPOSE_RESET:
     return state.withMutations(map => {
       map.set('in_reply_to', null);
@@ -458,6 +461,7 @@ export default function compose(state = initialState, action) {
       map.set('privacy', state.get('default_privacy'));
       map.set('id', null);
       map.set('poll', null);
+      map.set('language', state.get('default_language'));
       map.update(
         'advanced_options',
         map => map.mergeWith(overwrite, state.get('default_advanced_options')),

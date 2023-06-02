@@ -20,13 +20,12 @@ class Notification < ApplicationRecord
   include Paginable
 
   LEGACY_TYPE_CLASS_MAP = {
-    'Mention'        => :mention,
-    'Status'         => :reblog,
-    'Follow'         => :follow,
-    'FollowRequest'  => :follow_request,
-    'Favourite'      => :favourite,
-    'StatusReaction' => :reaction,
-    'Poll'           => :poll,
+    'Mention' => :mention,
+    'Status' => :reblog,
+    'Follow' => :follow,
+    'FollowRequest' => :follow_request,
+    'Favourite' => :favourite,
+    'Poll' => :poll,
   }.freeze
 
   TYPES = %i(
@@ -36,7 +35,6 @@ class Notification < ApplicationRecord
     follow
     follow_request
     favourite
-    reaction
     poll
     update
     admin.sign_up
@@ -48,7 +46,6 @@ class Notification < ApplicationRecord
     reblog: [status: :reblog],
     mention: [mention: :status],
     favourite: [favourite: :status],
-    reaction: [status_reaction: :status],
     poll: [poll: :status],
     update: :status,
     'admin.report': [report: :target_account],
@@ -58,14 +55,15 @@ class Notification < ApplicationRecord
   belongs_to :from_account, class_name: 'Account', optional: true
   belongs_to :activity, polymorphic: true, optional: true
 
-  belongs_to :mention,         foreign_key: 'activity_id', optional: true
-  belongs_to :status,          foreign_key: 'activity_id', optional: true
-  belongs_to :follow,          foreign_key: 'activity_id', optional: true
-  belongs_to :follow_request,  foreign_key: 'activity_id', optional: true
-  belongs_to :favourite,       foreign_key: 'activity_id', optional: true
-  belongs_to :poll,            foreign_key: 'activity_id', optional: true
-  belongs_to :report,          foreign_key: 'activity_id', optional: true
-  belongs_to :status_reaction, foreign_key: 'activity_id', optional: true
+  with_options foreign_key: 'activity_id', optional: true do
+    belongs_to :mention, inverse_of: :notification
+    belongs_to :status, inverse_of: :notification
+    belongs_to :follow, inverse_of: :notification
+    belongs_to :follow_request, inverse_of: :notification
+    belongs_to :favourite, inverse_of: :notification
+    belongs_to :poll, inverse_of: false
+    belongs_to :report, inverse_of: false
+  end
 
   validates :type, inclusion: { in: TYPES }
 
@@ -83,8 +81,6 @@ class Notification < ApplicationRecord
       status&.reblog
     when :favourite
       favourite&.status
-    when :reaction
-      status_reaction&.status
     when :mention
       mention&.status
     when :poll
@@ -118,7 +114,7 @@ class Notification < ApplicationRecord
         ActiveRecord::Associations::Preloader.new.preload(grouped_notifications, associations)
       end
 
-      unique_target_statuses = notifications.map(&:target_status).compact.uniq
+      unique_target_statuses = notifications.filter_map(&:target_status).uniq
       # Call cache_collection in block
       cached_statuses_by_id = yield(unique_target_statuses).index_by(&:id)
 
@@ -134,8 +130,6 @@ class Notification < ApplicationRecord
           notification.status.reblog = cached_status
         when :favourite
           notification.favourite.status = cached_status
-        when :reaction
-          notification.reaction.status = cached_status
         when :mention
           notification.mention.status = cached_status
         when :poll
@@ -147,8 +141,6 @@ class Notification < ApplicationRecord
     end
   end
 
-  alias reaction status_reaction
-
   after_initialize :set_from_account
   before_validation :set_from_account
 
@@ -158,7 +150,7 @@ class Notification < ApplicationRecord
     return unless new_record?
 
     case activity_type
-    when 'Status', 'Follow', 'Favourite', 'StatusReaction', 'FollowRequest', 'Poll', 'Report'
+    when 'Status', 'Follow', 'Favourite', 'FollowRequest', 'Poll', 'Report'
       self.from_account_id = activity&.account_id
     when 'Mention'
       self.from_account_id = activity&.status&.account_id

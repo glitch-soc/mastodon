@@ -514,7 +514,7 @@ body > [data-popper-placement] {
       outline: 0;
     }
 
-    @media screen and (max-width: 600px) {
+    @media screen and (width <= 600px) {
       font-size: 16px;
     }
   }
@@ -535,7 +535,7 @@ body > [data-popper-placement] {
       all: unset;
     }
 
-    @media screen and (max-width: 600px) {
+    @media screen and (width <= 600px) {
       height: 100px !important; // Prevent auto-resize textarea
       resize: vertical;
     }
@@ -1155,6 +1155,7 @@ body > [data-popper-placement] {
     .video-player,
     .audio-player,
     .attachment-list,
+    .picture-in-picture-placeholder,
     .status-card {
       margin-inline-start: 46px + 10px;
       width: calc(100% - (46px + 10px));
@@ -1197,10 +1198,6 @@ body > [data-popper-placement] {
         display: none;
       }
     }
-  }
-
-  .reactions-bar--empty {
-    margin-top: 0;
   }
 }
 
@@ -1337,16 +1334,6 @@ body > [data-popper-placement] {
   align-items: center;
   gap: 18px;
   margin-top: 16px;
-
-  & > .emoji-picker-dropdown > .emoji-button {
-    padding: 0;
-  }
-}
-
-.status__action-bar-button {
-  .fa-plus {
-    padding-top: 1px;
-  }
 }
 
 .detailed-status__action-bar-dropdown {
@@ -1797,7 +1784,6 @@ a.account__display-name {
 .status__avatar {
   width: 46px;
   height: 46px;
-  box-shadow: 0 0 0 2px $ui-base-color;
 }
 
 .muted {
@@ -2427,7 +2413,7 @@ $ui-header-height: 55px;
       display: none;
     }
 
-    @media screen and (min-width: 320px) {
+    @media screen and (width >= 320px) {
       .logo--wordmark {
         display: block;
       }
@@ -2539,7 +2525,7 @@ $ui-header-height: 55px;
   overflow: hidden;
 }
 
-@media screen and (min-width: 631px) {
+@media screen and (width >= 631px) {
   .columns-area {
     padding: 0;
   }
@@ -2599,7 +2585,7 @@ $ui-header-height: 55px;
   &:hover,
   &:focus,
   &:active {
-    @media screen and (min-width: 631px) {
+    @media screen and (width >= 631px) {
       background: lighten($ui-base-color, 14%);
       border-bottom-color: lighten($ui-base-color, 14%);
     }
@@ -2616,7 +2602,7 @@ $ui-header-height: 55px;
   }
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (width >= 600px) {
   .tabs-bar__link {
     span {
       display: inline;
@@ -2839,7 +2825,7 @@ $ui-header-height: 55px;
     color: $darker-text-color;
   }
 
-  @media screen and (min-width: 600px) {
+  @media screen and (width >= 600px) {
     padding: 40px;
   }
 }
@@ -2949,7 +2935,7 @@ $ui-header-height: 55px;
       height: 36px;
       color: $dark-text-color;
 
-      @media screen and (min-width: 600px) {
+      @media screen and (width >= 600px) {
         display: flex;
       }
     }
@@ -3001,7 +2987,7 @@ $ui-header-height: 55px;
   position: sticky;
   background: $ui-base-color;
 
-  @media screen and (min-width: 600) {
+  @media screen and (width >= 600) {
     padding: 0 40px;
   }
 
@@ -3123,12 +3109,16 @@ $ui-header-height: 55px;
 }
 
 .compose-form__highlightable {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 0 1 auto;
   border-radius: 4px;
   transition: box-shadow 300ms linear;
 
   &.active {
     transition: none;
-    box-shadow: 0 0 0 2px rgba(lighten($highlight-text-color, 8%), 0.7);
+    box-shadow: 0 0 0 6px rgba(lighten($highlight-text-color, 8%), 0.7);
   }
 }
 
@@ -3269,7 +3259,7 @@ $ui-header-height: 55px;
     user-select: none;
   }
 
-  @media screen and (min-height: 640px) {
+  @media screen and (height >= 640px) {
     display: block;
   }
 }
@@ -3618,19 +3608,19 @@ $ui-header-height: 55px;
       }
     }
 
-    @media screen and (max-height: 810px) {
+    @media screen and (height <= 810px) {
       .trends__item:nth-of-type(3) {
         display: none;
       }
     }
 
-    @media screen and (max-height: 720px) {
+    @media screen and (height <= 720px) {
       .trends__item:nth-of-type(2) {
         display: none;
       }
     }
 
-    @media screen and (max-height: 670px) {
+    @media screen and (height <= 670px) {
       display: none;
     }
 
@@ -3714,7 +3704,7 @@ $ui-header-height: 55px;
     margin-bottom: 20px;
   }
 
-  @media screen and (max-width: 600px) {
+  @media screen and (width <= 600px) {
     font-size: 16px;
   }
 }
@@ -3817,6 +3807,10 @@ a.status-card {
 }
 
 .status-card-video {
+  // Firefox has a bug where frameborder=0 iframes add some extra blank space
+  // see https://bugzilla.mozilla.org/show_bug.cgi?id=155174
+  overflow: hidden;
+
   iframe {
     width: 100%;
     height: 100%;
@@ -4466,10 +4460,6 @@ a.status-card.compact:hover {
   text-align: center;
 }
 
-.detailed-status__button .emoji-button {
-  padding: 0;
-}
-
 .column-settings__outer {
   background: lighten($ui-base-color, 8%);
   padding: 15px;
@@ -4514,7 +4504,7 @@ a.status-card.compact:hover {
         background: lighten($ui-base-color, 4%);
       }
 
-      @media screen and (max-width: 600px) {
+      @media screen and (width <= 600px) {
         font-size: 16px;
       }
     }
@@ -5849,7 +5839,7 @@ a.status-card.compact:hover {
     font-weight: 700;
     margin-bottom: 15px;
 
-    @media screen and (max-height: 800px) {
+    @media screen and (height <= 800px) {
       font-size: 22px;
     }
   }
@@ -6036,7 +6026,7 @@ a.status-card.compact:hover {
   display: flex;
   border-top: 1px solid $ui-secondary-color;
 
-  @media screen and (max-width: 480px) {
+  @media screen and (width <= 480px) {
     flex-wrap: wrap;
     overflow-y: auto;
   }
@@ -6047,7 +6037,7 @@ a.status-card.compact:hover {
   box-sizing: border-box;
   width: 50%;
 
-  @media screen and (max-width: 480px) {
+  @media screen and (width <= 480px) {
     width: 100%;
   }
 }
@@ -6069,13 +6059,13 @@ a.status-card.compact:hover {
     color: $inverted-text-color;
   }
 
-  @media screen and (max-width: 480px) {
+  @media screen and (width <= 480px) {
     max-height: 10vh;
   }
 }
 
 .focal-point-modal__content {
-  @media screen and (max-width: 480px) {
+  @media screen and (width <= 480px) {
     max-height: 40vh;
   }
 }
@@ -6126,7 +6116,7 @@ a.status-card.compact:hover {
     }
   }
 
-  @media screen and (max-width: 480px) {
+  @media screen and (width <= 480px) {
     padding: 10px;
     max-width: 100%;
     order: 2;
@@ -6343,31 +6333,25 @@ a.status-card.compact:hover {
   z-index: 9999;
 }
 
-.media-gallery__gifv__label {
-  display: block;
+.media-gallery__item__badges {
   position: absolute;
-  color: $primary-text-color;
-  background: rgba($base-overlay-background, 0.5);
   bottom: 6px;
   inset-inline-start: 6px;
-  padding: 2px 6px;
-  border-radius: 2px;
-  font-size: 11px;
-  font-weight: 600;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.9;
-  transition: opacity 0.1s ease;
-  line-height: 18px;
-  font-family: sans-serif;
+  display: flex;
+  gap: 2px;
 }
 
-.media-gallery__gifv {
-  &:hover {
-    .media-gallery__gifv__label {
-      opacity: 1;
-    }
-  }
+.media-gallery__gifv__label {
+  display: block;
+  color: $white;
+  background: rgba($black, 0.65);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 1;
+  pointer-events: none;
+  line-height: 18px;
 }
 
 .attachment-list {
@@ -6442,22 +6426,26 @@ a.status-card.compact:hover {
   position: relative;
   width: 100%;
   min-height: 64px;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  gap: 2px;
 }
 
 .media-gallery__item {
   border: 0;
   box-sizing: border-box;
   display: block;
-  float: left;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
 
-  &.standalone {
-    .media-gallery__item-gifv-thumbnail {
-      transform: none;
-      top: 0;
-    }
+  &--tall {
+    grid-row: span 2;
+  }
+
+  &--wide {
+    grid-column: span 2;
   }
 }
 
@@ -6506,11 +6494,7 @@ a.status-card.compact:hover {
   cursor: zoom-in;
   height: 100%;
   object-fit: cover;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
   width: 100%;
-  z-index: 1;
 }
 
 .media-gallery__item-thumbnail-label {
@@ -6541,6 +6525,7 @@ a.status-card.compact:hover {
   background: darken($ui-base-color, 8%);
   border-radius: 4px;
   padding-bottom: 44px;
+  width: 100%;
 
   &.editable {
     border-radius: 0;
@@ -6608,6 +6593,8 @@ a.status-card.compact:hover {
   border-radius: 4px;
   box-sizing: border-box;
   color: $white;
+  display: flex;
+  align-items: center;
 
   &.editable {
     border-radius: 0;
@@ -6642,9 +6629,6 @@ a.status-card.compact:hover {
   &.inline {
     video {
       object-fit: contain;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
 
@@ -7155,7 +7139,7 @@ noscript {
   }
 }
 
-@media screen and (max-width: 630px) and (max-height: 400px) {
+@media screen and (width <= 630px) and (height <= 400px) {
   $duration: 400ms;
   $delay: 100ms;
 
@@ -7285,7 +7269,7 @@ noscript {
         background: lighten($ui-base-color, 4%);
       }
 
-      @media screen and (max-width: 600px) {
+      @media screen and (width <= 600px) {
         font-size: 16px;
       }
     }
@@ -7376,7 +7360,7 @@ noscript {
   width: 380px;
   overflow: hidden;
 
-  @media screen and (max-width: 420px) {
+  @media screen and (width <= 420px) {
     width: 90%;
   }
 
@@ -7431,7 +7415,7 @@ noscript {
   width: 380px;
   overflow: hidden;
 
-  @media screen and (max-width: 420px) {
+  @media screen and (width <= 420px) {
     width: 90%;
   }
 
@@ -7530,7 +7514,7 @@ noscript {
     }
   }
 
-  @media screen and (max-width: 480px) {
+  @media screen and (width <= 480px) {
     img,
     video {
       max-height: 100%;
@@ -8349,6 +8333,7 @@ noscript {
   font-weight: 500;
   cursor: pointer;
   color: $darker-text-color;
+  aspect-ratio: 16 / 9;
 
   i {
     display: block;
@@ -9087,7 +9072,7 @@ noscript {
       margin-bottom: 20px;
     }
 
-    @media screen and (max-width: 600px) {
+    @media screen and (width <= 600px) {
       display: block;
 
       h4 {
@@ -9233,6 +9218,7 @@ noscript {
       }
 
       p {
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }

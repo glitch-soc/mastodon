@@ -1,36 +1,39 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import Avatar from '../../../components/avatar';
-import DisplayName from '../../../components/display_name';
-import StatusContent from '../../../components/status_content';
-import MediaGallery from '../../../components/media_gallery';
-import { Link } from 'react-router-dom';
+
 import { injectIntl, defineMessages, FormattedDate, FormattedMessage } from 'react-intl';
-import Card from './card';
+
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import Video from '../../video';
+
+import { AnimatedNumber } from 'mastodon/components/animated_number';
+import EditedTimestamp from 'mastodon/components/edited_timestamp';
+import { Icon }  from 'mastodon/components/icon';
+import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
+
+import { Avatar } from '../../../components/avatar';
+import { DisplayName } from '../../../components/display_name';
+import MediaGallery from '../../../components/media_gallery';
+import StatusContent from '../../../components/status_content';
 import Audio from '../../audio';
 import scheduleIdleTask from '../../ui/util/schedule_idle_task';
-import classNames from 'classnames';
-import Icon from 'mastodon/components/icon';
-import AnimatedNumber from 'mastodon/components/animated_number';
-import PictureInPicturePlaceholder from 'mastodon/components/picture_in_picture_placeholder';
-import EditedTimestamp from 'mastodon/components/edited_timestamp';
-import StatusReactions from 'mastodon/components/status_reactions';
+import Video from '../../video';
+
+import Card from './card';
 
 const messages = defineMessages({
   public_short: { id: 'privacy.public.short', defaultMessage: 'Public' },
   unlisted_short: { id: 'privacy.unlisted.short', defaultMessage: 'Unlisted' },
-  private_short: { id: 'privacy.private.short', defaultMessage: 'Followers-only' },
-  direct_short: { id: 'privacy.direct.short', defaultMessage: 'Direct' },
+  private_short: { id: 'privacy.private.short', defaultMessage: 'Followers only' },
+  direct_short: { id: 'privacy.direct.short', defaultMessage: 'Mentioned people only' },
 });
 
 class DetailedStatus extends ImmutablePureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
-    identity: PropTypes.object,
   };
 
   static propTypes = {
@@ -49,8 +52,6 @@ class DetailedStatus extends ImmutablePureComponent {
       available: PropTypes.bool,
     }),
     onToggleMediaVisibility: PropTypes.func,
-    onReactionAdd: PropTypes.func.isRequired,
-    onReactionRemove: PropTypes.func.isRequired,
   };
 
   state = {
@@ -194,7 +195,7 @@ class DetailedStatus extends ImmutablePureComponent {
     }
 
     if (status.get('application')) {
-      applicationLink = <React.Fragment> · <a className='detailed-status__application' href={status.getIn(['application', 'website'])} target='_blank' rel='noopener noreferrer'>{status.getIn(['application', 'name'])}</a></React.Fragment>;
+      applicationLink = <> · <a className='detailed-status__application' href={status.getIn(['application', 'website'])} target='_blank' rel='noopener noreferrer'>{status.getIn(['application', 'name'])}</a></>;
     }
 
     const visibilityIconInfo = {
@@ -205,33 +206,33 @@ class DetailedStatus extends ImmutablePureComponent {
     };
 
     const visibilityIcon = visibilityIconInfo[status.get('visibility')];
-    const visibilityLink = <React.Fragment> · <Icon id={visibilityIcon.icon} title={visibilityIcon.text} /></React.Fragment>;
+    const visibilityLink = <> · <Icon id={visibilityIcon.icon} title={visibilityIcon.text} /></>;
 
     if (['private', 'direct'].includes(status.get('visibility'))) {
       reblogLink = '';
     } else if (this.context.router) {
       reblogLink = (
-        <React.Fragment>
-          <React.Fragment> · </React.Fragment>
+        <>
+           ·
           <Link to={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}/reblogs`} className='detailed-status__link'>
             <Icon id={reblogIcon} />
             <span className='detailed-status__reblogs'>
               <AnimatedNumber value={status.get('reblogs_count')} />
             </span>
           </Link>
-        </React.Fragment>
+        </>
       );
     } else {
       reblogLink = (
-        <React.Fragment>
-          <React.Fragment> · </React.Fragment>
+        <>
+           ·
           <a href={`/interact/${status.get('id')}?type=reblog`} className='detailed-status__link' onClick={this.handleModalLink}>
             <Icon id={reblogIcon} />
             <span className='detailed-status__reblogs'>
               <AnimatedNumber value={status.get('reblogs_count')} />
             </span>
           </a>
-        </React.Fragment>
+        </>
       );
     }
 
@@ -257,10 +258,10 @@ class DetailedStatus extends ImmutablePureComponent {
 
     if (status.get('edited_at')) {
       edited = (
-        <React.Fragment>
-          <React.Fragment> · </React.Fragment>
+        <>
+           ·
           <EditedTimestamp statusId={status.get('id')} timestamp={status.get('edited_at')} />
-        </React.Fragment>
+        </>
       );
     }
 
@@ -286,14 +287,6 @@ class DetailedStatus extends ImmutablePureComponent {
           />
 
           {media}
-
-          <StatusReactions
-            statusId={status.get('id')}
-            reactions={status.get('reactions')}
-            addReaction={this.props.onReactionAdd}
-            removeReaction={this.props.onReactionRemove}
-            canReact={this.context.identity.signedIn}
-          />
 
           <div className='detailed-status__meta'>
             <a className='detailed-status__datetime' href={`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`} target='_blank' rel='noopener noreferrer'>

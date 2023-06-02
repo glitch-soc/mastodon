@@ -1,9 +1,11 @@
-import { connect } from 'react-redux';
-import StatusList from 'flavours/glitch/components/status_list';
-import { scrollTopTimeline, loadPending } from 'flavours/glitch/actions/timelines';
 import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
+import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
+
 import { debounce } from 'lodash';
+
+import { scrollTopTimeline, loadPending } from 'flavours/glitch/actions/timelines';
+import StatusList from 'flavours/glitch/components/status_list';
 import { me } from 'flavours/glitch/initial_state';
 
 const getRegex = createSelector([
@@ -60,6 +62,7 @@ const makeMapStateToProps = () => {
 
   const mapStateToProps = (state, { timelineId, regex }) => ({
     statusIds: getStatusIds(state, { type: timelineId, regex }),
+    lastId:    state.getIn(['timelines', timelineId, 'items'])?.last(),
     isLoading: state.getIn(['timelines', timelineId, 'isLoading'], true),
     isPartial: state.getIn(['timelines', timelineId, 'isPartial'], false),
     hasMore:   state.getIn(['timelines', timelineId, 'hasMore']),

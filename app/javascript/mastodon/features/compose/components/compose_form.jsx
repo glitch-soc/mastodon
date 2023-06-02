@@ -1,34 +1,40 @@
-import React from 'react';
-import CharacterCounter from './character_counter';
-import Button from '../../../components/button';
-import ImmutablePropTypes from 'react-immutable-proptypes';
 import PropTypes from 'prop-types';
-import ReplyIndicatorContainer from '../containers/reply_indicator_container';
-import AutosuggestTextarea from '../../../components/autosuggest_textarea';
-import AutosuggestInput from '../../../components/autosuggest_input';
-import PollButtonContainer from '../containers/poll_button_container';
-import UploadButtonContainer from '../containers/upload_button_container';
+
 import { defineMessages, injectIntl } from 'react-intl';
-import SpoilerButtonContainer from '../containers/spoiler_button_container';
-import PrivacyDropdownContainer from '../containers/privacy_dropdown_container';
+
+import classNames from 'classnames';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import ImmutablePureComponent from 'react-immutable-pure-component';
+
+import { length } from 'stringz';
+
+import { Icon }  from 'mastodon/components/icon';
+
+import AutosuggestInput from '../../../components/autosuggest_input';
+import AutosuggestTextarea from '../../../components/autosuggest_textarea';
+import Button from '../../../components/button';
+import { maxChars } from '../../../initial_state';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
+import LanguageDropdown from '../containers/language_dropdown_container';
+import PollButtonContainer from '../containers/poll_button_container';
 import PollFormContainer from '../containers/poll_form_container';
+import PrivacyDropdownContainer from '../containers/privacy_dropdown_container';
+import ReplyIndicatorContainer from '../containers/reply_indicator_container';
+import SpoilerButtonContainer from '../containers/spoiler_button_container';
+import UploadButtonContainer from '../containers/upload_button_container';
 import UploadFormContainer from '../containers/upload_form_container';
 import WarningContainer from '../containers/warning_container';
-import LanguageDropdown from '../containers/language_dropdown_container';
-import ImmutablePureComponent from 'react-immutable-pure-component';
-import { length } from 'stringz';
 import { countableText } from '../util/counter';
-import Icon from 'mastodon/components/icon';
-import classNames from 'classnames';
-import { maxChars, publishButtonText } from '../../../initial_state';
+
+import CharacterCounter from './character_counter';
 
 const allowedAroundShortCode = '><\u0085\u0020\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\u2028\u2029\u0009\u000a\u000b\u000c\u000d';
 
 const messages = defineMessages({
   placeholder: { id: 'compose_form.placeholder', defaultMessage: 'What is on your mind?' },
   spoiler_placeholder: { id: 'compose_form.spoiler_placeholder', defaultMessage: 'Write your warning here' },
-  publish: { id: 'compose_form.publish', defaultMessage: 'Mulch' },
+  publish: { id: 'compose_form.publish', defaultMessage: 'Publish' },
   publishLoud: { id: 'compose_form.publish_loud', defaultMessage: '{publish}!' },
   saveChanges: { id: 'compose_form.save_changes', defaultMessage: 'Save changes' },
 });
@@ -227,17 +233,9 @@ class ComposeForm extends ImmutablePureComponent {
     if (this.props.isEditing) {
       publishText = intl.formatMessage(messages.saveChanges);
     } else if (this.props.privacy === 'private' || this.props.privacy === 'direct') {
-      if (publishButtonText !== null){
-        publishText = <span className='compose-form__publish-private'><Icon id='lock' /> {publishButtonText}</span>;
-      } else {
-        publishText = <span className='compose-form__publish-private'><Icon id='lock' /> {intl.formatMessage(messages.publish)}</span>;
-      }
+      publishText = <span className='compose-form__publish-private'><Icon id='lock' /> {intl.formatMessage(messages.publish)}</span>;
     } else {
-      if (publishButtonText !== null){
-        publishText = this.props.privacy !== 'unlisted' ? publishButtonText+'!' : publishButtonText;
-      } else {
-        publishText = this.props.privacy !== 'unlisted' ? intl.formatMessage(messages.publishLoud, { publish: intl.formatMessage(messages.publish) }) : intl.formatMessage(messages.publish);
-      }
+      publishText = this.props.privacy !== 'unlisted' ? intl.formatMessage(messages.publishLoud, { publish: intl.formatMessage(messages.publish) }) : intl.formatMessage(messages.publish);
     }
 
     return (

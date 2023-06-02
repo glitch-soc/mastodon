@@ -1,16 +1,22 @@
-import React from 'react';
+import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
+
+import { defineMessages, injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
+
+import classNames from 'classnames';
+import { Link } from 'react-router-dom';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { connect } from 'react-redux';
+
+import SwipeableViews from 'react-swipeable-views';
+
 import Column from 'mastodon/components/column';
 import ColumnBackButton from 'mastodon/components/column_back_button';
-import PropTypes from 'prop-types';
+import { Icon }  from 'mastodon/components/icon';
 import { me, domain } from 'mastodon/initial_state';
-import { connect } from 'react-redux';
-import ImmutablePropTypes from 'react-immutable-proptypes';
-import { defineMessages, injectIntl, FormattedMessage, FormattedHTMLMessage } from 'react-intl';
-import classNames from 'classnames';
-import Icon from 'mastodon/components/icon';
+
 import ArrowSmallRight from './components/arrow_small_right';
-import { Link } from 'react-router-dom';
-import SwipeableViews from 'react-swipeable-views';
 
 const messages = defineMessages({
   shareableMessage: { id: 'onboarding.share.message', defaultMessage: 'I\'m {username} on #Mastodon! Come follow me at {url}' },
@@ -20,7 +26,7 @@ const mapStateToProps = state => ({
   account: state.getIn(['accounts', me]),
 });
 
-class CopyPasteText extends React.PureComponent {
+class CopyPasteText extends PureComponent {
 
   static propTypes = {
     value: PropTypes.string,
@@ -81,7 +87,7 @@ class CopyPasteText extends React.PureComponent {
 
 }
 
-class TipCarousel extends React.PureComponent {
+class TipCarousel extends PureComponent {
 
   static propTypes = {
     children: PropTypes.node,
@@ -135,22 +141,23 @@ class TipCarousel extends React.PureComponent {
 
 }
 
-class Share extends React.PureComponent {
+class Share extends PureComponent {
 
   static propTypes = {
     onBack: PropTypes.func,
     account: ImmutablePropTypes.map,
+    multiColumn: PropTypes.bool,
     intl: PropTypes.object,
   };
 
   render () {
-    const { onBack, account, intl } = this.props;
+    const { onBack, account, multiColumn, intl } = this.props;
 
     const url = (new URL(`/@${account.get('username')}`, document.baseURI)).href;
 
     return (
       <Column>
-        <ColumnBackButton onClick={onBack} />
+        <ColumnBackButton multiColumn={multiColumn} onClick={onBack} />
 
         <div className='scrollable privacy-policy'>
           <div className='column-title'>
