@@ -45,6 +45,13 @@ class Header extends ImmutablePureComponent {
     }
   };
 
+  linkify = text => {
+    const URL_REGEX = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
+    return text
+      .split(' ')
+      .map(part => URL_REGEX.test(part) ? <><a className={'account-note__link'} target={'_blank'} rel={'noopener nofollow noreferrer'} href={part}>{part}</a> </> : part + ' ');
+  }
+
   render () {
     const { account, accountNote, isEditing, isSubmitting, intl } = this.props;
 
@@ -89,7 +96,7 @@ class Header extends ImmutablePureComponent {
         />
       );
     } else {
-      note_container = (<div className='account__header__account-note__content'>{accountNote}</div>);
+      note_container = (<div className='account__header__account-note__content'>{this.linkify(accountNote)}</div>);
     }
 
     return (
