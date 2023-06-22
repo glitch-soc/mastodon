@@ -377,3 +377,12 @@
     color: $gold-star;
   }
 }
+
+.account-note__link {
+  text-decoration: none;
+  color: $highlight-text-color;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
