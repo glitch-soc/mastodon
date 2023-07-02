@@ -102,7 +102,7 @@ const Firehose = ({ feedType, multiColumn }) => {
         break;
       }
     },
-    [dispatch, onlyMedia, feedType],
+    [dispatch, onlyMedia, allowLocalOnly, feedType],
   );
 
   const handleHeaderClick = useCallback(() => columnRef.current?.scrollTop(), []);
@@ -132,7 +132,7 @@ const Firehose = ({ feedType, multiColumn }) => {
     }
 
     return () => disconnect?.();
-  }, [dispatch, signedIn, feedType, onlyMedia]);
+  }, [dispatch, signedIn, feedType, onlyMedia, allowLocalOnly]);
 
   const prependBanner = feedType === 'community' ? (
     <DismissableBanner id='community_timeline'>
