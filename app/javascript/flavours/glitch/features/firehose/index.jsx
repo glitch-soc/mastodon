@@ -86,17 +86,17 @@ const Firehose = ({ feedType, multiColumn }) => {
     () => {
       switch(feedType) {
       case 'community':
-        dispatch(addColumn('COMMUNITY', { other: { onlyMedia } }));
+        dispatch(addColumn('COMMUNITY', { other: { onlyMedia }, regex: { body: regex } }));
         break;
       case 'public':
-        dispatch(addColumn('PUBLIC', { other: { onlyMedia, allowLocalOnly } }));
+        dispatch(addColumn('PUBLIC', { other: { onlyMedia, allowLocalOnly }, regex: { body: regex }  }));
         break;
       case 'public:remote':
-        dispatch(addColumn('REMOTE', { other: { onlyMedia, onlyRemote: true } }));
+        dispatch(addColumn('REMOTE', { other: { onlyMedia, onlyRemote: true }, regex: { body: regex }  }));
         break;
       }
     },
-    [dispatch, onlyMedia, feedType, allowLocalOnly],
+    [dispatch, onlyMedia, feedType, allowLocalOnly, regex],
   );
 
   const handleLoadMore = useCallback(
