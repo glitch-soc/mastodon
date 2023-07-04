@@ -23,7 +23,6 @@ defaults: &defaults
   trendable_by_default: false
   trending_status_cw: true
   hide_followers_count: false
-  visible_reactions: 6
   reserved_usernames:
     - admin
     - support

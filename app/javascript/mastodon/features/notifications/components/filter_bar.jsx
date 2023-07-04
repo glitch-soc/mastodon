@@ -8,7 +8,6 @@ import { Icon }  from 'mastodon/components/icon';
 const tooltips = defineMessages({
   mentions: { id: 'notifications.filter.mentions', defaultMessage: 'Mentions' },
   favourites: { id: 'notifications.filter.favourites', defaultMessage: 'Favourites' },
-  reactions: { id: 'notifications.filter.reactions', defaultMessage: 'Reactions' },
   boosts: { id: 'notifications.filter.boosts', defaultMessage: 'Boosts' },
   polls: { id: 'notifications.filter.polls', defaultMessage: 'Poll results' },
   follows: { id: 'notifications.filter.follows', defaultMessage: 'Follows' },
@@ -75,13 +74,6 @@ class FilterBar extends PureComponent {
           title={intl.formatMessage(tooltips.favourites)}
         >
           <Icon id='star' fixedWidth />
-        </button>
-        <button
-          className={selectedFilter === 'reaction' ? 'active' : ''}
-          onClick={this.onClick('reaction')}
-          title={intl.formatMessage(tooltips.reactions)}
-        >
-          <Icon id='plus' fixedWidth />
         </button>
         <button
           className={selectedFilter === 'reblog' ? 'active' : ''}

@@ -78,10 +78,6 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       translation: {
         enabled: TranslationService.configured?,
       },
-
-      reactions: {
-        max_reactions: StatusReactionValidator::LIMIT,
-      },
     }
   end
 

@@ -654,7 +654,6 @@
   "timeline_hint.resources.statuses": "Ältere Beiträge",
   "trends.counter_by_accounts": "{count, plural, one {{counter} Profil} other {{counter} Profile}} {days, plural, one {seit gestern} other {in {days} Tagen}}",
   "trends.trending_now": "Aktuelle Trends",
-  "tooltips.reactions": "Reaktionen",
   "ui.beforeunload": "Dein Entwurf geht verloren, wenn du Mastodon verlässt.",
   "units.short.billion": "{count} Mrd.",
   "units.short.million": "{count} Mio.",
