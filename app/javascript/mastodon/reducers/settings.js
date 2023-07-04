@@ -82,6 +82,10 @@ const initialState = ImmutableMap({
     }),
   }),
 
+  firehose: ImmutableMap({
+    onlyMedia: false,
+  }),
+
   community: ImmutableMap({
     regex: ImmutableMap({
       body: '',
