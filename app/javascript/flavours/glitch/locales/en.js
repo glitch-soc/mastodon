@@ -148,9 +148,7 @@ const messages = {
   'home.column_settings.show_direct': 'Show DMs',
 
   'notification.markForDeletion': 'Mark for deletion',
-  'notification.reaction': '{name} reacted to your post',
   'notifications.clear': 'Clear all my notifications',
-  'notifications.column_settings.reaction': 'Reactions:',
   'notifications.marked_clear_confirmation': 'Are you sure you want to permanently clear all selected notifications?',
   'notifications.marked_clear': 'Clear selected notifications',
 
@@ -190,8 +188,6 @@ const messages = {
   'keyboard_shortcuts.bookmark': 'to bookmark',
   'keyboard_shortcuts.toggle_collapse': 'to collapse/uncollapse toots',
   'keyboard_shortcuts.secondary_toot': 'to send toot using secondary privacy setting',
-
-  'tooltips.reactions': 'Reactions',
 };
 
 export default Object.assign({}, inherited, messages);

@@ -115,22 +115,6 @@ class ActivityPub::Activity::Undo < ActivityPub::Activity
     end
   end
 
-  def undo_emoji_react
-    name = @object['content']
-    return if name.nil?
-
-    status = status_from_uri(target_uri)
-
-    return if status.nil? || !status.account.local?
-
-    if @account.reacted?(status, name.delete(':'))
-      reaction = status.status_reactions.where(account: @account, name: name).first
-      reaction&.destroy
-    else
-      delete_later!(object_uri)
-    end
-  end
-
   def undo_block
     target_account = account_from_uri(target_uri)
 

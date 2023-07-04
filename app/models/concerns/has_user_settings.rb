@@ -127,10 +127,6 @@ module HasUserSettings
     settings['hide_followers_count']
   end
 
-  def setting_visible_reactions
-    integer_cast_setting('visible_reactions', 0)
-  end
-
   def allows_report_emails?
     settings['notification_emails.report']
   end
