@@ -11,8 +11,6 @@ class ActivityPub::Activity::Undo < ActivityPub::Activity
       undo_follow
     when 'Like'
       undo_like
-    when 'EmojiReact'
-      undo_emoji_react
     when 'Block'
       undo_block
     when nil
