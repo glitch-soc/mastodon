@@ -15,18 +15,18 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
 
   skip_before_action :require_functional!
 
-  def new
-    super
-
-    resource.email = current_user.unconfirmed_email || current_user.email if user_signed_in?
-  end
-
   def show
     old_session_values = session.to_hash
     reset_session
     session.update old_session_values.except('session_id')
 
     super
+  end
+
+  def new
+    super
+
+    resource.email = current_user.unconfirmed_email || current_user.email if user_signed_in?
   end
 
   def confirm_captcha
@@ -51,14 +51,12 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
     # step.
     confirmation_token = params[:confirmation_token]
     return if confirmation_token.nil?
+
     @confirmation_user = User.find_first_by_auth_conditions(confirmation_token: confirmation_token)
   end
 
   def captcha_user_bypass?
     return true if @confirmation_user.nil? || @confirmation_user.confirmed?
-
-    invite = Invite.find(@confirmation_user.invite_id) if @confirmation_user.invite_id.present?
-    invite.present? && !invite.max_uses.nil?
   end
 
   def set_pack
@@ -90,8 +88,10 @@ class Auth::ConfirmationsController < Devise::ConfirmationsController
   def after_confirmation_path_for(_resource_name, user)
     if user.created_by_application && truthy_param?(:redirect_to_app)
       user.created_by_application.confirmation_redirect_uri
+    elsif user_signed_in?
+      web_url('start')
     else
-      super
+      new_user_session_path
     end
   end
 end

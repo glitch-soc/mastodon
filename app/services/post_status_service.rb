@@ -6,6 +6,15 @@ class PostStatusService < BaseService
 
   MIN_SCHEDULE_OFFSET = 5.minutes.freeze
 
+  class UnexpectedMentionsError < StandardError
+    attr_reader :accounts
+
+    def initialize(message, accounts)
+      super(message)
+      @accounts = accounts
+    end
+  end
+
   # Post a text status update, fetch and notify remote users mentioned
   # @param [Account] account Account from which to post
   # @param [Hash] options
@@ -21,6 +30,7 @@ class PostStatusService < BaseService
   # @option [Doorkeeper::Application] :application
   # @option [String] :idempotency Optional idempotency key
   # @option [Boolean] :with_rate_limit
+  # @option [Enumerable] :allowed_mentions Optional array of expected mentioned account IDs, raises `UnexpectedMentionsError` if unexpected accounts end up in mentions
   # @return [Status]
   def call(account, options = {})
     @account     = account
@@ -51,17 +61,24 @@ class PostStatusService < BaseService
 
   private
 
-  def preprocess_attributes!
-    if @text.blank? && @options[:spoiler_text].present?
-     @text = '.'
-     if @media&.find(&:video?) || @media&.find(&:gifv?)
-       @text = '📹'
-     elsif @media&.find(&:audio?)
-       @text = '🎵'
-     elsif @media&.find(&:image?)
-       @text = '🖼'
-     end
+  def fill_blank_text!
+    return unless @text.blank? && @options[:spoiler_text].present?
+
+    @text = begin
+      if @media&.any?(&:video?) || @media&.any?(&:gifv?)
+        '📹'
+      elsif @media&.any?(&:audio?)
+        '🎵'
+      elsif @media&.any?(&:image?)
+        '🖼'
+      else
+        '.'
+      end
     end
+  end
+
+  def preprocess_attributes!
+    fill_blank_text!
     @sensitive    = (@options[:sensitive].nil? ? @account.user&.setting_default_sensitive : @options[:sensitive]) || @options[:spoiler_text].present?
     @visibility   = @options[:visibility] || @account.user&.setting_default_privacy
     @visibility   = :unlisted if @visibility&.to_sym == :public && @account.silenced?
@@ -72,12 +89,26 @@ class PostStatusService < BaseService
   end
 
   def process_status!
+    @status = @account.statuses.new(status_attributes)
+    process_mentions_service.call(@status, save_records: false)
+    safeguard_mentions!(@status)
+
     # The following transaction block is needed to wrap the UPDATEs to
     # the media attachments when the status is created
-
     ApplicationRecord.transaction do
-      @status = @account.statuses.create!(status_attributes)
+      @status.save!
     end
+  end
+
+  def safeguard_mentions!(status)
+    return if @options[:allowed_mentions].nil?
+
+    expected_account_ids = @options[:allowed_mentions].map(&:to_i)
+
+    unexpected_accounts = status.mentions.map(&:account).to_a.reject { |mentioned_account| expected_account_ids.include?(mentioned_account.id) }
+    return if unexpected_accounts.empty?
+
+    raise UnexpectedMentionsError.new('Post would be sent to unexpected accounts', unexpected_accounts)
   end
 
   def schedule_status!
@@ -102,7 +133,6 @@ class PostStatusService < BaseService
 
   def postprocess_status!
     process_hashtags_service.call(@status)
-    process_mentions_service.call(@status)
     Trends.tags.register(@status)
     LinkCrawlWorker.perform_async(@status.id)
     DistributionWorker.perform_async(@status.id)
@@ -162,8 +192,10 @@ class PostStatusService < BaseService
 
   def bump_potential_friendship!
     return if !@status.reply? || @account.id == @status.in_reply_to_account_id
+
     ActivityTracker.increment('activity:interactions')
     return if @account.following?(@status.in_reply_to_account_id)
+
     PotentialFriendshipTracker.record(@account.id, @status.in_reply_to_account_id, :reply)
   end
 

@@ -4,7 +4,7 @@
   .emoji-picker-dropdown {
     position: absolute;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
 
     ::-webkit-scrollbar-track:hover,
     ::-webkit-scrollbar-track:active {
@@ -32,12 +32,12 @@
 .spoiler-input {
   height: 0;
   transform-origin: bottom;
-  opacity: 0.0;
+  opacity: 0;
 
   &.spoiler-input--visible {
     height: 36px;
     margin-bottom: 11px;
-    opacity: 1.0;
+    opacity: 1;
   }
 
   input {
@@ -59,8 +59,12 @@
       color: $dark-text-color;
     }
 
-    &:focus { outline: 0 }
-    @include single-column('screen and (max-width: 630px)') { font-size: 16px }
+    &:focus {
+      outline: 0;
+    }
+    @include single-column('screen and (max-width: 630px)') {
+      font-size: 16px;
+    }
   }
 }
 
@@ -90,7 +94,6 @@
 .compose-form__sensitive-button {
   padding: 10px;
   padding-top: 0;
-
   font-size: 14px;
   font-weight: 500;
 
@@ -98,7 +101,7 @@
     color: $highlight-text-color;
   }
 
-  input[type=checkbox] {
+  input[type='checkbox'] {
     display: none;
   }
 
@@ -110,15 +113,17 @@
     width: 18px;
     height: 18px;
     flex: 0 0 auto;
-    margin-left: 5px;
-    margin-right: 10px;
+    margin-inline-start: 5px;
+    margin-inline-end: 10px;
     top: -1px;
     border-radius: 4px;
     vertical-align: middle;
 
     &.active {
       border-color: $highlight-text-color;
-      background: $highlight-text-color url("data:image/svg+xml;utf8,<svg width='18' height='18' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4.5 8.5L8 12l6-6' stroke='white' stroke-width='1.5'/></svg>") center center no-repeat;
+      background: $highlight-text-color
+        url("data:image/svg+xml;utf8,<svg width='18' height='18' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4.5 8.5L8 12l6-6' stroke='white' stroke-width='1.5'/></svg>")
+        center center no-repeat;
     }
   }
 }
@@ -137,7 +142,9 @@
   margin-bottom: 5px;
   overflow: hidden;
 
-  & > .account.small { color: $inverted-text-color; }
+  & > .account.small {
+    color: $inverted-text-color;
+  }
 }
 
 .reply-indicator__cancel {
@@ -147,19 +154,17 @@
 
 .reply-indicator__content {
   position: relative;
-  margin: 10px 0;
-  padding: 0 12px;
   font-size: 14px;
   line-height: 20px;
-  color: $inverted-text-color;
   word-wrap: break-word;
   font-weight: 400;
-  overflow: visible;
-  white-space: pre-wrap;
-  padding-top: 5px;
   overflow: hidden;
+  padding-top: 5px;
+  color: $inverted-text-color;
+  white-space: pre-wrap;
 
-  p, pre, blockquote {
+  p,
+  pre {
     margin-bottom: 20px;
     white-space: pre-wrap;
 
@@ -168,80 +173,21 @@
     }
   }
 
-  h1, h2, h3, h4, h5 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-
-  h1, h2 {
-    font-weight: 700;
-    font-size: 18px;
-  }
-
-  h2 {
-    font-size: 16px;
-  }
-
-  h3, h4, h5 {
-    font-weight: 500;
-  }
-
-  blockquote {
-    padding-left: 10px;
-    border-left: 3px solid $inverted-text-color;
-    color: $inverted-text-color;
-    white-space: normal;
-
-    p:last-child {
-      margin-bottom: 0;
-    }
-  }
-
-  b, strong {
-    font-weight: 700;
-  }
-
-  em, i {
-    font-style: italic;
-  }
-
-  sub {
-    font-size: smaller;
-    vertical-align: sub;
-  }
-
-  sup {
-    font-size: smaller;
-    vertical-align: super;
-  }
-
-  ul, ol {
-    margin-left: 1em;
-
-    p {
-      margin: 0;
-    }
-  }
-
-  ul {
-    list-style-type: disc;
-  }
-
-  ol {
-    list-style-type: decimal;
-  }
-
   a {
     color: $lighter-text-color;
     text-decoration: none;
 
-    &:hover { text-decoration: underline }
+    &:hover {
+      text-decoration: underline;
+    }
 
     &.mention {
       &:hover {
         text-decoration: none;
 
-        span { text-decoration: underline }
+        span {
+          text-decoration: underline;
+        }
       }
     }
   }
@@ -308,20 +254,21 @@
   display: block;
   position: absolute;
   top: 29px;
-  right: 5px;
+  inset-inline-end: 5px;
   bottom: 5px;
   overflow: hidden;
 
   & > .textarea_icon {
     display: block;
-    margin: 2px 0 0 2px;
+    margin-top: 2px;
+    margin-inline-start: 2px;
     width: 24px;
     height: 24px;
     color: $lighter-text-color;
     font-size: 18px;
     line-height: 24px;
     text-align: center;
-    opacity: .8;
+    opacity: 0.8;
   }
 }
 
@@ -331,19 +278,18 @@
 }
 
 .autosuggest-textarea__suggestions {
-  display: block;
-  position: absolute;
   box-sizing: border-box;
-  top: 100%;
-  border-radius: 0 0 4px 4px;
-  padding: 6px;
-  width: 100%;
-  color: $inverted-text-color;
-  background: $ui-secondary-color;
-  box-shadow: 4px 4px 6px rgba($base-shadow-color, 0.4);
-  font-size: 14px;
-  z-index: 99;
   display: none;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  z-index: 99;
+  box-shadow: 4px 4px 6px rgba($base-shadow-color, 0.4);
+  background: $ui-secondary-color;
+  border-radius: 0 0 4px 4px;
+  color: $inverted-text-color;
+  font-size: 14px;
+  padding: 6px;
 }
 
 .autosuggest-textarea__suggestions--visible {
@@ -358,7 +304,9 @@
   &:hover,
   &:focus,
   &:active,
-  &.selected { background: darken($ui-secondary-color, 10%) }
+  &.selected {
+    background: darken($ui-secondary-color, 10%);
+  }
 
   > .account,
   > .emoji,
@@ -387,7 +335,7 @@
 
     &__uses {
       flex: 0 0 auto;
-      text-align: right;
+      text-align: end;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -396,7 +344,9 @@
 
   & > .account.small {
     .display-name {
-      & > span { color: $lighter-text-color }
+      & > span {
+        color: $lighter-text-color;
+      }
     }
   }
 }
@@ -430,7 +380,9 @@
     background-repeat: no-repeat;
     overflow: hidden;
 
-    & > .close { mix-blend-mode: difference }
+    & > .close {
+      mix-blend-mode: difference;
+    }
   }
 
   .icon-button {
@@ -452,15 +404,25 @@
     position: absolute;
     z-index: 2;
     bottom: 0;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     box-sizing: border-box;
-    background: linear-gradient(0deg, rgba($base-shadow-color, 0.8) 0, rgba($base-shadow-color, 0.35) 80%, transparent);
+    background: linear-gradient(
+      0deg,
+      rgba($base-shadow-color, 0.8) 0,
+      rgba($base-shadow-color, 0.35) 80%,
+      transparent
+    );
   }
 }
 
 .compose-form__upload__actions {
-  background: linear-gradient(180deg, rgba($base-shadow-color, 0.8) 0, rgba($base-shadow-color, 0.35) 80%, transparent);
+  background: linear-gradient(
+    180deg,
+    rgba($base-shadow-color, 0.8) 0,
+    rgba($base-shadow-color, 0.35) 80%,
+    transparent
+  );
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -474,7 +436,7 @@
 
   .fa {
     font-size: 34px;
-    margin-right: 10px;
+    margin-inline-end: 10px;
   }
 
   span {
@@ -495,13 +457,13 @@
   border-radius: 6px;
   width: 100%;
   height: 6px;
-  background: $ui-base-lighter-color;
+  background: darken($simple-background-color, 8%);
 }
 
 .upload-progress__tracker {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   height: 6px;
   border-radius: 6px;
   background: $ui-highlight-color;
@@ -543,7 +505,8 @@
     margin: 0 3px;
     border-width: 0 0 0 1px;
     border-style: none none none solid;
-    border-color: transparent transparent transparent darken($simple-background-color, 24%);
+    border-color: transparent transparent transparent
+      darken($simple-background-color, 24%);
     padding: 0;
     width: 0;
     height: 27px;
@@ -553,7 +516,7 @@
 
 .character-counter__wrapper {
   align-self: center;
-  margin-right: 4px;
+  margin-inline-end: 4px;
 }
 
 .privacy-dropdown.active {
@@ -604,7 +567,9 @@
     flex: 1 1 auto;
     color: $lighter-text-color;
 
-    &:not(:first-child) { margin-left: 10px }
+    &:not(:first-child) {
+      margin-inline-start: 10px;
+    }
 
     strong {
       display: block;
@@ -621,11 +586,15 @@
     .privacy-dropdown__option__content {
       color: $primary-text-color;
 
-      strong { color: $primary-text-color }
+      strong {
+        color: $primary-text-color;
+      }
     }
   }
 
-  &.active:hover { background: lighten($ui-highlight-color, 4%) }
+  &.active:hover {
+    background: lighten($ui-highlight-color, 4%);
+  }
 }
 
 .compose-form__publish {
@@ -667,11 +636,11 @@
     }
 
     .emoji-mart-search {
-      padding-right: 10px;
+      padding-inline-end: 10px;
     }
 
     .emoji-mart-search-icon {
-      right: 10px + 5px;
+      inset-inline-end: 10px + 5px;
     }
 
     .emoji-mart-scroll {

@@ -1,7 +1,6 @@
 // @ts-check
 
 import WebSocketClient from '@gamestdio/websocket';
-
 /**
  * @type {WebSocketClient | undefined}
  */
@@ -17,10 +16,10 @@ let sharedConnection;
  */
 
 /**
-  * @typedef StreamEvent
-  * @property {string} event
-  * @property {object} payload
-  */
+ * @typedef StreamEvent
+ * @property {string} event
+ * @property {object} payload
+ */
 
 /**
  * @type {Array.<Subscription>}
@@ -59,6 +58,7 @@ const subscribe = ({ channelName, params, onConnect }) => {
   subscriptionCounters[key] = subscriptionCounters[key] || 0;
 
   if (subscriptionCounters[key] === 0) {
+    // @ts-expect-error
     sharedConnection.send(JSON.stringify({ type: 'subscribe', stream: channelName, ...params }));
   }
 
@@ -74,7 +74,9 @@ const unsubscribe = ({ channelName, params, onDisconnect }) => {
 
   subscriptionCounters[key] = subscriptionCounters[key] || 1;
 
+  // @ts-expect-error
   if (subscriptionCounters[key] === 1 && sharedConnection.readyState === WebSocketClient.OPEN) {
+    // @ts-expect-error
     sharedConnection.send(JSON.stringify({ type: 'unsubscribe', stream: channelName, ...params }));
   }
 
@@ -87,6 +89,7 @@ const sharedCallbacks = {
     subscriptions.forEach(subscription => subscribe(subscription));
   },
 
+  // @ts-expect-error
   received (data) {
     const { stream } = data;
 
@@ -122,7 +125,7 @@ const sharedCallbacks = {
 /**
  * @param {string} channelName
  * @param {Object.<string, string>} params
- * @return {string}
+ * @returns {string}
  */
 const channelNameWithInlineParams = (channelName, params) => {
   if (Object.keys(params).length === 0) {
@@ -136,8 +139,9 @@ const channelNameWithInlineParams = (channelName, params) => {
  * @param {string} channelName
  * @param {Object.<string, string>} params
  * @param {function(Function, Function): { onConnect: (function(): void), onReceive: (function(StreamEvent): void), onDisconnect: (function(): void) }} callbacks
- * @return {function(): void}
+ * @returns {function(): void}
  */
+// @ts-expect-error
 export const connectStream = (channelName, params, callbacks) => (dispatch, getState) => {
   const streamingAPIBaseURL = getState().getIn(['meta', 'streaming_api_base_url']);
   const accessToken = getState().getIn(['meta', 'access_token']);
@@ -222,19 +226,24 @@ const handleEventSourceMessage = (e, received) => {
  * @param {string} accessToken
  * @param {string} channelName
  * @param {{ connected: Function, received: function(StreamEvent): void, disconnected: Function, reconnected: Function }} callbacks
- * @return {WebSocketClient | EventSource}
+ * @returns {WebSocketClient | EventSource}
  */
 const createConnection = (streamingAPIBaseURL, accessToken, channelName, { connected, received, disconnected, reconnected }) => {
   const params = channelName.split('&');
 
+  // @ts-expect-error
   channelName = params.shift();
 
   if (streamingAPIBaseURL.startsWith('ws')) {
+    // @ts-expect-error
     const ws = new WebSocketClient(`${streamingAPIBaseURL}/api/v1/streaming/?${params.join('&')}`, accessToken);
 
+    // @ts-expect-error
     ws.onopen      = connected;
     ws.onmessage   = e => received(JSON.parse(e.data));
+    // @ts-expect-error
     ws.onclose     = disconnected;
+    // @ts-expect-error
     ws.onreconnect = reconnected;
 
     return ws;

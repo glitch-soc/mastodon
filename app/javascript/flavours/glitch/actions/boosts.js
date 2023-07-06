@@ -11,10 +11,13 @@ export function initBoostModal(props) {
 
     dispatch({
       type: BOOSTS_INIT_MODAL,
-      privacy
+      privacy,
     });
 
-    dispatch(openModal('BOOST', props));
+    dispatch(openModal({
+      modalType: 'BOOST',
+      modalProps: props,
+    }));
   };
 }
 

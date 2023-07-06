@@ -22,6 +22,10 @@ export function CommunityTimeline () {
   return import(/* webpackChunkName: "flavours/glitch/async/community_timeline" */'flavours/glitch/features/community_timeline');
 }
 
+export function Firehose () {
+  return import(/* webpackChunkName: "flavours/glitch/async/firehose" */'../../firehose');
+}
+
 export function HashtagTimeline () {
   return import(/* webpackChunkName: "flavours/glitch/async/hashtag_timeline" */'flavours/glitch/features/hashtag_timeline');
 }
@@ -88,10 +92,6 @@ export function Favourites () {
 
 export function FollowRequests () {
   return import(/* webpackChunkName: "flavours/glitch/async/follow_requests" */'flavours/glitch/features/follow_requests');
-}
-
-export function GenericNotFound () {
-  return import(/* webpackChunkName: "flavours/glitch/async/generic_not_found" */'flavours/glitch/features/generic_not_found');
 }
 
 export function FavouritedStatuses () {

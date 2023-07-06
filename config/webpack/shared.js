@@ -1,13 +1,13 @@
 // Note: You must restart bin/webpack-dev-server for changes to take effect
 
-const webpack = require('webpack');
-const { basename, dirname, join, relative, resolve } = require('path');
-const { sync } = require('glob');
+const { resolve } = require('path');
+
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const webpack = require('webpack');
 const AssetsManifestPlugin = require('webpack-assets-manifest');
-const { env, settings, core, flavours, output } = require('./configuration.js');
+
+const { env, settings, core, flavours, output } = require('./configuration');
 const rules = require('./rules');
-const localePacks = require('./generateLocalePacks');
 
 function reducePacks (data, into = {}) {
   if (!data.pack) return into;
@@ -47,10 +47,8 @@ function reducePacks (data, into = {}) {
 }
 
 const entries = Object.assign(
-  { locales: resolve('app', 'javascript', 'locales') },
-  localePacks,
   reducePacks(core),
-  Object.values(flavours).reduce((map, data) => reducePacks(data, map), {})
+  Object.values(flavours).reduce((map, data) => reducePacks(data, map), {}),
 );
 
 
@@ -68,7 +66,7 @@ module.exports = {
 
   optimization: {
     runtimeChunk: {
-      name: 'locales',
+      name: 'common',
     },
     splitChunks: {
       cacheGroups: {
@@ -81,7 +79,7 @@ module.exports = {
           },
           minChunks: 2,
           minSize: 0,
-          test: /^(?!.*[\\\/]node_modules[\\\/]react-intl[\\\/]).+$/,
+          test: /^(?!.*[\\/]node_modules[\\/]react-intl[\\/]).+$/,
         },
       },
     },
@@ -90,6 +88,7 @@ module.exports = {
 
   module: {
     rules: Object.keys(rules).map(key => rules[key]),
+    strictExportPresence: true,
   },
 
   plugins: [

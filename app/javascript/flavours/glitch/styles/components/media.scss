@@ -43,30 +43,25 @@
   font-weight: 500;
 }
 
-.media-gallery__gifv__label {
-  display: block;
+.media-gallery__item__badges {
   position: absolute;
-  color: $primary-text-color;
-  background: rgba($base-overlay-background, 0.5);
   bottom: 6px;
-  left: 6px;
-  padding: 2px 6px;
-  border-radius: 2px;
-  font-size: 11px;
-  font-weight: 600;
-  z-index: 1;
-  pointer-events: none;
-  opacity: 0.9;
-  transition: opacity 0.1s ease;
-  line-height: 18px;
+  inset-inline-start: 6px;
+  display: flex;
+  gap: 2px;
 }
 
-.media-gallery__gifv {
-  &:hover {
-    .media-gallery__gifv__label {
-      opacity: 1;
-    }
-  }
+.media-gallery__gifv__label {
+  display: block;
+  color: $white;
+  background: rgba($black, 0.65);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 1;
+  pointer-events: none;
+  line-height: 18px;
 }
 
 .media-gallery {
@@ -77,6 +72,10 @@
   position: relative;
   width: 100%;
   min-height: 64px;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  gap: 2px;
 
   @include fullwidth-gallery;
 }
@@ -85,20 +84,20 @@
   border: 0;
   box-sizing: border-box;
   display: block;
-  float: left;
   position: relative;
   border-radius: 4px;
   overflow: hidden;
 
-  .full-width & {
-    border-radius: 0;
+  &--tall {
+    grid-row: span 2;
   }
 
-  &.standalone {
-    .media-gallery__item-gifv-thumbnail {
-      transform: none;
-      top: 0;
-    }
+  &--wide {
+    grid-column: span 2;
+  }
+
+  .full-width & {
+    border-radius: 0;
   }
 
   &.letterbox {
@@ -133,7 +132,7 @@
   object-fit: cover;
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   z-index: 0;
   background: $base-overlay-background;
 
@@ -155,8 +154,6 @@
   cursor: zoom-in;
   height: 100%;
   width: 100%;
-  position: relative;
-  z-index: 1;
   object-fit: contain;
   user-select: none;
 
@@ -207,16 +204,16 @@
 .media-modal__closer {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   bottom: 0;
 }
 
 .media-modal__navigation {
   position: absolute;
   top: 0;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   bottom: 0;
   pointer-events: none;
   transition: opacity 0.3s linear;
@@ -239,7 +236,7 @@
   background: transparent;
   box-sizing: border-box;
   border: 0;
-  color: rgba($primary-text-color, 0.7);
+  color: rgba($white, 0.7);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -254,23 +251,23 @@
   &:hover,
   &:focus,
   &:active {
-    color: $primary-text-color;
+    color: $white;
   }
 }
 
 .media-modal__nav--left {
-  left: 0;
+  inset-inline-start: 0;
 }
 
 .media-modal__nav--right {
-  right: 0;
+  inset-inline-end: 0;
 }
 
 .media-modal__overlay {
   max-width: 600px;
   position: absolute;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   bottom: 0;
   margin: 0 auto;
 
@@ -348,7 +345,7 @@
   padding: 0;
   border: 0;
   font-size: 0;
-  transition: opacity .2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
 
   &.active {
     opacity: 1;
@@ -357,7 +354,7 @@
 
 .media-modal__close {
   position: absolute;
-  right: 8px;
+  inset-inline-end: 8px;
   top: 8px;
   z-index: 100;
 }
@@ -372,7 +369,6 @@
   .video-player__volume__handle {
     bottom: 23px;
   }
-
 }
 
 .audio-player {
@@ -382,7 +378,7 @@
   background: darken($ui-base-color, 8%);
   border-radius: 4px;
   padding-bottom: 44px;
-  direction: ltr;
+  width: 100%;
 
   &.editable {
     border-radius: 0;
@@ -449,8 +445,9 @@
   max-width: 100%;
   border-radius: 4px;
   box-sizing: border-box;
-  direction: ltr;
   color: $white;
+  display: flex;
+  align-items: center;
 
   &.editable {
     border-radius: 0;
@@ -493,23 +490,26 @@
   &.inline {
     video {
       object-fit: contain;
-      position: relative;
-      top: 50%;
-      transform: translateY(-50%);
     }
   }
 
   &__controls {
     position: absolute;
+    direction: ltr;
     z-index: 2;
     bottom: 0;
-    left: 0;
-    right: 0;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
     box-sizing: border-box;
-    background: linear-gradient(0deg, rgba($base-shadow-color, 0.85) 0, rgba($base-shadow-color, 0.45) 60%, transparent);
+    background: linear-gradient(
+      0deg,
+      rgba($base-shadow-color, 0.85) 0,
+      rgba($base-shadow-color, 0.45) 60%,
+      transparent
+    );
     padding: 0 15px;
     opacity: 0;
-    transition: opacity .1s ease;
+    transition: opacity 0.1s ease;
 
     &.active {
       opacity: 1;
@@ -527,7 +527,7 @@
     display: none;
     position: absolute;
     top: 0;
-    left: 0;
+    inset-inline-start: 0;
     width: 100%;
     height: 100%;
     z-index: 4;
@@ -591,7 +591,6 @@
     .player-button {
       display: inline-block;
       outline: 0;
-
       flex: 0 0 auto;
       background: transparent;
       padding: 5px;
@@ -651,18 +650,18 @@
     &.active {
       overflow: visible;
       width: 50px;
-      margin-right: 16px;
+      margin-inline-end: 16px;
     }
 
     &::before {
-      content: "";
+      content: '';
       width: 50px;
       background: rgba($white, 0.35);
       border-radius: 4px;
       display: block;
       position: absolute;
       height: 4px;
-      left: 0;
+      inset-inline-start: 0;
       top: 50%;
       transform: translate(0, -50%);
     }
@@ -672,7 +671,7 @@
       position: absolute;
       height: 4px;
       border-radius: 4px;
-      left: 0;
+      inset-inline-start: 0;
       top: 50%;
       transform: translate(0, -50%);
       background: lighten($ui-highlight-color, 8%);
@@ -685,8 +684,8 @@
       width: 12px;
       height: 12px;
       top: 50%;
-      left: 0;
-      margin-left: -6px;
+      inset-inline-start: 0;
+      margin-inline-start: -6px;
       transform: translate(0, -50%);
       background: lighten($ui-highlight-color, 8%);
       box-shadow: 1px 2px 6px rgba($base-shadow-color, 0.2);
@@ -725,7 +724,7 @@
     position: relative;
 
     &::before {
-      content: "";
+      content: '';
       width: 100%;
       background: rgba($white, 0.35);
       border-radius: 4px;
@@ -757,12 +756,12 @@
       width: 12px;
       height: 12px;
       top: 10px;
-      margin-left: -6px;
+      margin-inline-start: -6px;
       background: lighten($ui-highlight-color, 8%);
       box-shadow: 1px 2px 6px rgba($base-shadow-color, 0.2);
 
       .no-reduce-motion & {
-        transition: opacity .1s ease;
+        transition: opacity 0.1s ease;
       }
 
       &.active {

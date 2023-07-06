@@ -8,6 +8,7 @@ class Filters::StatusesController < ApplicationController
   before_action :set_status_filters
   before_action :set_pack
   before_action :set_body_classes
+  before_action :set_cache_headers
 
   PER_PAGE = 20
 
@@ -43,12 +44,14 @@ class Filters::StatusesController < ApplicationController
   end
 
   def action_from_button
-    if params[:remove]
-      'remove'
-    end
+    'remove' if params[:remove]
   end
 
   def set_body_classes
     @body_classes = 'admin'
+  end
+
+  def set_cache_headers
+    response.cache_control.replace(private: true, no_store: true)
   end
 end

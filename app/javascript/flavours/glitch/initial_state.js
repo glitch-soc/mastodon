@@ -51,11 +51,12 @@
  * @property {boolean} activity_api_enabled
  * @property {string} admin
  * @property {boolean=} boost_modal
+ * @property {boolean=} favourite_modal
  * @property {boolean} crop_images
  * @property {boolean=} delete_modal
  * @property {boolean=} disable_swiping
  * @property {string=} disabled_account_id
- * @property {boolean} display_media
+ * @property {string} display_media
  * @property {string} domain
  * @property {boolean=} expand_spoilers
  * @property {boolean} limited_federation_mode
@@ -81,7 +82,9 @@
  * @property {boolean=} use_pending_items
  * @property {string} version
  * @property {boolean} translation_enabled
- * @property {object} local_settings
+ * @property {string} status_page_url
+ * @property {boolean} system_emoji_font
+ * @property {string} default_content_type
  */
 
 /**
@@ -89,6 +92,9 @@
  * @property {Record<string, Account>} accounts
  * @property {InitialStateLanguage[]} languages
  * @property {InitialStateMeta} meta
+ * @property {object} local_settings
+ * @property {number} max_toot_chars
+ * @property {number} poll_limits
  */
 
 const element = document.getElementById('initial-state');
@@ -96,10 +102,13 @@ const element = document.getElementById('initial-state');
 const initialState = element?.textContent && JSON.parse(element.textContent);
 
 // Glitch-soc-specific “local settings”
-try {
-  initialState.local_settings = JSON.parse(localStorage.getItem('mastodon-settings'));
-} catch (e) {
-  initialState.local_settings = {};
+if (initialState) {
+  try {
+    // @ts-expect-error
+    initialState.local_settings = JSON.parse(localStorage.getItem('mastodon-settings'));
+  } catch (e) {
+    initialState.local_settings = {};
+  }
 }
 
 /**
@@ -140,8 +149,8 @@ export const unfollowModal = getMeta('unfollow_modal');
 export const useBlurhash = getMeta('use_blurhash');
 export const usePendingItems = getMeta('use_pending_items');
 export const version = getMeta('version');
-export const translationEnabled = getMeta('translation_enabled');
 export const languages = initialState?.languages;
+export const statusPageUrl = getMeta('status_page_url');
 
 // Glitch-soc-specific settings
 export const maxChars = (initialState && initialState.max_toot_chars) || 500;
