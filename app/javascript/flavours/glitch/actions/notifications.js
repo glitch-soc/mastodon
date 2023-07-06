@@ -1,5 +1,15 @@
+import { IntlMessageFormat } from 'intl-messageformat';
+import { defineMessages } from 'react-intl';
+
+import { List as ImmutableList } from 'immutable';
+
+import { compareId } from 'flavours/glitch/compare_id';
+import { usePendingItems as preferPendingItems } from 'flavours/glitch/initial_state';
+import { unescapeHTML } from 'flavours/glitch/utils/html';
+import { requestNotificationPermission } from 'flavours/glitch/utils/notifications';
+
 import api, { getLinks } from '../api';
-import IntlMessageFormat from 'intl-messageformat';
+
 import { fetchFollowRequests, fetchRelationships } from './accounts';
 import {
   importFetchedAccount,
@@ -9,12 +19,9 @@ import {
 } from './importer';
 import { submitMarkers } from './markers';
 import { saveSettings } from './settings';
-import { defineMessages } from 'react-intl';
-import { List as ImmutableList } from 'immutable';
-import { unescapeHTML } from 'flavours/glitch/utils/html';
-import { usePendingItems as preferPendingItems } from 'flavours/glitch/initial_state';
-import compareId from 'flavours/glitch/compare_id';
-import { requestNotificationPermission } from 'flavours/glitch/utils/notifications';
+
+
+
 
 export const NOTIFICATIONS_UPDATE = 'NOTIFICATIONS_UPDATE';
 export const NOTIFICATIONS_UPDATE_NOOP = 'NOTIFICATIONS_UPDATE_NOOP';
@@ -129,7 +136,7 @@ export function updateNotifications(notification, intlMessages, intlLocale) {
       });
     }
   };
-};
+}
 
 const excludeTypesFromSettings = state => state.getIn(['settings', 'notifications', 'shows']).filter(enabled => !enabled).keySeq().toJS();
 
@@ -209,14 +216,14 @@ export function expandNotifications({ maxId, forceLoad } = {}, done = noOp) {
       done();
     });
   };
-};
+}
 
 export function expandNotificationsRequest(isLoadingMore) {
   return {
     type: NOTIFICATIONS_EXPAND_REQUEST,
     skipLoading: !isLoadingMore,
   };
-};
+}
 
 export function expandNotificationsSuccess(notifications, next, isLoadingMore, isLoadingRecent, usePendingItems) {
   return {
@@ -227,7 +234,7 @@ export function expandNotificationsSuccess(notifications, next, isLoadingMore, i
     usePendingItems,
     skipLoading: !isLoadingMore,
   };
-};
+}
 
 export function expandNotificationsFail(error, isLoadingMore) {
   return {
@@ -236,7 +243,7 @@ export function expandNotificationsFail(error, isLoadingMore) {
     skipLoading: !isLoadingMore,
     skipAlert: !isLoadingMore || error.name === 'AbortError',
   };
-};
+}
 
 export function clearNotifications() {
   return (dispatch, getState) => {
@@ -246,14 +253,14 @@ export function clearNotifications() {
 
     api(getState).post('/api/v1/notifications/clear');
   };
-};
+}
 
 export function scrollTopNotifications(top) {
   return {
     type: NOTIFICATIONS_SCROLL_TOP,
     top,
   };
-};
+}
 
 export function deleteMarkedNotifications() {
   return (dispatch, getState) => {
@@ -277,33 +284,33 @@ export function deleteMarkedNotifications() {
       dispatch(deleteMarkedNotificationsFail(error));
     });
   };
-};
+}
 
 export function enterNotificationClearingMode(yes) {
   return {
     type: NOTIFICATIONS_ENTER_CLEARING_MODE,
     yes: yes,
   };
-};
+}
 
 export function markAllNotifications(yes) {
   return {
     type: NOTIFICATIONS_MARK_ALL_FOR_DELETE,
     yes: yes, // true, false or null. null = invert
   };
-};
+}
 
 export function deleteMarkedNotificationsRequest() {
   return {
     type: NOTIFICATIONS_DELETE_MARKED_REQUEST,
   };
-};
+}
 
 export function deleteMarkedNotificationsFail() {
   return {
     type: NOTIFICATIONS_DELETE_MARKED_FAIL,
   };
-};
+}
 
 export function markNotificationForDelete(id, yes) {
   return {
@@ -311,32 +318,32 @@ export function markNotificationForDelete(id, yes) {
     id: id,
     yes: yes,
   };
-};
+}
 
 export function deleteMarkedNotificationsSuccess() {
   return {
     type: NOTIFICATIONS_DELETE_MARKED_SUCCESS,
   };
-};
+}
 
 export function mountNotifications() {
   return {
     type: NOTIFICATIONS_MOUNT,
   };
-};
+}
 
 export function unmountNotifications() {
   return {
     type: NOTIFICATIONS_UNMOUNT,
   };
-};
+}
 
 export function notificationsSetVisibility(visibility) {
   return {
     type: NOTIFICATIONS_SET_VISIBILITY,
     visibility: visibility,
   };
-};
+}
 
 export function setFilter (filterType) {
   return dispatch => {
@@ -348,13 +355,13 @@ export function setFilter (filterType) {
     dispatch(expandNotifications({ forceLoad: true }));
     dispatch(saveSettings());
   };
-};
+}
 
 export function markNotificationsAsRead() {
   return {
     type: NOTIFICATIONS_MARK_AS_READ,
   };
-};
+}
 
 // Browser support
 export function setupBrowserNotifications() {
@@ -379,7 +386,7 @@ export function requestBrowserPermission(callback = noOp) {
       callback(permission);
     });
   };
-};
+}
 
 export function setBrowserSupport (value) {
   return {

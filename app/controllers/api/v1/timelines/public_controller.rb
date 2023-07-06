@@ -5,6 +5,7 @@ class Api::V1::Timelines::PublicController < Api::BaseController
   after_action :insert_pagination_headers, unless: -> { @statuses.empty? }
 
   def show
+    cache_if_unauthenticated!
     @statuses = load_statuses
     render json: @statuses, each_serializer: REST::StatusSerializer, relationships: StatusRelationshipsPresenter.new(@statuses, current_user&.account_id)
   end
@@ -40,7 +41,7 @@ class Api::V1::Timelines::PublicController < Api::BaseController
       only_media: truthy_param?(:only_media),
       allow_local_only: truthy_param?(:allow_local_only),
       with_replies: Setting.show_replies_in_public_timelines,
-      with_reblogs: Setting.show_reblogs_in_public_timelines,
+      with_reblogs: Setting.show_reblogs_in_public_timelines
     )
   end
 

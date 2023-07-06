@@ -36,12 +36,24 @@ describe Sanitize::Config do
       expect(Sanitize.fragment('<a href="http://example.com">Test</a>', subject)).to eq '<a href="http://example.com" rel="nofollow noopener noreferrer" target="_blank">Test</a>'
     end
 
+    it 'keeps a with translate="no"' do
+      expect(Sanitize.fragment('<a href="http://example.com" translate="no">Test</a>', subject)).to eq '<a href="http://example.com" translate="no" rel="nofollow noopener noreferrer" target="_blank">Test</a>'
+    end
+
+    it 'removes "translate" attribute with invalid value' do
+      expect(Sanitize.fragment('<a href="http://example.com" translate="foo">Test</a>', subject)).to eq '<a href="http://example.com" rel="nofollow noopener noreferrer" target="_blank">Test</a>'
+    end
+
     it 'removes a with unparsable href' do
       expect(Sanitize.fragment('<a href=" https://google.fr">Test</a>', subject)).to eq 'Test'
     end
 
     it 'keeps a with supported scheme and no host' do
       expect(Sanitize.fragment('<a href="dweb:/a/foo">Test</a>', subject)).to eq '<a href="dweb:/a/foo" rel="nofollow noopener noreferrer" target="_blank">Test</a>'
+    end
+
+    it 'keeps title in abbr' do
+      expect(Sanitize.fragment('<abbr title="HyperText Markup Language">HTML</abbr>', subject)).to eq '<abbr title="HyperText Markup Language">HTML</abbr>'
     end
   end
 

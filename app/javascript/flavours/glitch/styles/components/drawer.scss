@@ -8,11 +8,11 @@
   flex: none;
 
   &:first-child {
-    padding-left: 10px;
+    padding-inline-start: 10px;
   }
 
   &:last-child {
-    padding-right: 10px;
+    padding-inline-end: 10px;
   }
 
   @include single-column('screen and (max-width: 630px)') {
@@ -34,7 +34,8 @@
   }
 
   @include single-column('screen and (max-width: 630px)') {
-    :root & {  //  Overrides `.wide` for single-column view
+    :root & {
+      //  Overrides `.wide` for single-column view
       flex: auto;
       width: 100%;
       min-width: 0;
@@ -43,16 +44,20 @@
     }
   }
 
-  .react-swipeable-view-container & { height: 100% }
+  .react-swipeable-view-container & {
+    height: 100%;
+  }
 }
 
-.drawer--header {
+.drawer__header {
+  flex: none;
+  font-size: 16px;
+  background: lighten($ui-base-color, 8%);
+  margin-bottom: 10px;
   display: flex;
   flex-direction: row;
-  margin-bottom: 10px;
-  flex: none;
-  background: lighten($ui-base-color, 8%);
-  font-size: 16px;
+  border-radius: 4px;
+  overflow: hidden;
 
   & > * {
     display: block;
@@ -84,12 +89,18 @@
   margin-bottom: 10px;
   flex: none;
 
-  @include limited-single-column('screen and (max-width: #{$no-gap-breakpoint})') { margin-bottom: 0 }
-  @include single-column('screen and (max-width: 630px)') { font-size: 16px }
+  @include limited-single-column(
+    'screen and (max-width: #{$no-gap-breakpoint})'
+  ) {
+    margin-bottom: 0;
+  }
+  @include single-column('screen and (max-width: 630px)') {
+    font-size: 16px;
+  }
 }
 
 .search-popout {
-  @include search-popout();
+  @include search-popout;
 }
 
 .navigation-bar {
@@ -115,7 +126,7 @@
 
 .navigation-bar__profile {
   flex: 1 1 auto;
-  margin-left: 8px;
+  margin-inline-start: 8px;
   overflow: hidden;
 }
 
@@ -139,7 +150,7 @@
 
     .fa {
       display: inline-block;
-      margin-right: 5px;
+      margin-inline-end: 5px;
     }
   }
 
@@ -170,12 +181,13 @@
   position: relative;
   overflow: hidden;
   display: flex;
+  border-radius: 4px;
 }
 
 .drawer__inner {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   background: lighten($ui-base-color, 13%);
   box-sizing: border-box;
   padding: 0;
@@ -192,7 +204,9 @@
 }
 
 .drawer__inner__mastodon {
-  background: lighten($ui-base-color, 13%) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 234.80078 31.757813" width="234.80078" height="31.757812"><path d="M19.599609 0c-1.05 0-2.10039.375-2.90039 1.125L0 16.925781v14.832031h234.80078V17.025391l-16.5-15.900391c-1.6-1.5-4.20078-1.5-5.80078 0l-13.80078 13.099609c-1.6 1.5-4.19883 1.5-5.79883 0L179.09961 1.125c-1.6-1.5-4.19883-1.5-5.79883 0L159.5 14.224609c-1.6 1.5-4.20078 1.5-5.80078 0L139.90039 1.125c-1.6-1.5-4.20078-1.5-5.80078 0l-13.79883 13.099609c-1.6 1.5-4.20078 1.5-5.80078 0L100.69922 1.125c-1.600001-1.5-4.198829-1.5-5.798829 0l-13.59961 13.099609c-1.6 1.5-4.200781 1.5-5.800781 0L61.699219 1.125c-1.6-1.5-4.198828-1.5-5.798828 0L42.099609 14.224609c-1.6 1.5-4.198828 1.5-5.798828 0L22.5 1.125C21.7.375 20.649609 0 19.599609 0z" fill="#{hex-color($ui-base-color)}"/></svg>') no-repeat bottom / 100% auto;
+  background: lighten($ui-base-color, 13%)
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 234.80078 31.757813" width="234.80078" height="31.757812"><path d="M19.599609 0c-1.05 0-2.10039.375-2.90039 1.125L0 16.925781v14.832031h234.80078V17.025391l-16.5-15.900391c-1.6-1.5-4.20078-1.5-5.80078 0l-13.80078 13.099609c-1.6 1.5-4.19883 1.5-5.79883 0L179.09961 1.125c-1.6-1.5-4.19883-1.5-5.79883 0L159.5 14.224609c-1.6 1.5-4.20078 1.5-5.80078 0L139.90039 1.125c-1.6-1.5-4.20078-1.5-5.80078 0l-13.79883 13.099609c-1.6 1.5-4.20078 1.5-5.80078 0L100.69922 1.125c-1.600001-1.5-4.198829-1.5-5.798829 0l-13.59961 13.099609c-1.6 1.5-4.200781 1.5-5.800781 0L61.699219 1.125c-1.6-1.5-4.198828-1.5-5.798828 0L42.099609 14.224609c-1.6 1.5-4.198828 1.5-5.798828 0L22.5 1.125C21.7.375 20.649609 0 19.599609 0z" fill="#{hex-color($ui-base-color)}"/></svg>')
+    no-repeat bottom / 100% auto;
   flex: 1;
   min-height: 47px;
   display: none;
@@ -204,7 +218,6 @@
     width: 85%;
     height: 100%;
     pointer-events: none;
-    user-drag: none;
     user-select: none;
   }
 
@@ -214,7 +227,7 @@
 		height: 100% !important;
   }
 
-  @media screen and (min-height: 640px) {
+  @media screen and (height >= 640px) {
     display: block;
   }
 }
@@ -222,14 +235,14 @@
 .pseudo-drawer {
   background: lighten($ui-base-color, 13%);
   font-size: 13px;
-  text-align: left;
+  text-align: start;
 }
 
 .drawer__backdrop {
   cursor: pointer;
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   width: 100%;
   height: 100%;
   background: rgba($base-overlay-background, 0.5);

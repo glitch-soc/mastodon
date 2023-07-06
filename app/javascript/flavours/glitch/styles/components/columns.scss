@@ -62,10 +62,9 @@ $ui-header-height: 55px;
   height: $ui-header-height;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 3;
   justify-content: space-between;
   align-items: center;
-  overflow: hidden;
 
   &__logo {
     display: inline-flex;
@@ -74,6 +73,20 @@ $ui-header-height: 55px;
     .logo {
       height: $ui-header-height - 30px;
       width: auto;
+    }
+
+    .logo--wordmark {
+      display: none;
+    }
+
+    @media screen and (width >= 320px) {
+      .logo--wordmark {
+        display: block;
+      }
+
+      .logo--icon {
+        display: none;
+      }
     }
   }
 
@@ -182,7 +195,8 @@ $ui-header-height: 55px;
   cursor: pointer;
   flex: 0 0 auto;
   font-size: 16px;
-  padding: 0 5px 0 0;
+  padding: 0;
+  padding-inline-end: 5px;
   z-index: 3;
 
   &:hover {
@@ -190,13 +204,14 @@ $ui-header-height: 55px;
   }
 
   &:last-child {
-    padding: 0 15px 0 0;
+    padding: 0;
+    padding-inline-end: 15px;
   }
 }
 
 .column-back-button__icon {
   display: inline-block;
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 
 .column-back-button--slim {
@@ -209,7 +224,7 @@ $ui-header-height: 55px;
   font-size: 16px;
   padding: 15px;
   position: absolute;
-  right: 0;
+  inset-inline-end: 0;
   top: -48px;
 }
 
@@ -263,7 +278,7 @@ $ui-header-height: 55px;
 
 .column-link__icon {
   display: inline-block;
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 
 .column-subheading {
@@ -286,17 +301,21 @@ $ui-header-height: 55px;
 
     &::before {
       display: block;
-      content: "";
+      content: '';
       position: absolute;
       bottom: -13px;
-      left: 0;
-      right: 0;
+      inset-inline-start: 0;
+      inset-inline-end: 0;
       margin: 0 auto;
       width: 60%;
       pointer-events: none;
       height: 28px;
       z-index: 1;
-      background: radial-gradient(ellipse, rgba($ui-highlight-color, 0.23) 0%, rgba($ui-highlight-color, 0) 60%);
+      background: radial-gradient(
+        ellipse,
+        rgba($ui-highlight-color, 0.23) 0%,
+        rgba($ui-highlight-color, 0) 60%
+      );
     }
   }
 
@@ -325,7 +344,7 @@ $ui-header-height: 55px;
     color: inherit;
     background: transparent;
     font: inherit;
-    text-align: left;
+    text-align: start;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -373,7 +392,7 @@ $ui-header-height: 55px;
 .column-header__buttons {
   height: 48px;
   display: flex;
-  margin-left: 0;
+  margin-inline-start: 0;
 }
 
 .column-header__links {
@@ -381,7 +400,7 @@ $ui-header-height: 55px;
 }
 
 .column-header__links .text-btn {
-  margin-right: 10px;
+  margin-inline-end: 10px;
 }
 
 .column-header__button {
@@ -422,8 +441,7 @@ $ui-header-height: 55px;
   align-items: stretch;
   justify-content: space-around;
 
-  button {
-    @extend .column-header__button;
+  .column-header__button {
     background: transparent;
     text-align: center;
     padding: 10px 5px;
@@ -435,11 +453,11 @@ $ui-header-height: 55px;
   }
 }
 
-
 .layout-single-column .column-header__notif-cleaning-buttons {
   @media screen and (min-width: $no-gap-breakpoint) {
-    b, i {
-      margin-right: 5px;
+    b,
+    i {
+      margin-inline-end: 5px;
     }
 
     br {
@@ -487,6 +505,7 @@ $ui-header-height: 55px;
   // notif cleaning drawer
   &.ncd {
     transition: none;
+
     &.collapsed {
       max-height: 0;
       opacity: 0.7;
@@ -524,12 +543,12 @@ $ui-header-height: 55px;
     padding: 5px;
 
     &:first-child {
-      padding-right: 7px;
+      padding-inline-end: 7px;
     }
 
     &:last-child {
-      padding-left: 7px;
-      margin-left: 5px;
+      padding-inline-start: 7px;
+      margin-inline-start: 5px;
     }
   }
 }
@@ -553,7 +572,7 @@ $ui-header-height: 55px;
 
 .column-header__icon {
   display: inline-block;
-  margin-right: 5px;
+  margin-inline-end: 5px;
 }
 
 .column-settings__pillbar {
@@ -575,8 +594,8 @@ $ui-header-height: 55px;
   font-size: inherit;
   flex: auto;
   background-color: $ui-base-color;
-  transition-property: background-color, box-shadow;
   transition: all 0.2s ease;
+  transition-property: background-color, box-shadow;
 
   &[disabled] {
     cursor: not-allowed;
@@ -622,7 +641,8 @@ $ui-header-height: 55px;
   flex: 1 1 auto;
   align-items: center;
   justify-content: center;
-  @supports(display: grid) { // hack to fix Chrome <57
+  @supports (display: grid) {
+    // hack to fix Chrome <57
     contain: strict;
   }
 
@@ -643,6 +663,7 @@ $ui-header-height: 55px;
 .follow_requests-unlocked_explanation {
   background: darken($ui-base-color, 4%);
   contain: initial;
+  flex-grow: 0;
 }
 
 .error-column {
@@ -690,34 +711,9 @@ $ui-header-height: 55px;
   }
 }
 
-// more fixes for the navbar-under mode
-@mixin fix-margins-for-navbar-under {
-  .tabs-bar {
-    margin-top: 0 !important;
-    margin-bottom: -6px !important;
-  }
-}
-
-.single-column.navbar-under {
-  @include fix-margins-for-navbar-under;
-}
-
-.auto-columns.navbar-under {
-  @media screen and (max-width: $no-gap-breakpoint) {
-    @include fix-margins-for-navbar-under;
-  }
-}
-
-.auto-columns.navbar-under .react-swipeable-view-container .columns-area,
-.single-column.navbar-under .react-swipeable-view-container .columns-area {
-  @media screen and (max-width: $no-gap-breakpoint) {
-    height: 100% !important;
-  }
-}
-
 .column-inline-form {
   padding: 7px 15px;
-  padding-right: 5px;
+  padding-inline-end: 5px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -766,7 +762,7 @@ $ui-header-height: 55px;
 
   .column-select {
     &__control {
-      @include search-input();
+      @include search-input;
 
       &::placeholder {
         color: lighten($darker-text-color, 4%);
@@ -786,19 +782,19 @@ $ui-header-height: 55px;
         background: lighten($ui-base-color, 4%);
       }
 
-      @media screen and (max-width: 600px) {
+      @media screen and (width <= 600px) {
         font-size: 16px;
       }
     }
 
     &__placeholder {
       color: $dark-text-color;
-      padding-left: 2px;
+      padding-inline-start: 2px;
       font-size: 12px;
     }
 
     &__value-container {
-      padding-left: 6px;
+      padding-inline-start: 6px;
     }
 
     &__multi-value {
@@ -840,7 +836,8 @@ $ui-header-height: 55px;
     }
 
     &__menu {
-      @include search-popout();
+      @include search-popout;
+
       padding: 0;
       background: $ui-secondary-color;
     }
@@ -880,7 +877,7 @@ $ui-header-height: 55px;
   &__close {
     position: absolute;
     top: 10px;
-    right: 10px;
+    inset-inline-end: 10px;
   }
 
   h2 {
@@ -916,7 +913,7 @@ $ui-header-height: 55px;
 
   p {
     font-size: 16px;
-   line-height: 24px;
+    line-height: 24px;
     font-weight: 400;
     color: $darker-text-color;
   }
@@ -939,7 +936,7 @@ $ui-header-height: 55px;
 
   &__background {
     position: absolute;
-    left: 0;
+    inset-inline-start: 0;
     bottom: 0;
     height: 220px;
     width: auto;
@@ -963,26 +960,79 @@ $ui-header-height: 55px;
 }
 
 .dismissable-banner {
-  background: $ui-base-color;
-  border-bottom: 1px solid lighten($ui-base-color, 8%);
-  display: flex;
-  align-items: center;
-  gap: 30px;
+  position: relative;
+  margin: 10px;
+  margin-bottom: 5px;
+  border-radius: 8px;
+  border: 1px solid $highlight-text-color;
+  background: rgba($highlight-text-color, 0.15);
+  padding-inline-end: 45px;
+  overflow: hidden;
+
+  &__background-image {
+    width: 125%;
+    position: absolute;
+    bottom: -25%;
+    inset-inline-end: -25%;
+    z-index: -1;
+    opacity: 0.15;
+    mix-blend-mode: luminosity;
+  }
 
   &__message {
     flex: 1 1 auto;
-    padding: 20px 15px;
-    cursor: default;
-    font-size: 14px;
-    line-height: 18px;
+    padding: 15px;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
     color: $primary-text-color;
+
+    p {
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    h1 {
+      color: $highlight-text-color;
+      font-size: 22px;
+      line-height: 33px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    &__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+
+      &__wrapper {
+        display: flex;
+        margin-top: 30px;
+      }
+
+      .button {
+        display: block;
+        flex-grow: 1;
+      }
+    }
+
+    .button-tertiary {
+      background: rgba($ui-base-color, 0.15);
+      backdrop-filter: blur(8px);
+    }
   }
 
   &__action {
-    padding: 15px;
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    padding: 10px;
+
+    .icon-button {
+      color: $highlight-text-color;
+    }
   }
 }

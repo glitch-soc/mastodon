@@ -1,11 +1,13 @@
+import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
+
 import {
   ACCOUNT_BLOCK_SUCCESS,
   ACCOUNT_MUTE_SUCCESS,
 } from 'flavours/glitch/actions/accounts';
 import { CONTEXT_FETCH_SUCCESS } from 'flavours/glitch/actions/statuses';
 import { TIMELINE_DELETE, TIMELINE_UPDATE } from 'flavours/glitch/actions/timelines';
-import { Map as ImmutableMap, List as ImmutableList } from 'immutable';
-import compareId from '../compare_id';
+
+import { compareId } from '../compare_id';
 
 const initialState = ImmutableMap({
   inReplyTos: ImmutableMap(),
@@ -67,7 +69,7 @@ const deleteFromContexts = (immutableState, ids) => immutableState.withMutations
 
 const filterContexts = (state, relationship, statuses) => {
   const ownedStatusIds = statuses.filter(status => status.get('account') === relationship.id)
-                                 .map(status => status.get('id'));
+    .map(status => status.get('id'));
 
   return deleteFromContexts(state, ownedStatusIds);
 };
@@ -102,4 +104,4 @@ export default function replies(state = initialState, action) {
   default:
     return state;
   }
-};
+}

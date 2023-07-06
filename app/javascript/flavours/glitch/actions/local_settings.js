@@ -1,4 +1,5 @@
 import { expandSpoilers, disableSwiping } from 'flavours/glitch/initial_state';
+
 import { openModal } from './modal';
 
 export const LOCAL_SETTING_CHANGE = 'LOCAL_SETTING_CHANGE';
@@ -27,20 +28,23 @@ export function checkDeprecatedLocalSettings() {
     }
 
     if (changed_settings.length > 0) {
-      dispatch(openModal('DEPRECATED_SETTINGS', {
-        settings: changed_settings,
-        onConfirm: () => dispatch(clearDeprecatedLocalSettings()),
+      dispatch(openModal({
+        modalType: 'DEPRECATED_SETTINGS',
+        modalProps: {
+          settings: changed_settings,
+          onConfirm: () => dispatch(clearDeprecatedLocalSettings()),
+        },
       }));
     }
   };
-};
+}
 
 export function clearDeprecatedLocalSettings() {
   return (dispatch) => {
     dispatch(deleteLocalSetting(['content_warnings', 'auto_unfold']));
     dispatch(deleteLocalSetting(['swipe_to_change_columns']));
   };
-};
+}
 
 export function changeLocalSetting(key, value) {
   return dispatch => {
@@ -52,7 +56,7 @@ export function changeLocalSetting(key, value) {
 
     dispatch(saveLocalSettings());
   };
-};
+}
 
 export function deleteLocalSetting(key) {
   return dispatch => {
@@ -63,7 +67,7 @@ export function deleteLocalSetting(key) {
 
     dispatch(saveLocalSettings());
   };
-};
+}
 
 //  __TODO :__
 //  Right now `saveLocalSettings()` doesn't keep track of which user
@@ -74,4 +78,4 @@ export function saveLocalSettings() {
     const localSettings = getState().get('local_settings').toJS();
     localStorage.setItem('mastodon-settings', JSON.stringify(localSettings));
   };
-};
+}

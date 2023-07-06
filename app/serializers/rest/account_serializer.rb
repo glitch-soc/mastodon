@@ -16,6 +16,8 @@ class REST::AccountSerializer < ActiveModel::Serializer
   attribute :silenced, key: :limited, if: :silenced?
   attribute :noindex, if: :local?
 
+  attribute :memorial, if: :memorial?
+
   class AccountDecorator < SimpleDelegator
     def self.model_name
       Account.model_name
@@ -25,6 +27,16 @@ class REST::AccountSerializer < ActiveModel::Serializer
       false
     end
   end
+
+  class RoleSerializer < ActiveModel::Serializer
+    attributes :id, :name, :color
+
+    def id
+      object.id.to_s
+    end
+  end
+
+  has_many :roles, serializer: RoleSerializer, if: :local?
 
   class FieldSerializer < ActiveModel::Serializer
     include FormattingHelper
@@ -79,7 +91,7 @@ class REST::AccountSerializer < ActiveModel::Serializer
   end
 
   def followers_count
-    (Setting.hide_followers_count || object.user&.setting_hide_followers_count) ? -1 : object.followers_count
+    Setting.hide_followers_count || object.user&.setting_hide_followers_count ? -1 : object.followers_count
   end
 
   def display_name
@@ -118,11 +130,23 @@ class REST::AccountSerializer < ActiveModel::Serializer
     object.silenced?
   end
 
+  def memorial
+    object.memorial?
+  end
+
+  def roles
+    if object.suspended? || object.user.nil?
+      []
+    else
+      [object.user.role].compact.filter(&:highlighted?)
+    end
+  end
+
   def noindex
     object.user_prefers_noindex?
   end
 
-  delegate :suspended?, :silenced?, :local?, to: :object
+  delegate :suspended?, :silenced?, :local?, :memorial?, to: :object
 
   def moved_and_not_nested?
     object.moved?

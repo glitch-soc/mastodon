@@ -11,7 +11,11 @@
 }
 
 .scrollable .account-card__bio::after {
-  background: linear-gradient(to left, lighten($ui-base-color, 8%), transparent);
+  background: linear-gradient(
+    to left,
+    lighten($ui-base-color, 8%),
+    transparent
+  );
 }
 
 .filter-form {
@@ -33,14 +37,13 @@
   display: inline-block;
   padding: 6px 0;
   line-height: 18px;
-  cursor: default;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
 
-  input[type=radio],
-  input[type=checkbox] {
+  input[type='radio'],
+  input[type='checkbox'] {
     display: none;
   }
 
@@ -52,7 +55,7 @@
     width: 18px;
     height: 18px;
     flex: 0 0 auto;
-    margin-right: 10px;
+    margin-inline-end: 10px;
     top: -1px;
     border-radius: 50%;
     vertical-align: middle;
