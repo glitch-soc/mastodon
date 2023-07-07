@@ -10,8 +10,21 @@ $ui-base-color: $classic-base-color !default;
 $ui-primary-color: $classic-primary-color !default;
 $ui-secondary-color: $classic-secondary-color !default;
 
+$blurple-500: #d9742b;
+$blurple-600: #cc563a;
+$blurple-300: #e08f55;
+$grey-600: #5a4e4c;
+$grey-100: #f3dada;
+
 // Differences
 $ui-highlight-color: #d9742b;
+
+$ui-button-secondary-color: $grey-600 !default;
+$ui-button-secondary-border-color: $grey-600 !default;
+$ui-button-secondary-focus-color: $white !default;
+
+$ui-button-tertiary-color: $blurple-500 !default;
+$ui-button-tertiary-border-color: $blurple-500 !default;
 
 $darker-text-color: #bebebe !default;
 $dark-text-color: #7e7e7e !default;

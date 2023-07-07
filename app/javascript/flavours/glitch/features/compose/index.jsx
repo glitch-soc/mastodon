@@ -10,7 +10,11 @@ import { connect } from 'react-redux';
 
 import spring from 'react-motion/lib/spring';
 
+<<<<<<< HEAD:app/javascript/flavours/glitch/features/compose/index.jsx
 import { mountCompose, unmountCompose } from 'flavours/glitch/actions/compose';
+=======
+import { mountCompose, unmountCompose, cycleElefriendCompose } from 'flavours/glitch/actions/compose';
+>>>>>>> 513078de7acea9eb3809e04c8b9bfb67f3039d60:app/javascript/flavours/glitch/features/compose/index.jsx
 import Column from 'flavours/glitch/components/column';
 import { mascot } from 'flavours/glitch/initial_state';
 
@@ -31,7 +35,7 @@ const mapStateToProps = (state, ownProps) => ({
   showSearch: ownProps.multiColumn ? state.getIn(['search', 'submitted']) && !state.getIn(['search', 'hidden']) : false,
 });
 
-const mapDispatchToProps = (dispatch, { intl }) => ({
+const mapDispatchToProps = (dispatch) => ({
   onMount () {
     dispatch(mountCompose());
   },
