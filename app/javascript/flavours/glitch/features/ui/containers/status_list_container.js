@@ -26,7 +26,8 @@ const makeGetStatusIds = (pending = false) => createSelector([
   (state, { type }) => state.getIn(['timelines', type, pending ? 'pendingItems' : 'items'], ImmutableList()),
   (state)           => state.get('statuses'),
   getRegex,
-], (columnSettings, statusIds, statuses, regex) => {
+  (state)           => state.get('accounts'),
+], (columnSettings, statusIds, statuses, regex, accounts) => {
   return statusIds.filter(id => {
     if (id === null) return true;
 
@@ -49,7 +50,8 @@ const makeGetStatusIds = (pending = false) => createSelector([
 
     if (showStatus && regex) {
       const searchIndex = statusForId.get('reblog') ? statuses.getIn([statusForId.get('reblog'), 'search_index']) : statusForId.get('search_index');
-      showStatus = !regex.test(searchIndex);
+      const acct = accounts.getIn([statusForId.get('account'), 'acct']);
+      showStatus = !regex.test(acct + '\n' + searchIndex);
     }
 
     return showStatus;
