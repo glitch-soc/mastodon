@@ -568,7 +568,7 @@ body > [data-popper-placement] {
   &__container {
     &__header {
       border-bottom: 1px solid var(--dropdown-border-color);
-      padding: 6px 12px;
+      padding: 6px 14px;
       padding-bottom: 12px;
       margin-bottom: 4px;
       font-size: 13px;
@@ -609,7 +609,7 @@ body > [data-popper-placement] {
     font: inherit;
     display: block;
     width: 100%;
-    padding: 6px 12px;
+    padding: 6px 14px;
     border: 0;
     margin: 0;
     background: transparent;
