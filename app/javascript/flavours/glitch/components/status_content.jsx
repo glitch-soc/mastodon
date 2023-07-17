@@ -380,7 +380,7 @@ class StatusContent extends PureComponent {
     const targetLanguages = this.props.languages?.get(status.get('language') || 'und');
     const renderTranslate = this.props.onTranslate && this.context.identity.signedIn && ['public', 'unlisted'].includes(status.get('visibility')) && status.get('search_index').trim().length > 0 && targetLanguages?.includes(contentLocale);
 
-    const content = { __html: status.getIn(['translation', 'contentHtml']) : this.highlightCode(status.get('contentHtml')) };
+    const content = { __html: status.getIn(['translation', 'contentHtml']) || this.highlightCode(status.get('contentHtml')) };
     const spoilerContent = { __html: status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml') };
     const language = status.getIn(['translation', 'language']) || status.get('language');
     const classNames = classnames('status__content', {

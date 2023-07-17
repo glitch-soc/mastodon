@@ -52,7 +52,7 @@ RSpec.describe AdvancedTextFormatter do
         end
       end
 
-      context 'given a block code with language' do
+      context 'with a block code with language' do
         let(:text) { "test\n\n```c++\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
         it 'formats code using <pre> and <code> with data containing set language' do
@@ -60,7 +60,7 @@ RSpec.describe AdvancedTextFormatter do
         end
       end
 
-      context 'given a link in inline code using backticks' do
+      context 'with a link in inline code using backticks' do
         let(:text) { 'test `https://foo.bar/bar` bar' }
 
         it 'does not rewrite the link' do

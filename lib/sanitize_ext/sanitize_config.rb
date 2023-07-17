@@ -31,7 +31,6 @@ class Sanitize
       node.remove_attribute('data-codelang') unless VALID_LANGUAGES.include?(node['data-codelang'].downcase)
     end
 
-
     CLASS_WHITELIST_TRANSFORMER = lambda do |env|
       node = env[:node]
       class_list = node['class']&.split(/[\t\n\f\r ]/)
