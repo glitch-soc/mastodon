@@ -21,6 +21,17 @@ class Sanitize
       gemini
     ).freeze
 
+    # Used to validate data-codelang attributes on code tags for syntax highlighting
+    VALID_LANGUAGES = YAML.load_file(File.expand_path('../../config/code-languages.yml', __dir__))['languages'].freeze
+
+    DATA_LANG_TRANSFORMER = lambda do |env|
+      return unless env[:node_name] == 'code' && env[:node]['data-codelang'].present?
+
+      node = env[:node]
+      node.remove_attribute('data-codelang') unless VALID_LANGUAGES.include?(node['data-codelang'].downcase)
+    end
+
+
     CLASS_WHITELIST_TRANSFORMER = lambda do |env|
       node = env[:node]
       class_list = node['class']&.split(/[\t\n\f\r ]/)
@@ -104,6 +115,7 @@ class Sanitize
         IMG_TAG_TRANSFORMER,
         TRANSLATE_TRANSFORMER,
         UNSUPPORTED_HREF_TRANSFORMER,
+        DATA_LANG_TRANSFORMER,
       ]
     )
 
@@ -170,6 +182,7 @@ class Sanitize
         UNSUPPORTED_HREF_TRANSFORMER,
         LINK_REL_TRANSFORMER,
         LINK_TARGET_TRANSFORMER,
+        DATA_LANG_TRANSFORMER,
       ]
     )
   end

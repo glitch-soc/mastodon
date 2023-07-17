@@ -40,7 +40,7 @@ RSpec.describe AdvancedTextFormatter do
         let(:text) { "test\n\n```\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
 
         it 'formats code using <pre> and <code> with no set language' do
-          expect(subject).to include '<pre><code data-codelang="">int main'
+          expect(subject).to include '<pre><code>int main'
         end
 
         it 'does not strip leading spaces' do
