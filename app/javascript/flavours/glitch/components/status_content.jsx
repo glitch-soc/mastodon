@@ -8,10 +8,11 @@ import classnames from 'classnames';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
+import highlightjs from 'highlight.js';
+
 import { Icon } from 'flavours/glitch/components/icon';
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
-import highlightjs from 'highlight.js';
 
 import Permalink from './permalink';
 
