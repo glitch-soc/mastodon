@@ -176,7 +176,8 @@
 .notif-cleaning {
   .status,
   .notification-follow,
-  .notification-follow-request {
+  .notification-follow-request,
+  .notification-admin-sign-up {
     padding-inline-end: ($dismiss-overlay-width + 0.5rem);
   }
 }
