@@ -10,7 +10,7 @@ import { addColumn } from 'flavours/glitch/actions/columns';
 import { changeSetting } from 'flavours/glitch/actions/settings';
 import { connectPublicStream, connectCommunityStream } from 'flavours/glitch/actions/streaming';
 import { expandPublicTimeline, expandCommunityTimeline } from 'flavours/glitch/actions/timelines';
-import DismissableBanner from 'flavours/glitch/components/dismissable_banner';
+import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import SettingText from 'flavours/glitch/components/setting_text';
 import initialState, { domain } from 'flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
@@ -129,7 +129,7 @@ const Firehose = ({ feedType, multiColumn }) => {
       }
       break;
     case 'public':
-      dispatch(expandPublicTimeline({ onlyMedia }));
+      dispatch(expandPublicTimeline({ onlyMedia, allowLocalOnly }));
       if (signedIn) {
         disconnect = dispatch(connectPublicStream({ onlyMedia, allowLocalOnly }));
       }

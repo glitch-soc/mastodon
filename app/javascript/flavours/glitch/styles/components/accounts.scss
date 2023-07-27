@@ -316,10 +316,10 @@
 }
 
 .relationship-tag {
-  color: $primary-text-color;
+  color: $white;
   margin-bottom: 4px;
   display: block;
-  background-color: $base-overlay-background;
+  background-color: rgba($black, 0.45);
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 500;

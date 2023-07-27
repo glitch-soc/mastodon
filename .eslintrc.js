@@ -247,13 +247,30 @@ module.exports = {
           },
           // Internal packages
           {
-            pattern: '{mastodon/**,flavours/glitch-soc/**}',
+            pattern: '{mastodon/**}',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '{flavours/glitch-soc/**}',
             group: 'internal',
             position: 'after',
           },
         ],
         pathGroupsExcludedImportTypes: [],
       },
+    ],
+
+    // Forbid imports from vanilla in glitch flavour
+    'import/no-restricted-paths': [
+      'error',
+      {
+        zones: [{
+          target: 'app/javascript/flavours/glitch/',
+          from: 'app/javascript/mastodon/',
+          message: 'Import from /flavours/glitch/ instead'
+        }]
+      }
     ],
 
     'promise/always-return': 'off',
@@ -325,8 +342,8 @@ module.exports = {
 
       extends: [
         'eslint:recommended',
-        'plugin:@typescript-eslint/recommended',
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
+        'plugin:@typescript-eslint/strict-type-checked',
+        'plugin:@typescript-eslint/stylistic-type-checked',
         'plugin:react/recommended',
         'plugin:react-hooks/recommended',
         'plugin:jsx-a11y/recommended',
@@ -338,7 +355,7 @@ module.exports = {
       ],
 
       parserOptions: {
-        project: './tsconfig.json',
+        project: true,
         tsconfigRootDir: __dirname,
       },
 
@@ -348,6 +365,7 @@ module.exports = {
         '@typescript-eslint/consistent-type-definitions': ['warn', 'interface'],
         '@typescript-eslint/consistent-type-exports': 'error',
         '@typescript-eslint/consistent-type-imports': 'error',
+        "@typescript-eslint/prefer-nullish-coalescing": ['error', {ignorePrimitives: {boolean: true}}],
 
         'jsdoc/require-jsdoc': 'off',
 
