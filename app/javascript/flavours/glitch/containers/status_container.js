@@ -92,11 +92,16 @@ const makeMapStateToProps = () => {
   return mapStateToProps;
 };
 
-const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
 
   onReply (status, router) {
+    const getStatus = makeGetStatus();
+
     dispatch((_, getState) => {
+      const { intl } = ownProps;
       let state = getState();
+      const statusFromState = getStatus(state, ownProps);
+      const rebloggedBy = statusFromState.get('reblog') ? statusFromState.get('account') : undefined;
 
       if (state.getIn(['local_settings', 'confirm_before_clearing_draft']) && state.getIn(['compose', 'text']).trim().length !== 0) {
         dispatch(openModal({
@@ -105,11 +110,11 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
             message: intl.formatMessage(messages.replyMessage),
             confirm: intl.formatMessage(messages.replyConfirm),
             onDoNotAsk: () => dispatch(changeLocalSetting(['confirm_before_clearing_draft'], false)),
-            onConfirm: () => dispatch(replyCompose(status, router)),
+            onConfirm: () => dispatch(replyCompose(status, router, rebloggedBy)),
           },
         }));
       } else {
-        dispatch(replyCompose(status, router));
+        dispatch(replyCompose(status, router, rebloggedBy));
       }
     });
   },
@@ -184,6 +189,7 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
   },
 
   onDelete (status, history, withRedraft = false) {
+    const { intl } = ownProps;
     if (!deleteModal) {
       dispatch(deleteStatus(status.get('id'), history, withRedraft));
     } else {
@@ -199,6 +205,7 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
   },
 
   onEdit (status, history) {
+    const { intl } = ownProps;
     dispatch((_, getState) => {
       let state = getState();
       if (state.getIn(['compose', 'text']).trim().length !== 0) {
@@ -256,6 +263,7 @@ const mapDispatchToProps = (dispatch, { intl, contextType }) => ({
   },
 
   onAddFilter (status) {
+    const { contextType } = ownProps;
     dispatch(initAddFilter(status, { contextType }));
   },
 

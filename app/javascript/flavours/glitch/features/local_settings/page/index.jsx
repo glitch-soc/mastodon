@@ -185,6 +185,14 @@ class LocalSettingsPage extends PureComponent {
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
+          item={['mention_reblogger']}
+          id='mastodon-settings--mention_reblogger'
+          onChange={onChange}
+        >
+          <FormattedMessage id='settings.mention_reblogger' defaultMessage='Mention booster when replying to a boosted post' />
+        </LocalSettingsPageItem>
+        <LocalSettingsPageItem
+          settings={settings}
           item={['prepend_cw_re']}
           id='mastodon-settings--prepend_cw_re'
           onChange={onChange}
