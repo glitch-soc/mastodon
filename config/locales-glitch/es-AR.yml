@@ -6,7 +6,7 @@ es-AR:
       batch_error: Ocurrió un error %{message}
     settings:
       captcha_enabled:
-        desc_html: Esto depende de scripts externos de hCaptcha, que pueden ser una preocupación de seguridad y privacidad. Además, <strong>esto puede hacer el proceso de registro significativamente menos accesible para algunas personas (especialmente minusválidos)</strong>. Por estas razones, por favor considera medidas alternativas como el registro basado en la aprobación o la invitación.<br>Los usuarios que han sido invitados a través de una invitación de uso limitado no necesitarán resolver un CAPTCHA
+        desc_html: Esto depende de scripts externos de hCaptcha, que pueden ser una preocupación de seguridad y privacidad. Además, <strong>esto puede hacer el proceso de registro significativamente menos accesible para algunas personas (especialmente personas discapacitadas)</strong>. Por estas razones, por favor, considerá medidas alternativas como el registro basado en la aprobación o la invitación.<br>Los usuarios que fueron invitados a través de una invitación de uso limitado no necesitarán resolver una CAPTCHA.
         title: Pedir a los usuarios nuevos resolver un CAPTCHA para confirmar su cuenta
       flavour_and_skin:
         title: Sabor y apariencia
