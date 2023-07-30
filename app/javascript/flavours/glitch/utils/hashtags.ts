@@ -27,3 +27,22 @@ const buildHashtagRegex = () => {
 export const HASHTAG_PATTERN_REGEX = buildHashtagPatternRegex();
 
 export const HASHTAG_REGEX = buildHashtagRegex();
+
+/**
+ * Searches for recognizedTags.name in text and replaces it to match casing
+ * @param recognizedTags - hashtags in toot
+ * @param text - text of toot
+ * @returns recognizedTags with changed casing
+ */
+export const recoverHashtags = (
+  recognizedTags: { name: string; url: string }[],
+  text: string,
+) => {
+  return recognizedTags
+    .map((tag) => {
+      const re = new RegExp(`(?:^|[^/)\\w])#(${tag.name})`, 'i');
+      const matched_hashtag = text.match(re);
+      return matched_hashtag ? matched_hashtag[1] : null;
+    })
+    .filter((x) => x !== null);
+};

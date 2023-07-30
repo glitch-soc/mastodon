@@ -56,7 +56,7 @@ import { REDRAFT } from '../actions/statuses';
 import { STORE_HYDRATE } from '../actions/store';
 import { TIMELINE_DELETE } from '../actions/timelines';
 import { me, defaultContentType } from '../initial_state';
-import { recoverHashtags } from '../utils/hashtag';
+import { recoverHashtags } from '../utils/hashtags';
 import { unescapeHTML } from '../utils/html';
 import { overwrite } from '../utils/js_helpers';
 import { privacyPreference } from '../utils/privacy_preference';

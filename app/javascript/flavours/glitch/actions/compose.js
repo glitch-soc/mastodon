@@ -6,7 +6,7 @@ import { throttle } from 'lodash';
 import api from 'flavours/glitch/api';
 import { search as emojiSearch } from 'flavours/glitch/features/emoji/emoji_mart_search_light';
 import { tagHistory } from 'flavours/glitch/settings';
-import { recoverHashtags } from 'flavours/glitch/utils/hashtag';
+import { recoverHashtags } from 'flavours/glitch/utils/hashtags';
 import resizeImage from 'flavours/glitch/utils/resize_image';
 
 import { showAlert, showAlertForError } from './alerts';
