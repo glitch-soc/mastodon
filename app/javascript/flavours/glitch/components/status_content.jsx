@@ -436,7 +436,7 @@ class StatusContent extends PureComponent {
             key={`contents-${tagLinks}-${rewriteMentions}`}
             dangerouslySetInnerHTML={content}
             className='status__content__text translate'
-            tabIndex={0}
+            tabIndex={!hidden ? 0 : null}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
             lang={language}
@@ -457,7 +457,7 @@ class StatusContent extends PureComponent {
             key={`contents-${tagLinks}`}
             className='status__content__text translate'
             dangerouslySetInnerHTML={content}
-            tabIndex={0}
+            tabIndex={!hidden ? 0 : null}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
             lang={language}
