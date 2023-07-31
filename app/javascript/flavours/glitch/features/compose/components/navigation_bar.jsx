@@ -19,23 +19,28 @@ export default class NavigationBar extends ImmutablePureComponent {
   };
 
   render () {
+    const username = this.props.account.get('acct');
+
     return (
       <div className='navigation-bar'>
-        <Permalink className='avatar' href={this.props.account.get('url')} to={`/@${this.props.account.get('acct')}`}>
-          <span style={{ display: 'none' }}>{this.props.account.get('acct')}</span>
+        <Permalink className='avatar' href={this.props.account.get('url')} to={`/@${username}`}>
+          <span style={{ display: 'none' }}>{username}</span>
           <Avatar account={this.props.account} size={48} />
         </Permalink>
 
         <div className='navigation-bar__profile'>
-          <Permalink className='acct' href={this.props.account.get('url')} to={`/@${this.props.account.get('acct')}`}>
-            <strong>@{this.props.account.get('acct')}</strong>
-          </Permalink>
-
+          <span>
+            <Permalink className='acct' href={this.props.account.get('url')} to={`/@${username}`}>
+              <strong>@{username}</strong>
+            </Permalink>
+          </span>
           { profileLink !== undefined && (
-            <a
-              className='edit'
-              href={profileLink}
-            ><FormattedMessage id='navigation_bar.edit_profile' defaultMessage='Edit profile' /></a>
+            <span>
+              <a
+                className='edit'
+                href={profileLink}
+              ><FormattedMessage id='navigation_bar.edit_profile' defaultMessage='Edit profile' /></a>
+            </span>
           )}
         </div>
 

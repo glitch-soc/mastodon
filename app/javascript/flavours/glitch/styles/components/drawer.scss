@@ -111,7 +111,7 @@
   }
 
   .acct {
-    display: block;
+    display: inline;
     color: $secondary-text-color;
     font-weight: 500;
     white-space: nowrap;
@@ -121,9 +121,10 @@
 }
 
 .navigation-bar__profile {
+  display: flex;
+  flex-direction: column;
   flex: 1 1 auto;
   margin-inline-start: 8px;
-  overflow: hidden;
 }
 
 .drawer--results {
