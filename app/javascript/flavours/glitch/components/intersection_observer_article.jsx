@@ -120,7 +120,7 @@ export default class IntersectionObserverArticle extends Component {
         aria-posinset={index + 1}
         aria-setsize={listLength}
         data-id={id}
-        tabIndex={0}
+        tabIndex={-1}
         style={style}
       >
         {children && cloneElement(children, { hidden: !isIntersecting && (isHidden || !!cachedHeight) })}

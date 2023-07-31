@@ -525,19 +525,6 @@
   .privacy-dropdown__value {
     background: $simple-background-color;
     border-radius: 4px 4px 0 0;
-    box-shadow: 0 -4px 4px rgba($base-shadow-color, 0.1);
-
-    .icon-button {
-      transition: none;
-    }
-
-    &.active {
-      background: $ui-highlight-color;
-
-      .icon-button {
-        color: $primary-text-color;
-      }
-    }
   }
 
   &.top .privacy-dropdown__value {
@@ -546,13 +533,13 @@
 
   .privacy-dropdown__dropdown {
     display: block;
-    box-shadow: 2px 4px 6px rgba($base-shadow-color, 0.1);
+    box-shadow: var(--dropdown-shadow);
   }
 }
 
 .privacy-dropdown__dropdown {
   border-radius: 4px;
-  box-shadow: 2px 4px 15px rgba($base-shadow-color, 0.4);
+  box-shadow: var(--dropdown-shadow);
   background: $simple-background-color;
   overflow: hidden;
   transform-origin: 50% 0;
@@ -623,7 +610,7 @@
 .language-dropdown {
   &__dropdown {
     background: $simple-background-color;
-    box-shadow: 2px 4px 15px rgba($base-shadow-color, 0.4);
+    box-shadow: var(--dropdown-shadow);
     border-radius: 4px;
     overflow: hidden;
     z-index: 2;
