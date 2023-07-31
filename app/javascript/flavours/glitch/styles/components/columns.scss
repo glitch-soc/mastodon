@@ -207,6 +207,10 @@ $ui-header-height: 55px;
     padding: 0;
     padding-inline-end: 15px;
   }
+
+  &:focus-visible {
+    outline: $ui-button-icon-focus-outline;
+  }
 }
 
 .column-back-button__icon {
