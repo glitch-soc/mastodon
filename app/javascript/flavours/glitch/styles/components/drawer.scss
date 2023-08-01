@@ -224,6 +224,10 @@
     height: 100%;
     border: 0;
     cursor: inherit;
+
+    &:focus-visible {
+      outline: none;
+    }
   }
 
   @media screen and (height >= 640px) {
