@@ -131,6 +131,10 @@
       background: lighten($ui-base-color, 33%);
       text-decoration: none;
     }
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
