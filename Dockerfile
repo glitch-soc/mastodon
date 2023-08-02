@@ -62,6 +62,7 @@ RUN apt-get update && \
     groupadd -g "${GID}" mastodon && \
     useradd -l -u "$UID" -g "${GID}" -m -d /opt/mastodon mastodon && \
     apt-get -y --no-install-recommends install whois \
+        curl \
         wget \
         procps \
         libssl1.1 \
