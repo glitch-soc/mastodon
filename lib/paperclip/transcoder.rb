@@ -30,6 +30,23 @@ module Paperclip
       @output_options = @convert_options[:output]&.dup || {}
       @input_options  = @convert_options[:input]&.dup  || {}
 
+      if ENV['FFMPEG_API_ENDPOINT'].present?
+        begin
+          case @format.to_s
+          when 'png'
+            receive_file(destination)
+            return destination
+          when 'mp4'
+            receive_mp4_file(destination)
+            return destination
+          end
+        rescue Terrapin::ExitStatusError => e
+          raise Paperclip::Error, "Error while transcoding #{@basename}: #{e}"
+        rescue Terrapin::CommandNotFoundError
+          raise Paperclip::Errors::CommandNotFoundError, 'Could not run the `curl` command. Please install curl.'
+        end
+      end
+
       case @format.to_s
       when /jpg$/, /jpeg$/, /png$/, /gif$/
         @input_options['ss'] = @time
@@ -110,6 +127,29 @@ module Paperclip
 
     def update_attachment_type(metadata)
       @attachment.instance.type = MediaAttachment.types[:gifv] unless metadata.audio_codec
+    end
+
+    def serve_file
+      puts 'Uploading the file... (serve_file in lib/paperclip/transcoder.rb)', @file.path
+      command = Terrapin::CommandLine.new('curl', '-X POST -F :source :endpoint')
+      puts command.command(source: 'file=@' + @file.path, endpoint: ENV['FFMPEG_API_ENDPOINT'] + '/video/extract/images?preset=1')
+      command.run(source: 'file=@' + @file.path, endpoint: ENV['FFMPEG_API_ENDPOINT'] + '/video/extract/images?preset=1', logger: Paperclip.logger)
+    end
+
+    def receive_file(destination)
+      result = Oj.load(serve_file, mode: :strict, symbol_keys: true)
+      filename = result[:files][0][:name]
+      puts "Downloading the file... (receive_file in lib/paperclip/transcoder.rb)", filename
+      command = Terrapin::CommandLine.new('curl', '-X GET :endpoint -o :destination')
+      puts command.command(destination: destination.path, endpoint: ENV['FFMPEG_API_ENDPOINT'] + '/video/extract/download/' + filename + '?delete=no')
+      command.run(destination: destination.path, endpoint: ENV['FFMPEG_API_ENDPOINT'] + '/video/extract/download/' + filename + '?delete=no', logger: Paperclip.logger)
+    end
+
+    def receive_mp4_file(destination)
+      puts 'Converting the file... (receive_mp4_file in lib/paperclip/transcoder.rb)', @file.path
+      command = Terrapin::CommandLine.new('curl', '-X POST -F :source :endpoint -o :destination')
+      puts command.command(source: 'file=@' + @file.path, destination: destination.path, endpoint: ENV['FFMPEG_API_ENDPOINT'] + '/convert/video/to/mp4')
+      command.run(source: 'file=@' + @file.path, destination: destination.path, endpoint: ENV['FFMPEG_API_ENDPOINT'] + '/convert/video/to/mp4', logger: Paperclip.logger)
     end
   end
 end
