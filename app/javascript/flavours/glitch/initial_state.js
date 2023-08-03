@@ -86,6 +86,7 @@
  * @property {string} status_page_url
  * @property {boolean} system_emoji_font
  * @property {string} default_content_type
+ * @property {string} sso_redirect
  */
 
 /** @type {string} */
@@ -160,6 +161,7 @@ export const usePendingItems = getMeta('use_pending_items');
 export const version = getMeta('version');
 export const languages = initialState?.languages;
 export const statusPageUrl = getMeta('status_page_url');
+export const sso_redirect = getMeta('sso_redirect');
 
 // Glitch-soc-specific settings
 export const maxChars = (initialState && initialState.max_toot_chars) || 500;
