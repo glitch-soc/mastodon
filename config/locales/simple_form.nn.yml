@@ -2,6 +2,10 @@
 nn:
   simple_form:
     hints:
+      account:
+        display_name: Ditt fulle namn eller ditt tøysenamn.
+        fields: Heimesida di, pronomen, alder, eller kva du måtte ynskje.
+        note: 'Du kan @nemne folk eller #emneknaggar.'
       account_alias:
         acct: Angi brukarnamn@domene til brukaren du ynskjer å flytta frå
       account_migration:
@@ -130,6 +134,7 @@ nn:
         position: Høgare rolle avgjer konfliktløysing i visse situasjonar. Visse handlingar kan kun utførast på rollar med lågare prioritet
       webhook:
         events: Vel hendingar å senda
+        template: Skriv di eiga JSON nyttelast ved å bruka variabel interpolering. La stå tom for standard JSON.
         url: Kvar hendingar skal sendast
     labels:
       account:
@@ -195,7 +200,6 @@ nn:
         setting_always_send_emails: Alltid send epostvarsel
         setting_auto_play_gif: Spel av animerte GIF-ar automatisk
         setting_boost_modal: Vis stadfesting før framheving
-        setting_crop_images: Skjer bilete i ikkje-utvida tut til 16x9
         setting_default_language: Språk på innlegg
         setting_default_privacy: Privatliv
         setting_default_sensitive: Merk alltid media som nærtakande
@@ -295,6 +299,7 @@ nn:
         usable: Gje tut lov til å nytta denne emneknaggen
       user:
         role: Rolle
+        time_zone: Tidssone
       user_role:
         color: Emblemfarge
         highlighted: Vis rolle som emblem på brukarprofil
@@ -303,6 +308,7 @@ nn:
         position: Prioritet
       webhook:
         events: Aktiverte hendingar
+        template: Nyttelastmal
         url: Endepunkts-URL
     'no': Nei
     not_recommended: Ikkje anbefalt
