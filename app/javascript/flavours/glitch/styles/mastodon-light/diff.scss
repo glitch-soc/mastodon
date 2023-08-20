@@ -24,11 +24,14 @@ html {
 .column > .scrollable,
 .getting-started,
 .column-inline-form,
-.error-column,
 .regeneration-indicator {
   background: $white;
   border: 1px solid lighten($ui-base-color, 8%);
   border-top: 0;
+}
+
+.error-column {
+  border: 1px solid lighten($ui-base-color, 8%);
 }
 
 .column > .scrollable.about {
@@ -415,6 +418,10 @@ html {
   background: darken($ui-base-color, 4%);
   border: 1px solid lighten($ui-base-color, 8%);
   border-top: 0;
+}
+
+.column-settings__hashtags .column-select__option {
+  color: $white;
 }
 
 .dashboard__quick-access,

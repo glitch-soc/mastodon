@@ -3,6 +3,7 @@ sl:
   simple_form:
     hints:
       account:
+        display_name: Vaše polno ime ali lažno ime.
         fields: Vaša domača stran, starost, kar koli.
         note: 'Druge osebe lahko @omenite ali #ključnite.'
       account_alias:
@@ -133,6 +134,7 @@ sl:
         position: Višja vloga se odloča o razrešitvi sporov v določenih situacijah. Določena dejanja lahko izvede le na vlogah z nižjo prioriteto
       webhook:
         events: Izberite dogodke za pošiljanje
+        template: Sestavite svojo obremenitev JSON z uporabo interpolacije spremenljivk. Za privzeti JSON pustite prazno.
         url: Kam bodo poslani dogodki
     labels:
       account:
@@ -198,7 +200,6 @@ sl:
         setting_always_send_emails: Vedno pošlji e-obvestila
         setting_auto_play_gif: Samodejno predvajanje animiranih GIF-ov
         setting_boost_modal: Pred izpostavljanjem pokaži potrditveno okno
-        setting_crop_images: Obreži slike v nerazširjenih objavah v razmerju 16:9
         setting_default_language: Jezik objavljanja
         setting_default_privacy: Zasebnost objave
         setting_default_sensitive: Vedno označi medije kot občutljive
@@ -307,6 +308,7 @@ sl:
         position: Prioriteta
       webhook:
         events: Omogočeni dogodki
+        template: Predloga obremenitev
         url: URL končne točke
     'no': Ne
     not_recommended: Ni priporočeno
