@@ -170,11 +170,6 @@
     display: block;
     width: 100%;
   }
-
-  .layout-multiple-columns &.button--with-bell {
-    font-size: 12px;
-    padding: 0 8px;
-  }
 }
 
 .column__wrapper {
@@ -1116,7 +1111,8 @@ body > [data-popper-placement] {
     .audio-player,
     .attachment-list,
     .picture-in-picture-placeholder,
-    .status-card {
+    .status-card,
+    .hashtag-bar {
       margin-inline-start: $thread-margin;
       width: calc(100% - ($thread-margin));
     }
@@ -5129,6 +5125,7 @@ a.status-card {
 
     &.active {
       transform: rotate(90deg);
+      opacity: 1;
     }
 
     &:hover {
@@ -8543,6 +8540,44 @@ noscript {
     }
   }
 
+  &__choices {
+    display: flex;
+    gap: 40px;
+
+    &__choice {
+      flex: 1;
+      box-sizing: border-box;
+
+      h3 {
+        margin-bottom: 20px;
+      }
+
+      p {
+        color: $darker-text-color;
+        margin-bottom: 20px;
+        font-size: 15px;
+      }
+
+      .button {
+        margin-bottom: 10px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: $no-gap-breakpoint - 1px) {
+    &__choices {
+      flex-direction: column;
+
+      &__choice {
+        margin-top: 40px;
+      }
+    }
+  }
+
   .link-button {
     font-size: inherit;
     display: inline;
@@ -9258,6 +9293,28 @@ noscript {
       font-size: 22px;
       line-height: 33px;
       font-weight: 700;
+    }
+  }
+}
+
+.hashtag-bar {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  gap: 4px;
+
+  a {
+    display: inline-flex;
+    color: $dark-text-color;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: none;
+
+      span {
+        text-decoration: underline;
+      }
     }
   }
 }
