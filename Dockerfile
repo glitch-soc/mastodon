@@ -20,6 +20,7 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends build-essential \
         git \
         libicu-dev \
+        libc6 \
         libidn11-dev \
         libpq-dev \
         libjemalloc-dev \
