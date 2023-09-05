@@ -20,7 +20,7 @@ jobs:
       # This needs to be updated after each minor version release
       flavor: |
         latest=${{ startsWith(github.ref, 'refs/tags/v4.') }}
-      version_suffix: +pegelinux
+      version_metadata: pegelinux
       tags: |
         type=pep440,pattern={{raw}}
         type=pep440,pattern=v{{major}}.{{minor}}
