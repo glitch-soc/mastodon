@@ -87,6 +87,7 @@
  * @typedef InitialState
  * @property {Record<string, Account>} accounts
  * @property {InitialStateLanguage[]} languages
+ * @property {boolean=} critical_updates_pending
  * @property {InitialStateMeta} meta
  * @property {number} max_toot_chars
  */
@@ -142,6 +143,7 @@ export const usePendingItems = getMeta('use_pending_items');
 export const version = getMeta('version');
 export const translationEnabled = getMeta('translation_enabled');
 export const languages = initialState?.languages;
+export const criticalUpdatesPending = initialState?.critical_updates_pending;
 // @ts-expect-error
 export const statusPageUrl = getMeta('status_page_url');
 export const sso_redirect = getMeta('sso_redirect');

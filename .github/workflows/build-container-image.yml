@@ -4,11 +4,16 @@ on:
       platforms:
         required: true
         type: string
+      cache:
+        type: boolean
+        default: true
       use_native_arm64_builder:
         type: boolean
       push_to_images:
         type: string
-      version_suffix:
+      version_prerelease:
+        type: string
+      version_metadata:
         type: string
       flavor:
         type: string
@@ -22,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: docker/setup-qemu-action@v2
         if: contains(inputs.platforms, 'linux/arm64') && !inputs.use_native_arm64_builder
@@ -74,8 +79,6 @@ jobs:
         if: ${{ inputs.push_to_images != '' }}
         with:
           images: ${{ inputs.push_to_images }}
-          # Only tag with latest when ran against the latest stable branch
-          # This needs to be updated after each minor version release
           flavor: ${{ inputs.flavor }}
           tags: ${{ inputs.tags }}
           labels: ${{ inputs.labels }}
@@ -83,12 +86,14 @@ jobs:
       - uses: docker/build-push-action@v4
         with:
           context: .
-          build-args: MASTODON_VERSION_SUFFIX=${{ inputs.version_suffix }}
+          build-args: |
+            MASTODON_VERSION_PRERELEASE=${{ inputs.version_prerelease }}
+            MASTODON_VERSION_METADATA=${{ inputs.version_metadata }}
           platforms: ${{ inputs.platforms }}
           provenance: false
           builder: ${{ steps.buildx.outputs.name || steps.buildx-native.outputs.name }}
           push: ${{ inputs.push_to_images != '' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: ${{ inputs.cache && 'type=gha' || '' }}
+          cache-to: ${{ inputs.cache && 'type=gha,mode=max' || '' }}

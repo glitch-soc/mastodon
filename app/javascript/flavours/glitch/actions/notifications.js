@@ -18,6 +18,7 @@ import {
   importFetchedStatuses,
 } from './importer';
 import { submitMarkers } from './markers';
+import { register as registerPushNotifications } from './push_notifications';
 import { saveSettings } from './settings';
 
 
@@ -385,6 +386,10 @@ export function requestBrowserPermission(callback = noOp) {
     requestNotificationPermission((permission) => {
       dispatch(setBrowserPermission(permission));
       callback(permission);
+
+      if (permission === 'granted') {
+        dispatch(registerPushNotifications());
+      }
     });
   };
 }
