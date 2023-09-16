@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.4
-# This needs to be bullseye-slim because the Ruby image is built on bullseye-slim
-ARG NODE_VERSION="16.20-bullseye-slim"
+# This needs to be bookworm-slim because the Ruby image is built on bookworm-slim
+ARG NODE_VERSION="20.6-bookworm-slim"
 
-FROM ghcr.io/moritzheiber/ruby-jemalloc:3.2.1-slim as ruby
+FROM ghcr.io/moritzheiber/ruby-jemalloc:3.2.2-slim as ruby
 FROM node:${NODE_VERSION} as build
 
 COPY --link --from=ruby /opt/ruby /opt/ruby
@@ -17,11 +17,11 @@ COPY Gemfile* package.json yarn.lock /opt/mastodon/
 
 # hadolint ignore=DL3008
 RUN apt-get update && \
+    apt-get -yq dist-upgrade && \
     apt-get install -y --no-install-recommends build-essential \
         git \
         libicu-dev \
-        libc6 \
-        libidn11-dev \
+        libidn-dev \
         libpq-dev \
         libjemalloc-dev \
         zlib1g-dev \
@@ -66,13 +66,13 @@ RUN apt-get update && \
         curl \
         wget \
         procps \
-        libssl1.1 \
+        libssl3 \
         libpq5 \
         imagemagick \
         ffmpeg \
         libjemalloc2 \
-        libicu67 \
-        libidn11 \
+        libicu72 \
+        libidn12 \
         libyaml-0-2 \
         file \
         ca-certificates \
