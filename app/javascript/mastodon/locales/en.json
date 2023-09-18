@@ -613,7 +613,7 @@
   "sign_in_banner.create_account": "Create account",
   "sign_in_banner.sign_in": "Login",
   "sign_in_banner.sso_redirect": "Login or Register",
-  "sign_in_banner.text": "This is a personal single-user instance with closed registrations. To interact with my posts, join another instance!",
+  "sign_in_banner.text": "This is a single-user Mastodon instance, and sign-ups are disabled. You can still interact with the posts here by joining another instance!",
   "status.admin_account": "Open moderation interface for @{name}",
   "status.admin_domain": "Open moderation interface for {domain}",
   "status.admin_status": "Open this post in the moderation interface",
