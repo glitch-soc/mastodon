@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+
+$blurple-600: #673DB6;
+$blurple-500: #9D6FF3;
+$blurple-400: #A185D6;
+$blurple-300: #CAB1FB;
+
+// Tell UI to use selected colors
+$ui-base-color: #1b1f3b;                  // Darkest
+$ui-base-lighter-color: lighten($ui-base-color, 26%); // Lighter darkest
+$ui-primary-color: #A185D6;            // Lighter
+$ui-secondary-color: #CAB1FB;        // Lightest
+$ui-highlight-color: #673DB6;
+
+$font-sans-serif: 'Poppins', sans-serif;
+$font-display: 'Poppins', sans-serif;
+$font-monospace: 'mastodon-font-monospace', monospace;
+
+@import 'flavours/glitch/styles/contrast';

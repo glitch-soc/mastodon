@@ -1,8 +1,0 @@
-// Tell UI to use selected colors
-$ui-base-color: #503255;                  // Darkest
-$ui-base-lighter-color: lighten($ui-base-color, 26%); // Lighter darkest
-$ui-primary-color: #c19ec6;            // Lighter
-$ui-secondary-color: #e5dbe7;        // Lightest
-$ui-highlight-color: #cb2bd9;
-
-@import 'flavours/glitch/styles/contrast';

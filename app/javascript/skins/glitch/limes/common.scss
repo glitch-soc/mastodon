@@ -1,0 +1,19 @@
+@import url('https://use.typekit.net/mbh0dyp.css');
+
+$blurple-600: #ff5da2;; // Iris
+$blurple-500: #FF5CA3; // Brand purple
+$blurple-400: #FF85BA; // Medium slate blue
+$blurple-300: #FFADD1; // Faded Blue
+
+// Tell UI to use selected colors
+$ui-base-color: #16213e;
+$ui-base-lighter-color: lighten($ui-base-color, 26%); // Lighter darkest
+$ui-primary-color: #ff5da2;            // Lighter
+$ui-secondary-color: #bc8cf2;        // Lightest
+$ui-highlight-color: #ff5da2;
+
+$font-sans-serif: 'objektiv-mk2', sans-serif;
+$font-display: 'azo-sans-web', sans-serif;
+$font-monospace: 'mastodon-font-monospace', monospace;
+
+@import 'flavours/glitch/styles/contrast';
