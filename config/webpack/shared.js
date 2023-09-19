@@ -2,6 +2,7 @@
 
 const { resolve } = require('path');
 
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const webpack = require('webpack');
 const AssetsManifestPlugin = require('webpack-assets-manifest');
@@ -60,6 +61,7 @@ module.exports = {
     chunkFilename: 'js/[name]-[chunkhash].chunk.js',
     hotUpdateChunkFilename: 'js/[id]-[hash].hot-update.js',
     hashFunction: 'sha256',
+    crossOriginLoading: 'anonymous',
     path: output.path,
     publicPath: output.publicPath,
   },
@@ -111,6 +113,9 @@ module.exports = {
       writeToDisk: true,
       publicPath: true,
     }),
+    new CircularDependencyPlugin({
+      failOnError: true,
+    })
   ],
 
   resolve: {

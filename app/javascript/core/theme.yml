@@ -13,8 +13,9 @@ pack:
   mailer:
     filename: mailer.js
     stylesheet: true
-  modal: public.js
-  public: public.js
+  modal:
+  public:
   settings: settings.js
   sign_up:
   share:
+  remote_interaction_helper: remote_interaction_helper.ts

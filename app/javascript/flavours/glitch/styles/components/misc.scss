@@ -147,11 +147,6 @@
     display: block;
     width: 100%;
   }
-
-  .layout-multiple-columns &.button--with-bell {
-    font-size: 12px;
-    padding: 0 8px;
-  }
 }
 
 .icon-button {
@@ -538,14 +533,14 @@ body > [data-popper-placement] {
 
 .dropdown-menu__separator {
   border-bottom: 1px solid var(--dropdown-border-color);
-  margin: 5px 0;
+  margin: 2px 0;
   height: 0;
 }
 
 .dropdown-menu {
   background: var(--dropdown-background-color);
   border: 1px solid var(--dropdown-border-color);
-  padding: 4px;
+  padding: 2px;
   border-radius: 4px;
   box-shadow: var(--dropdown-shadow);
   z-index: 9999;
@@ -569,8 +564,8 @@ body > [data-popper-placement] {
   &__container {
     &__header {
       border-bottom: 1px solid var(--dropdown-border-color);
-      padding: 10px 14px;
-      padding-bottom: 14px;
+      padding: 6px 14px;
+      padding-bottom: 12px;
       margin-bottom: 4px;
       font-size: 13px;
       line-height: 18px;
@@ -610,7 +605,7 @@ body > [data-popper-placement] {
     font: inherit;
     display: block;
     width: 100%;
-    padding: 10px 14px;
+    padding: 6px 14px;
     border: 0;
     margin: 0;
     background: transparent;
@@ -1343,33 +1338,40 @@ button.icon-button.active i.fa-retweet {
   }
 
   &__overlay {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
     width: 100%;
     height: 100%;
+    padding: 0;
+    margin: 0;
     border: 0;
+    color: $white;
 
     &__label {
-      display: inline-block;
-      background: rgba($base-overlay-background, 0.5);
-      border-radius: 8px;
-      padding: 8px 12px;
-      color: $primary-text-color;
+      background-color: rgba($black, 0.45);
+      backdrop-filter: blur(10px) saturate(180%) contrast(75%) brightness(70%);
+      border-radius: 6px;
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-direction: column;
       font-weight: 500;
       font-size: 14px;
     }
 
-    &:hover,
-    &:focus,
-    &:active {
-      .spoiler-button__overlay__label {
-        background: rgba($base-overlay-background, 0.8);
-      }
+    &__action {
+      font-weight: 400;
+      font-size: 13px;
     }
 
-    &:disabled {
+    &:hover,
+    &:focus {
       .spoiler-button__overlay__label {
-        background: rgba($base-overlay-background, 0.5);
+        background-color: rgba($black, 0.9);
       }
     }
   }

@@ -1,13 +1,33 @@
+# frozen_string_literal: true
+
 # Define an application-wide content security policy
 # For further information see the following documentation
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
 
-if Rails.env.production?
+def sso_host
+  return unless ENV['ONE_CLICK_SSO_LOGIN'] == 'true'
+  return unless ENV['OMNIAUTH_ONLY'] == 'true'
+  return unless Devise.omniauth_providers.length == 1
+
+  provider = Devise.omniauth_configs[Devise.omniauth_providers[0]]
+  @sso_host ||= begin
+    case provider.provider
+    when :cas
+      provider.cas_url
+    when :saml
+      provider.options[:idp_sso_target_url]
+    when :openid_connect
+      provider.options.dig(:client_options, :authorization_endpoint) || OpenIDConnect::Discovery::Provider::Config.discover!(provider.options[:issuer]).authorization_endpoint
+    end
+  end
+end
+
+unless Rails.env.development?
   assets_host = Rails.configuration.action_controller.asset_host || "https://#{ENV['WEB_DOMAIN'] || ENV['LOCAL_DOMAIN']}"
   data_hosts = [assets_host]
 
   if ENV['S3_ENABLED'] == 'true'
-    attachments_host = "https://#{ENV['S3_ALIAS_HOST'] || ENV['S3_CLOUDFRONT_HOST'] || ENV['S3_HOSTNAME'] || "s3-#{ENV['S3_REGION'] || 'us-east-1'}.amazonaws.com"}"
+    attachments_host = "https://#{ENV['S3_ALIAS_HOST'] || ENV['S3_CLOUDFRONT_HOST'] || ENV['AZURE_ALIAS_HOST'] || ENV['S3_HOSTNAME'] || "s3-#{ENV['S3_REGION'] || 'us-east-1'}.amazonaws.com"}"
     attachments_host = "https://#{Addressable::URI.parse(attachments_host).host}"
   elsif ENV['SWIFT_ENABLED'] == 'true'
     attachments_host = ENV['SWIFT_OBJECT_URL']
@@ -41,7 +61,12 @@ if Rails.env.production?
     p.worker_src      :self, :blob, assets_host
     p.connect_src     :self, :blob, :data, Rails.configuration.x.streaming_api_base_url, *data_hosts
     p.manifest_src    :self, assets_host
-    p.form_action     :self
+
+    if sso_host.present?
+      p.form_action     :self, sso_host
+    else
+      p.form_action     :self
+    end
   end
 end
 

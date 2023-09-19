@@ -31,10 +31,7 @@ describe ApplicationHelper do
     context 'with a body class string from a controller' do
       before do
         without_partial_double_verification do
-          allow(helper).to receive(:body_class_string).and_return('modal-layout compose-standalone')
-          allow(helper).to receive(:current_flavour).and_return('glitch')
-          allow(helper).to receive(:current_skin).and_return('default')
-          allow(helper).to receive(:current_account).and_return(Fabricate(:account))
+          allow(helper).to receive_messages(body_class_string: 'modal-layout compose-standalone', current_flavour: 'glitch', current_skin: 'default', current_account: Fabricate(:account))
         end
       end
 
@@ -78,19 +75,17 @@ describe ApplicationHelper do
 
   describe 'open_registrations?' do
     it 'returns true when open for registrations' do
-      without_partial_double_verification do
-        expect(Setting).to receive(:registrations_mode).and_return('open')
-      end
+      allow(Setting).to receive(:[]).with('registrations_mode').and_return('open')
 
       expect(helper.open_registrations?).to be true
+      expect(Setting).to have_received(:[]).with('registrations_mode')
     end
 
     it 'returns false when closed for registrations' do
-      without_partial_double_verification do
-        expect(Setting).to receive(:registrations_mode).and_return('none')
-      end
+      allow(Setting).to receive(:[]).with('registrations_mode').and_return('none')
 
       expect(helper.open_registrations?).to be false
+      expect(Setting).to have_received(:[]).with('registrations_mode')
     end
   end
 
@@ -297,8 +292,9 @@ describe ApplicationHelper do
 
     it 'returns site title on production environment' do
       Setting.site_title = 'site title'
-      expect(Rails.env).to receive(:production?).and_return(true)
+      allow(Rails.env).to receive(:production?).and_return(true)
       expect(helper.title).to eq 'site title'
+      expect(Rails.env).to have_received(:production?)
     end
   end
 end
