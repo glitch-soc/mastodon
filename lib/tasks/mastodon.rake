@@ -425,6 +425,10 @@ namespace :mastodon do
       end
 
       prompt.say "\n"
+
+      env['UPDATE_CHECK_URL'] = '' unless prompt.yes?('Do you want Mastodon to periodically check for important updates and notify you? (Recommended)', default: true)
+
+      prompt.say "\n"
       prompt.say 'This configuration will be written to .env.production'
 
       if prompt.yes?('Save configuration?')
@@ -438,12 +442,7 @@ namespace :mastodon do
           "#{key}=#{escaped}"
         end.join("\n")
 
-        generated_header = "# Generated with mastodon:setup on #{Time.now.utc}\n\n".dup
-
-        if incompatible_syntax
-          generated_header << "# Some variables in this file will be interpreted differently whether you are\n"
-          generated_header << "# using docker-compose or not.\n\n"
-        end
+        generated_header = generate_header(incompatible_syntax)
 
         Rails.root.join('.env.production').write("#{generated_header}#{env_contents}\n")
 
@@ -536,6 +535,19 @@ namespace :mastodon do
       vapid_key = Webpush.generate_key
       puts "VAPID_PRIVATE_KEY=#{vapid_key.private_key}"
       puts "VAPID_PUBLIC_KEY=#{vapid_key.public_key}"
+    end
+  end
+
+  private
+
+  def generate_header(include_warning)
+    default_message = "# Generated with mastodon:setup on #{Time.now.utc}\n\n"
+
+    default_message.tap do |string|
+      if include_warning
+        string << "# Some variables in this file will be interpreted differently whether you are\n"
+        string << "# using docker-compose or not.\n\n"
+      end
     end
   end
 end

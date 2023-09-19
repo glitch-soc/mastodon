@@ -212,11 +212,11 @@ class Audio extends PureComponent {
   };
 
   toggleMute = () => {
-    const muted = !this.state.muted;
+    const muted = !(this.state.muted || this.state.volume === 0);
 
-    this.setState({ muted }, () => {
+    this.setState((state) => ({ muted, volume: Math.max(state.volume || 0.5, 0.05) }), () => {
       if (this.gainNode) {
-        this.gainNode.gain.value = muted ? 0 : this.state.volume;
+        this.gainNode.gain.value = this.state.muted ? 0 : this.state.volume;
       }
     });
   };
@@ -294,7 +294,7 @@ class Audio extends PureComponent {
     const { x } = getPointerPosition(this.volume, e);
 
     if(!isNaN(x)) {
-      this.setState({ volume: x }, () => {
+      this.setState((state) => ({ volume: x, muted: state.muted && x === 0 }), () => {
         if (this.gainNode) {
           this.gainNode.gain.value = this.state.muted ? 0 : x;
         }
@@ -473,10 +473,12 @@ class Audio extends PureComponent {
 
   render () {
     const { src, intl, alt, lang, editable, autoPlay, sensitive, blurhash } = this.props;
-    const { paused, muted, volume, currentTime, duration, buffer, dragging, revealed } = this.state;
+    const { paused, volume, currentTime, duration, buffer, dragging, revealed } = this.state;
     const progress = Math.min((currentTime / duration) * 100, 100);
+    const muted = this.state.muted || volume === 0;
 
     let warning;
+
     if (sensitive) {
       warning = <FormattedMessage id='status.sensitive_warning' defaultMessage='Sensitive content' />;
     } else {
@@ -522,7 +524,10 @@ class Audio extends PureComponent {
 
         <div className={classNames('spoiler-button', { 'spoiler-button--hidden': revealed || editable })}>
           <button type='button' className='spoiler-button__overlay' onClick={this.toggleReveal}>
-            <span className='spoiler-button__overlay__label'>{warning}</span>
+            <span className='spoiler-button__overlay__label'>
+              {warning}
+              <span className='spoiler-button__overlay__action'><FormattedMessage id='status.media.show' defaultMessage='Click to show' /></span>
+            </span>
           </button>
         </div>
 
@@ -560,12 +565,12 @@ class Audio extends PureComponent {
               <button type='button' title={intl.formatMessage(muted ? messages.unmute : messages.mute)} aria-label={intl.formatMessage(muted ? messages.unmute : messages.mute)} className='player-button' onClick={this.toggleMute}><Icon id={muted ? 'volume-off' : 'volume-up'} fixedWidth /></button>
 
               <div className={classNames('video-player__volume', { active: this.state.hovered })} ref={this.setVolumeRef} onMouseDown={this.handleVolumeMouseDown}>
-                <div className='video-player__volume__current' style={{ width: `${volume * 100}%`, backgroundColor: this._getAccentColor() }} />
+                <div className='video-player__volume__current' style={{ width: `${muted ? 0 : volume * 100}%`, backgroundColor: this._getAccentColor() }} />
 
                 <span
                   className='video-player__volume__handle'
                   tabIndex={0}
-                  style={{ left: `${volume * 100}%`, backgroundColor: this._getAccentColor() }}
+                  style={{ left: `${muted ? 0 : volume * 100}%`, backgroundColor: this._getAccentColor() }}
                 />
               </div>
 
