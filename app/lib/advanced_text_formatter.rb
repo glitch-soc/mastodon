@@ -98,7 +98,8 @@ class AdvancedTextFormatter < TextFormatter
   private
 
   def format_markdown(html)
-    html = markdown_formatter.render(html)
+    # Force escape usernames in mentions before formatting
+    html = markdown_formatter.render(html.gsub(Account::MENTION_RE) { |re| re.gsub('_', '\\_') })
     html.delete("\r").delete("\n")
   end
 
