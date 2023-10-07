@@ -29,7 +29,9 @@ class ActivityPub::Parser::StatusParser
   end
 
   def text
-    if @object['content'].present?
+    if @object['source'].present? && @object['source']['mediaType'] == 'text/x.misskeymarkdown'
+      MisskeyFlavoredMarkdown.to_html(@object['source']['content'])
+    elsif @object['content'].present?
       @object['content']
     elsif content_language_map?
       @object['contentMap'].values.first
