@@ -108,6 +108,20 @@ class MisskeyFlavoredMarkdown
     tree.to_html
   end
 
+  def same_username_hits
+    return @same_username_hits unless @same_username_hits.nil?
+
+    usernames = @tags.select { |tag| tag['type'] == 'Mention' }.map { |tag| tag['name'][MENTION_USERNAME_RE, 1]&.downcase }
+
+    @same_username_hits = 0
+    usernames.each_with_index do |username, this_i|
+      all_usernames_but_this = usernames.dup.tap { |i| i.delete_at(this_i) }
+
+      @same_username_hits += 1 if all_usernames_but_this.include?(username)
+    end
+    @same_username_hits
+  end
+
   def link_to_url(entity)
     TextFormatter.shortened_link(entity[:url])
   end
@@ -122,17 +136,22 @@ class MisskeyFlavoredMarkdown
   end
 
   def link_to_mention(entity)
-    text = entity[:text]
+    display_username = entity[:text]
     url = entity[:url]
     username = entity[:text][MENTION_USERNAME_RE, 1]
     domain = Addressable::URI.parse(url).host
     domain = nil if local_domain?(domain) || web_domain?(domain)
     account = entity_cache.mention(username, domain)
     account = ResolveAccountService.new.call("@#{username}@#{domain}") if account.nil?
-    url = ActivityPub::TagManager.instance.url_for(account) unless account.nil?
+    if account.nil?
+      display_username.delete_prefix!('@')
+    else
+      url = ActivityPub::TagManager.instance.url_for(account)
+      display_username = same_username_hits&.positive? ? account.pretty_acct : account.username
+    end
 
     <<~HTML.squish
-      <a href="#{h(url)}" class="u-url mention">#{h(text)}</a>
+      <a href="#{h(url)}" class="u-url mention">@#{h(display_username)}</a>
     HTML
   end
 
