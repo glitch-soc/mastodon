@@ -9,6 +9,7 @@ class MisskeyFlavoredMarkdown
   MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>[\w\d]+)(?:\.(?<opt>\S+))?[\s\u3000]\z/
   SHORTCODE_ALLOWED_CHARS = /[a-zA-Z0-9_]/
   POST_TAGS = %w(Hashtag Mention).freeze
+  MENTION_USERNAME_RE = /@?(#{Account::USERNAME_RE})/
 
   def initialize(text, tags:)
     @text = text
@@ -53,7 +54,7 @@ class MisskeyFlavoredMarkdown
 
     return '' if html.blank?
 
-    rewrite(html) do |entity|
+    html = rewrite(html) do |entity|
       if entity[:tag_type] == 'Hashtag'
         link_to_hashtag(entity)
       elsif entity[:tag_type] == 'Mention'
@@ -62,6 +63,8 @@ class MisskeyFlavoredMarkdown
         link_to_url(entity)
       end
     end
+
+    html.html_safe # rubocop:disable Rails/OutputSafety
   end
 
   private
@@ -121,6 +124,12 @@ class MisskeyFlavoredMarkdown
   def link_to_mention(entity)
     text = entity[:text]
     url = entity[:url]
+    username = entity[:text][MENTION_USERNAME_RE, 1]
+    domain = Addressable::URI.parse(url).host
+    domain = nil if local_domain?(domain) || web_domain?(domain)
+    account = entity_cache.mention(username, domain)
+    account = ResolveAccountService.new.call("@#{username}@#{domain}") if account.nil?
+    url = ActivityPub::TagManager.instance.url_for(account) unless account.nil?
 
     <<~HTML.squish
       <a href="#{h(url)}" class="u-url mention">#{h(text)}</a>
@@ -311,6 +320,17 @@ class MisskeyFlavoredMarkdown
     end
     {}
   end
+
+  def tag_manager
+    @tag_manager ||= TagManager.instance
+  end
+
+  def entity_cache
+    @entity_cache ||= EntityCache.instance
+  end
+
+  delegate :local_domain?, to: :tag_manager
+  delegate :web_domain?, to: :tag_manager
 end
 
 # https://github.com/twitter/twitter-text/blob/30e2430d90cff3b46393ea54caf511441983c260/rb/lib/twitter-text/extractor.rb#L8-L49
