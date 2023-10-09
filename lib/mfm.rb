@@ -1,27 +1,8 @@
 # frozen_string_literal: true
 
-module MisskeyFlavoredMarkdown
-  # sparkle tags are ignored because they require adding new elements to the DOM and I simply don't want to deal with that right now
-  MFM_TAGS = %w(sparkle small crop tada jelly twitch spin jump bounce font fade shake rainbow flip x2 x3 x4 blur rotate position scale fg bg).freeze
+module MFM
   ALLOWED_SPAN_ATTRIBUTES = %w(style class).freeze
-  MFM_TOKEN_MATCH = /\$\[(?<tag>[\w\d]+)(?:\.(?<opt>\S+))?\s(?<content>[\s\S]+)\]/
-
-  module_function
-
-  def valid_time(time)
-    return unless time&.match?(/^[0-9.]+s$/)
-
-    time
-  end
-
-  def valid_number(number)
-    float = number&.to_f
-    return if float.nil? || float.nan?
-
-    float
-  end
-
-  MFM_TRANSFORMER = lambda do |env|
+  TRANSFORMER = lambda do |env|
     node = env[:node]
 
     if node.name == 'small' || (!node['mfm-tag'].nil? && node['mfm-tag'] == 'small')
@@ -173,81 +154,18 @@ module MisskeyFlavoredMarkdown
     { node_allowlist: [node] }
   end
 
-  def token_to_html(token)
-    match = MFM_TOKEN_MATCH.match(token)
-    tag = match[:tag]
-    # if tag isn't supported, just return the token string as-is
-    return token unless MFM_TAGS.include?(tag)
+  module_function
 
-    opt = match[:opt]&.split(',')&.map do |string|
-      key_value = string.split('=')
-      # TODO: escape options- Not particularly necessary because it's sanitized but it's probably a good idea anyways
-      "mfm-#{key_value[0]}=\"#{key_value[1]}\""
-    end&.join
-    content = to_html(match[:content])
+  def valid_time(time)
+    return unless time&.match?(/^[0-9.]+s$/)
 
-    "<span class=\"mfm mfm-#{tag}\" mfm-tag=\"#{tag}\" #{opt}>#{content}</span>"
+    time
   end
 
-  def to_html(text)
-    # these are safe to do here because they cannot interfere with emoji.
-    # underscore italics need to be parsed later because emoji can contain underscores
-    text.gsub!(/\*\*(.*?)\*\*/m, '<b>\1</b>')
-    text.gsub!(/\*(.*?)\*/m, '<i>\1</i>')
-    text.gsub!(/~~(.*?)~~/m, '<s>\1</s>')
-    depth = 0
-    state = :none
-    tokens = []
-    current = ''
-    in_emoji = false
-    formatting = :normal
-    text.each_char do |char|
-      normal_state = [:none, :in_tag].include?(state)
-      in_emoji = !in_emoji if char == ':'
-      case char
-      when "\n"
-        current += '<br/>'
-        next
-      when '_'
-        if normal_state && !in_emoji
-          if formatting == :normal
-            current = "#{current[0..-2]}<i>"
-            formatting = :italic
-            next
-          elsif formatting == :italic
-            current = "#{current[0..-2]}</i>"
-            formatting = :normal
-            next
-          end
-        end
-      when '$'
-        if normal_state
-          if state == :none
-            tokens << current
-            current = ''
-          end
-          state = :expecting_tag
-        end
-      when '['
-        if state == :expecting_tag
-          depth += 1
-          state = :in_tag
-        end
-      when ']'
-        if state == :in_tag
-          depth -= 1
-          if depth.zero?
-            current += char
-            tokens << token_to_html(current)
-            state = :none
-            current = ''
-            next
-          end
-        end
-      end
-      current += char
-    end
-    tokens << current
-    tokens.join
+  def valid_number(number)
+    float = number&.to_f
+    return if float.nil? || float.nan?
+
+    float
   end
 end
