@@ -10,6 +10,7 @@ class MisskeyFlavoredMarkdown
   SHORTCODE_ALLOWED_CHARS = /[a-zA-Z0-9_]/
   POST_TAGS = %w(Hashtag Mention).freeze
   MENTION_USERNAME_RE = /@?(#{Account::USERNAME_RE})/
+  MENTION_PROGRESS_RE = /\A@(#{Account::USERNAME_RE})(?:@|@[[:word:].-]+[[:word:]]*)?\z/
 
   def initialize(text, tags:)
     @text = text
@@ -18,6 +19,7 @@ class MisskeyFlavoredMarkdown
     @tokens = []
     @link = nil
     @in_emoji = false
+    @in_mention = false
     @formatting = :normal
   end
 
@@ -249,16 +251,34 @@ class MisskeyFlavoredMarkdown
     end
   end
 
-  def handle_char(char, context)
-    # not part of handle_char because disallowed characters include ones which are already conditions
+  def normal_state
+    state = @states[-1]
+    state.nil? || [:in_tag, :in_link_text, 'i', 'b', 's'].include?(state)
+  end
+
+  def initial_char_checks(char)
+    return unless normal_state
+
+    # not part of handle_char case statement because disallowed characters include ones which are already conditions
     if char == ':'
       @in_emoji = !@in_emoji
-    elsif !SHORTCODE_ALLOWED_CHARS.match?(char)
+    elsif @in_emoji && !SHORTCODE_ALLOWED_CHARS.match?(char)
       @in_emoji = false
     end
 
+    if @in_mention != false
+      @in_mention += char
+      @in_mention = false unless MENTION_PROGRESS_RE.match?(@in_mention)
+    elsif char == '@'
+      @in_mention = '@'
+    end
+  end
+
+  def handle_char(char, context)
+    initial_char_checks(char)
+    return handle_char_fallback(char) if @in_emoji || @in_mention
+
     state = @states[-1]
-    normal_state = state.nil? || [:in_tag, :in_link_text, 'i', 'b', 's'].include?(state)
 
     # difference compared to state == :in_link_text is that in_link_text is true even if there have been tags inside the link text
     in_link_text = @states.include?(:in_link_text)
@@ -267,7 +287,7 @@ class MisskeyFlavoredMarkdown
     when "\n"
       return { string: '<br/>' }
     when '*', '_', '~', '`'
-      if normal_state && !@in_emoji
+      if normal_state
         md = md_formatting_char(char, context)
         return if md.nil?
 
