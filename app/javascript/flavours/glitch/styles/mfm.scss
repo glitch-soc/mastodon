@@ -1,3 +1,15 @@
+#mastodon .detailed-status > :not(.status__content),
+.status > :not(.status__content) {
+  z-index: 1;
+  position: relative;
+}
+
+#mastodon .detailed-status .status__content,
+.status > .status__content {
+  isolation: isolate;
+  z-index: 0;
+}
+
 .detailed-status .status__content:has(.mfm),
 .status__content:has(.mfm),
 .mfm {
