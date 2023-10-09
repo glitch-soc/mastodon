@@ -1,5 +1,5 @@
-#mastodon .detailed-status > :not(.status__content),
-.status > :not(.status__content) {
+#mastodon .detailed-status > :not(.status__content, .status__line),
+.status > :not(.status__content, .status__line) {
   z-index: 1;
   position: relative;
 }
