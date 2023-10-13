@@ -22,6 +22,14 @@ RSpec.describe MisskeyFlavoredMarkdown do
       end
     end
 
+    context 'when given text surrounded by an underscore only on one side' do
+      let(:text) { '_my not-italic text' }
+
+      it 'keeps underscore' do
+        expect(subject).to include '_my not-italic text'
+      end
+    end
+
     context 'when given text surrounded by underscores inside a sentence' do
       let(:text) { 'This is _my italic text_ can you believe it?' }
 
@@ -72,6 +80,14 @@ RSpec.describe MisskeyFlavoredMarkdown do
       end
     end
 
+    context 'when given text surrounded by an asterisk only on one side' do
+      let(:text) { 'this *should stay as-is' }
+
+      it 'keeps asterisk' do
+        expect(subject).to include 'this *should stay as-is'
+      end
+    end
+
     context 'when given text surrounded by double asterisks' do
       let(:text) { '**my bold text**' }
 
@@ -109,6 +125,14 @@ RSpec.describe MisskeyFlavoredMarkdown do
 
       it 'generates nested span tags' do
         expect(subject).to include '<span class="mfm mfm-x2" mfm-tag="x2"><span class="mfm mfm-fg" mfm-tag="fg" mfm-color="FF00FF">PINK!</span></span>'
+      end
+    end
+
+    context 'when given an unfinished MFM tag' do
+      let(:text) { '$[x2 Oops!' }
+
+      it 'writes plain text' do
+        expect(subject).to include '$[x2 Oops!'
       end
     end
 
