@@ -10,8 +10,7 @@ class MisskeyFlavoredMarkdown
   MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>[\w\d]+)(?:\.(?<opt>\S+))?[\s\u3000]\z/
   SHORTCODE_ALLOWED_CHARS = /[a-zA-Z0-9_]/
   POST_TAGS = %w(Hashtag Mention).freeze
-  MENTION_USERNAME_RE = /@?(#{Account::USERNAME_RE})/
-  MENTION_PROGRESS_RE = /\A@(#{Account::USERNAME_RE})(?:@|@[[:word:].-]+[[:word:]]*)?\z/
+  URL_ALLOWED_CHARS_RE = %r{/A[a-z0-9\-._~:\/?#\[\]@!$&'\(\)*\+,;%=]*/z}i
 
   PUNCTUATION_RE_S = '\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}'
   WHITESPACE_RE_S = '\u0009\u000A\u000C\u000D\p{Zs}'
@@ -47,7 +46,7 @@ class MisskeyFlavoredMarkdown
     text.gsub!(/\*(.*?)\*/m, '<i>\1</i>')
     text.gsub!(/~~(.*?)~~/m, '<s>\1</s>')
 
-    text.chars.each_with_index do |char, i|
+    each_char = lambda do |char, i|
       command = handle_char(char, { text: text, i: i })
       @states = command[:states] if command[:states]
       @tokens = command[:tokens] if command[:tokens]
@@ -68,6 +67,12 @@ class MisskeyFlavoredMarkdown
         @link[:text] += command[:string]
       end
     end
+
+    text.chars.each_with_index do |char, i|
+      each_char.call(char, i)
+    end
+
+    each_char.call('', text.length)
 
     return '' if html.blank?
 
@@ -123,20 +128,6 @@ class MisskeyFlavoredMarkdown
     end
 
     tree.to_html
-  end
-
-  def same_username_hits
-    return @same_username_hits unless @same_username_hits.nil?
-
-    usernames = @tags.select { |tag| tag['type'] == 'Mention' }.map { |tag| tag['name'][MENTION_USERNAME_RE, 1]&.downcase }
-
-    @same_username_hits = 0
-    usernames.each_with_index do |username, this_i|
-      all_usernames_but_this = usernames.dup.tap { |i| i.delete_at(this_i) }
-
-      @same_username_hits += 1 if all_usernames_but_this.include?(username)
-    end
-    @same_username_hits
   end
 
   def link_to_url(entity)
@@ -331,26 +322,21 @@ class MisskeyFlavoredMarkdown
     state.nil? || [:in_tag, :in_link_text, 'i_', 'i*', 'b', 's'].include?(state)
   end
 
-  def initial_char_checks(_char)
-    # might need to do url checks?
-    # old checks (no longer necessary)
-    # # not part of handle_char case statement because disallowed characters include ones which are already conditions
-    # if char == ':'
-    #   @in_emoji = !@in_emoji
-    # elsif @in_emoji && !SHORTCODE_ALLOWED_CHARS.match?(char)
-    #   @in_emoji = false
-    # end
+  def initial_char_checks(char, _context)
+    state = @states[-1]
 
-    # if @in_mention != false
-    #   @in_mention += char
-    #   @in_mention = false unless MENTION_PROGRESS_RE.match?(@in_mention)
-    # elsif char == '@'
-    #   @in_mention = '@'
-    # end
+    if state == :expecting_link_href && char != '('
+      @states.pop
+      { link: false, string: "[#{@link[:text]}]#{char}" }
+    elsif state == :in_link_href && (char == '' || (!@link[:url] == '' && !@link[:url].match?(URL_ALLOWED_CHARS_RE)))
+      @states.pop
+      { link: false, string: "[#{@link[:text]}](#{@link[:url]}#{char}" }
+    end
   end
 
   def handle_char(char, context)
-    initial_char_checks(char)
+    initial = initial_char_checks(char, context)
+    return initial unless initial.nil?
     return handle_char_fallback(char) if @in_emoji || @in_mention
 
     state = @states[-1]

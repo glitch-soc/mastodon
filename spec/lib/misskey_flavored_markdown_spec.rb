@@ -151,6 +151,22 @@ RSpec.describe MisskeyFlavoredMarkdown do
         expect(subject).to include '<a href="https://example.com">link</a>'
       end
     end
+
+    context 'when given text surrounded by square brackets' do
+      let(:text) { '[my text]' }
+
+      it 'writes plain text' do
+        expect(subject).to include '[my text]'
+      end
+    end
+
+    context 'when given an unfinished anchor link' do
+      let(:text) { '[my text](https://example.com' }
+
+      it 'does not create titled anchor link' do
+        expect(subject).to include '[my text](<a href="https://example.com">https://example.com</a>'
+      end
+    end
   end
 
   describe '#to_html with tags' do
