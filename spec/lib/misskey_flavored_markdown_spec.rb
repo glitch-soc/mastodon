@@ -146,7 +146,7 @@ RSpec.describe MisskeyFlavoredMarkdown do
       let(:tags) { [{ 'type' => 'Mention', 'name' => '@julia@eepy.moe', 'href' => 'https://eepy.moe/users/9i25fxu2sro3sa2y' }] }
 
       it 'linkifies the mention' do
-        expect(subject).to include '<a href="https://eepy.moe/users/9i25fxu2sro3sa2y" class="u-url mention">@julia</a>'
+        expect(subject).to include '<a href="https://eepy.moe/users/9i25fxu2sro3sa2y" class="u-url mention">@julia@eepy.moe</a>'
       end
     end
   end

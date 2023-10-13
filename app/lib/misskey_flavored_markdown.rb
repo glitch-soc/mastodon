@@ -3,6 +3,7 @@
 class MisskeyFlavoredMarkdown
   include ERB::Util
   include JsonLdHelper
+  include RoutingHelper
 
   # sparkle tags are ignored because they require adding new elements to the DOM and I simply don't want to deal with that right now
   MFM_TAGS = %w(sparkle small crop tada jelly twitch spin jump bounce font fade shake rainbow flip x2 x3 x4 blur rotate position scale fg bg).freeze
@@ -156,12 +157,23 @@ class MisskeyFlavoredMarkdown
   end
 
   def link_to_mention(entity)
-    display_username = entity[:text]
     url = entity[:url]
-    username = entity[:text][MENTION_USERNAME_RE, 1] || display_username.delete_prefix('@')
+    screen_name = entity[:text].delete_prefix('@')
+    username, domain = screen_name.split('@')
+    domain = Addressable::URI.parse(url).host if domain.nil?
+
+    domain = if tag_manager.local_domain?(domain) || tag_manager.web_domain?(domain)
+               nil
+             else
+               tag_manager.normalize_domain(domain)
+             end
+
+    mentioned_account = entity_cache.mention(username, domain)
+    mentioned_account ||= Account.select(:id, :username, :domain, :uri, :url).find_by(uri: url)
+    url = mentioned_account['url'] || short_account_url(mentioned_account) unless mentioned_account.nil?
 
     <<~HTML.squish
-      <a href="#{h(url)}" class="u-url mention">@#{h(username)}</a>
+      <a href="#{h(url)}" class="u-url mention">@#{h(screen_name)}</a>
     HTML
   end
 
