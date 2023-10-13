@@ -12,7 +12,21 @@ class MisskeyFlavoredMarkdown
   MENTION_USERNAME_RE = /@?(#{Account::USERNAME_RE})/
   MENTION_PROGRESS_RE = /\A@(#{Account::USERNAME_RE})(?:@|@[[:word:].-]+[[:word:]]*)?\z/
 
-  def initialize(text, tags:)
+  PUNCTUATION_RE_S = '\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}'
+  WHITESPACE_RE_S = '\u0009\u000A\u000C\u000D\p{Zs}'
+
+  PUNCTUATION_RE = Regexp.new("[#{PUNCTUATION_RE_S}]")
+  WHITESPACE_RE = Regexp.new("[#{WHITESPACE_RE_S}]|$|^")
+  EITHER_RE = Regexp.new("[#{PUNCTUATION_RE_S}#{WHITESPACE_RE_S}]|$|^")
+  NEITHER_RE = Regexp.new("[^#{PUNCTUATION_RE_S}#{WHITESPACE_RE_S}]")
+
+  # \A..[^\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}\u0009\u000A\u000C\u000D\p{Zs}]\z
+  LEFT_FLANKING_RE = Regexp.union(/\A..#{NEITHER_RE}\z/, /\A#{EITHER_RE}.#{PUNCTUATION_RE}\z/)
+  # \A[^\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}\u0009\u000A\u000C\u000D\p{Zs}]..\z
+  # \A[\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}].[\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}\u0009\u000A\u000C\u000D\p{Zs}]\z
+  RIGHT_FLANKING_RE = Regexp.union(/\A#{NEITHER_RE}..\z/, /\A#{PUNCTUATION_RE}.#{EITHER_RE}\z/)
+
+  def initialize(text, tags: [])
     @text = text
     @tags = tags || []
     @states = []
@@ -125,7 +139,11 @@ class MisskeyFlavoredMarkdown
   end
 
   def link_to_url(entity)
-    TextFormatter.shortened_link(entity[:url])
+    url = entity[:url]
+
+    <<~HTML.squish
+      <a href="#{h(url)}">#{h(url)}</a>
+    HTML
   end
 
   def link_to_hashtag(entity)
@@ -140,20 +158,10 @@ class MisskeyFlavoredMarkdown
   def link_to_mention(entity)
     display_username = entity[:text]
     url = entity[:url]
-    username = entity[:text][MENTION_USERNAME_RE, 1]
-    domain = Addressable::URI.parse(url).host
-    domain = nil if local_domain?(domain) || web_domain?(domain)
-    account = entity_cache.mention(username, domain)
-    account = ResolveAccountService.new.call("@#{username}@#{domain}") if account.nil?
-    if account.nil?
-      display_username.delete_prefix!('@')
-    else
-      url = ActivityPub::TagManager.instance.url_for(account)
-      display_username = same_username_hits&.positive? ? account.pretty_acct : account.username
-    end
+    username = entity[:text][MENTION_USERNAME_RE, 1] || display_username.delete_prefix('@')
 
     <<~HTML.squish
-      <a href="#{h(url)}" class="u-url mention">@#{h(display_username)}</a>
+      <a href="#{h(url)}" class="u-url mention">@#{h(username)}</a>
     HTML
   end
 
@@ -216,62 +224,117 @@ class MisskeyFlavoredMarkdown
   end
 
   MD_FORMATTING_CODES = {
-    'b' => { code: 'b', open: '<b>', close: '</b>' },
-    'i' => { code: 'i', open: '<i>', close: '</i>' },
+    'b' => {
+      logic: lambda { |this_run, _previous_char, _next_char|
+        left_flanking = this_run.match?(LEFT_FLANKING_RE)
+        right_flanking = this_run.match?(RIGHT_FLANKING_RE)
+        {
+          can_open: left_flanking,
+          can_close: right_flanking,
+        }
+      },
+      code: 'b',
+      open: '<b>',
+      close: '</b>',
+    },
+    'i*' => {
+      logic: lambda { |this_run, _previous_char, _next_char|
+        left_flanking = this_run.match?(LEFT_FLANKING_RE)
+        right_flanking = this_run.match?(RIGHT_FLANKING_RE)
+        {
+          can_open: left_flanking,
+          can_close: right_flanking,
+        }
+      },
+      code: 'i*',
+      open: '<i>',
+      close: '</i>',
+    },
+    'i_' => {
+      logic: lambda { |this_run, previous_char, next_char|
+        left_flanking = this_run.match?(LEFT_FLANKING_RE)
+        right_flanking = this_run.match?(RIGHT_FLANKING_RE)
+        Rails.logger.info "this_run: #{this_run}, left_flanking: #{left_flanking}, right_flanking: #{right_flanking}"
+        {
+          can_open: left_flanking && (!right_flanking || previous_char.match?(PUNCTUATION_RE)),
+          can_close: right_flanking && (!left_flanking || next_char.match?(PUNCTUATION_RE)),
+        }
+      },
+      code: 'i_',
+      open: '<i>',
+      close: '</i>',
+    },
     's' => { code: 's', open: '<s>', close: '</s>' },
     'code' => { code: 'code', open: '<code>', close: '</code>' },
     'precode' => { code: 'precode', open: '<pre><code>', close: '</code></pre>' },
   }.freeze
 
-  def md_formatting_char(char, context)
+  def md_formatting_char(char, context, state)
     i = context[:i]
     text = context[:text]
-    double_previous_char = i - 2 >= 0 ? text[i - 2] : ''
-    previous_char = i - 1 >= 0 ? text[i - 1] : ''
-    next_char = i + 1 < text.length ? text[i + 1] : ''
+    double_previous_char = i - 2 >= 0 ? text[i - 2] : ' '
+    previous_char = i - 1 >= 0 ? text[i - 1] : ' '
+    next_char = i + 1 < text.length ? text[i + 1] : ' '
+    md = nil
+    this_run = "#{previous_char}#{char}#{next_char}"
+
     case char
     when '*'
       return if next_char == char
 
-      return MD_FORMATTING_CODES['b'] if previous_char == char
-
-      MD_FORMATTING_CODES['i']
+      if previous_char == char
+        this_run = "#{double_previous_char}#{char}#{next_char}"
+        md = MD_FORMATTING_CODES['b']
+      else
+        md = MD_FORMATTING_CODES['i*']
+      end
     when '_'
-      MD_FORMATTING_CODES['i']
+      md = MD_FORMATTING_CODES['i_']
     when '~'
       return if next_char == char || previous_char != char
 
-      MD_FORMATTING_CODES['s']
+      md = MD_FORMATTING_CODES['s']
     when '`'
       return if next_char == char
 
-      MD_FORMATTING_CODES['precode'] if double_previous_char == char && previous_char == char
-
-      MD_FORMATTING_CODES['code']
+      md = double_previous_char == char && previous_char == char ? MD_FORMATTING_CODES['precode'] : MD_FORMATTING_CODES['code']
     end
+
+    logic = md[:logic].nil? ? { can_open: true, can_close: true } : md[:logic].call(this_run, previous_char, next_char)
+
+    if state == md[:code]
+      return unless logic[:can_close]
+
+      @states.pop
+      return { string: md[:close] }
+    end
+    return unless logic[:can_open]
+
+    @states << md[:code]
+    { string: md[:open] }
   end
 
   def normal_state
     state = @states[-1]
-    state.nil? || [:in_tag, :in_link_text, 'i', 'b', 's'].include?(state)
+    state.nil? || [:in_tag, :in_link_text, 'i_', 'i*', 'b', 's'].include?(state)
   end
 
-  def initial_char_checks(char)
-    return unless normal_state
+  def initial_char_checks(_char)
+    # might need to do url checks?
+    # old checks (no longer necessary)
+    # # not part of handle_char case statement because disallowed characters include ones which are already conditions
+    # if char == ':'
+    #   @in_emoji = !@in_emoji
+    # elsif @in_emoji && !SHORTCODE_ALLOWED_CHARS.match?(char)
+    #   @in_emoji = false
+    # end
 
-    # not part of handle_char case statement because disallowed characters include ones which are already conditions
-    if char == ':'
-      @in_emoji = !@in_emoji
-    elsif @in_emoji && !SHORTCODE_ALLOWED_CHARS.match?(char)
-      @in_emoji = false
-    end
-
-    if @in_mention != false
-      @in_mention += char
-      @in_mention = false unless MENTION_PROGRESS_RE.match?(@in_mention)
-    elsif char == '@'
-      @in_mention = '@'
-    end
+    # if @in_mention != false
+    #   @in_mention += char
+    #   @in_mention = false unless MENTION_PROGRESS_RE.match?(@in_mention)
+    # elsif char == '@'
+    #   @in_mention = '@'
+    # end
   end
 
   def handle_char(char, context)
@@ -288,15 +351,8 @@ class MisskeyFlavoredMarkdown
       return { string: '<br/>' }
     when '*', '_', '~', '`'
       if normal_state
-        md = md_formatting_char(char, context)
-        return if md.nil?
-
-        if state == md[:code]
-          @states.pop
-          return { string: md[:close] }
-        end
-        @states << md[:code]
-        return { string: md[:open] }
+        md = md_formatting_char(char, context, state)
+        return md unless md.nil?
       end
     when '$'
       if normal_state
