@@ -295,7 +295,7 @@ class MisskeyFlavoredMarkdown
           @states.pop
           return { string: md[:close] }
         end
-        @states << md
+        @states << md[:code]
         return { string: md[:open] }
       end
     when '$'
