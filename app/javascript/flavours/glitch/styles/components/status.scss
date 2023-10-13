@@ -554,6 +554,7 @@
   background: lighten($ui-base-color, 4%);
   padding: 14px 10px;
   border-top: 1px solid lighten($ui-base-color, 8%);
+  overflow: hidden;
 
   &--flex {
     display: flex;
@@ -1017,6 +1018,7 @@ a.status-card.compact:hover {
 .notification,
 .status {
   position: relative;
+  overflow: hidden;
 
   &.unread {
     &::before {
