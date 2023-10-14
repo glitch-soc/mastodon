@@ -8,9 +8,9 @@ class MisskeyFlavoredMarkdown
   # sparkle tags are ignored because they require adding new elements to the DOM and I simply don't want to deal with that right now
   MFM_TAGS = %w(sparkle small crop tada jelly twitch spin jump bounce font fade shake rainbow flip x2 x3 x4 blur rotate position scale fg bg).freeze
   MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>[\w\d]+)(?:\.(?<opt>\S+))?[\s\u3000]\z/
-  SHORTCODE_ALLOWED_CHARS = /[a-zA-Z0-9_]/
   POST_TAGS = %w(Hashtag Mention).freeze
   URL_ALLOWED_CHARS_RE = %r{/A[a-z0-9\-._~:\/?#\[\]@!$&'\(\)*\+,;%=]*/z}i
+  MARKDOWN_FORMATTING_SYMBOLS = %w(* _ ~ `).freeze
 
   PUNCTUATION_RE_S = '\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}'
   WHITESPACE_RE_S = '\u0009\u000A\u000C\u000D\p{Zs}'
@@ -32,22 +32,27 @@ class MisskeyFlavoredMarkdown
     @states = []
     @tokens = []
     @link = nil
-    @in_emoji = false
-    @in_mention = false
     @formatting = :normal
   end
 
   def to_html
-    html = ''
+    html = []
     text = @text.dup
-    # these are safe to do here because they cannot interfere with emoji.
-    # underscore italics need to be parsed later because emoji can contain underscores
-    text.gsub!(/\*\*(.*?)\*\*/m, '<b>\1</b>')
-    text.gsub!(/\*(.*?)\*/m, '<i>\1</i>')
-    text.gsub!(/~~(.*?)~~/m, '<s>\1</s>')
 
     each_char = lambda do |char, i|
       command = handle_char(char, { text: text, i: i })
+      if command[:closes]
+        state_i = @states.length
+        html.reverse_each do |token|
+          next if token.is_a?(String)
+
+          next if token[:state_i] != state_i
+
+          token[:string] = token[:html] if token[:html]
+          break
+        end
+        @states.pop
+      end
       @states = command[:states] if command[:states]
       @tokens = command[:tokens] if command[:tokens]
       @formatting = command[:formatting] if command[:formatting]
@@ -55,16 +60,20 @@ class MisskeyFlavoredMarkdown
         if !command[:link]
           @link = nil
         elsif !@link
-          @link = { url: '', text: '' }
+          @link = { url: '', text: [] }
         end
       end
 
       next if command[:string].nil?
 
       if @link.nil?
-        html += command[:string]
+        html << if command[:html]
+                  { string: command[:string], html: command[:html], state_i: @states.length }
+                else
+                  command[:string]
+                end
       else
-        @link[:text] += command[:string]
+        @link[:text] << command[:string]
       end
     end
 
@@ -75,6 +84,8 @@ class MisskeyFlavoredMarkdown
     each_char.call('', text.length)
 
     return '' if html.blank?
+
+    html = join_tokens(html)
 
     html = rewrite(html) do |entity|
       if entity[:tag_type] == 'Hashtag'
@@ -90,6 +101,11 @@ class MisskeyFlavoredMarkdown
   end
 
   private
+
+  def join_tokens(tokens)
+    strings = tokens.map { |token| token.is_a?(String) ? token : token[:string] }
+    strings.join
+  end
 
   def rewrite(html)
     src = html.gsub(Sanitize::REGEX_UNSUITABLE_CHARS, '')
@@ -236,7 +252,7 @@ class MisskeyFlavoredMarkdown
           can_close: right_flanking,
         }
       },
-      code: 'b',
+      code: '**',
       open: '<b>',
       close: '</b>',
     },
@@ -249,7 +265,7 @@ class MisskeyFlavoredMarkdown
           can_close: right_flanking,
         }
       },
-      code: 'i*',
+      code: '*',
       open: '<i>',
       close: '</i>',
     },
@@ -263,14 +279,17 @@ class MisskeyFlavoredMarkdown
           can_close: right_flanking && (!left_flanking || next_char.match?(PUNCTUATION_RE)),
         }
       },
-      code: 'i_',
+      code: '_',
       open: '<i>',
       close: '</i>',
     },
-    's' => { code: 's', open: '<s>', close: '</s>' },
-    'code' => { code: 'code', open: '<code>', close: '</code>' },
-    'precode' => { code: 'precode', open: '<pre><code>', close: '</code></pre>' },
-  }.freeze
+    's' => { code: '~', open: '<s>', close: '</s>' },
+    'code' => { code: '`', open: '<code>', close: '</code>' },
+    'precode' => { code: '```', open: '<pre><code>', close: '</code></pre>' },
+  }.to_h do |index, hash|
+    hash[:state] = index
+    [index, hash]
+  end.freeze
 
   def md_formatting_char(char, context, state)
     i = context[:i]
@@ -283,7 +302,7 @@ class MisskeyFlavoredMarkdown
 
     case char
     when '*'
-      return if next_char == char
+      return {} if next_char == char
 
       if previous_char == char
         this_run = "#{double_previous_char}#{char}#{next_char}"
@@ -294,27 +313,26 @@ class MisskeyFlavoredMarkdown
     when '_'
       md = MD_FORMATTING_CODES['i_']
     when '~'
-      return if next_char == char || previous_char != char
+      return {} if next_char == char || previous_char != char
 
       md = MD_FORMATTING_CODES['s']
     when '`'
-      return if next_char == char
+      return {} if next_char == char
 
       md = double_previous_char == char && previous_char == char ? MD_FORMATTING_CODES['precode'] : MD_FORMATTING_CODES['code']
     end
 
     logic = md[:logic].nil? ? { can_open: true, can_close: true } : md[:logic].call(this_run, previous_char, next_char)
 
-    if state == md[:code]
-      return unless logic[:can_close]
+    if state == md[:state]
+      return { string: md[:code] } unless logic[:can_close]
 
-      @states.pop
-      return { string: md[:close] }
+      return { closes: true, string: md[:close] }
     end
-    return unless logic[:can_open]
+    return { string: md[:code] } unless logic[:can_open]
 
-    @states << md[:code]
-    { string: md[:open] }
+    @states << md[:state]
+    { string: md[:code], html: md[:open] }
   end
 
   def normal_state
@@ -327,31 +345,40 @@ class MisskeyFlavoredMarkdown
 
     if state == :expecting_link_href && char != '('
       @states.pop
-      { link: false, string: "[#{@link[:text]}]#{char}" }
+      { link: false, string: "[#{join_tokens(@link[:text])}]#{char}" }
     elsif state == :in_link_href && (char == '' || (!@link[:url] == '' && !@link[:url].match?(URL_ALLOWED_CHARS_RE)))
       @states.pop
-      { link: false, string: "[#{@link[:text]}](#{@link[:url]}#{char}" }
+      { link: false, string: "[#{join_tokens(@link[:text])}](#{@link[:url]}#{char}" }
     end
+  end
+
+  def handle_md(char, context)
+    state = @states[-1]
+
+    if MARKDOWN_FORMATTING_SYMBOLS.include?(char) && (normal_state || MD_FORMATTING_CODES.each_value { |format| format[:state] }.include?(state))
+      md = md_formatting_char(char, context, state)
+      return md unless md.nil?
+    end
+
+    return unless %w(code precode).include?(state)
+
+    { string: h(char) }
   end
 
   def handle_char(char, context)
     initial = initial_char_checks(char, context)
     return initial unless initial.nil?
-    return handle_char_fallback(char) if @in_emoji || @in_mention
+
+    md = handle_md(char, context)
+    return md unless md.nil?
 
     state = @states[-1]
-
     # difference compared to state == :in_link_text is that in_link_text is true even if there have been tags inside the link text
     in_link_text = @states.include?(:in_link_text)
 
     case char
     when "\n"
-      return { string: '<br/>' }
-    when '*', '_', '~', '`'
-      if normal_state
-        md = md_formatting_char(char, context, state)
-        return md unless md.nil?
-      end
+      return { string: '<br>' }
     when '$'
       if normal_state
         @states << :expecting_tag
@@ -369,14 +396,14 @@ class MisskeyFlavoredMarkdown
       end
     when ' ', "\t", "\u3000"
       if state == :in_tag_options
+        src = "#{@tokens.pop}#{char}"
         @states.pop
         @states << :in_tag
-        return { string: token_opener_to_html("#{@tokens.pop}#{char}") }
+        return { string: src, html: token_opener_to_html(src) }
       end
     when ']'
       if state == :in_tag
-        @states.pop
-        return { string: '</span>' }
+        return { closes: true, string: '</span>' }
       elsif state == :in_link_text
         @states.pop
         @states << :expecting_link_href
@@ -391,7 +418,7 @@ class MisskeyFlavoredMarkdown
     when ')'
       if state == :in_link_href
         @states.pop
-        return { string: "<a href=\"#{@link[:url]}\">#{@link[:text]}</a>", link: false }
+        return { string: "<a href=\"#{@link[:url]}\">#{join_tokens(@link[:text])}</a>", link: false }
       end
     end
     handle_char_fallback(char)
@@ -403,13 +430,13 @@ class MisskeyFlavoredMarkdown
       @tokens << '' if @tokens[-1].nil?
       @tokens[-1] += char
     when :in_link_text
-      @link = { text: '', url: '' } if @link.nil?
-      @link[:text] += char
+      @link = { text: [], url: '' } if @link.nil?
+      @link[:text] << char
     when :in_link_href
-      @link = { text: '???', url: '' } if @link.nil?
+      @link = { text: [], url: '' } if @link.nil?
       @link[:url] += char
     else
-      return { string: char }
+      return { string: h(char) }
     end
     {}
   end

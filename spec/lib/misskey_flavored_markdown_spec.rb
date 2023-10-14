@@ -88,6 +88,14 @@ RSpec.describe MisskeyFlavoredMarkdown do
       end
     end
 
+    context 'when given text surrounded by asterisks but the first is followed by a space' do
+      let(:text) { 'this* should stay as-is*' }
+
+      it 'keeps asterisk' do
+        expect(subject).to include 'this* should stay as-is*'
+      end
+    end
+
     context 'when given text surrounded by double asterisks' do
       let(:text) { '**my bold text**' }
 
@@ -101,6 +109,46 @@ RSpec.describe MisskeyFlavoredMarkdown do
 
       it 'adds bold' do
         expect(subject).to include 'is<b>bold</b>ed'
+      end
+    end
+
+    context 'when given text surrounded by double asterisks only one side' do
+      let(:text) { 'this **should stay as-is' }
+
+      it 'keeps asterisk' do
+        expect(subject).to include 'this **should stay as-is'
+      end
+    end
+
+    context 'when given text surrounded by double asterisks but the first is followed by a space' do
+      let(:text) { 'this** should stay as-is**' }
+
+      it 'keeps asterisk' do
+        expect(subject).to include 'this** should stay as-is**'
+      end
+    end
+
+    context 'when given inline code blocks' do
+      let(:text) { 'some `<span>code</span>`!' }
+
+      it 'adds a code tag' do
+        expect(subject).to include 'some <code>&lt;span&gt;code&lt;/span&gt;</code>!'
+      end
+    end
+
+    context 'when given inline code blocks surrounded by double asterisks' do
+      let(:text) { 'some **`<span>bold code</span>`**!' }
+
+      it 'adds a code tag inside a b tag' do
+        expect(subject).to include 'some <b><code>&lt;span&gt;bold code&lt;/span&gt;</code></b>!'
+      end
+    end
+
+    context 'when given multiline code blocks' do
+      let(:text) { "some\n```\n<span>code</span>\n```\nyay!" }
+
+      it 'adds a code tag inside a pre tag' do
+        expect(subject).to include "some<br><pre><code>\n&lt;span&gt;code&lt;/span&gt;\n</code></pre><br>yay!"
       end
     end
 
