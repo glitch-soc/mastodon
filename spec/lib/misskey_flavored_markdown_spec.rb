@@ -184,6 +184,14 @@ RSpec.describe MisskeyFlavoredMarkdown do
       end
     end
 
+    context 'when given an unknown MFM tag' do
+      let(:text) { '$[notarealtag Test!]' }
+
+      it 'writes plain text' do
+        expect(subject).to include '$[notarealtag Test!]'
+      end
+    end
+
     context 'when given a plain url' do
       let(:text) { 'https://example.com' }
 
