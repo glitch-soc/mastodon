@@ -10,9 +10,9 @@ class MisskeyFlavoredMarkdown
   MFM_XML_TAGS_NORMAL = %w(small center).freeze
   MFM_XML_TAGS = (MFM_XML_TAGS_NORMAL + %w(plain)).freeze
   NORMAL_STATES = ([:in_tag, :in_link_text, :in_xml_tag, 'i_', 'i*', 'b', 's'] + MFM_XML_TAGS_NORMAL).freeze
-  MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>[\w\d]+)(?:\.(?<opt>\S+))?[\s\u3000]\z/
+  MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>#{Regexp.union(MFM_TAGS)})(?:\.(?<opt>\S+))?[\s\u3000]\z/
   POST_TAGS = %w(Hashtag Mention).freeze
-  URL_ALLOWED_CHARS_RE = %r{/A[a-z0-9\-._~:\/?#\[\]@!$&'\(\)*\+,;%=]*/z}i
+  ANCHOR_URL_ALLOWED_RE = %r{\Ahttps?://[a-z0-9\/\._~:?#\[\]@!$&()hn+%=]+\z}i
   MARKDOWN_FORMATTING_SYMBOLS = %w(* _ ~ `).freeze
 
   PUNCTUATION_RE_S = '\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}'
@@ -33,9 +33,7 @@ class MisskeyFlavoredMarkdown
     @text = text
     @tags = tags || []
     @states = []
-    @tokens = []
     @link = nil
-    @formatting = :normal
   end
 
   def to_html
@@ -62,24 +60,11 @@ class MisskeyFlavoredMarkdown
       end
       skip_to_i = i + command[:skip] if command[:skip]
       @states = command[:states] if command[:states]
-      @tokens = command[:tokens] if command[:tokens]
-      @formatting = command[:formatting] if command[:formatting]
-      unless command[:link].nil?
-        if !command[:link]
-          @link = nil
-        elsif !@link
-          @link = { url: '', text: [] }
-        end
-      end
 
       next if command[:string].nil?
 
       if @link.nil?
-        html << if command[:html]
-                  { string: command[:string], html: command[:html], state_i: @states.length }
-                else
-                  command[:string]
-                end
+        html << (command[:html].nil? ? command[:string] : { string: command[:string], html: command[:html], state_i: @states.length })
       else
         @link[:text] << command[:string]
       end
@@ -236,10 +221,7 @@ class MisskeyFlavoredMarkdown
     possible_entries
   end
 
-  def token_opener_to_html(token)
-    match = MFM_TOKEN_OPENER_RE.match(token)
-    return token if match.nil?
-
+  def token_opener_to_html(token, match)
     tag = match[:tag]
     # if tag isn't supported, just return the token string as-is
     return token unless MFM_TAGS.include?(tag)
@@ -352,18 +334,6 @@ class MisskeyFlavoredMarkdown
     state.nil? || NORMAL_STATES.include?(state)
   end
 
-  def initial_char_checks(char, _context)
-    state = @states[-1]
-
-    if state == :expecting_link_href && char != '('
-      @states.pop
-      { link: false, string: "[#{join_tokens(@link[:text])}]#{char}" }
-    elsif state == :in_link_href && (char == '' || (!@link[:url] == '' && !@link[:url].match?(URL_ALLOWED_CHARS_RE)))
-      @states.pop
-      { link: false, string: "[#{join_tokens(@link[:text])}](#{@link[:url]}#{char}" }
-    end
-  end
-
   def handle_md(char, context)
     state = @states[-1]
 
@@ -377,14 +347,18 @@ class MisskeyFlavoredMarkdown
     { string: h(char) }
   end
 
+  def get_remaining_text(context)
+    text = context[:text]
+    i = context[:i]
+    i >= text.length - 1 ? '' : text[i + 1..]
+  end
+
   def handle_xml_tag(char, context)
     state = @states[-1]
 
     return unless char == '<' && (normal_state || state == 'plain')
 
-    text = context[:text]
-    i = context[:i]
-    remaining_text = i >= text.length - 1 ? '' : text[i + 1..]
+    remaining_text = get_remaining_text(context)
     closing = remaining_text[0] == '/'
     tag_name = remaining_text.delete_prefix('/').split('>')[0]
     if MFM_XML_TAGS.include?(tag_name) && (!closing || state != tag_name)
@@ -397,11 +371,38 @@ class MisskeyFlavoredMarkdown
     end
   end
 
-  def handle_char(char, context)
-    initial = initial_char_checks(char, context)
-    return initial unless initial.nil?
+  def handle_mfm_tag(char, context)
+    return unless normal_state && char == '$'
 
-    md = handle_md(char, context) || handle_xml_tag(char, context)
+    remaining_text = get_remaining_text(context)
+    return unless remaining_text.start_with?('[')
+
+    tag_options = remaining_text.delete_prefix('[').split(/[ \t\u3000]/)[0]
+    space = remaining_text[tag_options.length + 1]
+    src = "$[#{tag_options}#{space}"
+    match = MFM_TOKEN_OPENER_RE.match(src)
+    return if match.nil?
+
+    @states << :in_tag
+    { skip: src.length, string: src, html: token_opener_to_html(src, match) }
+  end
+
+  def handle_link_href(_char, context)
+    @states.pop
+    remaining_text = get_remaining_text(context)
+    return unless remaining_text.start_with?('(') && remaining_text.include?(')')
+
+    url = remaining_text.delete_prefix('(').split(')')[0]
+
+    return unless url.match?(ANCHOR_URL_ALLOWED_RE)
+
+    text = @link[:text]
+    @link = nil
+    { skip: "](#{url})".length, string: "<a href=\"#{url}\">#{join_tokens(text)}</a>" }
+  end
+
+  def handle_char(char, context)
+    md = handle_md(char, context) || handle_xml_tag(char, context) || handle_mfm_tag(char, context)
     return md unless md.nil?
 
     state = @states[-1]
@@ -411,46 +412,23 @@ class MisskeyFlavoredMarkdown
     case char
     when "\n"
       return { string: '<br>' }
-    when '$'
-      if normal_state
-        @states << :expecting_tag
-        return {}
-      end
     when '['
-      if state == :expecting_tag
-        @states.pop
-        @states << :in_tag_options
-        @tokens << '$['
-        return {}
-      elsif normal_state && !in_link_text
+      if normal_state && !in_link_text
         @states << :in_link_text
-        return { link: true }
-      end
-    when ' ', "\t", "\u3000"
-      if state == :in_tag_options
-        src = "#{@tokens.pop}#{char}"
-        @states.pop
-        @states << :in_tag
-        return { string: src, html: token_opener_to_html(src) }
+        @link = { text: [], url: '' }
+        return {}
       end
     when ']'
       if state == :in_tag
         return { closes: true, string: '</span>' }
       elsif state == :in_link_text
-        @states.pop
-        @states << :expecting_link_href
-        return {}
-      end
-    when '('
-      if state == :expecting_link_href
-        @states.pop
-        @states << :in_link_href
-        return {}
-      end
-    when ')'
-      if state == :in_link_href
-        @states.pop
-        return { string: "<a href=\"#{@link[:url]}\">#{join_tokens(@link[:text])}</a>", link: false }
+        link = handle_link_href(char, context)
+
+        return link unless link.nil?
+
+        link_text = @link[:text]
+        @link = nil
+        return { string: "[#{join_tokens(link_text)}]" }
       end
     end
     handle_char_fallback(char)
@@ -458,15 +436,9 @@ class MisskeyFlavoredMarkdown
 
   def handle_char_fallback(char)
     case @states[-1]
-    when :in_tag_options
-      @tokens << '' if @tokens[-1].nil?
-      @tokens[-1] += char
     when :in_link_text
       @link = { text: [], url: '' } if @link.nil?
       @link[:text] << char
-    when :in_link_href
-      @link = { text: [], url: '' } if @link.nil?
-      @link[:url] += char
     else
       return { string: h(char) }
     end
