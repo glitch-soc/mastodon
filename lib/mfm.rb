@@ -98,7 +98,7 @@ module MFM
       speed = valid_time(node['mfm-speed']) || '0.5s'
       delay = valid_time(node['mfm-delay']) || '0s'
       loops = valid_number(node['mfm-loop']) || 'infinite'
-      node['twitch'] += "animation: mfm-twitch #{speed} #{delay} ease #{loops};"
+      node['style'] += "animation: mfm-twitch #{speed} #{delay} ease #{loops};"
     when 'shake'
       speed = valid_time(node['mfm-speed']) || '0.5s'
       delay = valid_time(node['mfm-delay']) || '0s'
