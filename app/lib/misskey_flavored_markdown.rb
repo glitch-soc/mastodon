@@ -7,6 +7,9 @@ class MisskeyFlavoredMarkdown
 
   # sparkle tags are ignored because they require adding new elements to the DOM and I simply don't want to deal with that right now
   MFM_TAGS = %w(sparkle small crop tada jelly twitch spin jump bounce font fade shake rainbow flip x2 x3 x4 blur rotate position scale fg bg).freeze
+  MFM_XML_TAGS_NORMAL = %w(small center).freeze
+  MFM_XML_TAGS = (MFM_XML_TAGS_NORMAL + %w(plain)).freeze
+  NORMAL_STATES = ([:in_tag, :in_link_text, :in_xml_tag, 'i_', 'i*', 'b', 's'] + MFM_XML_TAGS_NORMAL).freeze
   MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>[\w\d]+)(?:\.(?<opt>\S+))?[\s\u3000]\z/
   POST_TAGS = %w(Hashtag Mention).freeze
   URL_ALLOWED_CHARS_RE = %r{/A[a-z0-9\-._~:\/?#\[\]@!$&'\(\)*\+,;%=]*/z}i
@@ -39,7 +42,11 @@ class MisskeyFlavoredMarkdown
     html = []
     text = @text.dup
 
+    skip_to_i = 0
+
     each_char = lambda do |char, i|
+      next if skip_to_i > i
+
       command = handle_char(char, { text: text, i: i })
       if command[:closes]
         state_i = @states.length
@@ -53,6 +60,7 @@ class MisskeyFlavoredMarkdown
         end
         @states.pop
       end
+      skip_to_i = i + command[:skip] if command[:skip]
       @states = command[:states] if command[:states]
       @tokens = command[:tokens] if command[:tokens]
       @formatting = command[:formatting] if command[:formatting]
@@ -112,7 +120,7 @@ class MisskeyFlavoredMarkdown
     tree = Nokogiri::HTML5.fragment(src)
     document = tree.document
 
-    tree.xpath('.//text()[not(ancestor::a | ancestor::code)] | text()').each do |text_node|
+    tree.xpath('.//text()[not(ancestor::a | ancestor::code | ancestor::plain)] | text()').each do |text_node|
       # Iterate over text elements and build up their replacements.
       content = text_node.content
       replacement = Nokogiri::XML::NodeSet.new(document)
@@ -141,6 +149,10 @@ class MisskeyFlavoredMarkdown
         )
       end
       text_node.replace(replacement)
+    end
+
+    tree.xpath('.//plain').each do |node|
+      node.name = 'span'
     end
 
     tree.to_html
@@ -337,7 +349,7 @@ class MisskeyFlavoredMarkdown
 
   def normal_state
     state = @states[-1]
-    state.nil? || [:in_tag, :in_link_text, 'i_', 'i*', 'b', 's'].include?(state)
+    state.nil? || NORMAL_STATES.include?(state)
   end
 
   def initial_char_checks(char, _context)
@@ -365,11 +377,31 @@ class MisskeyFlavoredMarkdown
     { string: h(char) }
   end
 
+  def handle_xml_tag(char, context)
+    state = @states[-1]
+
+    return unless char == '<' && (normal_state || state == 'plain')
+
+    text = context[:text]
+    i = context[:i]
+    remaining_text = i >= text.length - 1 ? '' : text[i + 1..]
+    closing = remaining_text[0] == '/'
+    tag_name = remaining_text.delete_prefix('/').split('>')[0]
+    if MFM_XML_TAGS.include?(tag_name) && (!closing || state != tag_name)
+      @states << tag_name
+      xml_tag = "<#{h(tag_name)}>"
+      { skip: xml_tag.length, string: h(xml_tag), html: xml_tag }
+    elsif closing && state == tag_name
+      xml_tag = "</#{h(tag_name)}>"
+      { skip: xml_tag.length, closes: true, string: xml_tag }
+    end
+  end
+
   def handle_char(char, context)
     initial = initial_char_checks(char, context)
     return initial unless initial.nil?
 
-    md = handle_md(char, context)
+    md = handle_md(char, context) || handle_xml_tag(char, context)
     return md unless md.nil?
 
     state = @states[-1]

@@ -215,6 +215,46 @@ RSpec.describe MisskeyFlavoredMarkdown do
         expect(subject).to include '[my text](<a href="https://example.com">https://example.com</a>'
       end
     end
+
+    context 'when given small tag' do
+      let(:text) { '<small>wow</small>' }
+
+      it 'is preserved' do
+        expect(subject).to include '<small>wow</small>'
+      end
+    end
+
+    context 'when given center tag' do
+      let(:text) { '<center>wow</center>' }
+
+      it 'is preserved' do
+        expect(subject).to include '<center>wow</center>'
+      end
+    end
+
+    context 'when given unsupported tag' do
+      let(:text) { '<span>wow</span>' }
+
+      it 'is preserved' do
+        expect(subject).to include '&lt;span&gt;wow&lt;/span&gt;'
+      end
+    end
+
+    context 'when given broken tag' do
+      let(:text) { '<small>wow</unsupported>' }
+
+      it 'is preserved' do
+        expect(subject).to include '&lt;small&gt;wow&lt;/unsupported&gt;'
+      end
+    end
+
+    context 'when given plain tag' do
+      let(:text) { '<plain>$[x2 hii]</plain>' }
+
+      it 'is preserved' do
+        expect(subject).to eq '<span>$[x2 hii]</span>'
+      end
+    end
   end
 
   describe '#to_html with tags' do
