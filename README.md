@@ -1,14 +1,7 @@
 # Mastodon Glitch Edition
 
-> Now with automated deploys!
 
-[![Build Status](https://img.shields.io/circleci/project/github/glitch-soc/mastodon.svg)][circleci]
-[![Code Climate](https://img.shields.io/codeclimate/maintainability/glitch-soc/mastodon.svg)][code_climate]
+A fork of glitch-soc, which is itself a fork of mastodon. "Powers" https://fedi.limes.pink and https://mastodon.pretendo.network.
 
-[circleci]: https://circleci.com/gh/glitch-soc/mastodon
-[code_climate]: https://codeclimate.com/github/glitch-soc/mastodon
 
-So here's the deal: we all work on this code, and anyone who uses that does so absolutely at their own risk. can you dig it?
-
-- You can view documentation for this project at [glitch-soc.github.io/docs/](https://glitch-soc.github.io/docs/).
-- And contributing guidelines are available [here](CONTRIBUTING.md) and [here](https://glitch-soc.github.io/docs/contributing/).
+Uses Mastodon Modern theme (CC-BY-SA 4.0, [source](https://codeberg.org/Freeplay/Mastodon-Modern))
