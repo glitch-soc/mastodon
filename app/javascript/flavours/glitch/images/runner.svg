@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" baseProfile="full"
+xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+width="100px" height="100px" viewBox="0 0 300 300">
+	<defs>
+		<g id="fig" fill="darkgreen">
+			<circle cx="82" cy="27" r="25" />
+			<path d="M 157,162 C 92,60 98,58 74,57 C 60,57 59,61 35,80 C 6,102 8,102 8,126 C 8,154 6,152 29,163 L 29,115 L 49,97 L 49,165 L 97,164 L 98,110 C 137,171 134,168 157,162 z M 96,171 L 50,171 C 50,182 46,181 21,228 C -5,276 -5,273 10,300 L 74,184 C 136,302 128,299 162,297 L 128,233 C 99,181 97,181 96,171 z " />
+		</g>
+	</defs>
+	<use id="f1" xlink:href="#fig" opacity="0.1" />
+	<use xlink:href="#fig" opacity="0.2" x="30" >
+		<animate attributeName="x" begin="0s" dur="2s" from="0" to="30" fill="freeze"/>
+	</use>
+	<use xlink:href="#fig" opacity="0.3" x="60" >
+		<animate attributeName="x" begin="0s" dur="3s" from="0" to="60" fill="freeze"/>
+	</use>
+	<use xlink:href="#fig" opacity="0.5" x="90" >
+		<animate attributeName="x" begin="0s" dur="4s" from="0" to="90" fill="freeze"/>
+	</use>
+	<use xlink:href="#fig" opacity="1" x="120" >
+		<animate attributeName="x" begin="0s" dur="5s" from="0" to="120" fill="freeze"/>
+	</use>	
+</svg>

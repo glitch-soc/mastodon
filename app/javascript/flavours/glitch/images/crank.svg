@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+  <svg version="1.1"
+    baseProfile="full"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ev="http://www.w3.org/2001/xml-events"
+    width="1100"
+    height="600">
+
+  <title>  Slider-Crank </title>
+
+  <defs>
+    <rect
+                id="Slidebar"
+      stroke-width="1"
+            stroke="black"
+              fill="silver"
+      fill-opacity="1"
+                 x="0"
+                 y="-12"
+             width="300"
+            height="24"
+    />
+    <g id="Crosshead" stroke-width="1" stroke="black" fill-opacity="1">
+      <rect
+           fill="gold"
+              x="-50"
+              y="-25"
+          width="100"
+         height="50"
+      />
+      <circle cx="0" cy="0" r="15" fill="white"/>
+    </g>
+    <g id="Crank" stroke-width="1" stroke="black" fill-opacity="1">
+      <path fill="silver"
+             d="M -99.959 40.000
+                A  40  40 0 0 1 -99.959, -40.000
+                A 450 450 0 0 0  -9.950, -49.000
+                A  50  50 0 1 1  -9.950,  49.000
+                A 450 450 0 0 0 -99.959,  40.000
+                z"/>
+      <circle cx="-100" cy="0" r="25" fill="white"/>
+      <circle cx="0"    cy="0" r="30" fill="lightgrey"/>
+    </g>
+    <g id="ConRod" stroke-width="1" stroke="black" fill-opacity="0.7">
+      <path fill="silver"
+             d="M  12.387  21.715
+                A 30 30 0 0 1  27.551  17.776
+                L 453.475  22.035
+                A 30 30 0 0 1 473.243  29.733
+                A 40 40 0 0 1 473.243 -29.733
+                A 30 30 0 0 1 453.475 -22.035
+                L  27.551 -17.776
+                A 30 30 0 0 1 12.387  -21.715
+                A 25 25 0 0 1 12.387   21.715
+                z"/>
+      <circle cx="0"   cy="0" r="25" fill="silver"/>
+      <circle cx="0"   cy="0" r="15" fill="white"/>
+      <circle cx="500" cy="0" r="40" fill="silver"/>
+      <circle cx="500" cy="0" r="25" fill="white"/>
+    </g>
+
+  </defs>
+
+  <use xlink:href="#Slidebar"  x="150" y="263"/>
+  <use xlink:href="#Slidebar"  x="150" y="337"/>
+  <use xlink:href="#Crosshead" x="200" y="300">
+    <animate
+      attributeName="x"
+            dur="3s"
+            values="  200.000;
+                      207.202;
+                      227.545;
+                      257.557;
+                      292.430;
+                      327.159;
+                      357.557;
+                      380.753;
+                      395.140;
+                      400.000;
+                      395.140;
+                      380.753;
+                      357.557;
+                      327.159;
+                      292.430;
+                      257.557;
+                      227.545;
+                      207.202;
+                      200.000"
+        repeatCount="indefinite"/>
+  </use>
+
+  <use xlink:href="#Crank" x="800" y="300">
+    <animateTransform
+      attributeName="transform" type="rotate" from="0,800,300"
+         by="360" dur="3s" repeatCount="indefinite"/>
+  </use>
+  <use xlink:href="#ConRod" x="200" y="300">
+    <animate
+      attributeName="x"
+            dur="3s"
+            values="  200.000;
+                      207.202;
+                      227.545;
+                      257.557;
+                      292.430;
+                      327.159;
+                      357.557;
+                      380.753;
+                      395.140;
+                      400.000;
+                      395.140;
+                      380.753;
+                      357.557;
+                      327.159;
+                      292.430;
+                      257.557;
+                      227.545;
+                      207.202;
+                      200.000"
+
+        repeatCount="indefinite"/>
+    <animateTransform
+      attributeName="transform" type="rotate" from="0,200,300"
+         repeatCount="indefinite" dur="3s"
+         values="  0.000, 200.000, 300;
+                  -3.922, 207.202, 300;
+                  -7.386, 227.545, 300;
+                  -9.974, 257.557, 300;
+                 -11.359, 292.430, 300;
+                 -11.359, 327.159, 300;
+                  -9.974, 357.557, 300;
+                  -7.386, 380.753, 300;
+                  -3.922, 395.140, 300;
+                   0.000, 400.000, 300;
+                   3.922, 395.140, 300;
+                   7.386, 380.753, 300;
+                   9.974, 357.557, 300;
+                  11.359, 327.159, 300;
+                  11.359, 292.430, 300;
+                   9.974, 257.557, 300;
+                   7.386, 227.545, 300;
+                   3.922, 207.202, 300;
+                   0.000, 200.000, 300"/>
+  </use>
+
+</svg>
+
+
+
