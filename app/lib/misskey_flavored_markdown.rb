@@ -9,11 +9,11 @@ class MisskeyFlavoredMarkdown
   MFM_TAGS = %w(sparkle small crop tada jelly twitch spin jump bounce font fade shake rainbow flip x2 x3 x4 blur rotate position scale fg bg).freeze
   MFM_XML_TAGS_NORMAL = %w(small center).freeze
   MFM_XML_TAGS = (MFM_XML_TAGS_NORMAL + %w(plain)).freeze
-  NORMAL_STATES = ([:in_tag, :in_link_text, :in_xml_tag, 'i_', 'i*', 'b', 's'] + MFM_XML_TAGS_NORMAL).freeze
+  NORMAL_STATES = ([:in_tag, :in_link_text, :in_xml_tag, 'i_', 'i*', 'b', 's', 'blockquote'] + MFM_XML_TAGS_NORMAL).freeze
   MFM_TOKEN_OPENER_RE = /\A\$\[(?<tag>#{Regexp.union(MFM_TAGS)})(?:\.(?<opt>\S+))?[\s\u3000]\z/
   POST_TAGS = %w(Hashtag Mention).freeze
   ANCHOR_URL_ALLOWED_RE = %r{\Ahttps?://[a-z0-9\/\._~:?#\[\]@!$&()hn+%=]+\z}i
-  MARKDOWN_FORMATTING_SYMBOLS = %w(* _ ~ `).freeze
+  MARKDOWN_FORMATTING_SYMBOLS = (%w(* _ ~ ` >) + ["\n", '']).freeze
 
   PUNCTUATION_RE_S = '\u0021-\u002f\u003A-\u0040\u005B-\u0060\u007B-\u007E\p{P}'
   WHITESPACE_RE_S = '\u0009\u000A\u000C\u000D\p{Zs}'
@@ -280,10 +280,40 @@ class MisskeyFlavoredMarkdown
     's' => { code: '~', open: '<s>', close: '</s>' },
     'code' => { code: '`', open: '<code>', close: '</code>' },
     'precode' => { code: '```', open: '<pre><code>', close: '</code></pre>' },
+    'blockquote' => {
+      logic: lambda { |_this_run, _previous_char, next_char|
+        {
+          can_open: true,
+          skip: next_char.match?(WHITESPACE_RE) ? 2 : nil,
+          can_close: true,
+        }
+      },
+      code: '>',
+      open: '<blockquote>',
+      close: '</blockquote>',
+    },
   }.to_h do |index, hash|
     hash[:state] = index
     [index, hash]
   end.freeze
+
+  def blockquotes(char, context, state)
+    i = context[:i]
+    text = context[:text]
+    previous_char = i - 1 >= 0 ? text[i - 1] : ' '
+    next_char = i + 1 < text.length ? text[i + 1] : ' '
+
+    return {} if char == "\n" && next_char == '>'
+
+    case char
+    when "\n", ''
+      MD_FORMATTING_CODES['blockquote'] if state == 'blockquote'
+    when '>'
+      return unless previous_char == "\n" || i.zero?
+
+      MD_FORMATTING_CODES['blockquote'] unless state == 'blockquote'
+    end
+  end
 
   def md_formatting_char(char, context, state)
     i = context[:i]
@@ -291,7 +321,7 @@ class MisskeyFlavoredMarkdown
     double_previous_char = i - 2 >= 0 ? text[i - 2] : ' '
     previous_char = i - 1 >= 0 ? text[i - 1] : ' '
     next_char = i + 1 < text.length ? text[i + 1] : ' '
-    md = nil
+    md = blockquotes(char, context, state)
     this_run = "#{previous_char}#{char}#{next_char}"
 
     case char
@@ -316,6 +346,8 @@ class MisskeyFlavoredMarkdown
       md = double_previous_char == char && previous_char == char ? MD_FORMATTING_CODES['precode'] : MD_FORMATTING_CODES['code']
     end
 
+    return if md.nil?
+
     logic = md[:logic].nil? ? { can_open: true, can_close: true } : md[:logic].call(this_run, previous_char, next_char)
 
     if state == md[:state]
@@ -326,7 +358,7 @@ class MisskeyFlavoredMarkdown
     return { string: md[:code] } unless logic[:can_open]
 
     @states << md[:state]
-    { string: md[:code], html: md[:open] }
+    { string: md[:code], skip: logic[:skip], html: md[:open] }
   end
 
   def normal_state

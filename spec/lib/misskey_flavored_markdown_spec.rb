@@ -128,6 +128,14 @@ RSpec.describe MisskeyFlavoredMarkdown do
       end
     end
 
+    context 'when given blockquotes' do
+      let(:text) { "> blockquotes are so cool\nikr\n> yass" }
+
+      it 'does the thing' do
+        expect(subject).to eq '<blockquote>blockquotes are so cool</blockquote>ikr<blockquote>yass</blockquote>'
+      end
+    end
+
     context 'when given inline code blocks' do
       let(:text) { 'some `<span>code</span>`!' }
 
