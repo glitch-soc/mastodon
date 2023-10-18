@@ -13,9 +13,9 @@ class EmailMxValidator < ActiveModel::Validator
     elsif !on_allowlist?(domain)
       resolved_ips, resolved_domains = resolve_mx(domain)
 
-      if resolved_ips.empty?
-        user.errors.add(:email, :unreachable)
-      elsif on_blacklist?(resolved_domains, user.sign_up_ip)
+      # if resolved_ips.empty?
+      #  user.errors.add(:email, :unreachable)
+      if on_blacklist?(resolved_domains, user.sign_up_ip)
         user.errors.add(:email, :blocked)
       end
     end

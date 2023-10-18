@@ -1,4 +1,3 @@
-// /home/mastodon/live/app/javascript/flavours/glitch/components/status_content.jsx
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -108,7 +107,6 @@ class TranslateButton extends PureComponent {
 
 const mapStateToProps = state => ({
   languages: state.getIn(['server', 'translationLanguages', 'items']),
-  accountId: state.getIn(['meta', 'me']),
 });
 
 class StatusContent extends PureComponent {
@@ -144,279 +142,9 @@ class StatusContent extends PureComponent {
     hidden: true,
   };
 
-  createSvgCarousel = (link, svgs, fundamentals) => {
-    const { statusId, accountId } = fundamentals;
-    const svgLinks = svgs.split('|');  // Split the SVG URLs into an array
-  
-    // Create carousel container
-    const carouselContainer = document.createElement('div');
-    carouselContainer.className = 'carousel-container custom-carousel-container';
-    carouselContainer.className += ' mention hashtag status-link';
-  
-    // Create basic CSS in code
-    carouselContainer.style.display = 'flex';
-    carouselContainer.style.flexDirection = 'column';
-    carouselContainer.style.alignItems = 'center';
-    carouselContainer.style.gap = '10px';
-    carouselContainer.style.width = '100%';
-    carouselContainer.style.margin = 'auto';
-  
-  
-    // Create SVG container
-    const svgContainer = document.createElement('div');
-    svgContainer.className = 'svg-container';
-    svgContainer.style.width = '100%';
-    svgContainer.style.height = '0';
-    svgContainer.style.paddingBottom = '50%';  // This makes it square
-    svgContainer.style.position = 'relative';  // If you want to maintain the aspect ratio
-     
-  
-    // Initial SVG
-    const initialSvg = document.createElement('object');
-    initialSvg.data = svgLinks[0];
-    initialSvg.type = "image/svg+xml";
-    initialSvg.style.position = 'absolute';
-    initialSvg.style.top = '0';
-    initialSvg.style.left = '0';
-    initialSvg.style.width = '100%';
-    initialSvg.style.height = '100%';  
-    svgContainer.appendChild(initialSvg);
-  
-    // Create controls
-    const controls = document.createElement('div');
-    controls.className = 'carousel-controls';
-    
-    const prevButton = document.createElement('button');
-    prevButton.innerHTML = '<<';
-    const nextButton = document.createElement('button');
-    nextButton.innerHTML = '>>';
-    const selectButton = document.createElement('button');
-    selectButton.innerHTML = 'Select this option';
-  
-    let currentSvgIndex = 0;
-  
-    prevButton.onclick = () => {
-      if (currentSvgIndex > 0) {
-        currentSvgIndex--;
-        initialSvg.data = svgLinks[currentSvgIndex];
-      }
-    };
-  
-    nextButton.onclick = () => {
-      if (currentSvgIndex < svgLinks.length - 1) {
-        currentSvgIndex++;
-        initialSvg.data = svgLinks[currentSvgIndex];
-      }
-    };
-  
-    selectButton.onclick = () => {
-      const originalUrl = new URL(link.getAttribute('href'));
-      // Extract the widgetId
-      const widgetId = originalUrl.searchParams.get('id');
-
-      // Construct a clean URL, removing query strings
-      const cleanUrl = `${originalUrl.protocol}//${originalUrl.hostname}${originalUrl.pathname}`;
-
-      // Append new parameters along with the widgetId
-      const apiUrl = `${cleanUrl}?id=${widgetId}&selectedSlide=${currentSvgIndex + 1}&statusId=${statusId}&accountId=${accountId}`;
-      console.log("Sending GET request to: ", apiUrl);
-
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          console.log("API response:", data);
-        })
-        .catch(error => {
-          console.error("Error sending API request:", error);
-        });
-    };
-  
-    controls.appendChild(prevButton);
-    controls.appendChild(selectButton);
-    controls.appendChild(nextButton);
-    controls.style.display = 'flex';
-    controls.style.justifyContent = 'space-between'; // This will make them justified
-    controls.style.width = '100%';
-    controls.style.marginTop = '10px';  // Add some space between the SVG and the buttons
-    
-  
-    // Append everything to carousel container
-    carouselContainer.appendChild(svgContainer);
-    carouselContainer.appendChild(controls);
-  
-    link.replaceWith(carouselContainer);
-  };
-
-    // Widget createApiDropdown
-
-    createApiDropdown = (link, options, fundamentals) => {
-      const { statusId, accountId } = fundamentals;
-      const dropdownOptions = options.split('|');  // Split the options string into an array based on the pipe delimiter
-    
-      const dropdown = document.createElement('select');
-      dropdown.className = 'api-dropdown custom-dropdown'; // Added 'custom-dropdown' class
-        // Add classes similar to mention, hashtag, and status-link
-      dropdown.className += ' mention hashtag status-link';
-
-      // Add inline styles to center the dropdown
-      dropdown.style.margin = '0 auto';
-      dropdown.style.display = 'block';
-
-      dropdown.style = "margin: 0 auto; display: block; background-color: #3498DB; color: white; padding: 16px; font-size: 16px; border: none; cursor: pointer;";
-
-      // Add command (disabled state)
-      const defOption = document.createElement('option');
-      defOption.text = "-- Select your answer --";
-      defOption.value = "";
-      defOption.disabled = true;
-      defOption.selected = true;
-      dropdown.add(defOption);
-    
-      dropdownOptions.forEach((optionLabel) => {
-        const option = document.createElement('option');
-        option.value = optionLabel;
-        option.text = optionLabel;
-        dropdown.add(option);
-      });
-    
-      dropdown.onchange = (event) => {
-        const originalUrl = new URL(link.getAttribute('href'));
-
-        // Extract the widgetId
-        const widgetId = originalUrl.searchParams.get('id');
-      
-        // Construct a clean URL, removing query strings
-        const cleanUrl = `${originalUrl.protocol}//${originalUrl.hostname}${originalUrl.pathname}`;
-      
-        // Get the selected option
-        const selectedOption = event.target.value;
-      
-        // Append new parameters along with the widgetId
-        const apiUrl = `${cleanUrl}?id=${widgetId}&optionSelected=${selectedOption}&statusId=${statusId}&accountId=${accountId}`;
-       
-        // Send GET request to API
-        // CSP and CORS (serverside) will be compromised if we send a GET request: 
-        // .../config/initializers/content_security_policy.rb add
-        //   p.connect_src     :self, :blob, :data, Rails.configuration.x.streaming_api_base_url,
-        //   *data_hosts, "https://api.xn--sft219bi3tzwd.com"
-        // remote_interaction_helper_controller.rb add
-        //   p.connect_src     :self, "https://api.xn--sft219bi3tzwd.com"
-        //  add CORS to your nginx configuration 
-        //  add the following inside your location block:
-        // add_header 'Access-Control-Allow-Origin' 'https://mastodon.xn--sft219bi3tzwd.com';
-        // add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
-
-        console.log("Sending GET request to:", apiUrl); // Debug line
-
-        fetch(apiUrl)
-          .then(response => response.json())
-          .then(data => {
-            // Handle API response data here
-          })
-          .catch(error => {
-            console.error("Error sending API request:", error);
-          });
-      };
-    
-      // Replace the original link with the dropdown
-      link.replaceWith(dropdown);
-    }
-    
-
-  // Widget createApiButtons
-   createApiButtons = (link, buttons, fundamentals) => {
-    const { statusId, accountId } = fundamentals;
-    const buttonLabels = buttons.split('|');  // Split the buttons string into an array based on the pipe delimiter
-  
-    const buttonContainer = document.createElement('div');
-    buttonContainer.className = 'api-button-container custom-button-container'; // Added 'custom-button-container' class
-  
-    buttonLabels.forEach((buttonLabel) => {
-      const button = document.createElement('button');
-      button.style = "background-color: #3498DB; color: white; padding: 16px; font-size: 16px; border: none; cursor: pointer;";
-      button.innerHTML = buttonLabel;  // Set button text
-      button.className = 'api-button custom-button';  // Added 'custom-button' class
-      buttonContainer.className += ' mention hashtag status-link';
-
-      // Add inline styles to center and space buttons
-      buttonContainer.style.display = 'flex';
-      buttonContainer.style.justifyContent = 'center';
-      buttonContainer.style.gap = '10px';
-  
-      button.onclick = () => {
-       // Get the original URL
-      const originalUrl = new URL(link.getAttribute('href'));
-
-      // Extract the widgetId
-      const widgetId = originalUrl.searchParams.get('id');
-
-      // Construct a clean URL, removing query strings
-      const cleanUrl = `${originalUrl.protocol}//${originalUrl.hostname}${originalUrl.pathname}`;
-
-      // Append new parameters along with the widgetId
-      const apiUrl = `${cleanUrl}?id=${widgetId}&buttonClicked=${buttonLabel}&statusId=${statusId}&accountId=${accountId}`;
-      console.log("Sending GET request to: ", apiUrl);
-
-        // Send GET request to API
-        fetch(apiUrl)
-          .then(response => response.json())
-          .then(data => {
-            // Handle API response data here
-          })
-          .catch(error => {
-            console.error("Error sending API request:", error);
-          });
-      };
-  
-      buttonContainer.appendChild(button);
-    });
-  
-    // Replace the original link with the button container
-    link.replaceWith(buttonContainer);
-  }
-
-widgetRouter = (status, link) => {
-  const href = link.getAttribute('href');
-  const url = new URL(href);
-  const params = new URLSearchParams(url.search);
-
-  // Retrieve statusId and accountId
-  const statusId = status.get('id');
-//  const accountId = status.getIn(['account', 'id']);
-// Get accountId of logged in user
-  const { accountId } = this.props;
-
-  const fundamentals = { statusId, accountId };
-
-  // Check for 'buttons' parameter in URL
-  if (params.has('buttons')) {
-    const buttons = params.get('buttons');
-    this.createApiButtons(link, buttons, fundamentals);
-    return;  // Exit after finding a match
-  }
-
-  // Check for 'dropdown' parameter in URL
-  if (params.has('dropdown')) {
-    const options = params.get('dropdown');
-    this.createApiDropdown(link, options, fundamentals);
-    return;  // Exit after finding a match
-  }
-
-  // Check for 'carousel' parameter in URL
-  if (params.has('carousel')) {
-    const svgs = params.get('carousel');
-    this.createSvgCarousel(link, svgs, fundamentals);
-    return;  // Exit after finding a match
-  }
-
-  // No matching widgets found
-}
-
-
   _updateStatusLinks () {
     const node = this.contentsNode;
     const { tagLinks, rewriteMentions } = this.props;
-    const targetHref = "https://api.tactcheck.com/widgets";  
 
     if (!node) {
       return;
@@ -430,13 +158,6 @@ widgetRouter = (status, link) => {
         continue;
       }
       link.classList.add('status-link');
-
-      const href = link.getAttribute('href');
-
-      if (href && href.includes(targetHref)) {
-        this.widgetRouter(this.props.status, link);  
-        continue;  
-      }
 
       let mention = this.props.status.get('mentions').find(item => link.href === item.get('url'));
 
@@ -487,8 +208,6 @@ widgetRouter = (status, link) => {
       }
     }
   }
-
-
 
   handleMouseEnter = ({ currentTarget }) => {
     if (autoPlayGif) {
