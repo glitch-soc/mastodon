@@ -364,6 +364,7 @@ const updateSuggestionTags = (state, token) => {
 };
 
 export default function compose(state = initialState, action) {
+  let do_not_federate, text;
   switch(action.type) {
   case STORE_HYDRATE:
     return hydrate(state, action.state.get('compose'));
@@ -568,8 +569,8 @@ export default function compose(state = initialState, action) {
   case COMPOSE_DOODLE_SET:
     return state.mergeIn(['doodle'], action.options);
   case REDRAFT:
-    const do_not_federate = !!action.status.get('local_only');
-    let text = action.raw_text || unescapeHTML(expandMentions(action.status));
+    do_not_federate = !!action.status.get('local_only');
+    text = action.raw_text || unescapeHTML(expandMentions(action.status));
     if (do_not_federate) text = text.replace(/ ?👁\ufe0f?\u200b?$/, '');
     return state.withMutations(map => {
       map.set('text', text);
@@ -609,9 +610,12 @@ export default function compose(state = initialState, action) {
       }
     });
   case COMPOSE_SET_STATUS:
+    do_not_federate = !!action.status.get('local_only');
+    text = action.text || unescapeHTML(expandMentions(action.status));
+    if (do_not_federate && state.getIn(['advanced_options', 'threaded_mode'])) text = text.replace(/ ?👁\ufe0f?\u200b?$/, '');
     return state.withMutations(map => {
       map.set('id', action.status.get('id'));
-      map.set('text', action.text);
+      map.set('text', text);
       map.set('content_type', action.content_type || 'text/plain');
       map.set('in_reply_to', action.status.get('in_reply_to_id'));
       map.set('privacy', action.status.get('visibility'));
