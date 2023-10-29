@@ -11,7 +11,7 @@ import { throttle, escapeRegExp } from 'lodash';
 
 import { openModal, closeModal } from 'flavours/glitch/actions/modal';
 import api from 'flavours/glitch/api';
-import Button from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { registrationsOpen, sso_redirect } from 'flavours/glitch/initial_state';
 
@@ -27,9 +27,9 @@ const mapStateToProps = (state, { accountId }) => ({
 const mapDispatchToProps = (dispatch) => ({
   onSignupClick() {
     dispatch(closeModal({
-        modalType: undefined,
-        ignoreFocus: false,
-      }));
+      modalType: undefined,
+      ignoreFocus: false,
+    }));
     dispatch(openModal({ modalType: 'CLOSED_REGISTRATIONS' }));
   },
 });
@@ -187,7 +187,7 @@ class LoginForm extends React.PureComponent {
 
   setIFrameRef = (iframe) => {
     this.iframeRef = iframe;
-  }
+  };
 
   handleFocus = () => {
     this.setState({ expanded: true });

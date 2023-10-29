@@ -22,6 +22,7 @@ import { expandHomeTimeline } from 'flavours/glitch/actions/timelines';
 import PermaLink from 'flavours/glitch/components/permalink';
 import PictureInPicture from 'flavours/glitch/features/picture_in_picture';
 import { layoutFromWindow } from 'flavours/glitch/is_mobile';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding } from '../../initial_state';
 
@@ -191,7 +192,9 @@ class SwitchingColumnsArea extends PureComponent {
 
           {singleColumn ? <Redirect from='/deck' to='/home' exact /> : null}
           {singleColumn && pathName.startsWith('/deck/') ? <Redirect from={pathName} to={pathName.slice(5)} /> : null}
+          {/* Redirect old bookmarks (without /deck) with home-like routes to the advanced interface */}
           {!singleColumn && pathName === '/getting-started' ? <Redirect from='/getting-started' to='/deck/getting-started' exact /> : null}
+          {!singleColumn && pathName === '/home' ? <Redirect from='/home' to='/deck/getting-started' exact /> : null}
 
           <WrappedRoute path='/getting-started' component={GettingStarted} content={children} />
           <WrappedRoute path='/keyboard-shortcuts' component={KeyboardShortcuts} content={children} />
@@ -267,8 +270,6 @@ class UI extends Component {
     hasMediaAttachments: PropTypes.bool,
     canUploadMore: PropTypes.bool,
     match: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     dropdownMenuIsOpen: PropTypes.bool,
     unreadNotifications: PropTypes.number,
@@ -278,6 +279,7 @@ class UI extends Component {
     layout: PropTypes.string.isRequired,
     firstLaunch: PropTypes.bool,
     username: PropTypes.string,
+    ...WithRouterPropTypes,
   };
 
   state = {
@@ -414,7 +416,7 @@ class UI extends Component {
 
     // On first launch, redirect to the follow recommendations page
     if (signedIn && this.props.firstLaunch) {
-      this.context.router.history.replace('/start');
+      this.props.history.replace('/start');
       // TODO: this.props.dispatch(closeOnboarding());
     }
 
