@@ -630,6 +630,11 @@ export default function compose(state = initialState, action) {
         map.set('spoiler_text', '');
       }
 
+      map.update(
+        'advanced_options',
+        map => map.merge(new ImmutableMap({ do_not_federate: action.status.get('local_only'), threaded_mode: false })),
+      );
+
       if (action.status.get('poll')) {
         map.set('poll', ImmutableMap({
           options: action.status.getIn(['poll', 'options']).map(x => x.get('title')),
