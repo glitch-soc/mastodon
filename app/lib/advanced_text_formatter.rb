@@ -7,9 +7,9 @@ class AdvancedTextFormatter < TextFormatter
       @format_link = block
     end
 
-    def block_code(code, _language)
+    def block_code(code, language)
       <<~HTML
-        <pre><code>#{ERB::Util.h(code).gsub("\n", '<br/>')}</code></pre>
+        <pre><code data-codelang="#{language}">#{ERB::Util.h(code).gsub("\n", '<br/>')}</code></pre>
       HTML
     end
 
