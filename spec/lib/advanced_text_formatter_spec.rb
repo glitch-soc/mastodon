@@ -50,6 +50,14 @@ RSpec.describe AdvancedTextFormatter do
         it 'does not format links' do
           expect(subject).to include 'return 0; // https://joinmastodon.org/foo'
         end
+
+        context 'with valid language' do
+          let(:text) { "test\n\n```c++\nint main(void) {\n  return 0; // https://joinmastodon.org/foo\n}\n```\n" }
+
+          it 'formats code using <pre> and <code> with data containing set language' do
+            expect(subject).to include '<pre><code data-codelang="c++">int main'
+          end
+        end
       end
 
       context 'with a link in inline code using backticks' do
