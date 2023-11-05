@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { omit } from 'lodash';
+
 import { withOptionalRouter, WithOptionalRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 class Permalink extends PureComponent {
@@ -38,8 +40,11 @@ class Permalink extends PureComponent {
       ...other
     } = this.props;
 
+    // Use lodash omit method to remove router props, as we don't want these to be added to the link
+    const extraAttributes = omit(other, [Object.keys(WithOptionalRouterPropTypes), 'staticContext'].flat());
+
     return (
-      <a target='_blank' href={href} onClick={this.handleClick} {...other} className={`permalink${className ? ' ' + className : ''}`}>
+      <a target='_blank' href={href} onClick={this.handleClick} {...extraAttributes} className={`permalink${className ? ' ' + className : ''}`}>
         {children}
       </a>
     );
