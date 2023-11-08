@@ -6,6 +6,7 @@ import { FormattedMessage } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import AddReactionIcon from '@/material-icons/400-24px/add_reaction.svg?react';
 import EditIcon from '@/material-icons/400-24px/edit.svg?react';
 import FormatQuoteIcon from '@/material-icons/400-24px/format_quote-fill.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home-fill.svg?react';
@@ -60,6 +61,14 @@ export default class StatusPrepend extends PureComponent {
           id='notification.favourite'
           defaultMessage='{name} favorited your post'
           values={{ name : link }}
+        />
+      );
+    case 'reaction':
+      return (
+        <FormattedMessage
+          id='notification.reaction'
+          defaultMessage='{name} reacted to your status'
+          values={{ name: link }}
         />
       );
     case 'reblog':
@@ -132,6 +141,10 @@ export default class StatusPrepend extends PureComponent {
     case 'favourite':
       iconId = 'star';
       iconComponent = StarIcon;
+      break;
+    case 'reaction':
+      iconId = 'add_reaction';
+      iconComponent = AddReactionIcon;
       break;
     case 'featured':
       iconId = 'thumb-tack';

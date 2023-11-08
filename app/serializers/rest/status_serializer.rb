@@ -30,6 +30,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   has_many :ordered_mentions, key: :mentions
   has_many :tags
   has_many :emojis, serializer: REST::CustomEmojiSerializer
+  has_many :reactions, serializer: REST::ReactionSerializer
 
   # Due to a ActiveModel::Serializer quirk, if you change any of the following, have a look at
   # updating `app/serializers/rest/shallow_status_serializer.rb` as well
@@ -168,6 +169,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
 
   def ordered_mentions
     object.active_mentions.to_a.sort_by(&:id)
+  end
+
+  def reactions
+    object.reactions(current_user&.account)
   end
 
   def quote_approval
