@@ -31,6 +31,7 @@ module Account::Associations
         has_many :reports
         has_many :scheduled_statuses
         has_many :status_pins
+        has_many :status_reactions
         has_many :statuses
 
         has_one :deletion_request, class_name: 'AccountDeletionRequest'
