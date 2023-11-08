@@ -18,6 +18,7 @@ class UserSettings
   setting :default_privacy, default: nil, in: %w(public unlisted private)
   setting :default_content_type, default: 'text/plain'
   setting :hide_followers_count, default: false
+  setting :visible_reactions, default: 6
   setting :default_quote_policy, default: 'public', in: %w(public followers nobody)
 
   setting_inverse_alias :indexable, :noindex
