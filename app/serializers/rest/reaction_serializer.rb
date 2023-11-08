@@ -21,11 +21,25 @@ class REST::ReactionSerializer < ActiveModel::Serializer
     object.custom_emoji.present?
   end
 
+  def name
+    if extern?
+      [object.name, '@', object.custom_emoji.domain].join
+    else
+      object.name
+    end
+  end
+
   def url
     full_asset_url(object.custom_emoji.image.url)
   end
 
   def static_url
     full_asset_url(object.custom_emoji.image.url(:static))
+  end
+
+  private
+
+  def extern?
+    custom_emoji? && object.custom_emoji.domain.present?
   end
 end
