@@ -22,6 +22,10 @@ class StatusReaction < ApplicationRecord
   validates :name, presence: true
   validates_with StatusReactionValidator
 
+  before_validation do
+    self.status = status.reblog if status&.reblog?
+  end
+
   before_validation :set_custom_emoji
 
   private
