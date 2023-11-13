@@ -16,16 +16,31 @@ class ReactService < BaseService
 
     reaction = StatusReaction.create!(account: account, status: status, name: name, custom_emoji: custom_emoji)
 
-    json = Oj.dump(serialize_payload(reaction, ActivityPub::EmojiReactionSerializer))
-    if status.account.local?
-      NotifyService.new.call(status.account, :reaction, reaction)
-      ActivityPub::RawDistributionWorker.perform_async(json, status.account.id)
-    else
-      ActivityPub::DeliveryWorker.perform_async(json, reaction.account_id, status.account.inbox_url)
-    end
+    Trends.statuses.register(status)
 
-    ActivityTracker.increment('activity:interactions')
+    create_notification(reaction)
+    increment_statistics
 
     reaction
+  end
+
+  private
+
+  def create_notification(reaction)
+    status = reaction.status
+
+    if status.account.local?
+      LocalNotificationWorker.perform_async(status.account_id, reaction.id, 'StatusReaction', 'reaction')
+    elsif status.account.activitypub?
+      ActivityPub::DeliveryWorker.perform_async(build_json(reaction), reaction.account_id, status.account.inbox_url)
+    end
+  end
+
+  def increment_statistics
+    ActivityTracker.increment('activity:interactions')
+  end
+
+  def build_json(reaction)
+    Oj.dump(serialize_payload(reaction, ActivityPub::EmojiReactionSerializer))
   end
 end
