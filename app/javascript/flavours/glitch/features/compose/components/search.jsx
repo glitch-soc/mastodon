@@ -4,14 +4,14 @@ import { PureComponent } from 'react';
 import { defineMessages, injectIntl, FormattedMessage, FormattedList } from 'react-intl';
 
 import classNames from 'classnames';
+import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-
-import { Icon } from 'flavours/glitch/components/icon';
+import { Icon }  from 'flavours/glitch/components/icon';
 import { domain, searchEnabled } from 'flavours/glitch/initial_state';
-import { focusRoot } from 'flavours/glitch/utils/dom_helpers';
 import { HASHTAG_REGEX } from 'flavours/glitch/utils/hashtags';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 const messages = defineMessages({
   placeholder: { id: 'search.placeholder', defaultMessage: 'Search' },
@@ -32,7 +32,6 @@ const labelForRecentSearch = search => {
 class Search extends PureComponent {
 
   static contextTypes = {
-    router: PropTypes.object.isRequired,
     identity: PropTypes.object.isRequired,
   };
 
@@ -50,6 +49,7 @@ class Search extends PureComponent {
     openInRoute: PropTypes.bool,
     intl: PropTypes.object.isRequired,
     singleColumn: PropTypes.bool,
+    ...WithRouterPropTypes,
   };
 
   state = {
@@ -66,7 +66,7 @@ class Search extends PureComponent {
     { label: <><mark>before:</mark> <FormattedMessage id='search_popout.specific_date' defaultMessage='specific date' /></>, action: e => { e.preventDefault(); this._insertText('before:'); } },
     { label: <><mark>during:</mark> <FormattedMessage id='search_popout.specific_date' defaultMessage='specific date' /></>, action: e => { e.preventDefault(); this._insertText('during:'); } },
     { label: <><mark>after:</mark> <FormattedMessage id='search_popout.specific_date' defaultMessage='specific date' /></>, action: e => { e.preventDefault(); this._insertText('after:'); } },
-    { label: <><mark>in:</mark> <FormattedList type='disjunction' value={['all', 'library']} /></>, action: e => { e.preventDefault(); this._insertText('in:'); } }
+    { label: <><mark>in:</mark> <FormattedList type='disjunction' value={['all', 'library', 'public']} /></>, action: e => { e.preventDefault(); this._insertText('in:'); } }
   ];
 
   setRef = c => {
@@ -82,13 +82,9 @@ class Search extends PureComponent {
   };
 
   handleClear = e => {
-    const {
-      onClear,
-      submitted,
-      value,
-    } = this.props;
+    const { value, submitted, onClear } = this.props;
 
-    e.preventDefault();  //  Prevents focus change ??
+    e.preventDefault();
 
     if (value.length > 0 || submitted) {
       onClear();
@@ -122,8 +118,7 @@ class Search extends PureComponent {
     switch(e.key) {
     case 'Escape':
       e.preventDefault();
-
-      focusRoot();
+      this._unfocus();
 
       break;
     case 'ArrowDown':
@@ -161,6 +156,7 @@ class Search extends PureComponent {
           search.forget(e);
         }
       }
+
       break;
     }
   };
@@ -170,32 +166,29 @@ class Search extends PureComponent {
   };
 
   handleHashtagClick = () => {
-    const { router } = this.context;
-    const { value, onClickSearchResult } = this.props;
+    const { value, onClickSearchResult, history } = this.props;
 
     const query = value.trim().replace(/^#/, '');
 
-    router.history.push(`/tags/${query}`);
+    history.push(`/tags/${query}`);
     onClickSearchResult(query, 'hashtag');
     this._unfocus();
   };
 
   handleAccountClick = () => {
-    const { router } = this.context;
-    const { value, onClickSearchResult } = this.props;
+    const { value, onClickSearchResult, history } = this.props;
 
     const query = value.trim().replace(/^@/, '');
 
-    router.history.push(`/@${query}`);
+    history.push(`/@${query}`);
     onClickSearchResult(query, 'account');
     this._unfocus();
   };
 
   handleURLClick = () => {
-    const { router } = this.context;
-    const { onOpenURL } = this.props;
+    const { onOpenURL, history } = this.props;
 
-    onOpenURL(router.history);
+    onOpenURL(history);
     this._unfocus();
   };
 
@@ -208,13 +201,12 @@ class Search extends PureComponent {
   };
 
   handleRecentSearchClick = search => {
-    const { onChange } = this.props;
-    const { router } = this.context;
+    const { onChange, history } = this.props;
 
     if (search.get('type') === 'account') {
-      router.history.push(`/@${search.get('q')}`);
+      history.push(`/@${search.get('q')}`);
     } else if (search.get('type') === 'hashtag') {
-      router.history.push(`/tags/${search.get('q')}`);
+      history.push(`/tags/${search.get('q')}`);
     } else {
       onChange(search.get('q'));
       this._submit(search.get('type'));
@@ -246,8 +238,7 @@ class Search extends PureComponent {
   }
 
   _submit (type) {
-    const { onSubmit, openInRoute, value, onClickSearchResult } = this.props;
-    const { router } = this.context;
+    const { onSubmit, openInRoute, value, onClickSearchResult, history } = this.props;
 
     onSubmit(type);
 
@@ -256,7 +247,7 @@ class Search extends PureComponent {
     }
 
     if (openInRoute) {
-      router.history.push('/search');
+      history.push('/search');
     }
 
     this._unfocus();
@@ -348,6 +339,7 @@ class Search extends PureComponent {
           <Icon id='search' className={hasValue ? '' : 'active'} />
           <Icon id='times-circle' className={hasValue ? 'active' : ''} />
         </div>
+
         <div className='search__popout'>
           {options.length === 0 && (
             <>
@@ -367,6 +359,7 @@ class Search extends PureComponent {
               </div>
             </>
           )}
+
           {options.length > 0 && (
             <>
               <h4><FormattedMessage id='search_popout.quick_actions' defaultMessage='Quick actions' /></h4>
@@ -403,4 +396,4 @@ class Search extends PureComponent {
 
 }
 
-export default injectIntl(Search);
+export default withRouter(injectIntl(Search));

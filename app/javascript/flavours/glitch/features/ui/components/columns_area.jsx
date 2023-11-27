@@ -6,8 +6,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import { supportsPassiveEvents } from 'detect-passive-events';
 
-import { scrollRight } from 'flavours/glitch/scroll';
-
+import { scrollRight } from '../../../scroll';
 import BundleContainer from '../containers/bundle_container';
 import {
   Compose,
@@ -45,11 +44,6 @@ const componentMap = {
 };
 
 export default class ColumnsArea extends ImmutablePureComponent {
-
-  static contextTypes = {
-    router: PropTypes.object.isRequired,
-  };
-
   static propTypes = {
     columns: ImmutablePropTypes.list.isRequired,
     singleColumn: PropTypes.bool,

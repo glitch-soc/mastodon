@@ -4,6 +4,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
+import { withRouter } from 'react-router-dom';
 
 import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
@@ -13,13 +14,20 @@ import { createSelector } from 'reselect';
 
 import { HotKeys } from 'react-hotkeys';
 
-import { initBlockModal } from 'flavours/glitch/actions/blocks';
-import { initBoostModal } from 'flavours/glitch/actions/boosts';
+import { Icon }  from 'flavours/glitch/components/icon';
+import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
+import ScrollContainer from 'flavours/glitch/containers/scroll_container';
+import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
+import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
+
+import { initBlockModal } from '../../actions/blocks';
+import { initBoostModal } from '../../actions/boosts';
 import {
   replyCompose,
   mentionCompose,
   directCompose,
-} from 'flavours/glitch/actions/compose';
+} from '../../actions/compose';
 import {
   favourite,
   unfavourite,
@@ -29,11 +37,11 @@ import {
   unreblog,
   pin,
   unpin,
-} from 'flavours/glitch/actions/interactions';
-import { changeLocalSetting } from 'flavours/glitch/actions/local_settings';
-import { openModal } from 'flavours/glitch/actions/modal';
-import { initMuteModal } from 'flavours/glitch/actions/mutes';
-import { initReport } from 'flavours/glitch/actions/reports';
+} from '../../actions/interactions';
+import { changeLocalSetting } from '../../actions/local_settings';
+import { openModal } from '../../actions/modal';
+import { initMuteModal } from '../../actions/mutes';
+import { initReport } from '../../actions/reports';
 import {
   fetchStatus,
   muteStatus,
@@ -44,23 +52,18 @@ import {
   revealStatus,
   translateStatus,
   undoStatusTranslation,
-} from 'flavours/glitch/actions/statuses';
-import { Icon } from 'flavours/glitch/components/icon';
-import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
-import { textForScreenReader, defaultMediaVisibility } from 'flavours/glitch/components/status';
-import ScrollContainer from 'flavours/glitch/containers/scroll_container';
-import StatusContainer from 'flavours/glitch/containers/status_container';
-import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
-import Column from 'flavours/glitch/features/ui/components/column';
-import { boostModal, favouriteModal, deleteModal } from 'flavours/glitch/initial_state';
-import { makeGetStatus, makeGetPictureInPicture } from 'flavours/glitch/selectors';
-import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
-
+} from '../../actions/statuses';
 import ColumnHeader from '../../components/column_header';
+import { textForScreenReader, defaultMediaVisibility } from '../../components/status';
+import StatusContainer from '../../containers/status_container';
+import { boostModal, favouriteModal, deleteModal } from '../../initial_state';
+import { makeGetStatus, makeGetPictureInPicture } from '../../selectors';
+import Column from '../ui/components/column';
 import { attachFullscreenListener, detachFullscreenListener, isFullscreen } from '../ui/util/fullscreen';
 
 import ActionBar from './components/action_bar';
 import DetailedStatus from './components/detailed_status';
+
 
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
@@ -182,7 +185,6 @@ const titleFromStatus = (intl, status) => {
 class Status extends ImmutablePureComponent {
 
   static contextTypes = {
-    router: PropTypes.object,
     identity: PropTypes.object,
   };
 
@@ -202,6 +204,7 @@ class Status extends ImmutablePureComponent {
       inUse: PropTypes.bool,
       available: PropTypes.bool,
     }),
+    ...WithRouterPropTypes
   };
 
   state = {
@@ -322,11 +325,11 @@ class Status extends ImmutablePureComponent {
             message: intl.formatMessage(messages.replyMessage),
             confirm: intl.formatMessage(messages.replyConfirm),
             onDoNotAsk: () => dispatch(changeLocalSetting(['confirm_before_clearing_draft'], false)),
-            onConfirm: () => dispatch(replyCompose(status, this.context.router.history)),
+            onConfirm: () => dispatch(replyCompose(status, this.props.history)),
           },
         }));
       } else {
-        dispatch(replyCompose(status, this.context.router.history));
+        dispatch(replyCompose(status, this.props.history));
       }
     } else {
       dispatch(openModal({
@@ -403,12 +406,12 @@ class Status extends ImmutablePureComponent {
     this.props.dispatch(editStatus(status.get('id'), history));
   };
 
-  handleDirectClick = (account, router) => {
-    this.props.dispatch(directCompose(account, router));
+  handleDirectClick = (account, history) => {
+    this.props.dispatch(directCompose(account, history));
   };
 
-  handleMentionClick = (account, router) => {
-    this.props.dispatch(mentionCompose(account, router));
+  handleMentionClick = (account, history) => {
+    this.props.dispatch(mentionCompose(account, history));
   };
 
   handleOpenMedia = (media, index, lang) => {
@@ -530,7 +533,7 @@ class Status extends ImmutablePureComponent {
   };
 
   handleHotkeyOpenProfile = () => {
-    this.context.router.history.push(`/@${this.props.status.getIn(['account', 'acct'])}`);
+    this.props.history.push(`/@${this.props.status.getIn(['account', 'acct'])}`);
   };
 
   handleMoveUp = id => {
@@ -653,7 +656,7 @@ class Status extends ImmutablePureComponent {
 
   shouldUpdateScroll = (prevRouterProps, { location }) => {
     // Do not change scroll when opening a modal
-    if (location.state?.mastodonModalKey && location.state?.mastodonModalKey !== prevRouterProps?.location?.state?.mastodonModalKey) {
+    if (location.state?.mastodonModalKey !== prevRouterProps?.location?.state?.mastodonModalKey) {
       return false;
     }
 
@@ -783,4 +786,4 @@ class Status extends ImmutablePureComponent {
 
 }
 
-export default injectIntl(connect(makeMapStateToProps)(Status));
+export default withRouter(injectIntl(connect(makeMapStateToProps)(Status)));

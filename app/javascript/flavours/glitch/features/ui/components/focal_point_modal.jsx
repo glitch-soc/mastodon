@@ -16,18 +16,18 @@ import tesseractWorkerPath from 'tesseract.js/dist/worker.min.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import tesseractCorePath from 'tesseract.js-core/tesseract-core.wasm.js';
 
-import Button from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button';
 import { GIFV } from 'flavours/glitch/components/gifv';
 import { IconButton } from 'flavours/glitch/components/icon_button';
 import Audio from 'flavours/glitch/features/audio';
 import CharacterCounter from 'flavours/glitch/features/compose/components/character_counter';
 import UploadProgress from 'flavours/glitch/features/compose/components/upload_progress';
 import { Tesseract as fetchTesseract } from 'flavours/glitch/features/ui/util/async-components';
-import Video, { getPointerPosition } from 'flavours/glitch/features/video';
 import { me } from 'flavours/glitch/initial_state';
 import { assetHost } from 'flavours/glitch/utils/config';
 
 import { changeUploadCompose, uploadThumbnail, onChangeMediaDescription, onChangeMediaFocus } from '../../../actions/compose';
+import Video, { getPointerPosition } from '../../video';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },

@@ -104,10 +104,7 @@
   }
 
   input[type='checkbox'] {
-    display: none;
-  }
-
-  .checkbox {
+    appearance: none;
     display: inline-block;
     position: relative;
     border: 1px solid $ui-primary-color;
@@ -120,8 +117,9 @@
     top: -1px;
     border-radius: 4px;
     vertical-align: middle;
+    cursor: inherit;
 
-    &.active {
+    &:checked {
       border-color: $highlight-text-color;
       background: $highlight-text-color
         url("data:image/svg+xml;utf8,<svg width='18' height='18' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M4.5 8.5L8 12l6-6' stroke='white' stroke-width='1.5'/></svg>")
@@ -143,15 +141,30 @@
 .reply-indicator__header {
   margin-bottom: 5px;
   overflow: hidden;
-
-  & > .account.small {
-    color: $inverted-text-color;
-  }
 }
 
 .reply-indicator__cancel {
   float: right;
   line-height: 24px;
+}
+
+.reply-indicator__display-name {
+  color: $inverted-text-color;
+  display: block;
+  max-width: 100%;
+  line-height: 24px;
+  overflow: hidden;
+  text-decoration: none;
+
+  & > .display-name {
+    line-height: unset;
+    height: unset;
+  }
+}
+
+.reply-indicator__display-avatar {
+  float: left;
+  margin-inline-end: 5px;
 }
 
 .reply-indicator__content {
@@ -310,9 +323,9 @@
     background: darken($ui-secondary-color, 10%);
   }
 
-  > .account,
-  > .emoji,
-  > .autosuggest-hashtag {
+  .autosuggest-account,
+  .autosuggest-emoji,
+  .autosuggest-hashtag {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -344,12 +357,13 @@
     }
   }
 
-  & > .account.small {
-    .display-name {
-      & > span {
-        color: $lighter-text-color;
-      }
-    }
+  .autosuggest-account-icon,
+  .autosuggest-emoji img {
+    margin-inline-end: 8px;
+  }
+
+  .autosuggest-account .display-name > span {
+    color: $lighter-text-color;
   }
 }
 

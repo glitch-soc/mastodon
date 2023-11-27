@@ -3,14 +3,17 @@ import PropTypes from 'prop-types';
 import { defineMessages, injectIntl } from 'react-intl';
 
 import classNames from 'classnames';
+import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
-import { me } from 'flavours/glitch/initial_state';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'flavours/glitch/permissions';
 import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend_links';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
+
+import DropdownMenuContainer from '../containers/dropdown_menu_container';
+import { me } from '../initial_state';
 
 import { IconButton } from './icon_button';
 import { RelativeTimestamp } from './relative_timestamp';
@@ -53,7 +56,6 @@ const messages = defineMessages({
 class StatusActionBar extends ImmutablePureComponent {
 
   static contextTypes = {
-    router: PropTypes.object,
     identity: PropTypes.object,
   };
 
@@ -80,6 +82,7 @@ class StatusActionBar extends ImmutablePureComponent {
     showReplyCount: PropTypes.bool,
     scrollKey: PropTypes.string,
     intl: PropTypes.object.isRequired,
+    ...WithRouterPropTypes,
   };
 
   // Avoid checking props that are functions (and whose equality will always
@@ -95,7 +98,7 @@ class StatusActionBar extends ImmutablePureComponent {
     const { signedIn } = this.context.identity;
 
     if (signedIn) {
-      this.props.onReply(this.props.status, this.context.router.history);
+      this.props.onReply(this.props.status, this.props.history);
     } else {
       this.props.onInteractionModal('reply', this.props.status);
     }
@@ -132,15 +135,15 @@ class StatusActionBar extends ImmutablePureComponent {
   };
 
   handleDeleteClick = () => {
-    this.props.onDelete(this.props.status, this.context.router.history);
+    this.props.onDelete(this.props.status, this.props.history);
   };
 
   handleRedraftClick = () => {
-    this.props.onDelete(this.props.status, this.context.router.history, true);
+    this.props.onDelete(this.props.status, this.props.history, true);
   };
 
   handleEditClick = () => {
-    this.props.onEdit(this.props.status, this.context.router.history);
+    this.props.onEdit(this.props.status, this.props.history);
   };
 
   handlePinClick = () => {
@@ -148,11 +151,11 @@ class StatusActionBar extends ImmutablePureComponent {
   };
 
   handleMentionClick = () => {
-    this.props.onMention(this.props.status.get('account'), this.context.router.history);
+    this.props.onMention(this.props.status.get('account'), this.props.history);
   };
 
   handleDirectClick = () => {
-    this.props.onDirect(this.props.status.get('account'), this.context.router.history);
+    this.props.onDirect(this.props.status.get('account'), this.props.history);
   };
 
   handleMuteClick = () => {
@@ -164,12 +167,7 @@ class StatusActionBar extends ImmutablePureComponent {
   };
 
   handleOpen = () => {
-    let state = { ...this.context.router.history.location.state };
-    if (state.mastodonModalKey) {
-      this.context.router.history.replace(`/@${this.props.status.getIn(['account', 'acct'])}/${this.props.status.get('id')}`);
-    } else {
-      this.context.router.history.push(`/@${this.props.status.getIn(['account', 'acct'])}/${this.props.status.get('id')}`);
-    }
+    this.props.history.push(`/@${this.props.status.getIn(['account', 'acct'])}/${this.props.status.get('id')}`);
   };
 
   handleEmbed = () => {
@@ -340,4 +338,4 @@ class StatusActionBar extends ImmutablePureComponent {
 
 }
 
-export default injectIntl(StatusActionBar);
+export default withRouter(injectIntl(StatusActionBar));
