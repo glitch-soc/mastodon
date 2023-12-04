@@ -1,4 +1,3 @@
-//  Package imports.
 import PropTypes from 'prop-types';
 
 import { defineMessages, injectIntl } from 'react-intl';
@@ -6,35 +5,37 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-//  Components.
 import AttachmentList from 'flavours/glitch/components/attachment_list';
-import { IconButton } from 'flavours/glitch/components/icon_button';
-import AccountContainer from 'flavours/glitch/containers/account_container';
-//  Messages.
-const messages = defineMessages({
-  cancel: {
-    defaultMessage: 'Cancel',
-    id: 'reply_indicator.cancel',
-  },
-});
+import { WithOptionalRouterPropTypes, withOptionalRouter } from 'flavours/glitch/utils/react_router';
 
+import { Avatar } from '../../../components/avatar';
+import { DisplayName } from '../../../components/display_name';
+import { IconButton } from '../../../components/icon_button';
+
+const messages = defineMessages({
+  cancel: { id: 'reply_indicator.cancel', defaultMessage: 'Cancel' },
+});
 
 class ReplyIndicator extends ImmutablePureComponent {
 
   static propTypes = {
     status: ImmutablePropTypes.map,
+    onCancel: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
-    onCancel: PropTypes.func,
+    ...WithOptionalRouterPropTypes,
   };
 
   handleClick = () => {
-    const { onCancel } = this.props;
-    if (onCancel) {
-      onCancel();
+    this.props.onCancel();
+  };
+
+  handleAccountClick = (e) => {
+    if (e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.props.history?.push(`/@${this.props.status.getIn(['account', 'acct'])}`);
     }
   };
 
-  //  Rendering.
   render () {
     const { status, intl } = this.props;
 
@@ -42,42 +43,31 @@ class ReplyIndicator extends ImmutablePureComponent {
       return null;
     }
 
-    const account     = status.get('account');
-    const content     = status.get('content');
-    const attachments = status.get('media_attachments');
+    const content = { __html: status.get('contentHtml') };
 
-    //  The result.
     return (
-      <article className='reply-indicator'>
-        <header className='reply-indicator__header'>
-          <IconButton
-            className='reply-indicator__cancel'
-            icon='times'
-            onClick={this.handleClick}
-            title={intl.formatMessage(messages.cancel)}
-            inverted
-          />
-          {account && (
-            <AccountContainer
-              id={account}
-              small
-            />
-          )}
-        </header>
-        <div
-          className='reply-indicator__content translate'
-          dangerouslySetInnerHTML={{ __html: content || '' }}
-        />
-        {attachments.size > 0 && (
+      <div className='reply-indicator'>
+        <div className='reply-indicator__header'>
+          <div className='reply-indicator__cancel'><IconButton title={intl.formatMessage(messages.cancel)} icon='times' onClick={this.handleClick} inverted /></div>
+
+          <a href={status.getIn(['account', 'url'])} onClick={this.handleAccountClick} className='reply-indicator__display-name' target='_blank' rel='noopener noreferrer'>
+            <div className='reply-indicator__display-avatar'><Avatar account={status.get('account')} size={24} /></div>
+            <DisplayName account={status.get('account')} inline />
+          </a>
+        </div>
+
+        <div className='reply-indicator__content translate' dangerouslySetInnerHTML={content} />
+
+        {status.get('media_attachments').size > 0 && (
           <AttachmentList
             compact
-            media={attachments}
+            media={status.get('media_attachments')}
           />
         )}
-      </article>
+      </div>
     );
   }
 
 }
 
-export default injectIntl(ReplyIndicator);
+export default withOptionalRouter(injectIntl(ReplyIndicator));

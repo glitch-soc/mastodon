@@ -1,9 +1,10 @@
 import Trie from 'substring-trie';
 
-import { autoPlayGif, useSystemEmojiFont } from 'flavours/glitch/initial_state';
 import { assetHost } from 'flavours/glitch/utils/config';
 
-import unicodeMapping from './emoji_unicode_mapping_light';
+import { autoPlayGif, useSystemEmojiFont } from '../../initial_state';
+
+import { unicodeMapping } from './emoji_unicode_mapping_light';
 
 const trie = new Trie(Object.keys(unicodeMapping));
 
@@ -137,7 +138,6 @@ const emojify = (str, customEmojis = {}) => {
 };
 
 export default emojify;
-export { unicodeMapping };
 
 export const buildCustomEmojis = (customEmojis) => {
   const emojis = [];

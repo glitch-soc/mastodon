@@ -642,7 +642,7 @@
 
 .status__display-name,
 .account__display-name {
-  strong {
+  .display-name strong {
     color: $primary-text-color;
   }
 }
@@ -657,12 +657,12 @@ a.status__display-name,
 .reply-indicator__display-name,
 .detailed-status__display-name,
 .account__display-name {
-  &:hover strong {
+  &:hover .display-name strong {
     text-decoration: underline;
   }
 }
 
-.account__display-name strong {
+.account__display-name .display-name strong {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1182,5 +1182,32 @@ a.status-card.compact:hover {
   &:focus,
   &:active {
     border-color: lighten($ui-base-color, 12%);
+  }
+}
+
+.hashtag-bar {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  line-height: 18px;
+  gap: 4px;
+  color: $darker-text-color;
+
+  a {
+    display: inline-flex;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover span {
+      text-decoration: underline;
+    }
+  }
+
+  .link-button {
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 0;
   }
 }

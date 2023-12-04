@@ -12,12 +12,11 @@ import { debounce } from 'lodash';
 
 import { fetchFavourites, expandFavourites } from 'flavours/glitch/actions/interactions';
 import ColumnHeader from 'flavours/glitch/components/column_header';
-import { Icon } from 'flavours/glitch/components/icon';
+import { Icon }  from 'flavours/glitch/components/icon';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import AccountContainer from 'flavours/glitch/containers/account_container';
 import Column from 'flavours/glitch/features/ui/components/column';
-
 
 const messages = defineMessages({
   heading: { id: 'column.favourited_by', defaultMessage: 'Favourited by' },
