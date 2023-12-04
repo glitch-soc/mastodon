@@ -11,8 +11,8 @@ import { throttle, escapeRegExp } from 'lodash';
 
 import { openModal, closeModal } from 'flavours/glitch/actions/modal';
 import api from 'flavours/glitch/api';
-import Button from 'flavours/glitch/components/button';
-import { Icon } from 'flavours/glitch/components/icon';
+import { Button } from 'flavours/glitch/components/button';
+import { Icon }  from 'flavours/glitch/components/icon';
 import { registrationsOpen, sso_redirect } from 'flavours/glitch/initial_state';
 
 const messages = defineMessages({
@@ -34,7 +34,7 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-const PERSISTENCE_KEY = 'flavours/glitch_home';
+const PERSISTENCE_KEY = 'mastodon_home';
 
 const isValidDomain = value => {
   const url = new URL('https:///path');

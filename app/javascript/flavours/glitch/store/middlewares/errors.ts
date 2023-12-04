@@ -1,12 +1,11 @@
 import type { AnyAction, Middleware } from 'redux';
 
-import { showAlertForError } from 'flavours/glitch/actions/alerts';
-
 import type { RootState } from '..';
+import { showAlertForError } from '../../actions/alerts';
 
 const defaultFailSuffix = 'FAIL';
 
-export const errorsMiddleware: Middleware<Record<string, never>, RootState> =
+export const errorsMiddleware: Middleware<unknown, RootState> =
   ({ dispatch }) =>
   (next) =>
   (action: AnyAction & { skipAlert?: boolean; skipNotFound?: boolean }) => {

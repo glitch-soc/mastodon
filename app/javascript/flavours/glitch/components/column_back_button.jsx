@@ -4,26 +4,28 @@ import { createPortal } from 'react-dom';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Icon } from 'flavours/glitch/components/icon';
+import { withRouter } from 'react-router-dom';
 
+import { Icon }  from 'flavours/glitch/components/icon';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
-export default class ColumnBackButton extends PureComponent {
-
-  static contextTypes = {
-    router: PropTypes.object,
-  };
+export class ColumnBackButton extends PureComponent {
 
   static propTypes = {
     multiColumn: PropTypes.bool,
+    onClick: PropTypes.func,
+    ...WithRouterPropTypes,
   };
 
   handleClick = () => {
-    const { router } = this.context;
+    const { onClick, history } = this.props;
 
-    if (router.history.location?.state?.fromMastodon) {
-      router.history.goBack();
+    if (onClick) {
+      onClick();
+    } else if (history.location?.state?.fromMastodon) {
+      history.goBack();
     } else {
-      router.history.push('/');
+      history.push('/');
     }
   };
 
@@ -57,3 +59,5 @@ export default class ColumnBackButton extends PureComponent {
   }
 
 }
+
+export default withRouter(ColumnBackButton);

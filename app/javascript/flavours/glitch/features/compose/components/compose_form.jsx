@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 
 import { defineMessages, injectIntl } from 'react-intl';
 
+import classNames from 'classnames';
+
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
@@ -9,6 +11,7 @@ import { length } from 'stringz';
 
 import { maxChars } from 'flavours/glitch/initial_state';
 import { isMobile } from 'flavours/glitch/is_mobile';
+import { WithOptionalRouterPropTypes, withOptionalRouter } from 'flavours/glitch/utils/react_router';
 
 import AutosuggestInput from '../../../components/autosuggest_input';
 import AutosuggestTextarea from '../../../components/autosuggest_textarea';
@@ -38,14 +41,9 @@ const messages = defineMessages({
 });
 
 class ComposeForm extends ImmutablePureComponent {
-
-  static contextTypes = {
-    router: PropTypes.object,
-  };
-
   static propTypes = {
     intl: PropTypes.object.isRequired,
-    text: PropTypes.string,
+    text: PropTypes.string.isRequired,
     suggestions: ImmutablePropTypes.list,
     spoiler: PropTypes.bool,
     privacy: PropTypes.string,
@@ -70,7 +68,6 @@ class ComposeForm extends ImmutablePureComponent {
     isInReply: PropTypes.bool,
     singleColumn: PropTypes.bool,
     lang: PropTypes.string,
-
     advancedOptions: ImmutablePropTypes.map,
     layout: PropTypes.string,
     media: ImmutablePropTypes.list,
@@ -82,10 +79,15 @@ class ComposeForm extends ImmutablePureComponent {
     onChangeSpoilerness: PropTypes.func,
     onChangeVisibility: PropTypes.func,
     onMediaDescriptionConfirm: PropTypes.func,
+    ...WithOptionalRouterPropTypes
   };
 
   static defaultProps = {
     showSearch: false,
+  };
+
+  state = {
+    highlighted: false,
   };
 
   handleChange = (e) => {
@@ -129,12 +131,12 @@ class ComposeForm extends ImmutablePureComponent {
     // Submit unless there are media with missing descriptions
     if (mediaDescriptionConfirmation && onMediaDescriptionConfirm && media && media.some(item => !item.get('description'))) {
       const firstWithoutDescription = media.find(item => !item.get('description'));
-      onMediaDescriptionConfirm(this.context.router ? this.context.router.history : null, firstWithoutDescription.get('id'), overriddenVisibility);
+      onMediaDescriptionConfirm(this.props.history || null, firstWithoutDescription.get('id'), overriddenVisibility);
     } else if (onSubmit) {
       if (onChangeVisibility && overriddenVisibility) {
         onChangeVisibility(overriddenVisibility);
       }
-      onSubmit(this.context.router ? this.context.router.history : null);
+      onSubmit(this.props.history || null);
     }
   };
 
@@ -213,6 +215,10 @@ class ComposeForm extends ImmutablePureComponent {
     this._updateFocusAndSelection({ });
   }
 
+  componentWillUnmount () {
+    if (this.timeout) clearTimeout(this.timeout);
+  }
+
   componentDidUpdate (prevProps) {
     this._updateFocusAndSelection(prevProps);
   }
@@ -261,6 +267,8 @@ class ComposeForm extends ImmutablePureComponent {
           textarea.setSelectionRange(selectionStart, selectionEnd);
           textarea.focus();
           if (!singleColumn) textarea.scrollIntoView();
+          this.setState({ highlighted: true });
+          this.timeout = setTimeout(() => this.setState({ highlighted: false }), 700);
         }).catch(console.error);
       }
 
@@ -306,6 +314,7 @@ class ComposeForm extends ImmutablePureComponent {
       spoilersAlwaysOn,
       isEditing,
     } = this.props;
+    const { highlighted } = this.state;
 
     const countText = this.getFulltextForCharacterCounting();
 
@@ -336,42 +345,44 @@ class ComposeForm extends ImmutablePureComponent {
           />
         </div>
 
-        <AutosuggestTextarea
-          ref={this.setAutosuggestTextarea}
-          placeholder={intl.formatMessage(messages.placeholder)}
-          disabled={isSubmitting}
-          value={this.props.text}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          suggestions={suggestions}
-          onFocus={this.handleFocus}
-          onSuggestionsFetchRequested={onFetchSuggestions}
-          onSuggestionsClearRequested={onClearSuggestions}
-          onSuggestionSelected={this.handleSuggestionSelected}
-          onPaste={onPaste}
-          autoFocus={!showSearch && !isMobile(window.innerWidth, layout)}
-          lang={this.props.lang}
-        >
-          <EmojiPickerDropdown onPickEmoji={handleEmojiPick} />
-          <TextareaIcons advancedOptions={advancedOptions} />
-          <div className='compose-form__modifiers'>
-            <UploadFormContainer />
-            <PollFormContainer />
-          </div>
-        </AutosuggestTextarea>
-
-        <div className='compose-form__buttons-wrapper'>
-          <OptionsContainer
-            advancedOptions={advancedOptions}
+        <div className={classNames('compose-form__highlightable', { active: highlighted })}>
+          <AutosuggestTextarea
+            ref={this.setAutosuggestTextarea}
+            placeholder={intl.formatMessage(messages.placeholder)}
             disabled={isSubmitting}
-            onToggleSpoiler={spoilersAlwaysOn ? null : onChangeSpoilerness}
-            onUpload={onPaste}
-            isEditing={isEditing}
-            sensitive={sensitive || (spoilersAlwaysOn && spoilerText && spoilerText.length > 0)}
-            spoiler={spoilersAlwaysOn ? (spoilerText && spoilerText.length > 0) : spoiler}
-          />
-          <div className='character-counter__wrapper'>
-            <CharacterCounter text={countText} max={maxChars} />
+            value={this.props.text}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+            suggestions={suggestions}
+            onFocus={this.handleFocus}
+            onSuggestionsFetchRequested={onFetchSuggestions}
+            onSuggestionsClearRequested={onClearSuggestions}
+            onSuggestionSelected={this.handleSuggestionSelected}
+            onPaste={onPaste}
+            autoFocus={!showSearch && !isMobile(window.innerWidth, layout)}
+            lang={this.props.lang}
+          >
+            <TextareaIcons advancedOptions={advancedOptions} />
+            <div className='compose-form__modifiers'>
+              <UploadFormContainer />
+              <PollFormContainer />
+            </div>
+          </AutosuggestTextarea>
+          <EmojiPickerDropdown onPickEmoji={handleEmojiPick} />
+
+          <div className='compose-form__buttons-wrapper'>
+            <OptionsContainer
+              advancedOptions={advancedOptions}
+              disabled={isSubmitting}
+              onToggleSpoiler={spoilersAlwaysOn ? null : onChangeSpoilerness}
+              onUpload={onPaste}
+              isEditing={isEditing}
+              sensitive={sensitive || (spoilersAlwaysOn && spoilerText && spoilerText.length > 0)}
+              spoiler={spoilersAlwaysOn ? (spoilerText && spoilerText.length > 0) : spoiler}
+            />
+            <div className='character-counter__wrapper'>
+              <CharacterCounter text={countText} max={maxChars} />
+            </div>
           </div>
         </div>
 
@@ -390,4 +401,4 @@ class ComposeForm extends ImmutablePureComponent {
 
 }
 
-export default injectIntl(ComposeForm);
+export default withOptionalRouter(injectIntl(ComposeForm));

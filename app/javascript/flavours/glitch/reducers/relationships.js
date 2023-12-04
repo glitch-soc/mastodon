@@ -1,8 +1,8 @@
 import { Map as ImmutableMap, fromJS } from 'immutable';
 
 import {
-  ACCOUNT_NOTE_SUBMIT_SUCCESS,
-} from 'flavours/glitch/actions/account_notes';
+  submitAccountNote,
+} from '../actions/account_notes';
 import {
   ACCOUNT_FOLLOW_SUCCESS,
   ACCOUNT_FOLLOW_REQUEST,
@@ -19,12 +19,11 @@ import {
   RELATIONSHIPS_FETCH_SUCCESS,
   FOLLOW_REQUEST_AUTHORIZE_SUCCESS,
   FOLLOW_REQUEST_REJECT_SUCCESS,
-} from 'flavours/glitch/actions/accounts';
+} from '../actions/accounts';
 import {
   DOMAIN_BLOCK_SUCCESS,
   DOMAIN_UNBLOCK_SUCCESS,
-} from 'flavours/glitch/actions/domain_blocks';
-
+} from '../actions/domain_blocks';
 import {
   NOTIFICATIONS_UPDATE,
 } from '../actions/notifications';
@@ -74,10 +73,11 @@ export default function relationships(state = initialState, action) {
   case ACCOUNT_UNMUTE_SUCCESS:
   case ACCOUNT_PIN_SUCCESS:
   case ACCOUNT_UNPIN_SUCCESS:
-  case ACCOUNT_NOTE_SUBMIT_SUCCESS:
     return normalizeRelationship(state, action.relationship);
   case RELATIONSHIPS_FETCH_SUCCESS:
     return normalizeRelationships(state, action.relationships);
+  case submitAccountNote.fulfilled:
+    return normalizeRelationship(state, action.payload.relationship);
   case DOMAIN_BLOCK_SUCCESS:
     return setDomainBlocking(state, action.accounts, true);
   case DOMAIN_UNBLOCK_SUCCESS:

@@ -10,9 +10,9 @@ import { List as ImmutableList } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import { fetchServer, fetchExtendedDescription, fetchDomainBlocks } from 'flavours/glitch/actions/server';
+import { fetchServer, fetchExtendedDescription, fetchDomainBlocks  } from 'flavours/glitch/actions/server';
 import Column from 'flavours/glitch/components/column';
-import { Icon } from 'flavours/glitch/components/icon';
+import { Icon  }  from 'flavours/glitch/components/icon';
 import { ServerHeroImage } from 'flavours/glitch/components/server_hero_image';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import Account from 'flavours/glitch/containers/account_container';
@@ -128,7 +128,7 @@ class About extends PureComponent {
             <div className='about__meta__column'>
               <h4><FormattedMessage id='server_banner.administered_by' defaultMessage='Administered by:' /></h4>
 
-              <Account id={server.getIn(['contact', 'account', 'id'])} size={36} />
+              <Account id={server.getIn(['contact', 'account', 'id'])} size={36} minimal />
             </div>
 
             <hr className='about__meta__divider' />

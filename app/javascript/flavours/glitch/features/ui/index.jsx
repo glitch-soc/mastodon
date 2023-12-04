@@ -13,16 +13,18 @@ import { debounce } from 'lodash';
 import { HotKeys } from 'react-hotkeys';
 
 import { changeLayout } from 'flavours/glitch/actions/app';
-import { uploadCompose, resetCompose, changeComposeSpoilerness } from 'flavours/glitch/actions/compose';
-import { clearHeight } from 'flavours/glitch/actions/height_cache';
 import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'flavours/glitch/actions/markers';
-import { expandNotifications, notificationsSetVisibility } from 'flavours/glitch/actions/notifications';
-import { fetchServer, fetchServerTranslationLanguages } from 'flavours/glitch/actions/server';
-import { expandHomeTimeline } from 'flavours/glitch/actions/timelines';
+import { INTRODUCTION_VERSION } from 'flavours/glitch/actions/onboarding';
 import PermaLink from 'flavours/glitch/components/permalink';
 import PictureInPicture from 'flavours/glitch/features/picture_in_picture';
 import { layoutFromWindow } from 'flavours/glitch/is_mobile';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
+import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
+import { clearHeight } from '../../actions/height_cache';
+import { expandNotifications, notificationsSetVisibility } from '../../actions/notifications';
+import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
+import { expandHomeTimeline } from '../../actions/timelines';
 import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding } from '../../initial_state';
 
 import BundleColumnError from './components/bundle_column_error';
@@ -61,7 +63,7 @@ import {
   GettingStartedMisc,
   Directory,
   Explore,
-  FollowRecommendations,
+  Onboarding,
   About,
   PrivacyPolicy,
 } from './util/async-components';
@@ -85,7 +87,7 @@ const mapStateToProps = state => ({
   showFaviconBadge: state.getIn(['local_settings', 'notifications', 'favicon_badge']),
   hicolorPrivacyIcons: state.getIn(['local_settings', 'hicolor_privacy_icons']),
   moved: state.getIn(['accounts', me, 'moved']) && state.getIn(['accounts', state.getIn(['accounts', me, 'moved'])]),
-  firstLaunch: false, // TODO: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
+  firstLaunch: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
   username: state.getIn(['accounts', me, 'username']),
 });
 
@@ -215,7 +217,7 @@ class SwitchingColumnsArea extends PureComponent {
           <WrappedRoute path='/bookmarks' component={BookmarkedStatuses} content={children} />
           <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} />
 
-          <WrappedRoute path='/start' component={FollowRecommendations} content={children} />
+          <WrappedRoute path='/start' exact component={Onboarding} content={children} />
           <WrappedRoute path='/directory' component={Directory} content={children} />
           <WrappedRoute path={['/explore', '/search']} component={Explore} content={children} />
           <WrappedRoute path={['/publish', '/statuses/new']} component={Compose} content={children} />
@@ -269,8 +271,6 @@ class UI extends Component {
     hasMediaAttachments: PropTypes.bool,
     canUploadMore: PropTypes.bool,
     match: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     dropdownMenuIsOpen: PropTypes.bool,
     unreadNotifications: PropTypes.number,
@@ -280,6 +280,7 @@ class UI extends Component {
     layout: PropTypes.string.isRequired,
     firstLaunch: PropTypes.bool,
     username: PropTypes.string,
+    ...WithRouterPropTypes,
   };
 
   state = {
@@ -413,12 +414,6 @@ class UI extends Component {
     }
 
     this.favicon = new Favico({ animation:'none' });
-
-    // On first launch, redirect to the follow recommendations page
-    if (signedIn && this.props.firstLaunch) {
-      this.context.router.history.replace('/start');
-      // TODO: this.props.dispatch(closeOnboarding());
-    }
 
     if (signedIn) {
       this.props.dispatch(fetchMarkers());

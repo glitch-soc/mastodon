@@ -7,10 +7,9 @@ import { OrderedSet } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import Button from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import StatusCheckBox from 'flavours/glitch/features/report/containers/status_check_box_container';
-
 
 const mapStateToProps = (state, { accountId }) => ({
   availableStatusIds: OrderedSet(state.getIn(['timelines', `account:${accountId}:with_replies`, 'items'])),
