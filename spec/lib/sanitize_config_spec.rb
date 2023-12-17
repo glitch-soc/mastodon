@@ -55,6 +55,14 @@ describe Sanitize::Config do
     it 'keeps title in abbr' do
       expect(Sanitize.fragment('<abbr title="HyperText Markup Language">HTML</abbr>', subject)).to eq '<abbr title="HyperText Markup Language">HTML</abbr>'
     end
+
+    it 'keeps data-codelang attribute in code' do
+      expect(Sanitize.fragment('<code data-codelang="c++">int main(void) { return 0; // https://joinmastodon.org/foo }</code>', subject)).to eq '<code data-codelang="c++">int main(void) { return 0; // https://joinmastodon.org/foo }</code>'
+    end
+
+    it 'removes data-codelang attribute in code when unsupported' do
+      expect(Sanitize.fragment('<code data-codelang="invalid">int main(void) { return 0; // https://joinmastodon.org/foo }</code>', subject)).to eq '<code>int main(void) { return 0; // https://joinmastodon.org/foo }</code>'
+    end
   end
 
   describe '::MASTODON_OUTGOING' do
