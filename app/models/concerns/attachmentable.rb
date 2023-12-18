@@ -6,7 +6,9 @@ module Attachmentable
   extend ActiveSupport::Concern
 
   MAX_MATRIX_LIMIT = 33_177_600 # 7680x4320px or approx. 847MB in RAM
-  GIF_MATRIX_LIMIT = 921_600    # 1280x720px
+  MAX_GIF_WIDTH = 3840
+  MAX_GIF_HEIGHT = 2160
+  GIF_MATRIX_LIMIT = MAX_GIF_WIDTH * MAX_GIF_HEIGHT
 
   # For some file extensions, there exist different content
   # type variants, and browsers often send the wrong one,

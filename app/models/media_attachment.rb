@@ -42,7 +42,9 @@ class MediaAttachment < ApplicationRecord
   IMAGE_LIMIT = (ENV['MAX_IMAGE_SIZE'] || 16.megabytes).to_i
   VIDEO_LIMIT = (ENV['MAX_VIDEO_SIZE'] || 99.megabytes).to_i
 
-  MAX_VIDEO_MATRIX_LIMIT = 8_294_400 # 3840x2160px
+  MAX_VIDEO_WIDTH = 3840
+  MAX_VIDEO_HEIGHT = 2160
+  MAX_VIDEO_MATRIX_LIMIT = MAX_VIDEO_WIDTH * MAX_VIDEO_HEIGHT # 3840x2160px
   MAX_VIDEO_FRAME_RATE   = 120
   MAX_VIDEO_FRAMES       = 36_000 # Approx. 5 minutes at 120 fps
 
@@ -102,7 +104,9 @@ class MediaAttachment < ApplicationRecord
         'preset' => 'veryfast',
         'movflags' => 'faststart', # Move metadata to start of file so playback can begin before download finishes
         'pix_fmt' => 'yuv420p', # Ensure color space for cross-browser compatibility
-        'vf' => 'crop=floor(iw/2)*2:floor(ih/2)*2', # h264 requires width and height to be even. Crop instead of scale to avoid blurring
+        # scale videos if larger than maximum width or height, keeping same size otherwise. then,
+        # h264 requires width and height to be even. Crop instead of scale to avoid blurring
+        'vf' => "scale=iw*min(1\\,min(#{MAX_VIDEO_WIDTH}/iw\\,#{MAX_VIDEO_HEIGHT}/ih)):-1,crop=floor(iw/2)*2:floor(ih/2)*2",
         'c:v' => 'h264',
         'c:a' => 'aac',
         'b:a' => '192k',
@@ -348,7 +352,8 @@ class MediaAttachment < ApplicationRecord
     return unless movie.valid?
 
     raise Mastodon::StreamValidationError, 'Video has no video stream' if movie.width.nil? || movie.frame_rate.nil?
-    raise Mastodon::DimensionsValidationError, "#{movie.width}x#{movie.height} videos are not supported" if movie.width * movie.height > MAX_VIDEO_MATRIX_LIMIT
+    # Only reject if more than 1.5x max allowed size to reject resource overuse attacks, otherwise rescale
+    raise Mastodon::DimensionsValidationError, "#{movie.width}x#{movie.height} videos are not supported" if movie.width * movie.height > MAX_VIDEO_MATRIX_LIMIT * 1.5
     raise Mastodon::DimensionsValidationError, "#{movie.frame_rate.floor}fps videos are not supported" if movie.frame_rate.floor > MAX_VIDEO_FRAME_RATE
   end
 
