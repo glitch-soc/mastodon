@@ -42,7 +42,7 @@ class MoveEmojiReactionSettings < ActiveRecord::Migration[6.1]
           end
         end
 
-        user.update_column('settings', Oj.dump(user_settings)) # rubocop:disable Rails/SkipsModelValidations
+        user.update_column('settings', Oj.dump(user_settings))
       end
     end
   end
