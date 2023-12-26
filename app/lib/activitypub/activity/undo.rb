@@ -110,7 +110,7 @@ class ActivityPub::Activity::Undo < ActivityPub::Activity
     if @account.favourited?(status)
       favourite = status.favourites.where(account: @account).first
       favourite&.destroy
-    elsif @object['_misskey_reaction'].present?
+    elsif @object['content'].present? || @object['_misskey_reaction'].present?
       undo_emoji_react
     else
       delete_later!(object_uri)
