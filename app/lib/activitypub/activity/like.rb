@@ -15,11 +15,12 @@ class ActivityPub::Activity::Like < ActivityPub::Activity
     Trends.statuses.register(original_status)
   end
 
-  # Misskey delivers reactions as likes with the emoji in _misskey_reaction
-  # see https://misskey-hub.net/ns.html#misskey-reaction for details
+  # Misskey delivers reactions as likes with the emoji in _misskey_reaction and content
+  # Versions of Misskey before 12.1.0 only specify emojis in _misskey_reaction, so we check both
+  # See https://misskey-hub.net/ns.html#misskey-reaction for details
   def maybe_process_misskey_reaction
     original_status = status_from_uri(object_uri)
-    name = @json['_misskey_reaction']
+    name = @json['content'] || @json['_misskey_reaction']
     return false if name.nil?
 
     if /^:.*:$/.match?(name)
