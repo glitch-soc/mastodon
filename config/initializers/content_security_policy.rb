@@ -62,7 +62,7 @@ unless Rails.env.development?
     p.frame_ancestors :none
     p.font_src        :self, assets_host
     p.img_src         :self, :data, :blob, *data_hosts
-    p.style_src       :self, assets_host
+    p.style_src       :self, :unsafe_inline, assets_host
     p.media_src       :self, :data, *data_hosts
     p.frame_src       :self, :https
     p.manifest_src    :self, assets_host
@@ -87,7 +87,7 @@ end
 
 Rails.application.config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
 
-Rails.application.config.content_security_policy_nonce_directives = %w(style-src)
+Rails.application.config.content_security_policy_nonce_directives = %w()
 
 Rails.application.reloader.to_prepare do
   PgHero::HomeController.content_security_policy do |p|
