@@ -252,9 +252,9 @@ export function submitCompose(routerHistory) {
         return;
       }
 
-      // To make the app more responsive, immediately get the status into the columns
-
-      const insertIfOnline = (timelineId) => {
+      // To make the app more responsive, immediately push the status
+      // into the columns
+      const insertIfOnline = timelineId => {
         const timeline = getState().getIn(['timelines', timelineId]);
 
         if (timeline && timeline.get('items').size > 0 && timeline.getIn(['items', 0]) !== null && timeline.get('online')) {
@@ -671,8 +671,9 @@ export function selectComposeSuggestion(position, token, suggestion, path) {
   return (dispatch, getState) => {
     let completion;
     if (suggestion.type === 'emoji') {
-      dispatch(useEmoji(suggestion));
       completion = suggestion.native || suggestion.colons;
+
+      dispatch(useEmoji(suggestion));
     } else if (suggestion.type === 'hashtag') {
       completion = `#${suggestion.name}`;
     } else if (suggestion.type === 'account') {

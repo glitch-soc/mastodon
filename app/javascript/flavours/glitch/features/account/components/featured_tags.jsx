@@ -15,7 +15,7 @@ const messages = defineMessages({
 class FeaturedTags extends ImmutablePureComponent {
 
   static propTypes = {
-    account: ImmutablePropTypes.map,
+    account: ImmutablePropTypes.record,
     featuredTags: ImmutablePropTypes.list,
     tagged: PropTypes.string,
     intl: PropTypes.object.isRequired,
@@ -38,7 +38,7 @@ class FeaturedTags extends ImmutablePureComponent {
             name={featuredTag.get('name')}
             href={featuredTag.get('url')}
             to={`/@${account.get('acct')}/tagged/${featuredTag.get('name')}`}
-            uses={featuredTag.get('statuses_count')}
+            uses={featuredTag.get('statuses_count') * 1}
             withGraph={false}
             description={((featuredTag.get('statuses_count') * 1) > 0) ? intl.formatMessage(messages.lastStatusAt, { date: intl.formatDate(featuredTag.get('last_status_at'), { month: 'short', day: '2-digit' }) }) : intl.formatMessage(messages.empty)}
           />

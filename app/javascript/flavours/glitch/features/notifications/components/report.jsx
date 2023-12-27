@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-import AvatarOverlay from 'flavours/glitch/components/avatar_overlay';
+import { AvatarOverlay } from 'flavours/glitch/components/avatar_overlay';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 
 // This needs to be kept in sync with app/models/report.rb
@@ -20,7 +20,7 @@ const messages = defineMessages({
 class Report extends ImmutablePureComponent {
 
   static propTypes = {
-    account: ImmutablePropTypes.map.isRequired,
+    account: ImmutablePropTypes.record.isRequired,
     report: ImmutablePropTypes.map.isRequired,
     hidden: PropTypes.bool,
     intl: PropTypes.object.isRequired,
