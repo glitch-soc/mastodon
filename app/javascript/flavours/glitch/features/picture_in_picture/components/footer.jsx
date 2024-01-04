@@ -122,8 +122,8 @@ class Footer extends ImmutablePureComponent {
     }
   };
 
-  _performReblog = (privacy) => {
-    const { dispatch, status } = this.props;
+  _performReblog = (status, privacy) => {
+    const { dispatch } = this.props;
     dispatch(reblog(status, privacy));
   };
 
@@ -135,7 +135,7 @@ class Footer extends ImmutablePureComponent {
       if (status.get('reblogged')) {
         dispatch(unreblog(status));
       } else if ((e && e.shiftKey) || !boostModal) {
-        this._performReblog();
+        this._performReblog(status);
       } else {
         dispatch(initBoostModal({ status, onReblog: this._performReblog }));
       }
@@ -162,7 +162,7 @@ class Footer extends ImmutablePureComponent {
       onClose();
     }
 
-    history.push(`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`);
+    this.props.history.push(`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`);
   };
 
   render () {

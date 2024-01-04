@@ -109,7 +109,7 @@ class FocalPointModal extends ImmutablePureComponent {
 
   static propTypes = {
     media: ImmutablePropTypes.map.isRequired,
-    account: ImmutablePropTypes.map.isRequired,
+    account: ImmutablePropTypes.record.isRequired,
     isUploadingThumbnail: PropTypes.bool,
     onSave: PropTypes.func.isRequired,
     onChangeDescription: PropTypes.func.isRequired,
@@ -221,7 +221,7 @@ class FocalPointModal extends ImmutablePureComponent {
       const worker = createWorker({
         workerPath: tesseractWorkerPath,
         corePath: tesseractCorePath,
-        langPath: `${assetHost}/ocr/lang-data/`,
+        langPath: `${assetHost}/ocr/lang-data`,
         logger: ({ status, progress }) => {
           if (status === 'recognizing text') {
             this.setState({ ocrStatus: 'detecting', progress });

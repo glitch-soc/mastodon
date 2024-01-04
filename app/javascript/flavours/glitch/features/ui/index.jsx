@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PureComponent, Component } from 'react';
+import { PureComponent } from 'react';
 
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
@@ -14,6 +14,7 @@ import { HotKeys } from 'react-hotkeys';
 
 import { changeLayout } from 'flavours/glitch/actions/app';
 import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'flavours/glitch/actions/markers';
+import { INTRODUCTION_VERSION } from 'flavours/glitch/actions/onboarding';
 import PermaLink from 'flavours/glitch/components/permalink';
 import PictureInPicture from 'flavours/glitch/features/picture_in_picture';
 import { layoutFromWindow } from 'flavours/glitch/is_mobile';
@@ -62,14 +63,15 @@ import {
   GettingStartedMisc,
   Directory,
   Explore,
-  FollowRecommendations,
+  Onboarding,
   About,
   PrivacyPolicy,
 } from './util/async-components';
 import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
+
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
-import "../../components/status";
+import '../../components/status';
 
 const messages = defineMessages({
   beforeUnload: { id: 'ui.beforeunload', defaultMessage: 'Your draft will be lost if you leave Mastodon.' },
@@ -86,7 +88,7 @@ const mapStateToProps = state => ({
   showFaviconBadge: state.getIn(['local_settings', 'notifications', 'favicon_badge']),
   hicolorPrivacyIcons: state.getIn(['local_settings', 'hicolor_privacy_icons']),
   moved: state.getIn(['accounts', me, 'moved']) && state.getIn(['accounts', state.getIn(['accounts', me, 'moved'])]),
-  firstLaunch: false, // TODO: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
+  firstLaunch: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
   username: state.getIn(['accounts', me, 'username']),
 });
 
@@ -118,7 +120,7 @@ const keyMap = {
   goToBlocked: 'g b',
   goToMuted: 'g m',
   goToRequests: 'g r',
-  toggleSpoiler: 'x',
+  toggleHidden: 'x',
   bookmark: 'd',
   toggleCollapse: 'shift+x',
   toggleSensitive: 'h',
@@ -216,7 +218,7 @@ class SwitchingColumnsArea extends PureComponent {
           <WrappedRoute path='/bookmarks' component={BookmarkedStatuses} content={children} />
           <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} />
 
-          <WrappedRoute path='/start' component={FollowRecommendations} content={children} />
+          <WrappedRoute path='/start' exact component={Onboarding} content={children} />
           <WrappedRoute path='/directory' component={Directory} content={children} />
           <WrappedRoute path={['/explore', '/search']} component={Explore} content={children} />
           <WrappedRoute path={['/publish', '/statuses/new']} component={Compose} content={children} />
@@ -254,7 +256,7 @@ class SwitchingColumnsArea extends PureComponent {
 
 }
 
-class UI extends Component {
+class UI extends PureComponent {
 
   static contextTypes = {
     identity: PropTypes.object.isRequired,
@@ -269,7 +271,6 @@ class UI extends Component {
     hasComposingText: PropTypes.bool,
     hasMediaAttachments: PropTypes.bool,
     canUploadMore: PropTypes.bool,
-    match: PropTypes.object.isRequired,
     intl: PropTypes.object.isRequired,
     dropdownMenuIsOpen: PropTypes.bool,
     unreadNotifications: PropTypes.number,
@@ -286,7 +287,7 @@ class UI extends Component {
     draggingOver: false,
   };
 
-  handleBeforeUnload = (e) => {
+  handleBeforeUnload = e => {
     const { intl, dispatch, hasComposingText, hasMediaAttachments } = this.props;
 
     dispatch(synchronouslySubmitMarkers());
@@ -296,6 +297,14 @@ class UI extends Component {
       // Many browsers no longer display this text to users,
       // but we set user-friendly message for other browsers, e.g. Edge.
       e.returnValue = intl.formatMessage(messages.beforeUnload);
+    }
+  };
+
+  handleVisibilityChange = () => {
+    const visibility = !document[this.visibilityHiddenProp];
+    this.props.dispatch(notificationsSetVisibility(visibility));
+    if (visibility) {
+      this.props.dispatch(submitMarkers({ immediate: true }));
     }
   };
 
@@ -310,13 +319,14 @@ class UI extends Component {
       this.dragTargets.push(e.target);
     }
 
-    if (e.dataTransfer && e.dataTransfer.types.includes('Files') && this.props.canUploadMore && this.context.identity.signedIn) {
+    if (e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files') && this.props.canUploadMore && this.context.identity.signedIn) {
       this.setState({ draggingOver: true });
     }
   };
 
   handleDragOver = (e) => {
     if (this.dataTransferIsText(e.dataTransfer)) return false;
+
     e.preventDefault();
     e.stopPropagation();
 
@@ -371,14 +381,6 @@ class UI extends Component {
     }
   };
 
-  handleVisibilityChange = () => {
-    const visibility = !document[this.visibilityHiddenProp];
-    this.props.dispatch(notificationsSetVisibility(visibility));
-    if (visibility) {
-      this.props.dispatch(submitMarkers({ immediate: true }));
-    }
-  };
-
   handleLayoutChange = debounce(() => {
     this.props.dispatch(clearHeight()); // The cached heights are no longer accurate, invalidate
   }, 500, {
@@ -413,12 +415,6 @@ class UI extends Component {
     }
 
     this.favicon = new Favico({ animation:'none' });
-
-    // On first launch, redirect to the follow recommendations page
-    if (signedIn && this.props.firstLaunch) {
-      this.props.history.replace('/start');
-      // TODO: this.props.dispatch(closeOnboarding());
-    }
 
     if (signedIn) {
       this.props.dispatch(fetchMarkers());

@@ -6,62 +6,78 @@
 
   .account__display-name {
     flex: 1 1 auto;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     color: $darker-text-color;
     overflow: hidden;
     text-decoration: none;
     font-size: 14px;
 
-    &--with-note {
-      strong {
-        display: inline;
+    .display-name {
+      margin-bottom: 4px;
+    }
+
+    .display-name strong {
+      display: inline;
+    }
+  }
+
+  &--minimal {
+    .account__display-name {
+      .display-name {
+        margin-bottom: 0;
+      }
+
+      .display-name strong {
+        display: block;
       }
     }
   }
 
   &__note {
+    font-size: 14px;
+    font-weight: 400;
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
-    color: $ui-secondary-color;
-  }
+    margin-top: 10px;
+    color: $darker-text-color;
 
-  &.small {
-    border: 0;
-    padding: 0;
-
-    & > .account__avatar-wrapper {
-      margin: 0;
-      margin-inline-end: 8px;
+    &--missing {
+      color: $dark-text-color;
     }
 
-    & > .display-name {
-      height: 24px;
-      line-height: 24px;
+    p {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
-  }
-}
 
-.follow-recommendations-account {
-  .icon-button {
-    color: $ui-primary-color;
+    a {
+      color: inherit;
 
-    &.active {
-      color: $valid-value-color;
+      &:hover,
+      &:focus,
+      &:active {
+        text-decoration: none;
+      }
     }
   }
 }
 
 .account__wrapper {
   display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
 .account__avatar-wrapper {
   float: left;
-  margin-inline-start: 12px;
-  margin-inline-end: 12px;
 }
 
 .account__avatar {
@@ -69,10 +85,14 @@
 
   display: block;
   position: relative;
-  cursor: pointer;
-  width: 36px;
-  height: 36px;
-  background-size: 36px 36px;
+  overflow: hidden;
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   &-inline {
     display: inline-block;
@@ -86,12 +106,17 @@
     overflow: hidden;
     position: relative;
 
-    & div {
+    & > div {
       @include avatar-radius;
 
       float: left;
       position: relative;
       box-sizing: border-box;
+    }
+
+    .account__avatar {
+      width: 100% !important;
+      height: 100% !important;
     }
 
     &__label {
@@ -109,44 +134,21 @@
 }
 
 .account__avatar-overlay {
-  @include avatar-size(48px);
-
   position: relative;
 
-  &-base {
-    @include avatar-radius;
-    @include avatar-size(36px);
-
-    img {
-      @include avatar-radius;
-
-      width: 100%;
-      height: 100%;
-    }
-  }
-
   &-overlay {
-    @include avatar-radius;
-    @include avatar-size(24px);
-
     position: absolute;
     bottom: 0;
     inset-inline-end: 0;
     z-index: 1;
-
-    img {
-      @include avatar-radius;
-
-      width: 100%;
-      height: 100%;
-    }
   }
 }
 
 .account__relationship {
-  height: 18px;
-  padding: 10px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .account__header__wrapper {
@@ -687,52 +689,18 @@
     border-top: 1px solid lighten($ui-base-color, 12%);
     border-bottom: 1px solid lighten($ui-base-color, 12%);
 
-    &__header {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      margin-bottom: 5px;
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
       color: $darker-text-color;
+      text-transform: uppercase;
+      margin-bottom: 5px;
     }
 
     &__content {
       white-space: pre-wrap;
       padding: 10px 0;
-    }
-
-    &__buttons {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-end;
-      flex: 1 0;
-
-      .icon-button {
-        font-size: 14px;
-        padding: 2px 6px;
-        color: $darker-text-color;
-
-        &:hover,
-        &:active,
-        &:focus {
-          color: lighten($darker-text-color, 7%);
-          background-color: rgba($darker-text-color, 0.15);
-        }
-
-        &:focus {
-          background-color: rgba($darker-text-color, 0.3);
-        }
-
-        &[disabled] {
-          color: darken($darker-text-color, 13%);
-          background-color: transparent;
-          cursor: default;
-        }
-      }
-
-      .flex-spacer {
-        flex: 0 0 5px;
-        background: transparent;
-      }
     }
 
     strong {
@@ -761,6 +729,36 @@
         opacity: 1;
       }
     }
+  }
+}
+
+.account__contents {
+  overflow: hidden;
+}
+
+.account__details {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 1em;
+}
+
+.verified-badge {
+  display: inline-flex;
+  align-items: center;
+  color: $valid-value-color;
+  gap: 4px;
+  overflow: hidden;
+  white-space: nowrap;
+
+  > span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  a {
+    color: inherit;
+    font-weight: 500;
+    text-decoration: none;
   }
 }
 
