@@ -481,7 +481,7 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
-    nio4r (2.5.9)
+    nio4r (2.7.0)
     nokogiri (1.16.0)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -544,7 +544,7 @@ GEM
     psych (5.1.2)
       stringio
     public_suffix (5.0.4)
-    puma (6.4.1)
+    puma (6.4.2)
       nio4r (~> 2.0)
     pundit (2.3.1)
       activesupport (>= 3.0.0)
@@ -913,7 +913,7 @@ DEPENDENCIES
   private_address_check (~> 0.5)
   propshaft
   public_suffix (~> 5.0)
-  puma (~> 6.3)
+  puma (~> 6.4)
   pundit (~> 2.3)
   rack (~> 2.2.7)
   rack-attack (~> 6.6)

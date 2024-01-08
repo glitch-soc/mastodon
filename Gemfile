@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 ruby '>= 3.0.0'
 
-gem 'puma', '~> 6.3'
+gem 'puma', '~> 6.4'
 gem 'rails', '~> 7.1.1'
 gem 'propshaft'
 gem 'thor', '~> 1.2'
