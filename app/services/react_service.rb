@@ -10,6 +10,9 @@ class ReactService < BaseService
     name, domain = emoji.split('@')
     return unless domain.nil? || status.local?
 
+    normalized = "#{name}\uFE0F"
+    name = normalized if StatusReactionValidator::SUPPORTED_EMOJIS.include?(normalized)
+
     custom_emoji = CustomEmoji.find_by(shortcode: name, domain: domain)
     reaction = StatusReaction.find_by(account: account, status: status, name: name, custom_emoji: custom_emoji)
     return reaction unless reaction.nil?
