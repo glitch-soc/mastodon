@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import BlockIcon from '@/material-icons/400-24px/block.svg?react';
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
-import MoreHorizIcon from '@/material-icons/400-24px/outlined/more_horiz.svg';
+import MoreHorizIcon from '@/material-icons/400-24px/outlined/more_horiz.svg?react';
 import PersonCheckIcon from '@/material-icons/400-24px/person_check.svg?react';
 import PushPinIcon from '@/material-icons/400-24px/push_pin.svg?react';
 import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
