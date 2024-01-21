@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
-import { Component } from 'react';
+import { PureComponent } from 'react';
 
 import { defineMessages, injectIntl } from 'react-intl';
+
+import RefreshIcon from '@/material-icons/400-24px/refresh.svg?react';
 
 import { IconButton } from '../../../components/icon_button';
 
@@ -11,7 +13,7 @@ const messages = defineMessages({
   close: { id: 'bundle_modal_error.close', defaultMessage: 'Close' },
 });
 
-class BundleModalError extends Component {
+class BundleModalError extends PureComponent {
 
   static propTypes = {
     onRetry: PropTypes.func.isRequired,
@@ -31,7 +33,7 @@ class BundleModalError extends Component {
     return (
       <div className='modal-root__modal error-modal'>
         <div className='error-modal__body'>
-          <IconButton title={formatMessage(messages.retry)} icon='refresh' onClick={this.handleRetry} size={64} />
+          <IconButton title={formatMessage(messages.retry)} icon='refresh' iconComponent={RefreshIcon} onClick={this.handleRetry} size={64} />
           {formatMessage(messages.error)}
         </div>
 

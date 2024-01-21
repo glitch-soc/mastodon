@@ -20,7 +20,7 @@ import { LoadingIndicator } from '../../components/loading_indicator';
 import StatusList from '../../components/status_list';
 import Column from '../ui/components/column';
 
-import LimitedAccountHint from './components/limited_account_hint';
+import { LimitedAccountHint } from './components/limited_account_hint';
 import HeaderContainer from './containers/header_container';
 
 const emptyList = ImmutableList();
@@ -184,7 +184,7 @@ class AccountTimeline extends ImmutablePureComponent {
     const remoteMessage = remote ? <RemoteHint url={remoteUrl} /> : null;
 
     return (
-      <Column ref={this.setRef} name='account'>
+      <Column ref={this.setRef}>
         <ProfileColumnHeader onClick={this.handleHeaderClick} multiColumn={multiColumn} />
 
         <StatusList

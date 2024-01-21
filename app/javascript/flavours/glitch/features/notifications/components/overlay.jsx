@@ -2,8 +2,6 @@
  * Notification overlay
  */
 
-
-//  Package imports.
 import PropTypes from 'prop-types';
 
 import { defineMessages, injectIntl } from 'react-intl';
@@ -11,7 +9,9 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
+import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
+
 
 const messages = defineMessages({
   markForDeletion: { id: 'notification.markForDeletion', defaultMessage: 'Mark for deletion' },
@@ -49,7 +49,7 @@ class NotificationOverlay extends ImmutablePureComponent {
       >
         <div className='wrappy'>
           <div className='ckbox' aria-hidden='true' title={label}>
-            {active ? (<Icon id='check' />) : ''}
+            {active ? (<Icon id='check' icon={CheckIcon} />) : ''}
           </div>
         </div>
       </div>

@@ -8,11 +8,11 @@ import { DisplayName } from 'flavours/glitch/components/display_name';
 import MediaAttachments from 'flavours/glitch/components/media_attachments';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 import StatusContent from 'flavours/glitch/components/status_content';
-import VisibilityIcon from 'flavours/glitch/components/status_visibility_icon';
+import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
 
 import Option from './option';
 
-export default class StatusCheckBox extends PureComponent {
+class StatusCheckBox extends PureComponent {
 
   static propTypes = {
     id: PropTypes.string.isRequired,
@@ -40,10 +40,12 @@ export default class StatusCheckBox extends PureComponent {
             <Avatar account={status.get('account')} size={46} />
           </div>
 
-          <div><DisplayName account={status.get('account')} /> · <VisibilityIcon visibility={status.get('visibility')} /><RelativeTimestamp timestamp={status.get('created_at')} /></div>
+          <div>
+            <DisplayName account={status.get('account')} /> · <VisibilityIcon visibility={status.get('visibility')} /><RelativeTimestamp timestamp={status.get('created_at')} />
+          </div>
         </div>
 
-        <StatusContent status={status} media={<MediaAttachments status={status} revealed={false} />} />
+        <StatusContent status={status} media={<MediaAttachments status={status} visible={false} />} />
       </div>
     );
 
@@ -61,3 +63,5 @@ export default class StatusCheckBox extends PureComponent {
   }
 
 }
+
+export default StatusCheckBox;

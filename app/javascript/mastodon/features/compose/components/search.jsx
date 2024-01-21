@@ -8,10 +8,9 @@ import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { ReactComponent as CancelIcon } from '@material-symbols/svg-600/outlined/cancel-fill.svg';
-import { ReactComponent as CloseIcon } from '@material-symbols/svg-600/outlined/close.svg';
-import { ReactComponent as SearchIcon } from '@material-symbols/svg-600/outlined/search.svg';
-
+import CancelIcon from '@/material-icons/400-24px/cancel-fill.svg?react';
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
+import SearchIcon from '@/material-icons/400-24px/search.svg?react';
 import { Icon }  from 'mastodon/components/icon';
 import { domain, searchEnabled } from 'mastodon/initial_state';
 import { HASHTAG_REGEX } from 'mastodon/utils/hashtags';
@@ -275,6 +274,7 @@ class Search extends PureComponent {
   }
 
   _calculateOptions (value) {
+    const { signedIn } = this.context.identity;
     const trimmedValue = value.trim();
     const options = [];
 
@@ -299,7 +299,7 @@ class Search extends PureComponent {
 
       const couldBeStatusSearch = searchEnabled;
 
-      if (couldBeStatusSearch) {
+      if (couldBeStatusSearch && signedIn) {
         options.push({ key: 'status-search', label: <FormattedMessage id='search.quick_action.status_search' defaultMessage='Posts matching {x}' values={{ x: <mark>{trimmedValue}</mark> }} />, action: this.handleStatusSearch });
       }
 
@@ -376,7 +376,7 @@ class Search extends PureComponent {
 
           <h4><FormattedMessage id='search_popout.options' defaultMessage='Search options' /></h4>
 
-          {searchEnabled ? (
+          {searchEnabled && signedIn ? (
             <div className='search__popout__menu'>
               {this.defaultOptions.map(({ key, label, action }, i) => (
                 <button key={key} onMouseDown={action} className={classNames('search__popout__menu__item', { selected: selectedOption === ((options.length || recent.size) + i) })}>
@@ -386,7 +386,11 @@ class Search extends PureComponent {
             </div>
           ) : (
             <div className='search__popout__menu__message'>
-              <FormattedMessage id='search_popout.full_text_search_disabled_message' defaultMessage='Not available on {domain}.' values={{ domain }} />
+              {searchEnabled ? (
+                <FormattedMessage id='search_popout.full_text_search_logged_out_message' defaultMessage='Only available when logged in.' />
+              ) : (
+                <FormattedMessage id='search_popout.full_text_search_disabled_message' defaultMessage='Not available on {domain}.' values={{ domain }} />
+              )}
             </div>
           )}
         </div>

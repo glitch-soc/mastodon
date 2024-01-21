@@ -8,6 +8,16 @@ import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import BookmarkIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
+import BookmarkBorderIcon from '@/material-icons/400-24px/bookmark.svg?react';
+import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
+import RepeatIcon from '@/material-icons/400-24px/repeat.svg?react';
+import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
+import ReplyAllIcon from '@/material-icons/400-24px/reply_all.svg?react';
+import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
+import StarBorderIcon from '@/material-icons/400-24px/star.svg?react';
+import RepeatDisabledIcon from '@/svg-icons/repeat_disabled.svg';
+import RepeatPrivateIcon from '@/svg-icons/repeat_private.svg';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'flavours/glitch/permissions';
 import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend_links';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
@@ -58,13 +68,13 @@ class ActionBar extends PureComponent {
     onReblog: PropTypes.func.isRequired,
     onFavourite: PropTypes.func.isRequired,
     onBookmark: PropTypes.func.isRequired,
-    onMute: PropTypes.func,
-    onMuteConversation: PropTypes.func,
-    onBlock: PropTypes.func,
     onDelete: PropTypes.func.isRequired,
     onEdit: PropTypes.func.isRequired,
     onDirect: PropTypes.func.isRequired,
     onMention: PropTypes.func.isRequired,
+    onMute: PropTypes.func,
+    onBlock: PropTypes.func,
+    onMuteConversation: PropTypes.func,
     onReport: PropTypes.func,
     onPin: PropTypes.func,
     onEmbed: PropTypes.func,
@@ -112,12 +122,12 @@ class ActionBar extends PureComponent {
     this.props.onMute(this.props.status.get('account'));
   };
 
-  handleConversationMuteClick = () => {
-    this.props.onMuteConversation(this.props.status);
-  };
-
   handleBlockClick = () => {
     this.props.onBlock(this.props.status);
+  };
+
+  handleConversationMuteClick = () => {
+    this.props.onMuteConversation(this.props.status);
   };
 
   handleReport = () => {
@@ -208,28 +218,44 @@ class ActionBar extends PureComponent {
       }
     }
 
+    let replyIcon;
+    let replyIconComponent;
+
+    if (status.get('in_reply_to_id', null) === null) {
+      replyIcon = 'reply';
+      replyIconComponent = ReplyIcon;
+    } else {
+      replyIcon = 'reply-all';
+      replyIconComponent = ReplyAllIcon;
+    }
+
     const reblogPrivate = status.getIn(['account', 'id']) === me && status.get('visibility') === 'private';
 
-    let reblogTitle;
+    let reblogTitle, reblogIconComponent;
+
     if (status.get('reblogged')) {
       reblogTitle = intl.formatMessage(messages.cancel_reblog_private);
+      reblogIconComponent = publicStatus ? RepeatIcon : RepeatPrivateIcon;
     } else if (publicStatus) {
       reblogTitle = intl.formatMessage(messages.reblog);
+      reblogIconComponent = RepeatIcon;
     } else if (reblogPrivate) {
       reblogTitle = intl.formatMessage(messages.reblog_private);
+      reblogIconComponent = RepeatPrivateIcon;
     } else {
       reblogTitle = intl.formatMessage(messages.cannot_reblog);
+      reblogIconComponent = RepeatDisabledIcon;
     }
 
     return (
       <div className='detailed-status__action-bar'>
-        <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.reply)} icon={status.get('in_reply_to_id', null) === null ? 'reply' : 'reply-all'} onClick={this.handleReplyClick} /></div>
-        <div className='detailed-status__button'><IconButton className={classNames({ reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} title={reblogTitle} icon='retweet' onClick={this.handleReblogClick} /></div>
-        <div className='detailed-status__button'><IconButton className='star-icon' animate active={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' onClick={this.handleFavouriteClick} /></div>
-        <div className='detailed-status__button'><IconButton className='bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' onClick={this.handleBookmarkClick} /></div>
+        <div className='detailed-status__button'><IconButton title={intl.formatMessage(messages.reply)} icon={replyIcon} iconComponent={replyIconComponent} onClick={this.handleReplyClick} /></div>
+        <div className='detailed-status__button'><IconButton className={classNames({ reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} title={reblogTitle} icon='retweet' iconComponent={reblogIconComponent} onClick={this.handleReblogClick} /></div>
+        <div className='detailed-status__button'><IconButton className='star-icon' animate active={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' iconComponent={status.get('favourited') ? StarIcon : StarBorderIcon} onClick={this.handleFavouriteClick} /></div>
+        <div className='detailed-status__button'><IconButton className='bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' iconComponent={status.get('bookmarked') ? BookmarkIcon : BookmarkBorderIcon} onClick={this.handleBookmarkClick} /></div>
 
         <div className='detailed-status__action-bar-dropdown'>
-          <DropdownMenuContainer size={18} icon='ellipsis-h' items={menu} direction='left' title={intl.formatMessage(messages.more)} />
+          <DropdownMenuContainer size={18} icon='ellipsis-h' iconComponent={MoreHorizIcon} items={menu} direction='left' title={intl.formatMessage(messages.more)} />
         </div>
       </div>
     );

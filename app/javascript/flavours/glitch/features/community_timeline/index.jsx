@@ -7,6 +7,8 @@ import { Helmet } from 'react-helmet';
 
 import { connect } from 'react-redux';
 
+
+import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
 import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import { domain } from 'flavours/glitch/initial_state';
 
@@ -40,12 +42,12 @@ const mapStateToProps = (state, { columnId }) => {
 
 class CommunityTimeline extends PureComponent {
 
-  static defaultProps = {
-    onlyMedia: false,
-  };
-
   static contextTypes = {
     identity: PropTypes.object,
+  };
+
+  static defaultProps = {
+    onlyMedia: false,
   };
 
   static propTypes = {
@@ -128,9 +130,10 @@ class CommunityTimeline extends PureComponent {
     const pinned = !!columnId;
 
     return (
-      <Column ref={this.setRef} name='local' bindToDocument={!multiColumn} label={intl.formatMessage(messages.title)}>
+      <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='users'
+          iconComponent={PeopleIcon}
           active={hasUnread}
           title={intl.formatMessage(messages.title)}
           onPin={this.handlePin}

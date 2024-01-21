@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 
 import { defineMessages, injectIntl } from 'react-intl';
 
-import classNames from 'classnames';
-
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-import { length } from 'stringz';
-
+import LockIcon from '@/material-icons/400-24px/lock.svg?react';
+import LockOpenIcon from '@/material-icons/400-24px/lock_open.svg?react';
+import MailIcon from '@/material-icons/400-24px/mail.svg?react';
+import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
-import { maxChars } from 'flavours/glitch/initial_state';
+
 
 const messages = defineMessages({
   publish: {
@@ -31,39 +31,44 @@ const messages = defineMessages({
 class Publisher extends ImmutablePureComponent {
 
   static propTypes = {
-    countText: PropTypes.string,
     disabled: PropTypes.bool,
     intl: PropTypes.object.isRequired,
     onSecondarySubmit: PropTypes.func,
-    onSubmit: PropTypes.func,
     privacy: PropTypes.oneOf(['direct', 'private', 'unlisted', 'public']),
     sideArm: PropTypes.oneOf(['none', 'direct', 'private', 'unlisted', 'public']),
     isEditing: PropTypes.bool,
   };
 
-  handleSubmit = () => {
-    this.props.onSubmit();
-  };
-
   render () {
-    const { countText, disabled, intl, onSecondarySubmit, privacy, sideArm, isEditing } = this.props;
+    const { disabled, intl, onSecondarySubmit, privacy, sideArm, isEditing } = this.props;
 
-    const diff = maxChars - length(countText || '');
-    const computedClass = classNames('compose-form__publish', {
-      disabled: disabled,
-      over: diff < 0,
-    });
-
-    const privacyIcons = { direct: 'envelope', private: 'lock', public: 'globe', unlisted: 'unlock' };
+    const privacyIcons = {
+      direct: {
+        id: 'envelope',
+        icon: MailIcon,
+      },
+      private: {
+        id: 'lock',
+        icon: LockIcon,
+      },
+      public: {
+        id: 'globe',
+        icon: PublicIcon,
+      },
+      unlisted: {
+        id: 'unlock',
+        icon: LockOpenIcon,
+      },
+    };
 
     let publishText;
     if (isEditing) {
       publishText = intl.formatMessage(messages.saveChanges);
     } else if (privacy === 'private' || privacy === 'direct') {
-      const iconId = privacyIcons[privacy];
+      const icon = privacyIcons[privacy];
       publishText = (
         <span>
-          <Icon id={iconId} /> {intl.formatMessage(messages.publish)}
+          <Icon {...icon} /> {intl.formatMessage(messages.publish)}
         </span>
       );
     } else {
@@ -78,25 +83,25 @@ class Publisher extends ImmutablePureComponent {
     };
 
     return (
-      <div className={computedClass}>
-        {sideArm && !isEditing && sideArm !== 'none' ? (
+      <div className='compose-form__publish'>
+        {sideArm && !isEditing && sideArm !== 'none' && (
           <div className='compose-form__publish-button-wrapper'>
             <Button
               className='side_arm'
               disabled={disabled}
               onClick={onSecondarySubmit}
               style={{ padding: null }}
-              text={<Icon id={privacyIcons[sideArm]} />}
+              text={<Icon {...privacyIcons[sideArm]} />}
               title={`${intl.formatMessage(messages.publish)}: ${intl.formatMessage(privacyNames[sideArm])}`}
             />
           </div>
-        ) : null}
+        )}
         <div className='compose-form__publish-button-wrapper'>
           <Button
             className='primary'
+            type='submit'
             text={publishText}
             title={`${intl.formatMessage(messages.publish)}: ${intl.formatMessage(privacyNames[privacy])}`}
-            onClick={this.handleSubmit}
             disabled={disabled}
           />
         </div>

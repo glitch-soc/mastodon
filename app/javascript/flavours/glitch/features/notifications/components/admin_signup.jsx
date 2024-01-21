@@ -10,8 +10,9 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import { HotKeys } from 'react-hotkeys';
 
+import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
-import Permalink from 'flavours/glitch/components/permalink';
+import { Permalink } from 'flavours/glitch/components/permalink';
 import AccountContainer from 'flavours/glitch/containers/account_container';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
@@ -86,7 +87,7 @@ class NotificationAdminSignup extends ImmutablePureComponent {
         <div className={classNames('notification notification-admin-sign-up focusable', { unread })} tabIndex={0}>
           <div className='notification__message'>
             <div className='notification__favourite-icon-wrapper'>
-              <Icon fixedWidth id='user-plus' />
+              <Icon id='user-plus' icon={PersonAddIcon} />
             </div>
 
             <FormattedMessage

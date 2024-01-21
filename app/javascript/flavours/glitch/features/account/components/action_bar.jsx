@@ -6,7 +6,9 @@ import { NavLink } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
+
 
 class ActionBar extends PureComponent {
 
@@ -28,7 +30,8 @@ class ActionBar extends PureComponent {
       return (
         <div>
           <div className='account__disclaimer'>
-            <Icon id='info-circle' fixedWidth /> <FormattedMessage
+            <Icon id='info-circle' icon={InfoIcon} />
+            <FormattedMessage
               id='account.suspended_disclaimer_full'
               defaultMessage='This user has been suspended by a moderator.'
             />
@@ -42,14 +45,17 @@ class ActionBar extends PureComponent {
     if (account.get('acct') !== account.get('username')) {
       extraInfo = (
         <div className='account__disclaimer'>
-          <Icon id='info-circle' fixedWidth /> <FormattedMessage
-            id='account.disclaimer_full'
-            defaultMessage="Information below may reflect the user's profile incompletely."
-          />
-          {' '}
-          <a target='_blank' rel='noopener' href={account.get('url')}>
-            <FormattedMessage id='account.view_full_profile' defaultMessage='View full profile' />
-          </a>
+          <Icon id='info-circle' icon={InfoIcon} />
+          <div>
+            <FormattedMessage
+              id='account.disclaimer_full'
+              defaultMessage="Information below may reflect the user's profile incompletely."
+            />
+            {' '}
+            <a target='_blank' rel='noopener' href={account.get('url')}>
+              <FormattedMessage id='account.view_full_profile' defaultMessage='View full profile' />
+            </a>
+          </div>
         </div>
       );
     }

@@ -43,7 +43,6 @@
 
   .compose-form {
     flex: 1;
-    overflow-y: hidden;
     display: flex;
     flex-direction: column;
     min-height: 310px;
@@ -91,14 +90,6 @@
 
   .flex-spacer {
     background: transparent;
-  }
-}
-
-@media screen and (width >= 600px) {
-  .tabs-bar__link {
-    span {
-      display: inline;
-    }
   }
 }
 
@@ -221,20 +212,12 @@
 }
 
 @media screen and (min-width: $no-gap-breakpoint) {
-  .tabs-bar {
-    width: 100%;
-  }
-
   .react-swipeable-view-container .columns-area--mobile {
     height: calc(100% - 10px) !important;
   }
 
   .getting-started__wrapper {
     margin-bottom: 10px;
-  }
-
-  .tabs-bar__link.optional {
-    display: none;
   }
 
   .search-page .search {

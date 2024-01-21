@@ -69,7 +69,7 @@ namespace :tests do
         exit(1)
       end
 
-      unless Status.find(12).preview_cards.pluck(:url) == ['https://joinmastodon.org/']
+      unless PreviewCard.where(id: PreviewCardsStatus.where(status_id: 12).select(:preview_card_id)).pluck(:url) == ['https://joinmastodon.org/']
         puts 'Preview cards not deduplicated as expected'
         exit(1)
       end
@@ -81,6 +81,11 @@ namespace :tests do
 
       unless Account.find_local('kmruser').user.settings['default_language'] == 'ku'
         puts 'Default posting language not migrated as expected for kmr users'
+        exit(1)
+      end
+
+      unless Account.find_local('qcuser').user.locale == 'fr-CA'
+        puts 'Locale for fr-QC users not updated to fr-CA as expected'
         exit(1)
       end
     end
@@ -142,12 +147,18 @@ namespace :tests do
         INSERT INTO "accounts"
           (id, username, domain, private_key, public_key, created_at, updated_at)
         VALUES
-          (10, 'kmruser', NULL, #{user_private_key}, #{user_public_key}, now(), now());
+          (10, 'kmruser', NULL, #{user_private_key}, #{user_public_key}, now(), now()),
+          (11, 'qcuser', NULL, #{user_private_key}, #{user_public_key}, now(), now());
 
         INSERT INTO "users"
           (id, account_id, email, created_at, updated_at, admin, locale, chosen_languages)
         VALUES
           (4, 10, 'kmruser@localhost', now(), now(), false, 'ku', '{en,kmr,ku,ckb}');
+
+        INSERT INTO "users"
+          (id, account_id, email, created_at, updated_at, locale)
+        VALUES
+          (5, 11, 'qcuser@localhost', now(), now(), 'fr-QC');
 
         INSERT INTO "settings"
           (id, thing_type, thing_id, var, value, created_at, updated_at)

@@ -7,6 +7,8 @@ import { Helmet } from 'react-helmet';
 
 import { connect } from 'react-redux';
 
+
+import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import { domain } from 'flavours/glitch/initial_state';
 
@@ -133,9 +135,10 @@ class PublicTimeline extends PureComponent {
     const pinned = !!columnId;
 
     return (
-      <Column bindToDocument={!multiColumn} ref={this.setRef} name='federated' label={intl.formatMessage(messages.title)}>
+      <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
           icon='globe'
+          iconComponent={PublicIcon}
           active={hasUnread}
           title={intl.formatMessage(messages.title)}
           onPin={this.handlePin}
