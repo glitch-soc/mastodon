@@ -9,6 +9,9 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import ReactSwipeableViews from 'react-swipeable-views';
 
+import ChevronLeftIcon from '@/material-icons/400-24px/chevron_left.svg?react';
+import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { getAverageFromBlurhash } from 'flavours/glitch/blurhash';
 import { GIFV } from 'flavours/glitch/components/gifv';
 import { Icon }  from 'flavours/glitch/components/icon';
@@ -96,23 +99,9 @@ class MediaModal extends ImmutablePureComponent {
 
   componentDidMount () {
     window.addEventListener('keydown', this.handleKeyDown, false);
+
     this._sendBackgroundColor();
   }
-
-  componentWillUnmount () {
-    window.removeEventListener('keydown', this.handleKeyDown);
-    this.props.onChangeBackgroundColor(null);
-  }
-
-  getIndex () {
-    return this.state.index !== null ? this.state.index : this.props.index;
-  }
-
-  toggleNavigation = () => {
-    this.setState(prevState => ({
-      navigationHidden: !prevState.navigationHidden,
-    }));
-  };
 
   componentDidUpdate (prevProps, prevState) {
     if (prevState.index !== this.state.index) {
@@ -131,14 +120,30 @@ class MediaModal extends ImmutablePureComponent {
     }
   }
 
+  componentWillUnmount () {
+    window.removeEventListener('keydown', this.handleKeyDown);
+
+    this.props.onChangeBackgroundColor(null);
+  }
+
+  getIndex () {
+    return this.state.index !== null ? this.state.index : this.props.index;
+  }
+
+  toggleNavigation = () => {
+    this.setState(prevState => ({
+      navigationHidden: !prevState.navigationHidden,
+    }));
+  };
+
   render () {
     const { media, statusId, lang, intl, onClose } = this.props;
     const { navigationHidden } = this.state;
 
     const index = this.getIndex();
 
-    const leftNav  = media.size > 1 && <button tabIndex={0} className='media-modal__nav media-modal__nav--left' onClick={this.handlePrevClick} aria-label={intl.formatMessage(messages.previous)}><Icon id='chevron-left' fixedWidth /></button>;
-    const rightNav = media.size > 1 && <button tabIndex={0} className='media-modal__nav  media-modal__nav--right' onClick={this.handleNextClick} aria-label={intl.formatMessage(messages.next)}><Icon id='chevron-right' fixedWidth /></button>;
+    const leftNav  = media.size > 1 && <button tabIndex={0} className='media-modal__nav media-modal__nav--left' onClick={this.handlePrevClick} aria-label={intl.formatMessage(messages.previous)}><Icon id='chevron-left' icon={ChevronLeftIcon} /></button>;
+    const rightNav = media.size > 1 && <button tabIndex={0} className='media-modal__nav  media-modal__nav--right' onClick={this.handleNextClick} aria-label={intl.formatMessage(messages.next)}><Icon id='chevron-right' icon={ChevronRightIcon} /></button>;
 
     const content = media.map((image) => {
       const width  = image.getIn(['meta', 'original', 'width']) || null;
@@ -240,7 +245,7 @@ class MediaModal extends ImmutablePureComponent {
         </div>
 
         <div className={navigationClassName}>
-          <IconButton className='media-modal__close' title={intl.formatMessage(messages.close)} icon='times' onClick={onClose} size={40} />
+          <IconButton className='media-modal__close' title={intl.formatMessage(messages.close)} icon='times' iconComponent={CloseIcon} onClick={onClose} size={40} />
 
           {leftNav}
           {rightNav}

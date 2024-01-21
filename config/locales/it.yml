@@ -425,6 +425,7 @@ it:
       view: Visualizza blocco di dominio
     email_domain_blocks:
       add_new: Aggiungi nuovo
+      allow_registrations_with_approval: Consenti registrazioni con approvazione
       attempts_over_week:
         one: "%{count} tentativo nell'ultima settimana"
         other: "%{count} tentativi di registrazione nell'ultima settimana"
@@ -611,6 +612,7 @@ it:
       created_at: Segnalato
       delete_and_resolve: Cancella post
       forwarded: Inoltrato
+      forwarded_replies_explanation: Questa segnalazione proviene da un utente remoto e tratta di contenuti remoti. È stato inoltrato a voi perché il contenuto riportato è in risposta a uno dei vostri utenti.
       forwarded_to: Inoltrato a %{domain}
       mark_as_resolved: Segna come risolto
       mark_as_sensitive: Segna come sensibile
@@ -996,8 +998,6 @@ it:
       new_trending_statuses:
         title: Post di tendenza
       new_trending_tags:
-        no_approved_tags: Attualmente non ci sono hashtag di tendenza approvati.
-        requirements: 'Ognuno di questi candidati potrebbe superare il #%{rank} hashtag di tendenza approvato, che è attualmente "%{lowest_tag_name}" con un punteggio di %{lowest_tag_score}.'
         title: Hashtag di tendenza
       subject: Nuove tendenze in attesa di controllo su %{instance}
   aliases:
@@ -1043,6 +1043,14 @@ it:
       hint_html: Solamente un'altra cosa! Dobbiamo confermare che tu sia un essere umano (così possiamo tenere fuori lo spam!). Risolvi il CAPTCHA sottostante e fai clic su "Continua".
       title: Controllo di sicurezza
     confirmations:
+      awaiting_review: Il tuo indirizzo e-mail è confermato! Lo staff di %{domain} sta esaminando la tua registrazione. Riceverai una e-mail se il tuo account sarà approvato!
+      awaiting_review_title: La tua registrazione è in corso di revisione
+      clicking_this_link: cliccando su questo link
+      login_link: accedi
+      proceed_to_login_html: Ora puoi procedere con il %{login_link}.
+      redirect_to_app_html: Avresti dovuto essere reindirizzato all'app <strong>%{app_name}</strong>. Se ciò non fosse avvenuto, prova %{clicking_this_link} o torna manualmente all'app.
+      registration_complete: La tua registrazione su %{domain} è ora completata!
+      welcome_title: Benvenutə, %{name}!
       wrong_email_hint: Se l'indirizzo e-mail non è corretto, puoi modificarlo nelle impostazioni dell'account.
     delete_account: Elimina account
     delete_account_html: Se desideri cancellare il tuo account, puoi <a href="%{path}">farlo qui</a>. Ti sarà chiesta conferma.
@@ -1362,6 +1370,7 @@ it:
       '86400': 1 giorno
     expires_in_prompt: Mai
     generate: Genera
+    invalid: Questo invito non è valido
     invited_by: 'Sei stato invitato da:'
     max_uses:
       one: un uso
@@ -1601,6 +1610,7 @@ it:
       unknown_browser: Browser sconosciuto
       weibo: Weibo
     current_session: Sessione corrente
+    date: Data
     description: "%{browser} su %{platform}"
     explanation: Questi sono i browser da cui attualmente è avvenuto l'accesso al tuo account Mastodon.
     ip: IP
@@ -1767,16 +1777,19 @@ it:
     webauthn: Chiavi di sicurezza
   user_mailer:
     appeal_approved:
-      action: Vai al tuo account
+      action: Impostazioni account
       explanation: L'appello della sanzione contro il tuo account del %{strike_date} che hai inviato il %{appeal_date} è stato approvato. Il tuo account ha riottenuto la buona reputazione.
       subject: Il tuo appello del %{date} è stato approvato
+      subtitle: Il tuo account è ancora una volta in buona posizione.
       title: Appello approvato
     appeal_rejected:
       explanation: L'appello della sanzione contro il tuo account del %{strike_date} che hai inviato il %{appeal_date} è stato respinto.
       subject: Il tuo appello del %{date} è stato respinto
+      subtitle: Il tuo appello è stato respinto.
       title: Appello respinto
     backup_ready:
-      explanation: Hai richiesto un backup completo del tuo account Mastodon. È pronto per essere scaricato!
+      explanation: Hai richiesto un backup completo del tuo account Mastodon.
+      extra: Ora è pronto per il download!
       subject: Il tuo archivio è pronto per essere scaricato
       title: Esportazione archivio
     suspicious_sign_in:

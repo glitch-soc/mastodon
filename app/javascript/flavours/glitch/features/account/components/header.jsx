@@ -9,9 +9,16 @@ import { withRouter } from 'react-router-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
+
+import CheckIcon from '@/material-icons/400-24px/check.svg?react';
+import LockIcon from '@/material-icons/400-24px/lock.svg?react';
+import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
+import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
+import NotificationsActiveIcon from '@/material-icons/400-24px/notifications_active-fill.svg?react';
 import { Avatar } from 'flavours/glitch/components/avatar';
+import { Badge, AutomatedBadge, GroupBadge } from 'flavours/glitch/components/badge';
 import { Button } from 'flavours/glitch/components/button';
-import { Icon } from 'flavours/glitch/components/icon';
+import { Icon }  from 'flavours/glitch/components/icon';
 import { IconButton } from 'flavours/glitch/components/icon_button';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
 import { autoPlayGif, me, domain } from 'flavours/glitch/initial_state';
@@ -59,7 +66,6 @@ const messages = defineMessages({
   add_or_remove_from_list: { id: 'account.add_or_remove_from_list', defaultMessage: 'Add or Remove from lists' },
   admin_account: { id: 'status.admin_account', defaultMessage: 'Open moderation interface for @{name}' },
   admin_domain: { id: 'status.admin_domain', defaultMessage: 'Open moderation interface for {domain}' },
-  add_account_note: { id: 'account.add_account_note', defaultMessage: 'Add note for @{name}' },
   languages: { id: 'account.languages', defaultMessage: 'Change subscribed languages' },
   openOriginalPage: { id: 'account.open_original_page', defaultMessage: 'Open original page' },
 });
@@ -84,7 +90,7 @@ const dateFormatOptions = {
 class Header extends ImmutablePureComponent {
 
   static propTypes = {
-    account: ImmutablePropTypes.map,
+    account: ImmutablePropTypes.record,
     identity_props: ImmutablePropTypes.list,
     onFollow: PropTypes.func.isRequired,
     onBlock: PropTypes.func.isRequired,
@@ -98,7 +104,6 @@ class Header extends ImmutablePureComponent {
     onUnblockDomain: PropTypes.func.isRequired,
     onEndorseToggle: PropTypes.func.isRequired,
     onAddToList: PropTypes.func.isRequired,
-    onEditAccountNote: PropTypes.func.isRequired,
     onChangeLanguages: PropTypes.func.isRequired,
     onInteractionModal: PropTypes.func.isRequired,
     onOpenAvatar: PropTypes.func.isRequired,
@@ -167,8 +172,6 @@ class Header extends ImmutablePureComponent {
       return null;
     }
 
-    const accountNote = account.getIn(['relationship', 'note']);
-
     const suspended    = account.get('suspended');
     const isRemote     = account.get('acct') !== account.get('username');
     const remoteDomain = isRemote ? account.get('acct').split('@')[1] : null;
@@ -192,7 +195,7 @@ class Header extends ImmutablePureComponent {
     }
 
     if (account.getIn(['relationship', 'requested']) || account.getIn(['relationship', 'following'])) {
-      bellBtn = <IconButton icon={account.getIn(['relationship', 'notifying']) ? 'bell' : 'bell-o'} size={24} active={account.getIn(['relationship', 'notifying'])} title={intl.formatMessage(account.getIn(['relationship', 'notifying']) ? messages.disableNotifications : messages.enableNotifications, { name: account.get('username') })} onClick={this.props.onNotifyToggle} />;
+      bellBtn = <IconButton icon={account.getIn(['relationship', 'notifying']) ? 'bell' : 'bell-o'} iconComponent={account.getIn(['relationship', 'notifying']) ? NotificationsActiveIcon : NotificationsIcon} active={account.getIn(['relationship', 'notifying'])} title={intl.formatMessage(account.getIn(['relationship', 'notifying']) ? messages.disableNotifications : messages.enableNotifications, { name: account.get('username') })} onClick={this.props.onNotifyToggle} />;
     }
 
     if (me !== account.get('id')) {
@@ -213,15 +216,15 @@ class Header extends ImmutablePureComponent {
       actionBtn = '';
     }
 
-    if (suspended && !account.getIn(['relationship', 'following'])) {
+    if (account.get('suspended') && !account.getIn(['relationship', 'following'])) {
       actionBtn = '';
     }
 
     if (account.get('locked')) {
-      lockedIcon = <Icon id='lock' title={intl.formatMessage(messages.account_locked)} />;
+      lockedIcon = <Icon id='lock' icon={LockIcon} title={intl.formatMessage(messages.account_locked)} />;
     }
 
-    if (signedIn && account.get('id') !== me && !suspended) {
+    if (signedIn && account.get('id') !== me && !account.get('suspended')) {
       menu.push({ text: intl.formatMessage(messages.mention, { name: account.get('username') }), action: this.props.onMention });
       menu.push({ text: intl.formatMessage(messages.direct, { name: account.get('username') }), action: this.props.onDirect });
       menu.push(null);
@@ -232,13 +235,9 @@ class Header extends ImmutablePureComponent {
       menu.push(null);
     }
 
-    if ('share' in navigator && !suspended) {
+    if ('share' in navigator && !account.get('suspended')) {
       menu.push({ text: intl.formatMessage(messages.share, { name: account.get('username') }), action: this.handleShare });
       menu.push(null);
-    }
-
-    if (accountNote === null || accountNote === '') {
-      menu.push({ text: intl.formatMessage(messages.add_account_note, { name: account.get('username') }), action: this.props.onEditAccountNote });
     }
 
     if (account.get('id') === me) {
@@ -284,7 +283,9 @@ class Header extends ImmutablePureComponent {
         menu.push({ text: intl.formatMessage(messages.block, { name: account.get('username') }), action: this.props.onBlock, dangerous: true });
       }
 
-      menu.push({ text: intl.formatMessage(messages.report, { name: account.get('username') }), action: this.props.onReport, dangerous: true });
+      if (!account.get('suspended')) {
+        menu.push({ text: intl.formatMessage(messages.report, { name: account.get('username') }), action: this.props.onReport, dangerous: true });
+      }
     }
 
     if (signedIn && isRemote) {
@@ -314,20 +315,17 @@ class Header extends ImmutablePureComponent {
     const acct            = isLocal && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
     const isIndexable     = !account.get('noindex');
 
-    let badge;
+    const badges = [];
 
     if (account.get('bot')) {
-      badge = (<div className='account-role bot'><FormattedMessage id='account.badges.bot' defaultMessage='Automated' /></div>);
+      badges.push(<AutomatedBadge key='bot-badge' />);
     } else if (account.get('group')) {
-      badge = (<div className='account-role group'><FormattedMessage id='account.badges.group' defaultMessage='Group' /></div>);
-    } else {
-      badge = null;
+      badges.push(<GroupBadge key='group-badge' />);
     }
 
-    let role = null;
-    if (account.getIn(['roles', 0])) {
-      role = (<div key='role' className={`account-role user-role-${account.getIn(['roles', 0, 'id'])}`}>{account.getIn(['roles', 0, 'name'])}</div>);
-    }
+    account.get('roles', []).forEach((role) => {
+      badges.push(<Badge key={`role-badge-${role.get('id')}`} label={<span>{role.get('name')}</span>} domain={domain} />);
+    });
 
     return (
       <div className={classNames('account__header', { inactive: !!account.get('moved') })} onMouseEnter={this.handleMouseEnter} onMouseLeave={this.handleMouseLeave}>
@@ -345,31 +343,34 @@ class Header extends ImmutablePureComponent {
           <div className='account__header__tabs'>
             <a className='avatar' href={account.get('avatar')} rel='noopener noreferrer' target='_blank' onClick={this.handleAvatarClick}>
               <Avatar account={suspended || hidden ? undefined : account} size={90} />
-              {role}
             </a>
 
-            {!suspended && (
-              <div className='account__header__tabs__buttons'>
-                {!hidden && (
-                  <>
-                    {actionBtn}
-                    {bellBtn}
-                  </>
-                )}
+            <div className='account__header__tabs__buttons'>
+              {!hidden && (
+                <>
+                  {actionBtn}
+                  {bellBtn}
+                </>
+              )}
 
-                <DropdownMenuContainer disabled={menu.length === 0} items={menu} icon='ellipsis-v' size={24} direction='right' />
-              </div>
-            )}
+              <DropdownMenuContainer disabled={menu.length === 0} items={menu} icon='ellipsis-v' iconComponent={MoreHorizIcon} size={24} direction='right' />
+            </div>
           </div>
 
           <div className='account__header__tabs__name'>
             <h1>
-              <span dangerouslySetInnerHTML={displayNameHtml} /> {badge}
+              <span dangerouslySetInnerHTML={displayNameHtml} />
               <small>
                 <span>@{acct}</span> {lockedIcon}
               </small>
             </h1>
           </div>
+
+          {badges.length > 0 && (
+            <div className='account__header__badges'>
+              {badges}
+            </div>
+          )}
 
           {signedIn && <AccountNoteContainer account={account} />}
 
@@ -383,7 +384,7 @@ class Header extends ImmutablePureComponent {
                         <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} />
 
                         <dd className={pair.get('verified_at') && 'verified'} title={pair.get('value_plain')}>
-                          {pair.get('verified_at') && <span title={intl.formatMessage(messages.linkVerifiedOn, { date: intl.formatDate(pair.get('verified_at'), dateFormatOptions) })}><Icon id='check' className='verified__mark' /></span>} <span dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} className='translate' />
+                          {pair.get('verified_at') && <span title={intl.formatMessage(messages.linkVerifiedOn, { date: intl.formatDate(pair.get('verified_at'), dateFormatOptions) })}><Icon id='check' icon={CheckIcon} className='verified__mark' /></span>} <span dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} className='translate' />
                         </dd>
                       </dl>
                     ))}

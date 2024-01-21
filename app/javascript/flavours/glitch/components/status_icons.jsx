@@ -6,15 +6,21 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-
-//  Mastodon imports.
+import ExpandLessIcon from '@/material-icons/400-24px/expand_less.svg?react';
+import ForumIcon from '@/material-icons/400-24px/forum.svg?react';
+import HomeIcon from '@/material-icons/400-24px/home.svg?react';
+import ImageIcon from '@/material-icons/400-24px/image.svg?react';
+import InsertChartIcon from '@/material-icons/400-24px/insert_chart.svg?react';
+import LinkIcon from '@/material-icons/400-24px/link.svg?react';
+import MovieIcon from '@/material-icons/400-24px/movie.svg?react';
+import MusicNoteIcon from '@/material-icons/400-24px/music_note.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
 import { languages } from 'flavours/glitch/initial_state';
 
-import { IconButton } from './icon_button';
-import VisibilityIcon from './status_visibility_icon';
 
-//  Messages for use with internationalization stuff.
+import { IconButton } from './icon_button';
+import { VisibilityIcon } from './visibility_icon';
+
 const messages = defineMessages({
   collapse: { id: 'status.collapse', defaultMessage: 'Collapse' },
   uncollapse: { id: 'status.uncollapse', defaultMessage: 'Uncollapse' },
@@ -65,34 +71,47 @@ class StatusIcons extends PureComponent {
     }
   };
 
-  mediaIconTitleText (mediaIcon) {
+  renderIcon (mediaIcon) {
     const { intl } = this.props;
 
-    const message = {
-      'link': messages.previewCard,
-      'picture-o': messages.pictures,
-      'tasks': messages.poll,
-      'video-camera': messages.video,
-      'music': messages.audio,
-    }[mediaIcon];
+    let title, iconComponent;
 
-    return message && intl.formatMessage(message);
-  }
+    switch (mediaIcon) {
+    case 'link':
+      title = messages.previewCard;
+      iconComponent = LinkIcon;
+      break;
+    case 'picture-o':
+      title = messages.pictures;
+      iconComponent = ImageIcon;
+      break;
+    case 'tasks':
+      title = messages.poll;
+      iconComponent = InsertChartIcon;
+      break;
+    case 'video-camera':
+      title = messages.video;
+      iconComponent = MovieIcon;
+      break;
+    case 'music':
+      title = messages.audio;
+      iconComponent = MusicNoteIcon;
+      break;
+    }
 
-  renderIcon (mediaIcon) {
     return (
       <Icon
         fixedWidth
         className='status__media-icon'
         key={`media-icon--${mediaIcon}`}
         id={mediaIcon}
+        icon={iconComponent}
         aria-hidden='true'
-        title={this.mediaIconTitleText(mediaIcon)}
+        title={title && intl.formatMessage(title)}
       />
     );
   }
 
-  //  Rendering.
   render () {
     const {
       status,
@@ -109,16 +128,16 @@ class StatusIcons extends PureComponent {
         {settings.get('reply') && status.get('in_reply_to_id', null) !== null ? (
           <Icon
             className='status__reply-icon'
-            fixedWidth
             id='comment'
+            icon={ForumIcon}
             aria-hidden='true'
             title={intl.formatMessage(messages.inReplyTo)}
           />
         ) : null}
         {settings.get('local_only') && status.get('local_only') &&
           <Icon
-            fixedWidth
             id='home'
+            icon={HomeIcon}
             aria-hidden='true'
             title={intl.formatMessage(messages.localOnly)}
           />}
@@ -135,6 +154,7 @@ class StatusIcons extends PureComponent {
                 intl.formatMessage(messages.collapse)
             }
             icon='angle-double-up'
+            iconComponent={ExpandLessIcon}
             onClick={this.handleCollapsedClick}
           />
         )}

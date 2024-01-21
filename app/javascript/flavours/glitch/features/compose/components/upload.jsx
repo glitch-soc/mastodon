@@ -7,7 +7,11 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import spring from 'react-motion/lib/spring';
 
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
+import EditIcon from '@/material-icons/400-24px/edit.svg?react';
+import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
+
 
 import Motion from '../../ui/util/optional_motion';
 
@@ -47,13 +51,13 @@ export default class Upload extends ImmutablePureComponent {
           {({ scale }) => (
             <div className='compose-form__upload-thumbnail' style={{ transform: `scale(${scale})`, backgroundImage: `url(${media.get('preview_url')})`, backgroundPosition: `${x}% ${y}%` }}>
               <div className='compose-form__upload__actions'>
-                <button type='button' className='icon-button' onClick={this.handleUndoClick}><Icon id='times' /> <FormattedMessage id='upload_form.undo' defaultMessage='Delete' /></button>
-                <button type='button' className='icon-button' onClick={this.handleFocalPointClick}><Icon id='pencil' /> <FormattedMessage id='upload_form.edit' defaultMessage='Edit' /></button>
+                <button type='button' className='icon-button' onClick={this.handleUndoClick}><Icon id='times' icon={CloseIcon} /> <FormattedMessage id='upload_form.undo' defaultMessage='Delete' /></button>
+                <button type='button' className='icon-button' onClick={this.handleFocalPointClick}><Icon id='pencil' icon={EditIcon} /> <FormattedMessage id='upload_form.edit' defaultMessage='Edit' /></button>
               </div>
 
               {(media.get('description') || '').length === 0 && (
                 <div className='compose-form__upload__warning'>
-                  <button type='button' className='icon-button' onClick={this.handleFocalPointClick}><Icon id='info-circle' /> <FormattedMessage id='upload_form.description_missing' defaultMessage='No description added' /></button>
+                  <button type='button' className='icon-button' onClick={this.handleFocalPointClick}><Icon id='info-circle' icon={InfoIcon} /> <FormattedMessage id='upload_form.description_missing' defaultMessage='No description added' /></button>
                 </div>
               )}
             </div>

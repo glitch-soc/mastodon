@@ -5,7 +5,7 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import { ReactComponent as MenuIcon } from '@material-symbols/svg-600/outlined/menu.svg';
+import MenuIcon from '@/material-icons/400-24px/menu.svg?react';
 
 import DropdownMenuContainer from '../../../containers/dropdown_menu_container';
 
@@ -28,7 +28,7 @@ const messages = defineMessages({
 class ActionBar extends PureComponent {
 
   static propTypes = {
-    account: ImmutablePropTypes.map.isRequired,
+    account: ImmutablePropTypes.record.isRequired,
     onLogout: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
   };

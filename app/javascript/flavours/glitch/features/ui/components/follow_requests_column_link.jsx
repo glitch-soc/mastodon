@@ -6,6 +6,7 @@ import { injectIntl, defineMessages } from 'react-intl';
 import { List as ImmutableList } from 'immutable';
 import { connect } from 'react-redux';
 
+import PersonAddIcon from '@/material-icons/400-24px/person_add.svg?react';
 import { fetchFollowRequests } from 'flavours/glitch/actions/accounts';
 import { IconWithBadge } from 'flavours/glitch/components/icon_with_badge';
 import ColumnLink from 'flavours/glitch/features/ui/components/column_link';
@@ -43,7 +44,7 @@ class FollowRequestsColumnLink extends Component {
       <ColumnLink
         transparent
         to='/follow_requests'
-        icon={<IconWithBadge className='column-link__icon' id='user-plus' count={count} />}
+        icon={<IconWithBadge className='column-link__icon' id='user-plus' icon={PersonAddIcon} count={count} />}
         text={intl.formatMessage(messages.text)}
       />
     );

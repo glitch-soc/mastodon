@@ -2,8 +2,10 @@
 
 const fs = require('fs');
 const http = require('http');
+const path = require('path');
 const url = require('url');
 
+const cors = require('cors');
 const dotenv = require('dotenv');
 const express = require('express');
 const Redis = require('ioredis');
@@ -11,14 +13,19 @@ const { JSDOM } = require('jsdom');
 const log = require('npmlog');
 const pg = require('pg');
 const dbUrlToConfig = require('pg-connection-string').parse;
-const metrics = require('prom-client');
 const uuid = require('uuid');
 const WebSocket = require('ws');
 
+const { setupMetrics } = require('./metrics');
+const { isTruthy } = require("./utils");
+
 const environment = process.env.NODE_ENV || 'development';
 
+// Correctly detect and load .env or .env.production file based on environment:
+const dotenvFile = environment === 'production' ? '.env.production' : '.env';
+
 dotenv.config({
-  path: environment === 'production' ? '.env.production' : '.env',
+  path: path.resolve(__dirname, path.join('..', dotenvFile))
 });
 
 log.level = process.env.LOG_LEVEL || 'verbose';
@@ -175,12 +182,73 @@ const CHANNEL_NAMES = [
 ];
 
 const startServer = async () => {
+  const pgPool = new pg.Pool(pgConfigFromEnv(process.env));
+  const server = http.createServer();
+  const wss = new WebSocket.Server({ noServer: true });
+
+  // Set the X-Request-Id header on WebSockets:
+  wss.on("headers", function onHeaders(headers, req) {
+    headers.push(`X-Request-Id: ${req.id}`);
+  });
+
   const app = express();
 
   app.set('trust proxy', process.env.TRUSTED_PROXY_IP ? process.env.TRUSTED_PROXY_IP.split(/(?:\s*,\s*|\s+)/) : 'loopback,uniquelocal');
 
-  const pgPool = new pg.Pool(pgConfigFromEnv(process.env));
-  const server = http.createServer(app);
+  app.use(cors());
+
+  // Handle eventsource & other http requests:
+  server.on('request', app);
+
+  // Handle upgrade requests:
+  server.on('upgrade', async function handleUpgrade(request, socket, head) {
+    /** @param {Error} err */
+    const onSocketError = (err) => {
+      log.error(`Error with websocket upgrade: ${err}`);
+    };
+
+    socket.on('error', onSocketError);
+
+    // Authenticate:
+    try {
+      await accountFromRequest(request);
+    } catch (err) {
+      log.error(`Error authenticating request: ${err}`);
+
+      // Unfortunately for using the on('upgrade') setup, we need to manually
+      // write a HTTP Response to the Socket to close the connection upgrade
+      // attempt, so the following code is to handle all of that.
+      const statusCode = err.status ?? 401;
+
+      /** @type {Record<string, string | number>} */
+      const headers = {
+        'Connection': 'close',
+        'Content-Type': 'text/plain',
+        'Content-Length': 0,
+        'X-Request-Id': request.id,
+        // TODO: Send the error message via header so it can be debugged in
+        // developer tools
+      };
+
+      // Ensure the socket is closed once we've finished writing to it:
+      socket.once('finish', () => {
+        socket.destroy();
+      });
+
+      // Write the HTTP response manually:
+      socket.end(`HTTP/1.1 ${statusCode} ${http.STATUS_CODES[statusCode]}\r\n${Object.keys(headers).map((key) => `${key}: ${headers[key]}`).join('\r\n')}\r\n\r\n`);
+
+      return;
+    }
+
+    wss.handleUpgrade(request, socket, head, function done(ws) {
+      // Remove the error handler:
+      socket.removeListener('error', onSocketError);
+
+      // Start the connection:
+      wss.emit('connection', ws, request);
+    });
+  });
 
   /**
    * @type {Object.<string, Array.<function(Object<string, any>): void>>}
@@ -192,78 +260,15 @@ const startServer = async () => {
   const redisClient = await createRedisClient(redisConfig);
   const { redisPrefix } = redisConfig;
 
-  // Collect metrics from Node.js
-  metrics.collectDefaultMetrics();
-
-  new metrics.Gauge({
-    name: 'pg_pool_total_connections',
-    help: 'The total number of clients existing within the pool',
-    collect() {
-      this.set(pgPool.totalCount);
-    },
-  });
-
-  new metrics.Gauge({
-    name: 'pg_pool_idle_connections',
-    help: 'The number of clients which are not checked out but are currently idle in the pool',
-    collect() {
-      this.set(pgPool.idleCount);
-    },
-  });
-
-  new metrics.Gauge({
-    name: 'pg_pool_waiting_queries',
-    help: 'The number of queued requests waiting on a client when all clients are checked out',
-    collect() {
-      this.set(pgPool.waitingCount);
-    },
-  });
-
-  const connectedClients = new metrics.Gauge({
-    name: 'connected_clients',
-    help: 'The number of clients connected to the streaming server',
-    labelNames: ['type'],
-  });
-
-  const connectedChannels = new metrics.Gauge({
-    name: 'connected_channels',
-    help: 'The number of channels the streaming server is streaming to',
-    labelNames: [ 'type', 'channel' ]
-  });
-
-  const redisSubscriptions = new metrics.Gauge({
-    name: 'redis_subscriptions',
-    help: 'The number of Redis channels the streaming server is subscribed to',
-  });
-
-  const redisMessagesReceived = new metrics.Counter({
-    name: 'redis_messages_received_total',
-    help: 'The total number of messages the streaming server has received from redis subscriptions'
-  });
-
-  const messagesSent = new metrics.Counter({
-    name: 'messages_sent_total',
-    help: 'The total number of messages the streaming server sent to clients per connection type',
-    labelNames: [ 'type' ]
-  });
-
-  // Prime the gauges so we don't loose metrics between restarts:
-  redisSubscriptions.set(0);
-  connectedClients.set({ type: 'websocket' }, 0);
-  connectedClients.set({ type: 'eventsource' }, 0);
-
-  // For each channel, initialize the gauges at zero; There's only a finite set of channels available
-  CHANNEL_NAMES.forEach(( channel ) => {
-    connectedChannels.set({ type: 'websocket', channel }, 0);
-    connectedChannels.set({ type: 'eventsource', channel }, 0);
-  });
-
-  // Prime the counters so that we don't loose metrics between restarts.
-  // Unfortunately counters don't support the set() API, so instead I'm using
-  // inc(0) to achieve the same result.
-  redisMessagesReceived.inc(0);
-  messagesSent.inc({ type: 'websocket' }, 0);
-  messagesSent.inc({ type: 'eventsource' }, 0);
+  const metrics = setupMetrics(CHANNEL_NAMES, pgPool);
+  // TODO: migrate all metrics to metrics.X.method() instead of just X.method()
+  const {
+    connectedClients,
+    connectedChannels,
+    redisSubscriptions,
+    redisMessagesReceived,
+    messagesSent,
+  } = metrics;
 
   // When checking metrics in the browser, the favicon is requested this
   // prevents the request from falling through to the API Router, which would
@@ -384,38 +389,6 @@ const startServer = async () => {
     }
   };
 
-  const FALSE_VALUES = [
-    false,
-    0,
-    '0',
-    'f',
-    'F',
-    'false',
-    'FALSE',
-    'off',
-    'OFF',
-  ];
-
-  /**
-   * @param {any} value
-   * @returns {boolean}
-   */
-  const isTruthy = value =>
-    value && !FALSE_VALUES.includes(value);
-
-  /**
-   * @param {any} req
-   * @param {any} res
-   * @param {function(Error=): void} next
-   */
-  const allowCrossDomain = (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Authorization, Accept, Cache-Control');
-    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
-
-    next();
-  };
-
   /**
    * @param {any} req
    * @param {any} res
@@ -448,9 +421,18 @@ const startServer = async () => {
     req.scopes.some(scope => necessaryScopes.includes(scope));
 
   /**
+   * @typedef ResolvedAccount
+   * @property {string} accessTokenId
+   * @property {string[]} scopes
+   * @property {string} accountId
+   * @property {string[]} chosenLanguages
+   * @property {string} deviceId
+   */
+
+  /**
    * @param {string} token
    * @param {any} req
-   * @returns {Promise.<void>}
+   * @returns {Promise<ResolvedAccount>}
    */
   const accountFromToken = (token, req) => new Promise((resolve, reject) => {
     pgPool.connect((err, client, done) => {
@@ -481,14 +463,20 @@ const startServer = async () => {
         req.chosenLanguages = result.rows[0].chosen_languages;
         req.deviceId = result.rows[0].device_id;
 
-        resolve();
+        resolve({
+          accessTokenId: result.rows[0].id,
+          scopes: result.rows[0].scopes.split(' '),
+          accountId: result.rows[0].account_id,
+          chosenLanguages: result.rows[0].chosen_languages,
+          deviceId: result.rows[0].device_id
+        });
       });
     });
   });
 
   /**
    * @param {any} req
-   * @returns {Promise.<void>}
+   * @returns {Promise<ResolvedAccount>}
    */
   const accountFromRequest = (req) => new Promise((resolve, reject) => {
     const authorization = req.headers.authorization;
@@ -580,25 +568,6 @@ const startServer = async () => {
 
     reject(err);
   });
-
-  /**
-   * @param {any} info
-   * @param {function(boolean, number, string): void} callback
-   */
-  const wsVerifyClient = (info, callback) => {
-    // When verifying the websockets connection, we no longer pre-emptively
-    // check OAuth scopes and drop the connection if they're missing. We only
-    // drop the connection if access without token is not allowed by environment
-    // variables. OAuth scope checks are moved to the point of subscription
-    // to a specific stream.
-
-    accountFromRequest(info.req).then(() => {
-      callback(true, undefined, undefined);
-    }).catch(err => {
-      log.error(info.req.requestId, err.toString());
-      callback(false, 401, 'Unauthorized');
-    });
-  };
 
   /**
    * @typedef SystemMessageHandlers
@@ -1038,8 +1007,8 @@ const startServer = async () => {
   };
 
   /**
-   * @param {any} req
-   * @param {any} ws
+   * @param {http.IncomingMessage} req
+   * @param {WebSocket} ws
    * @param {string[]} streamName
    * @returns {function(string, string): void}
    */
@@ -1049,7 +1018,9 @@ const startServer = async () => {
       return;
     }
 
-    ws.send(JSON.stringify({ stream: streamName, event, payload }), (err) => {
+    const message = JSON.stringify({ stream: streamName, event, payload });
+
+    ws.send(message, (/** @type {Error} */ err) => {
       if (err) {
         log.error(req.requestId, `Failed to send to websocket: ${err}`);
       }
@@ -1070,7 +1041,6 @@ const startServer = async () => {
 
   api.use(setRequestId);
   api.use(setRemoteAddress);
-  api.use(allowCrossDomain);
 
   api.use(authenticationMiddleware);
   api.use(errorMiddleware);
@@ -1086,8 +1056,6 @@ const startServer = async () => {
       httpNotFound(res);
     });
   });
-
-  const wss = new WebSocket.Server({ server, verifyClient: wsVerifyClient });
 
   /**
    * @typedef StreamParams
@@ -1282,8 +1250,8 @@ const startServer = async () => {
 
   /**
    * @typedef WebSocketSession
-   * @property {any} socket
-   * @property {any} request
+   * @property {WebSocket} websocket
+   * @property {http.IncomingMessage} request
    * @property {Object.<string, { channelName: string, listener: SubscriptionListener, stopHeartbeat: function(): void }>} subscriptions
    */
 
@@ -1406,7 +1374,11 @@ const startServer = async () => {
     }
   };
 
-  wss.on('connection', (ws, req) => {
+  /**
+   * @param {WebSocket & { isAlive: boolean }} ws
+   * @param {http.IncomingMessage} req
+   */
+  function onConnection(ws, req) {
     // Note: url.parse could throw, which would terminate the connection, so we
     // increment the connected clients metric straight away when we establish
     // the connection, without waiting:
@@ -1484,7 +1456,9 @@ const startServer = async () => {
     if (location && location.query.stream) {
       subscribeWebsocketToChannel(session, firstParam(location.query.stream), location.query);
     }
-  });
+  }
+
+  wss.on('connection', onConnection);
 
   setInterval(() => {
     wss.clients.forEach(ws => {

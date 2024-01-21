@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 
 import { debounce } from 'lodash';
 
+import BookmarksIcon from '@/material-icons/400-24px/bookmarks-fill.svg?react';
 import { fetchBookmarkedStatuses, expandBookmarkedStatuses } from 'flavours/glitch/actions/bookmarks';
 import { addColumn, removeColumn, moveColumn } from 'flavours/glitch/actions/columns';
 import ColumnHeader from 'flavours/glitch/components/column_header';
@@ -77,9 +78,10 @@ class Bookmarks extends ImmutablePureComponent {
     const emptyMessage = <FormattedMessage id='empty_column.bookmarked_statuses' defaultMessage="You don't have any bookmarked posts yet. When you bookmark one, it will show up here." />;
 
     return (
-      <Column bindToDocument={!multiColumn} ref={this.setRef} name='bookmarks'>
+      <Column bindToDocument={!multiColumn} ref={this.setRef}>
         <ColumnHeader
-          icon='bookmark'
+          icon='bookmarks'
+          iconComponent={BookmarksIcon}
           title={intl.formatMessage(messages.heading)}
           onPin={this.handlePin}
           onMove={this.handleMove}

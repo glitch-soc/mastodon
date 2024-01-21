@@ -1,17 +1,34 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { connect } from 'react-redux';
+
+import CancelIcon from '@/material-icons/400-24px/cancel.svg?react';
+import SearchIcon from '@/material-icons/400-24px/search.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
+
+
+import { fetchListSuggestions, clearListSuggestions, changeListSuggestions } from '../../../actions/lists';
 
 const messages = defineMessages({
   search: { id: 'lists.search', defaultMessage: 'Search among people you follow' },
 });
 
-export default class Search extends PureComponent {
+const mapStateToProps = state => ({
+  value: state.getIn(['listEditor', 'suggestions', 'value']),
+});
+
+const mapDispatchToProps = dispatch => ({
+  onSubmit: value => dispatch(fetchListSuggestions(value)),
+  onClear: () => dispatch(clearListSuggestions()),
+  onChange: value => dispatch(changeListSuggestions(value)),
+});
+
+class Search extends PureComponent {
 
   static propTypes = {
     intl: PropTypes.object.isRequired,
@@ -55,11 +72,13 @@ export default class Search extends PureComponent {
         </label>
 
         <div role='button' tabIndex={0} className='search__icon' onClick={this.handleClear}>
-          <Icon id='search' className={classNames({ active: !hasValue })} />
-          <Icon id='times-circle' aria-label={intl.formatMessage(messages.search)} className={classNames({ active: hasValue })} />
+          <Icon id='search' icon={SearchIcon} className={classNames({ active: !hasValue })} />
+          <Icon id='times-circle' icon={CancelIcon} aria-label={intl.formatMessage(messages.search)} className={classNames({ active: hasValue })} />
         </div>
       </div>
     );
   }
 
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Search));

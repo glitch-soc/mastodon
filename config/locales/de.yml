@@ -425,6 +425,7 @@ de:
       view: Domain-Sperre ansehen
     email_domain_blocks:
       add_new: Neue hinzufügen
+      allow_registrations_with_approval: Registrierungen mit Genehmigung erlauben
       attempts_over_week:
         one: "%{count} Registrierungsversuch in der vergangenen Woche"
         other: "%{count} Registrierungsversuche in der vergangenen Woche"
@@ -611,6 +612,7 @@ de:
       created_at: Gemeldet
       delete_and_resolve: Beiträge löschen
       forwarded: Weitergeleitet
+      forwarded_replies_explanation: Diese Meldung stammt von einem externen Profil und betrifft einen externen Inhalt. Der Inhalt wurde an Dich weitergeleitet, weil er eine Antwort auf ein bei Dir registriertes Profil ist.
       forwarded_to: Weitergeleitet an %{domain}
       mark_as_resolved: Als geklärt markieren
       mark_as_sensitive: Mit einer Inhaltswarnung versehen
@@ -747,7 +749,7 @@ de:
         title: Neue Nutzer*innen müssen ein CAPTCHA lösen, um das Konto zu bestätigen
       content_retention:
         preamble: Lege fest, wie lange Inhalte von Nutzer*innen auf deinem Mastodon-Server gespeichert bleiben.
-        title: Aufbewahrung von Inhalten
+        title: Cache & Archive
       default_noindex:
         desc_html: Betrifft alle Profile, die diese Einstellung bei sich nicht geändert haben
         title: Profile standardmäßig von der Suchmaschinen-Indizierung ausnehmen
@@ -996,8 +998,6 @@ de:
       new_trending_statuses:
         title: Angesagte Beiträge
       new_trending_tags:
-        no_approved_tags: Es gibt keine genehmigten Hashtags, die gerade im Trend liegen.
-        requirements: 'Jeder dieser Kandidaten könnte den #%{rank} genehmigten angesagten Hashtag übertreffen, der derzeit #%{lowest_tag_name} mit einer Punktzahl von %{lowest_tag_score} ist.'
         title: Angesagte Hashtags
       subject: Neue Trends zur Überprüfung auf %{instance}
   aliases:
@@ -1041,6 +1041,14 @@ de:
       hint_html: Fast geschafft! Wir müssen uns vergewissern, dass du ein Mensch bist (damit wir Spam verhindern können!). Bitte löse das CAPTCHA und klicke auf „Weiter“.
       title: Sicherheitsüberprüfung
     confirmations:
+      awaiting_review: Deine E-Mail-Adresse wurde bestätigt und das Team von %{domain} überprüft nun deine Registrierung. Sobald es dein Konto genehmigt, wirst du eine E-Mail erhalten.
+      awaiting_review_title: Deine Registrierung wird überprüft
+      clicking_this_link: Klick auf diesen Link
+      login_link: anmelden
+      proceed_to_login_html: Du kannst dich nun %{login_link}.
+      redirect_to_app_html: Du hättest zur <strong>%{app_name}</strong>-App weitergeleitet werden sollen. Wenn das nicht geschehen ist, versuche es mit einem %{clicking_this_link} oder kehre manuell zur App zurück.
+      registration_complete: Deine Registrierung auf %{domain} ist nun abgeschlossen!
+      welcome_title: Willkommen, %{name}!
       wrong_email_hint: Sollte diese E-Mail-Adresse nicht korrekt sein, kannst du sie in den Kontoeinstellungen ändern.
     delete_account: Konto löschen
     delete_account_html: Falls du dein Konto endgültig löschen möchtest, kannst du das <a href="%{path}">hier vornehmen</a>. Du musst dies zusätzlich bestätigen.
@@ -1230,7 +1238,7 @@ de:
       home: Startseite und Listen
       notifications: Benachrichtigungen
       public: Öffentliche Timelines
-      thread: Unterhaltungen
+      thread: Private Erwähnungen
     edit:
       add_keyword: Schlagwort hinzufügen
       keywords: Schlagwörter
@@ -1360,6 +1368,7 @@ de:
       '86400': 1 Tag
     expires_in_prompt: Nie
     generate: Einladungslink erstellen
+    invalid: Diese Einladung ist ungültig
     invited_by: 'Du wurdest eingeladen von:'
     max_uses:
       one: Eine Verwendung
@@ -1599,6 +1608,7 @@ de:
       unknown_browser: Unbekannter Browser
       weibo: Weibo
     current_session: Aktuelle Sitzung
+    date: Datum
     description: "%{browser} auf %{platform}"
     explanation: Dies sind die Webbrowser, die derzeit mit deinem Mastodon-Konto verbunden sind.
     ip: IP-Adresse
@@ -1765,16 +1775,19 @@ de:
     webauthn: Sicherheitsschlüssel
   user_mailer:
     appeal_approved:
-      action: Dein Konto aufrufen
-      explanation: Der Einspruch gegen deinen Verstoß vom %{strike_date}, den du am %{appeal_date} eingereicht hast, wurde genehmigt. Dein Konto ist wieder in gutem Zustand.
+      action: Kontoeinstellungen
+      explanation: Der Einspruch gegen deinen Verstoß vom %{strike_date}, den du am %{appeal_date} eingereicht hast, wurde genehmigt. Dein Konto ist wieder in Ordnung.
       subject: Dein Einspruch vom %{date} wurde angenommen
+      subtitle: Dein Konto ist wieder in Ordnung.
       title: Einspruch angenommen
     appeal_rejected:
       explanation: Der Einspruch gegen deinen Verstoß vom %{strike_date}, den du am %{appeal_date} eingereicht hast, wurde abgelehnt.
       subject: Dein Einspruch vom %{date} wurde abgelehnt
+      subtitle: Dein Einspruch wurde abgelehnt.
       title: Einspruch abgelehnt
     backup_ready:
-      explanation: Du hast eine vollständige Sicherung deines Mastodon-Kontos angefordert. Die Sicherung kann jetzt heruntergeladen werden!
+      explanation: Du hast eine vollständige Datensicherung deines Mastodon-Kontos angefordert.
+      extra: Sie ist jetzt zum Herunterladen bereit!
       subject: Dein persönliches Archiv kann heruntergeladen werden
       title: Archiv-Download
     suspicious_sign_in:

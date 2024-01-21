@@ -8,6 +8,10 @@ import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+
+import CancelIcon from '@/material-icons/400-24px/cancel-fill.svg?react';
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
+import SearchIcon from '@/material-icons/400-24px/search.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { domain, searchEnabled } from 'flavours/glitch/initial_state';
 import { HASHTAG_REGEX } from 'flavours/glitch/utils/hashtags';
@@ -92,25 +96,6 @@ class Search extends PureComponent {
     }
   };
 
-  handleBlur = () => {
-    this.setState({ expanded: false, selectedOption: -1 });
-  };
-
-  handleFocus = () => {
-    const { onShow, singleColumn } = this.props;
-
-    this.setState({ expanded: true, selectedOption: -1 });
-    onShow();
-
-    if (this.searchForm && !singleColumn) {
-      const { left, right } = this.searchForm.getBoundingClientRect();
-
-      if (left < 0 || right > (window.innerWidth || document.documentElement.clientWidth)) {
-        this.searchForm.scrollIntoView();
-      }
-    }
-  };
-
   handleKeyDown = (e) => {
     const { selectedOption } = this.state;
     const options = searchEnabled ? this._getOptions().concat(this.defaultOptions) : this._getOptions();
@@ -161,8 +146,23 @@ class Search extends PureComponent {
     }
   };
 
-  findTarget = () => {
-    return this.searchForm;
+  handleFocus = () => {
+    const { onShow, singleColumn } = this.props;
+
+    this.setState({ expanded: true, selectedOption: -1 });
+    onShow();
+
+    if (this.searchForm && !singleColumn) {
+      const { left, right } = this.searchForm.getBoundingClientRect();
+
+      if (left < 0 || right > (window.innerWidth || document.documentElement.clientWidth)) {
+        this.searchForm.scrollIntoView();
+      }
+    }
+  };
+
+  handleBlur = () => {
+    this.setState({ expanded: false, selectedOption: -1 });
   };
 
   handleHashtagClick = () => {
@@ -275,6 +275,7 @@ class Search extends PureComponent {
   }
 
   _calculateOptions (value) {
+    const { signedIn } = this.context.identity;
     const trimmedValue = value.trim();
     const options = [];
 
@@ -299,7 +300,7 @@ class Search extends PureComponent {
 
       const couldBeStatusSearch = searchEnabled;
 
-      if (couldBeStatusSearch) {
+      if (couldBeStatusSearch && signedIn) {
         options.push({ key: 'status-search', label: <FormattedMessage id='search.quick_action.status_search' defaultMessage='Posts matching {x}' values={{ x: <mark>{trimmedValue}</mark> }} />, action: this.handleStatusSearch });
       }
 
@@ -336,8 +337,8 @@ class Search extends PureComponent {
         />
 
         <div role='button' tabIndex={0} className='search__icon' onClick={this.handleClear}>
-          <Icon id='search' className={hasValue ? '' : 'active'} />
-          <Icon id='times-circle' className={hasValue ? 'active' : ''} />
+          <Icon id='search' icon={SearchIcon}  className={hasValue ? '' : 'active'} />
+          <Icon id='times-circle' icon={CancelIcon} className={hasValue ? 'active' : ''} />
         </div>
 
         <div className='search__popout'>
@@ -349,7 +350,7 @@ class Search extends PureComponent {
                 {recent.size > 0 ? this._getOptions().map(({ label, action, forget }, i) => (
                   <button key={label} onMouseDown={action} className={classNames('search__popout__menu__item search__popout__menu__item--flex', { selected: selectedOption === i })}>
                     <span>{label}</span>
-                    <button className='icon-button' onMouseDown={forget}><Icon id='times' /></button>
+                    <button className='icon-button' onMouseDown={forget}><Icon id='times' icon={CloseIcon} /></button>
                   </button>
                 )) : (
                   <div className='search__popout__menu__message'>
@@ -376,7 +377,7 @@ class Search extends PureComponent {
 
           <h4><FormattedMessage id='search_popout.options' defaultMessage='Search options' /></h4>
 
-          {searchEnabled ? (
+          {searchEnabled && signedIn ? (
             <div className='search__popout__menu'>
               {this.defaultOptions.map(({ key, label, action }, i) => (
                 <button key={key} onMouseDown={action} className={classNames('search__popout__menu__item', { selected: selectedOption === ((options.length || recent.size) + i) })}>
@@ -386,7 +387,11 @@ class Search extends PureComponent {
             </div>
           ) : (
             <div className='search__popout__menu__message'>
-              <FormattedMessage id='search_popout.full_text_search_disabled_message' defaultMessage='Not available on {domain}.' values={{ domain }} />
+              {searchEnabled ? (
+                <FormattedMessage id='search_popout.full_text_search_logged_out_message' defaultMessage='Only available when logged in.' />
+              ) : (
+                <FormattedMessage id='search_popout.full_text_search_disabled_message' defaultMessage='Not available on {domain}.' values={{ domain }} />
+              )}
             </div>
           )}
         </div>
