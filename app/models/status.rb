@@ -293,20 +293,13 @@ class Status < ApplicationRecord
   end
 
   def reactions(account = nil)
-    records = begin
-      scope = status_reactions.group(:status_id, :name, :custom_emoji_id).order(Arel.sql('MIN(created_at) ASC'))
-
-      if account.nil?
-        scope.select('name, custom_emoji_id, count(*) as count, false as me')
-      else
-        # rubocop:disable Layout/LineLength
-        scope.select("name, custom_emoji_id, count(*) as count, exists(select 1 from status_reactions r where r.account_id = #{account.id} and r.status_id = status_reactions.status_id and r.name = status_reactions.name and (r.custom_emoji_id = status_reactions.custom_emoji_id or r.custom_emoji_id is null and status_reactions.custom_emoji_id is null)) as me")
-        # rubocop:enable Layout/LineLength
+    grouped_ordered_status_reactions.select(
+      [:name, :custom_emoji_id, 'COUNT(*) as count'].tap do |values|
+        values << value_for_reaction_me_column(account)
       end
+    ).to_a.tap do |records|
+      ActiveRecord::Associations::Preloader.new(records: records, associations: :custom_emoji).call
     end
-
-    ActiveRecord::Associations::Preloader.new(records: records, associations: :custom_emoji)
-    records
   end
 
   def ordered_media_attachments
@@ -485,6 +478,35 @@ class Status < ApplicationRecord
   end
 
   private
+
+  def grouped_ordered_status_reactions
+    status_reactions
+      .group(:status_id, :name, :custom_emoji_id)
+      .order(
+        Arel.sql('MIN(created_at)').asc
+      )
+  end
+
+  def value_for_reaction_me_column(account)
+    if account.nil?
+      'FALSE AS me'
+    else
+      <<~SQL.squish
+        EXISTS(
+          SELECT 1
+          FROM status_reactions inner_reactions
+          WHERE inner_reactions.account_id = #{account.id}
+            AND inner_reactions.status_id = status_reactions.status_id
+            AND inner_reactions.name = status_reactions.name
+            AND (
+              inner_reactions.custom_emoji_id = status_reactions.custom_emoji_id
+              OR inner_reactions.custom_emoji_id IS NULL
+                AND status_reactions.custom_emoji_id IS NULL
+            )
+        ) AS me
+      SQL
+    end
+  end
 
   def update_status_stat!(attrs)
     return if marked_for_destruction? || destroyed?
