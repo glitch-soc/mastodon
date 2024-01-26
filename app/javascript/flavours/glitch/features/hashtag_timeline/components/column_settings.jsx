@@ -9,8 +9,9 @@ import { NonceProvider } from 'react-select';
 import AsyncSelect from 'react-select/async';
 import Toggle from 'react-toggle';
 
-import SettingToggle from '../../notifications/components/setting_toggle';
 import { maxFeedHashtags } from 'flavours/glitch/initial_state';
+
+import SettingToggle from '../../notifications/components/setting_toggle';
 
 const messages = defineMessages({
   placeholder: { id: 'hashtag.column_settings.select.placeholder', defaultMessage: 'Enter hashtags…' },
