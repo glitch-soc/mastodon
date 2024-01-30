@@ -1546,6 +1546,9 @@ nl:
     errors:
       limit_reached: Limiet van verschillende emoji-reacties bereikt
       unrecognized_emoji: is geen bestaande emoji-reactie
+  redirects:
+    prompt: Als je deze link vertrouwt, klik er dan op om door te gaan.
+    title: Je verlaat %{instance}.
   relationships:
     activity: Accountactiviteit
     confirm_follow_selected_followers: Weet je zeker dat je de geselecteerde volgers wilt volgen?
@@ -1790,6 +1793,12 @@ nl:
       extra: Het staat nu klaar om te worden gedownload!
       subject: Jouw archief staat klaar om te worden gedownload
       title: Archief ophalen
+    failed_2fa:
+      details: 'Hier zijn details van de aanmeldpoging:'
+      explanation: Iemand heeft geprobeerd om in te loggen op jouw account maar heeft een ongeldige tweede verificatiefactor opgegeven.
+      further_actions_html: Als jij dit niet was, raden we je aan om onmiddellijk %{action} aangezien het in gevaar kan zijn.
+      subject: Tweede factor authenticatiefout
+      title: Tweestapsverificatie mislukt
     suspicious_sign_in:
       change_password: je wachtwoord te wijzigen
       details: 'Hier zijn de details van inlogpoging:'
@@ -1843,6 +1852,7 @@ nl:
     go_to_sso_account_settings: Ga naar de accountinstellingen van je identiteitsprovider
     invalid_otp_token: Ongeldige tweestaps-toegangscode
     otp_lost_help_html: Als je toegang tot beiden kwijt bent geraakt, neem dan contact op via %{email}
+    rate_limited: Te veel authenticatiepogingen, probeer het later opnieuw.
     seamless_external_login: Je bent ingelogd via een externe dienst, daarom zijn wachtwoorden en e-mailinstellingen niet beschikbaar.
     signed_in_as: 'Ingelogd als:'
   verification:
