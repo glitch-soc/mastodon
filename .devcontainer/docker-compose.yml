@@ -20,8 +20,6 @@ services:
       ES_ENABLED: 'true'
       ES_HOST: es
       ES_PORT: '9200'
-      MAX_TOOT_CHARS: 666
-      MAX_FEED_HASHTAGS: 5
       LIBRE_TRANSLATE_ENDPOINT: http://libretranslate:5000
     # Overrides default command so things don't shut down after the process ends.
     command: sleep infinity
