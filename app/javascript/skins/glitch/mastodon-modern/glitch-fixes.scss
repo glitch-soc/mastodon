@@ -40,12 +40,6 @@ body.app-body.flavour-glitch > #mastodon .collapsed .status__content br {
 body.app-body.flavour-glitch > #mastodon .collapsed .status__content::after {
   content: unset;
 }
-body.app-body.flavour-glitch > #mastodon .collapsed .status__action-bar :not(i),
-body.app-body.flavour-glitch > #mastodon .collapsed .detailed-status__action-bar :not(i),
-body.app-body.flavour-glitch > #mastodon .collapsed .picture-in-picture__footer :not(i) {
-  height: unset !important;
-  width: unset !important;
-}
 body.app-body.flavour-glitch > #mastodon .collapsed.muted .status__content__text ~ * {
   display: none;
 }
@@ -86,6 +80,10 @@ body.app-body.flavour-glitch > #mastodon .status__relative-time {
   z-index: 2;
   flex-grow: 0 !important;
   min-width: 5ch !important;
+  max-width: unset !important;
+}
+body.app-body.flavour-glitch > #mastodon .status__relative-time time {
+  display: inline !important;
 }
 body.app-body.flavour-glitch > #mastodon .reactions-bar {
   width: unset;
@@ -94,15 +92,14 @@ body.app-body.flavour-glitch > #mastodon .reactions-bar {
 body.app-body.flavour-glitch > #mastodon .reactions-bar button {
   border-radius: 6px !important;
   padding-block: 2px;
+  border: 1px solid var(--border-color-2);
 }
-@media (pointer: coarse) {
-  body.app-body.flavour-glitch > #mastodon .reactions-bar button {
-    padding: 4px 8px !important;
-  }
-  body.app-body.flavour-glitch > #mastodon .reactions-bar button .reactions-bar__item__emoji {
-    height: 18px;
-    width: 18px;
-  }
+body.app-body.flavour-glitch > #mastodon .reactions-bar button .reactions-bar__item__emoji {
+  height: 2em;
+  width: 2em;
+}
+body.app-body.flavour-glitch > #mastodon .reactions-bar button:not(.active) {
+  background: none;
 }
 body.app-body.flavour-glitch > #mastodon .reactions-bar:empty {
   display: none;
@@ -113,9 +110,6 @@ body.app-body.flavour-glitch > #mastodon .collapsed > .status__info .notificatio
 body.app-body.flavour-glitch > #mastodon .notification > .notification__message {
   padding-inline: 15px !important;
   padding-top: 18px !important;
-}
-body.app-body.flavour-glitch > #mastodon .notification .account {
-  padding-inline-start: 0 !important;
 }
 body.app-body.flavour-glitch > #mastodon .notification__favourite-icon-wrapper {
   position: static;
@@ -187,7 +181,9 @@ body.app-body.flavour-glitch > #mastodon .account-card .media-modal__close::befo
   z-index: -1;
   opacity: 0.5;
 }
+.layout-multiple-columns.flavour-glitch .drawer {
+  flex-grow: 0.2;
+}
 .layout-multiple-columns.flavour-glitch .drawer__inner {
   margin-top: -10px;
-  padding-top: 30px !important;
 }

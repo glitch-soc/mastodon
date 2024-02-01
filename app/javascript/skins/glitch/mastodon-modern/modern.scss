@@ -404,11 +404,16 @@ a:focus-visible,
 .account-card__title__avatar img {
   border-radius: 30% !important;
 }
+.scrollable,
 .detailed-status__action-bar,
 .column-header__collapsible-inner,
 .audio-player,
 .search__input {
   border: 0 !important;
+}
+.notification__filter-bar,
+.column-header {
+  border-inline: 0;
 }
 .dropdown-menu,
 .dropdown-animation {
@@ -457,6 +462,7 @@ a:focus-visible,
 }
 .columns-area__panels {
   --top: 5px;
+  gap: 0;
 }
 @media (min-width: 1175px) {
   .columns-area__panels {
@@ -472,22 +478,72 @@ a:focus-visible,
     --top: 30px;
   }
 }
+.emoji-picker-dropdown__menu {
+  border-radius: var(--radius);
+  overflow: hidden;
+  resize: both;
+  width: 400px;
+}
+.emoji-mart {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+.emoji-mart-scroll {
+  flex-grow: 1;
+  max-height: unset !important;
+}
+.emoji-mart-bar {
+  order: 2;
+}
+.emoji-mart-category-list {
+  overflow: visible !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(20px + 6%), 1fr));
+}
+.emoji-mart-category-list li {
+  display: contents;
+}
+.emoji-mart-category-list button {
+  position: relative;
+  padding-top: 100% !important;
+}
+.emoji-mart-category-list button img,
+.emoji-mart-category-list button span {
+  height: calc(100% - 10px) !important;
+  width: calc(100% - 10px) !important;
+  inset: 5px;
+  position: absolute !important;
+  transition: transform 0.1s cubic-bezier(0, 0, 0, 1);
+}
+.emoji-mart-category-list button:hover img,
+.emoji-mart-category-list button:hover span {
+  transform: scale(1.2);
+}
+.emoji-picker-dropdown__modifiers {
+  top: 16px;
+}
 #mastodon {
   overflow: clip;
 }
 #mastodon .compose-panel {
-  margin-top: 0;
   overflow-y: auto;
   margin-top: calc(0px - var(--top));
   padding-top: var(--top);
   padding-bottom: 20px;
+  padding-inline: 10px;
   box-sizing: border-box;
   max-height: unset !important;
   height: 100%;
 }
+#mastodon .compose-panel > * {
+  padding-inline: 0;
+}
 #mastodon .search {
-  margin-inline: 5px;
   border-radius: var(--radius);
+  margin-inline: -5px;
+  margin-bottom: 15px !important;
 }
 #mastodon .search label {
   box-sizing: border-box;
@@ -508,15 +564,17 @@ a:focus-visible,
   margin-inline: 4px;
   width: calc(100% - 8px);
 }
-#mastodon .compose__action-bar-dropdown .icon-button {
+#mastodon .navigation-bar .icon-button {
   width: auto !important;
   height: auto !important;
   padding: 8px;
 }
 #mastodon .compose-form {
-  padding-top: 10px;
   min-height: unset;
   overflow: unset;
+}
+#mastodon .compose-form > .navigation-bar {
+  margin-top: 10px;
 }
 #mastodon .compose-form .reply-indicator {
   position: relative;
@@ -524,6 +582,22 @@ a:focus-visible,
 }
 #mastodon .compose-form .reply-indicator__display-name {
   padding: 0;
+}
+#mastodon .compose-form .compose-form__highlightable {
+  border-radius: var(--radius);
+  overflow: visible !important;
+}
+#mastodon .compose-form .compose-form__highlightable > .compose-form__footer {
+  gap: 8px;
+}
+#mastodon .compose-form .compose-form__highlightable > .compose-form__footer .compose-form__buttons {
+  gap: 2px;
+}
+#mastodon .compose-form .compose-form__highlightable > .compose-form__footer .compose-form__buttons button {
+  padding: 6px;
+}
+#mastodon .compose-form .compose-form__highlightable .compose-form__submit button {
+  padding: 6px;
 }
 #mastodon .compose-form .compose-form__autosuggest-wrapper,
 #mastodon .compose-form .autosuggest-textarea__textarea {
@@ -565,7 +639,7 @@ a:focus-visible,
   transform: scale(1.2);
 }
 .server-banner {
-  padding-inline: 10px;
+  padding: 10px;
 }
 .server-banner .server-banner__hero {
   border-radius: var(--radius);
@@ -624,6 +698,9 @@ a:focus-visible,
 .navigation-panel__sign-in-banner .sign-in-banner > :last-child {
   margin-bottom: 0;
 }
+#mastodon .link-footer {
+  margin-top: 20px;
+}
 #mastodon .link-footer > p:last-child {
   margin-bottom: 0;
 }
@@ -635,6 +712,7 @@ a:focus-visible,
   .columns-area__panels__main {
     width: 0;
     flex-grow: 1;
+    padding-inline: 10px;
   }
 }
 @media (min-width: 1320px) {
@@ -670,7 +748,6 @@ a:focus-visible,
 }
 #mastodon .scrollable:not(.scrollable--flex),
 #mastodon .activity-stream {
-  border: 0 !important;
   contain: unset !important;
 }
 #mastodon .scrollable:not(.scrollable--flex):not(.activity-stream):not(.privacy-policy),
@@ -827,8 +904,7 @@ a:focus-visible,
   }
 }
 #mastodon .column:not(.scrollable--flex) > .dismissable-banner {
-  border-radius: var(--radius) var(--radius) 0 0 !important;
-  margin: 0;
+  margin: 0 !important;
 }
 #mastodon .column:not(.scrollable--flex) > .dismissable-banner ~ .scrollable {
   border-radius: 0 !important;
@@ -1176,38 +1252,38 @@ a:focus-visible,
   font-weight: 600;
   padding-inline: 14px;
 }
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) {
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) {
   background: none;
   position: relative;
   z-index: 2;
 }
-.with-modals  #mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) {
+.with-modals  #mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) {
   border: 0 !important;
 }
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) a,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) button {
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) a,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) button {
   background: none;
   border-radius: 0 !important;
 }
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) a span,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) button span {
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) a span,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) button span {
   font-weight: 400;
   opacity: 0.7;
   transition: opacity 0.2s;
 }
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) a.active span,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) button.active span {
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) a.active span,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) button.active span {
   font-weight: 700;
   opacity: 1;
 }
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) a:hover span,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) button:hover span,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) a:active span,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) button:active span {
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) a:hover span,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) button:hover span,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) a:active span,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) button:active span {
   opacity: 1 !important;
 }
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) a::before,
-#mastodon .account__section-headline:not(:first-child):not(:nth-child(2)) button::before {
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) a::before,
+#mastodon :not(.explore__search-header) + .account__section-headline:not(:first-child) button::before {
   border-color: transparent transparent var(--border-color);
 }
 #mastodon .account-gallery__container {
@@ -1247,6 +1323,210 @@ a:focus-visible,
 }
 #mastodon .account-gallery__container > button:hover:not(:focus) {
   transform: scale(1.01);
+}
+@media (max-width: 890px) {
+  #mastodon #Follow-requests.column-header {
+    display: none;
+  }
+}
+@media (min-width: 890px) {
+  #mastodon #Follow-requests ~ .scrollable .item-list {
+    display: grid;
+    align-items: stretch;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 0 10px;
+  }
+  #mastodon #Follow-requests ~ .scrollable .item-list > article {
+    display: flex;
+  }
+}
+.layout-multiple-columns article:first-child .account-authorize__wrapper {
+  margin-top: 10px;
+}
+@media (max-width: 890px) {
+  #mastodon article:first-child .account-authorize__wrapper {
+    margin-top: 10px;
+  }
+}
+#mastodon .account-authorize__wrapper {
+  background: var(--elevated-color);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex-grow: 1;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+@media (max-width: 890px) {
+  #mastodon .account-authorize__wrapper {
+    margin-inline: 10px;
+  }
+}
+.layout-multiple-columns  #mastodon .account-authorize__wrapper {
+  margin-inline: 10px;
+}
+#mastodon .account-authorize__wrapper .account-authorize {
+  padding: 20px 15px 10px;
+}
+#mastodon .account-authorize__wrapper .detailed-status__display-name {
+  margin-bottom: 10px !important;
+}
+#mastodon .account-authorize__wrapper .account--panel {
+  margin-top: auto;
+  border-bottom: 0;
+  padding-inline: 15px;
+  gap: 10px;
+  background: none;
+}
+#mastodon .account-authorize__wrapper br {
+  display: block;
+}
+#mastodon .account-authorize__wrapper p {
+  margin-bottom: 0.2em;
+}
+#mastodon .account-authorize__wrapper .account--panel__button:first-child .icon-button:not(:hover):not(:focus) {
+  background: var(--elevated-color);
+}
+#mastodon .account-authorize__wrapper .icon-button {
+  width: 100% !important;
+  padding: 10px;
+  height: unset !important;
+}
+#mastodon .account-card {
+  display: flex;
+  flex-direction: column;
+  max-height: 360px;
+  margin: 0;
+  border-radius: var(--radius) !important;
+  background: var(--elevated-color);
+  box-shadow: none !important;
+  box-shadow: var(--shadow);
+}
+.explore__suggestions,
+.directory__list {
+  padding: 15px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 10px;
+}
+.explore__suggestions.directory__list,
+.directory__list.directory__list {
+  padding: 15px 10px;
+}
+.layout-multiple-columns .explore__suggestions,
+.layout-multiple-columns .directory__list {
+  display: block;
+}
+.layout-multiple-columns .explore__suggestions > *,
+.layout-multiple-columns .directory__list > * {
+  margin: 10px !important;
+}
+@media (max-width: 890px) {
+  .explore__suggestions,
+  .directory__list {
+    gap: 0 !important;
+  }
+  .explore__suggestions > *,
+  .directory__list > * {
+    margin: 10px !important;
+  }
+}
+#mastodon .account-card .account-card__header {
+  padding: 0 !important;
+}
+#mastodon .account-card .account-card__title {
+  margin-bottom: 10px;
+  margin-top: -24px;
+}
+#mastodon .account-card .account-card__title__avatar {
+  padding-inline-end: 10px;
+  padding-bottom: 0;
+}
+#mastodon .account-card .display-name {
+  padding-bottom: 0;
+}
+#mastodon .account-card .display-name__account {
+  font-size: 0.9em !important;
+}
+#mastodon .account-card .account-card__title__avatar .account__avatar,
+#mastodon .account-card .account-card__title__avatar {
+  width: 64px !important;
+  height: 64px !important;
+  background-size: 64px 64px !important;
+}
+#mastodon .account-card .account-card__title__avatar .account__avatar img,
+#mastodon .account-card .account-card__title__avatar img {
+  width: inherit;
+  height: inherit;
+}
+#mastodon .account-card .account-card__title {
+  padding-inline-end: 15px;
+}
+#mastodon .account-card .display-name bdi {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+#mastodon .account-card .account-card__bio {
+  margin-top: 0 !important;
+  max-height: unset;
+  mask: linear-gradient(#000 65px, rgba(0,0,0,0.5), transparent);
+  -webkit-mask: linear-gradient(#000 65px, rgba(0,0,0,0.5), transparent);
+  flex-grow: 1;
+  margin-bottom: -50px;
+  margin-bottom: -15px;
+  font-size: 1em;
+  padding-bottom: 60px;
+}
+#mastodon .account-card .account-card__bio::after {
+  content: unset !important;
+}
+#mastodon .account-card .account-card__bio br {
+  display: block;
+}
+#mastodon .account-card .account-card__actions {
+  margin-top: auto !important;
+  display: unset !important;
+}
+#mastodon .account-card .account-card__actions .account-card__counters {
+  display: flex;
+  gap: 1em;
+  padding-inline: 15px;
+}
+#mastodon .account-card .account-card__actions .account-card__counters__item {
+  display: flex;
+  align-items: center;
+  font-size: 1em;
+}
+#mastodon .account-card .account-card__actions .account-card__counters__item > small {
+  display: inline !important;
+  margin-inline-start: 0.4em;
+  font-size: 1em !important;
+}
+#mastodon .account-card .account-card__actions .account-card__actions__button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0;
+  background: rgba(0,0,0,0.4);
+  border-radius: var(--radius-round);
+  padding: 4px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+#mastodon .account-card .account-card__actions .account-card__actions__button button,
+#mastodon .account-card .account-card__actions .account-card__actions__button a {
+  border-radius: var(--radius-round) !important;
+  padding: 0.7em 1.7em;
+  min-height: unset;
+  font-size: 14px !important;
+  line-height: 1.2;
+  font-size: 1em !important;
+}
+#mastodon .account-card .account-card__actions .account-card__actions__button:empty {
+  display: none;
+}
+#mastodon .account-card::after {
+  content: unset !important;
 }
 #mastodon .scrollable > div:first-child > [tabindex="-1"]:last-child .status__wrapper::after {
   content: unset;
@@ -1290,6 +1570,7 @@ a:focus-visible,
 .scrollable :not(.focusable) > .account.account-card,
 .timeline-hint.account-card {
   animation-name: slideUpFade;
+  animation-delay: 0.44s;
 }
 .focusable.trends__item:nth-child(1),
 .entry.trends__item:nth-child(1),
@@ -1707,7 +1988,6 @@ a:focus-visible,
   float: right;
   overflow: visible !important;
   position: relative;
-  z-index: -1;
 }
 .explore__links .trends__item .trends__item__sparkline svg path {
   display: unset !important;
@@ -1770,318 +2050,6 @@ a:focus-visible,
   margin-inline-end: 0;
   border-radius: var(--radius);
   overflow: hidden;
-}
-.focusable.account-card.account-card.account-card,
-.entry.account-card.account-card.account-card,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card,
-.trends__item.account-card.account-card.account-card,
-.story.account-card.account-card.account-card,
-.account-card.account-card.account-card.account-card,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card,
-.timeline-hint.account-card.account-card.account-card {
-  display: flex;
-  flex-direction: column;
-  max-height: 320px;
-  margin: 0;
-  border-radius: var(--radius) !important;
-  box-shadow: var(--shadow);
-}
-.explore__suggestions,
-.directory__list {
-  padding: 15px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 15px;
-}
-.explore__suggestions.directory__list,
-.directory__list.directory__list {
-  padding: 15px 10px;
-}
-.layout-multiple-columns .explore__suggestions,
-.layout-multiple-columns .directory__list {
-  display: block !important;
-}
-.layout-multiple-columns .explore__suggestions > *,
-.layout-multiple-columns .directory__list > * {
-  margin: 10px !important;
-}
-.focusable.account-card.account-card.account-card .account-card__header,
-.entry.account-card.account-card.account-card .account-card__header,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__header,
-.trends__item.account-card.account-card.account-card .account-card__header,
-.story.account-card.account-card.account-card .account-card__header,
-.account-card.account-card.account-card.account-card .account-card__header,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__header,
-.timeline-hint.account-card.account-card.account-card .account-card__header {
-  padding: 0 !important;
-}
-.focusable.account-card.account-card.account-card .account-card__title,
-.entry.account-card.account-card.account-card .account-card__title,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title,
-.trends__item.account-card.account-card.account-card .account-card__title,
-.story.account-card.account-card.account-card .account-card__title,
-.account-card.account-card.account-card.account-card .account-card__title,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title,
-.timeline-hint.account-card.account-card.account-card .account-card__title {
-  margin-bottom: 10px;
-  margin-top: -26px;
-}
-.focusable.account-card.account-card.account-card .account-card__title__avatar,
-.entry.account-card.account-card.account-card .account-card__title__avatar,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title__avatar,
-.trends__item.account-card.account-card.account-card .account-card__title__avatar,
-.story.account-card.account-card.account-card .account-card__title__avatar,
-.account-card.account-card.account-card.account-card .account-card__title__avatar,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title__avatar,
-.timeline-hint.account-card.account-card.account-card .account-card__title__avatar {
-  padding-inline-end: 10px;
-  padding-bottom: 0;
-}
-.focusable.account-card.account-card.account-card .display-name,
-.entry.account-card.account-card.account-card .display-name,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .display-name,
-.trends__item.account-card.account-card.account-card .display-name,
-.story.account-card.account-card.account-card .display-name,
-.account-card.account-card.account-card.account-card .display-name,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .display-name,
-.timeline-hint.account-card.account-card.account-card .display-name {
-  padding-bottom: 0;
-}
-.focusable.account-card.account-card.account-card .display-name__account,
-.entry.account-card.account-card.account-card .display-name__account,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .display-name__account,
-.trends__item.account-card.account-card.account-card .display-name__account,
-.story.account-card.account-card.account-card .display-name__account,
-.account-card.account-card.account-card.account-card .display-name__account,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .display-name__account,
-.timeline-hint.account-card.account-card.account-card .display-name__account {
-  font-size: 0.9em !important;
-}
-.focusable.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.entry.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.trends__item.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.story.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.account-card.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.timeline-hint.account-card.account-card.account-card .account-card__title__avatar .account__avatar,
-.focusable.account-card.account-card.account-card .account-card__title__avatar,
-.entry.account-card.account-card.account-card .account-card__title__avatar,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title__avatar,
-.trends__item.account-card.account-card.account-card .account-card__title__avatar,
-.story.account-card.account-card.account-card .account-card__title__avatar,
-.account-card.account-card.account-card.account-card .account-card__title__avatar,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title__avatar,
-.timeline-hint.account-card.account-card.account-card .account-card__title__avatar {
-  width: 64px !important;
-  height: 64px !important;
-  background-size: 64px 64px !important;
-}
-.focusable.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.entry.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.trends__item.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.story.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.account-card.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.timeline-hint.account-card.account-card.account-card .account-card__title__avatar .account__avatar img,
-.focusable.account-card.account-card.account-card .account-card__title__avatar img,
-.entry.account-card.account-card.account-card .account-card__title__avatar img,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title__avatar img,
-.trends__item.account-card.account-card.account-card .account-card__title__avatar img,
-.story.account-card.account-card.account-card .account-card__title__avatar img,
-.account-card.account-card.account-card.account-card .account-card__title__avatar img,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title__avatar img,
-.timeline-hint.account-card.account-card.account-card .account-card__title__avatar img {
-  width: inherit;
-  height: inherit;
-}
-.focusable.account-card.account-card.account-card .account-card__title,
-.entry.account-card.account-card.account-card .account-card__title,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__title,
-.trends__item.account-card.account-card.account-card .account-card__title,
-.story.account-card.account-card.account-card .account-card__title,
-.account-card.account-card.account-card.account-card .account-card__title,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__title,
-.timeline-hint.account-card.account-card.account-card .account-card__title {
-  padding-inline-end: 15px;
-}
-.focusable.account-card.account-card.account-card .display-name bdi,
-.entry.account-card.account-card.account-card .display-name bdi,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .display-name bdi,
-.trends__item.account-card.account-card.account-card .display-name bdi,
-.story.account-card.account-card.account-card .display-name bdi,
-.account-card.account-card.account-card.account-card .display-name bdi,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .display-name bdi,
-.timeline-hint.account-card.account-card.account-card .display-name bdi {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-.focusable.account-card.account-card.account-card .account-card__bio,
-.entry.account-card.account-card.account-card .account-card__bio,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__bio,
-.trends__item.account-card.account-card.account-card .account-card__bio,
-.story.account-card.account-card.account-card .account-card__bio,
-.account-card.account-card.account-card.account-card .account-card__bio,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__bio,
-.timeline-hint.account-card.account-card.account-card .account-card__bio {
-  margin-top: 0 !important;
-  max-height: unset;
-  mask: linear-gradient(#000 65px, rgba(0,0,0,0.5), transparent);
-  -webkit-mask: linear-gradient(#000 65px, rgba(0,0,0,0.5), transparent);
-  flex-grow: 1;
-  margin-bottom: -50px;
-  margin-bottom: -15px;
-  font-size: 1em;
-  padding-bottom: 60px;
-}
-.focusable.account-card.account-card.account-card .account-card__bio::after,
-.entry.account-card.account-card.account-card .account-card__bio::after,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__bio::after,
-.trends__item.account-card.account-card.account-card .account-card__bio::after,
-.story.account-card.account-card.account-card .account-card__bio::after,
-.account-card.account-card.account-card.account-card .account-card__bio::after,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__bio::after,
-.timeline-hint.account-card.account-card.account-card .account-card__bio::after {
-  content: unset !important;
-}
-.focusable.account-card.account-card.account-card .account-card__bio p,
-.entry.account-card.account-card.account-card .account-card__bio p,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__bio p,
-.trends__item.account-card.account-card.account-card .account-card__bio p,
-.story.account-card.account-card.account-card .account-card__bio p,
-.account-card.account-card.account-card.account-card .account-card__bio p,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__bio p,
-.timeline-hint.account-card.account-card.account-card .account-card__bio p {
-  display: inline;
-}
-.focusable.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.entry.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.trends__item.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.story.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.account-card.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before,
-.timeline-hint.account-card.account-card.account-card .account-card__bio p:not(:first-child)::before {
-  content: " · ";
-}
-.focusable.account-card.account-card.account-card .account-card__bio br,
-.entry.account-card.account-card.account-card .account-card__bio br,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__bio br,
-.trends__item.account-card.account-card.account-card .account-card__bio br,
-.story.account-card.account-card.account-card .account-card__bio br,
-.account-card.account-card.account-card.account-card .account-card__bio br,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__bio br,
-.timeline-hint.account-card.account-card.account-card .account-card__bio br {
-  display: block;
-}
-.focusable.account-card.account-card.account-card .account-card__actions,
-.entry.account-card.account-card.account-card .account-card__actions,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions,
-.trends__item.account-card.account-card.account-card .account-card__actions,
-.story.account-card.account-card.account-card .account-card__actions,
-.account-card.account-card.account-card.account-card .account-card__actions,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions,
-.timeline-hint.account-card.account-card.account-card .account-card__actions {
-  margin-top: auto !important;
-  display: unset !important;
-}
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.story.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__counters,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__counters {
-  display: flex;
-  gap: 1em;
-  padding-inline: 15px;
-}
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.story.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__counters__item,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__counters__item {
-  display: flex;
-  align-items: center;
-  font-size: 1em;
-}
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.story.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__counters__item > small {
-  display: inline !important;
-  margin-inline-start: 0.4em;
-  font-size: 1em !important;
-}
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.story.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__actions__button,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__actions__button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 0;
-  background: rgba(0,0,0,0.4);
-  border-radius: var(--radius-round);
-  padding: 4px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.story.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__actions__button button,
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.story.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__actions__button a,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__actions__button a {
-  border-radius: var(--radius-round) !important;
-  padding: 0.7em 1.7em;
-  min-height: unset;
-  font-size: 14px !important;
-  line-height: 1.2;
-  font-size: 1em !important;
-}
-.focusable.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.entry.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.trends__item.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.story.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.account-card.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty,
-.timeline-hint.account-card.account-card.account-card .account-card__actions .account-card__actions__button:empty {
-  display: none;
-}
-.focusable.account-card.account-card.account-card::after,
-.entry.account-card.account-card.account-card::after,
-.statuses-grid__item .detailed-status.account-card.account-card.account-card::after,
-.trends__item.account-card.account-card.account-card::after,
-.story.account-card.account-card.account-card::after,
-.account-card.account-card.account-card.account-card::after,
-.scrollable :not(.focusable) > .account.account-card.account-card.account-card::after,
-.timeline-hint.account-card.account-card.account-card::after {
-  content: unset !important;
 }
 .focusable.empty-column-indicator,
 .entry.empty-column-indicator,
@@ -2338,10 +2306,11 @@ a:focus-visible,
   width: auto;
 }
 .custom-emoji {
-  transition: transform 0.4s cubic-bezier(0, 0.7, 0, 1);
+  transition: transform 1s cubic-bezier(0, 0.7, 0, 1);
 }
 .custom-emoji:hover {
-  transform: scale(1.3);
+  transform: scale(1.7);
+  transition: transform 0.4s cubic-bezier(0, 0.7, 0, 1);
 }
 #mastodon .status__content ~ [style*="aspect-ratio"] {
   max-height: 80vh;
@@ -2350,7 +2319,8 @@ a:focus-visible,
   margin-top: -5px !important;
 }
 #mastodon .status__content__spoiler-link {
-  display: block;
+  display: flex;
+  align-items: center;
   position: relative;
   padding: 0.4em 1.2em;
   border-radius: var(--radius-round) !important;
@@ -2709,12 +2679,18 @@ a:focus-visible,
 #mastodon .picture-in-picture__footer.picture-in-picture__footer .icon-button {
   flex-grow: 1 !important;
 }
-#mastodon .status__action-bar.detailed-status__action-bar > div,
-#mastodon .detailed-status__action-bar.detailed-status__action-bar > div,
-#mastodon .picture-in-picture__footer.detailed-status__action-bar > div,
-#mastodon .status__action-bar.picture-in-picture__footer > div,
-#mastodon .detailed-status__action-bar.picture-in-picture__footer > div,
-#mastodon .picture-in-picture__footer.picture-in-picture__footer > div {
+#mastodon .status__action-bar.detailed-status__action-bar div,
+#mastodon .detailed-status__action-bar.detailed-status__action-bar div,
+#mastodon .picture-in-picture__footer.detailed-status__action-bar div,
+#mastodon .status__action-bar.picture-in-picture__footer div,
+#mastodon .detailed-status__action-bar.picture-in-picture__footer div,
+#mastodon .picture-in-picture__footer.picture-in-picture__footer div,
+#mastodon .status__action-bar.detailed-status__action-bar > div > span,
+#mastodon .detailed-status__action-bar.detailed-status__action-bar > div > span,
+#mastodon .picture-in-picture__footer.detailed-status__action-bar > div > span,
+#mastodon .status__action-bar.picture-in-picture__footer > div > span,
+#mastodon .detailed-status__action-bar.picture-in-picture__footer > div > span,
+#mastodon .picture-in-picture__footer.picture-in-picture__footer > div > span {
   display: flex;
   justify-content: center;
   flex-grow: 1;
@@ -3848,6 +3824,9 @@ a:focus-visible,
     flex-grow: 1;
     overflow: visible !important;
   }
+  #mastodon .compose-form {
+    padding: 10px;
+  }
   #mastodon .compose-form::before {
     content: "";
     position: absolute;
@@ -4645,7 +4624,11 @@ a:focus-visible,
   background-color: transparent !important;
 }
 .layout-multiple-columns #mastodon .columns-area .drawer__inner.darker {
+  padding: 0 !important;
   border-radius: var(--radius-round) var(--radius-round) 0 0;
+}
+.layout-multiple-columns #mastodon .columns-area .compose-form:first-child {
+  padding-top: 0;
 }
 .layout-multiple-columns #mastodon .columns-area .getting-started__trends {
   padding: 0px 20px;
