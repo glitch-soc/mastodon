@@ -6,14 +6,17 @@ import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
 
+import { createSelector } from '@reduxjs/toolkit';
 import Immutable from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 
 import { HotKeys } from 'react-hotkeys';
 
+import ChatIcon from '@/material-icons/400-24px/chat.svg?react';
+import VisibilityIcon from '@/material-icons/400-24px/visibility.svg?react';
+import VisibilityOffIcon from '@/material-icons/400-24px/visibility_off.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
@@ -610,7 +613,7 @@ class Status extends ImmutablePureComponent {
     this.setState({ isExpanded: value });
   };
 
-  setRef = c => {
+  setContainerRef = c => {
     this.node = c;
   };
 
@@ -618,12 +621,16 @@ class Status extends ImmutablePureComponent {
     this.column = c;
   };
 
+  setStatusRef = c => {
+    this.statusNode = c;
+  };
+
   _scrollStatusIntoView () {
     const { status, multiColumn } = this.props;
 
     if (status) {
-      window.requestAnimationFrame(() => {
-        this.node?.querySelector('.detailed-status__wrapper')?.scrollIntoView(true);
+      requestIdleCallback(() => {
+        this.statusNode?.scrollIntoView(true);
 
         // In the single-column interface, `scrollIntoView` will put the post behind the header,
         // so compensate for that.
@@ -661,9 +668,8 @@ class Status extends ImmutablePureComponent {
     }
 
     // Scroll to focused post if it is loaded
-    const child = this.node?.querySelector('.detailed-status__wrapper');
-    if (child) {
-      return [0, child.offsetTop];
+    if (this.statusNode) {
+      return [0, this.statusNode.offsetTop];
     }
 
     // Do not scroll otherwise, `componentDidUpdate` will take care of that
@@ -720,21 +726,22 @@ class Status extends ImmutablePureComponent {
       <Column bindToDocument={!multiColumn} ref={this.setColumnRef} label={intl.formatMessage(messages.detailedStatus)}>
         <ColumnHeader
           icon='comment'
+          iconComponent={ChatIcon}
           title={intl.formatMessage(messages.tootHeading)}
           onClick={this.handleHeaderClick}
           showBackButton
           multiColumn={multiColumn}
           extraButton={(
-            <button type='button' className='column-header__button' title={intl.formatMessage(!isExpanded ? messages.revealAll : messages.hideAll)} aria-label={intl.formatMessage(!isExpanded ? messages.revealAll : messages.hideAll)} onClick={this.handleToggleAll}><Icon id={!isExpanded ? 'eye-slash' : 'eye'} /></button>
+            <button type='button' className='column-header__button' title={intl.formatMessage(!isExpanded ? messages.revealAll : messages.hideAll)} aria-label={intl.formatMessage(!isExpanded ? messages.revealAll : messages.hideAll)} onClick={this.handleToggleAll}><Icon id={!isExpanded ? 'eye-slash' : 'eye'} icon={isExpanded ? VisibilityOffIcon : VisibilityIcon} /></button>
           )}
         />
 
         <ScrollContainer scrollKey='thread' shouldUpdateScroll={this.shouldUpdateScroll}>
-          <div className={classNames('scrollable', { fullscreen })} ref={this.setRef}>
+          <div className={classNames('scrollable', { fullscreen })} ref={this.setContainerRef}>
             {ancestors}
 
             <HotKeys handlers={handlers}>
-              <div className={classNames('focusable', 'detailed-status__wrapper', `detailed-status__wrapper-${status.get('visibility')}`)} tabIndex={0} aria-label={textForScreenReader(intl, status, false, isExpanded)}>
+              <div className={classNames('focusable', 'detailed-status__wrapper', `detailed-status__wrapper-${status.get('visibility')}`)} tabIndex={0} aria-label={textForScreenReader(intl, status, false, isExpanded)} ref={this.setStatusRef}>
                 <DetailedStatus
                   key={`details-${status.get('id')}`}
                   status={status}

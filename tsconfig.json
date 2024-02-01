@@ -10,6 +10,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": "./",
+    "incremental": true,
+    "tsBuildInfoFile": "tmp/cache/tsconfig.tsbuildinfo",
     "paths": {
       "locales": ["app/javascript/locales"],
       "styles/*": ["app/javascript/styles/*"],
@@ -17,14 +19,15 @@
       "flavours/glitch": ["app/javascript/flavours/glitch"],
       "flavours/glitch/*": ["app/javascript/flavours/glitch/*"],
       "mastodon": ["app/javascript/mastodon"],
-      "mastodon/*": ["app/javascript/mastodon/*"]
-    }
+      "mastodon/*": ["app/javascript/mastodon/*"],
+      "@/*": ["app/javascript/*"],
+    },
   },
   "include": [
     "app/javascript/mastodon",
     "app/javascript/packs",
     "app/javascript/types",
     "app/javascript/flavours/glitch",
-    "app/javascript/core"
-  ]
+    "app/javascript/core",
+  ],
 }

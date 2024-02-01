@@ -4,18 +4,32 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import { Helmet } from 'react-helmet';
 
+import { createSelector } from '@reduxjs/toolkit';
 import { List as ImmutableList } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 
+import BookmarksIcon from '@/material-icons/400-24px/bookmarks-fill.svg?react';
+import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
+import HomeIcon from '@/material-icons/400-24px/home-fill.svg?react';
+import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
+import MailIcon from '@/material-icons/400-24px/mail.svg?react';
+import ManufacturingIcon from '@/material-icons/400-24px/manufacturing.svg?react';
+import MenuIcon from '@/material-icons/400-24px/menu.svg?react';
+import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
+import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
+import PersonAddIcon from '@/material-icons/400-24px/person_add.svg?react';
+import PublicIcon from '@/material-icons/400-24px/public.svg?react';
+import SettingsIcon from '@/material-icons/400-24px/settings-fill.svg?react';
+import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import { fetchFollowRequests } from 'flavours/glitch/actions/accounts';
 import { fetchLists } from 'flavours/glitch/actions/lists';
 import { openModal } from 'flavours/glitch/actions/modal';
 import Column from 'flavours/glitch/features/ui/components/column';
 import LinkFooter from 'flavours/glitch/features/ui/components/link_footer';
 import { preferencesLink } from 'flavours/glitch/utils/backend_links';
+
 
 import { me, showTrends } from '../../initial_state';
 import NavigationBar from '../compose/components/navigation_bar';
@@ -127,53 +141,53 @@ class GettingStarted extends ImmutablePureComponent {
 
     if (multiColumn) {
       if (signedIn && !columns.find(item => item.get('id') === 'HOME')) {
-        navItems.push(<ColumnLink key='home' icon='home' text={intl.formatMessage(messages.home_timeline)} to='/home' />);
+        navItems.push(<ColumnLink key='home' icon='home' iconComponent={HomeIcon} text={intl.formatMessage(messages.home_timeline)} to='/home' />);
       }
 
       if (!columns.find(item => item.get('id') === 'NOTIFICATIONS')) {
-        navItems.push(<ColumnLink key='notifications' icon='bell' text={intl.formatMessage(messages.notifications)} badge={badgeDisplay(unreadNotifications)} to='/notifications' />);
+        navItems.push(<ColumnLink key='notifications' icon='bell' iconComponent={NotificationsIcon} text={intl.formatMessage(messages.notifications)} badge={badgeDisplay(unreadNotifications)} to='/notifications' />);
       }
 
       if (!columns.find(item => item.get('id') === 'COMMUNITY')) {
-        navItems.push(<ColumnLink key='community_timeline' icon='users' text={intl.formatMessage(messages.community_timeline)} to='/public/local' />);
+        navItems.push(<ColumnLink key='community_timeline' icon='users' iconComponent={PeopleIcon} text={intl.formatMessage(messages.community_timeline)} to='/public/local' />);
       }
 
       if (!columns.find(item => item.get('id') === 'PUBLIC')) {
-        navItems.push(<ColumnLink key='public_timeline' icon='globe' text={intl.formatMessage(messages.public_timeline)} to='/public' />);
+        navItems.push(<ColumnLink key='public_timeline' icon='globe' iconComponent={PublicIcon} text={intl.formatMessage(messages.public_timeline)} to='/public' />);
       }
     }
 
     if (showTrends) {
-      navItems.push(<ColumnLink key='explore' icon='hashtag' text={intl.formatMessage(messages.explore)} to='/explore' />);
+      navItems.push(<ColumnLink key='explore' icon='hashtag' iconComponent={TagIcon} text={intl.formatMessage(messages.explore)} to='/explore' />);
     }
 
     if (signedIn) {
       if (!multiColumn || !columns.find(item => item.get('id') === 'DIRECT')) {
-        navItems.push(<ColumnLink key='conversations' icon='envelope' text={intl.formatMessage(messages.direct)} to='/conversations' />);
+        navItems.push(<ColumnLink key='conversations' icon='envelope' iconComponent={MailIcon} text={intl.formatMessage(messages.direct)} to='/conversations' />);
       }
 
       if (!multiColumn || !columns.find(item => item.get('id') === 'BOOKMARKS')) {
-        navItems.push(<ColumnLink key='bookmarks' icon='bookmark' text={intl.formatMessage(messages.bookmarks)} to='/bookmarks' />);
+        navItems.push(<ColumnLink key='bookmarks' icon='bookmark' iconComponent={BookmarksIcon} text={intl.formatMessage(messages.bookmarks)} to='/bookmarks' />);
       }
 
       if (myAccount.get('locked') || unreadFollowRequests > 0) {
-        navItems.push(<ColumnLink key='follow_requests' icon='user-plus' text={intl.formatMessage(messages.follow_requests)} badge={badgeDisplay(unreadFollowRequests, 40)} to='/follow_requests' />);
+        navItems.push(<ColumnLink key='follow_requests' icon='user-plus' iconComponent={PersonAddIcon} text={intl.formatMessage(messages.follow_requests)} badge={badgeDisplay(unreadFollowRequests, 40)} to='/follow_requests' />);
       }
 
-      navItems.push(<ColumnLink key='getting_started' icon='ellipsis-h' text={intl.formatMessage(messages.misc)} to='/getting-started-misc' />);
+      navItems.push(<ColumnLink key='getting_started' icon='ellipsis-h' iconComponent={MoreHorizIcon} text={intl.formatMessage(messages.misc)} to='/getting-started-misc' />);
 
       listItems = listItems.concat([
         <div key='9'>
-          <ColumnLink key='lists' icon='bars' text={intl.formatMessage(messages.lists)} to='/lists' />
+          <ColumnLink key='lists' icon='bars' iconComponent={ListAltIcon} text={intl.formatMessage(messages.lists)} to='/lists' />
           {lists.filter(list => !columns.find(item => item.get('id') === 'LIST' && item.getIn(['params', 'id']) === list.get('id'))).map(list =>
-            <ColumnLink key={`list-${list.get('id')}`} to={`/lists/${list.get('id')}`} icon='list-ul' text={list.get('title')} />,
+            <ColumnLink key={`list-${list.get('id')}`} to={`/lists/${list.get('id')}`} icon='list-ul' iconComponent={ListAltIcon} text={list.get('title')} />,
           )}
         </div>,
       ]);
     }
 
     return (
-      <Column bindToDocument={!multiColumn} icon='asterisk' heading={intl.formatMessage(messages.heading)} label={intl.formatMessage(messages.menu)} hideHeadingOnMobile>
+      <Column bindToDocument={!multiColumn} icon='bars' iconComponent={MenuIcon} heading={intl.formatMessage(messages.heading)} label={intl.formatMessage(messages.menu)} hideHeadingOnMobile>
         <div className='scrollable optionally-scrollable'>
           <div className='getting-started__wrapper'>
             {!multiColumn && signedIn && <NavigationBar account={myAccount} />}
@@ -184,8 +198,8 @@ class GettingStarted extends ImmutablePureComponent {
                 <ColumnSubheading text={intl.formatMessage(messages.lists_subheading)} />
                 {listItems}
                 <ColumnSubheading text={intl.formatMessage(messages.settings_subheading)} />
-                { preferencesLink !== undefined && <ColumnLink icon='cog' text={intl.formatMessage(messages.preferences)} href={preferencesLink} /> }
-                <ColumnLink icon='cogs' text={intl.formatMessage(messages.settings)} onClick={openSettings} />
+                { preferencesLink !== undefined && <ColumnLink icon='cog' iconComponent={SettingsIcon} text={intl.formatMessage(messages.preferences)} href={preferencesLink} /> }
+                <ColumnLink icon='cogs' iconComponent={ManufacturingIcon} text={intl.formatMessage(messages.settings)} onClick={openSettings} />
               </>
             )}
           </div>

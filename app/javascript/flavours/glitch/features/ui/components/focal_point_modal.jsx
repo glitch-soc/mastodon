@@ -16,6 +16,7 @@ import tesseractWorkerPath from 'tesseract.js/dist/worker.min.js';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import tesseractCorePath from 'tesseract.js-core/tesseract-core.wasm.js';
 
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { Button } from 'flavours/glitch/components/button';
 import { GIFV } from 'flavours/glitch/components/gifv';
 import { IconButton } from 'flavours/glitch/components/icon_button';
@@ -312,7 +313,7 @@ class FocalPointModal extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal report-modal' style={{ maxWidth: 960 }}>
         <div className='report-modal__target'>
-          <IconButton className='report-modal__close' title={intl.formatMessage(messages.close)} icon='times' onClick={onClose} size={20} />
+          <IconButton className='report-modal__close' title={intl.formatMessage(messages.close)} icon='times' iconComponent={CloseIcon} onClick={onClose} size={20} />
           <FormattedMessage id='upload_modal.edit_media' defaultMessage='Edit media' />
         </div>
 

@@ -4,8 +4,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
+import LockIcon from '@/material-icons/400-24px/lock.svg?react';
+import LockOpenIcon from '@/material-icons/400-24px/lock_open.svg?react';
+import MailIcon from '@/material-icons/400-24px/mail.svg?react';
+import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
+
 
 const messages = defineMessages({
   publish: {
@@ -37,16 +42,33 @@ class Publisher extends ImmutablePureComponent {
   render () {
     const { disabled, intl, onSecondarySubmit, privacy, sideArm, isEditing } = this.props;
 
-    const privacyIcons = { direct: 'envelope', private: 'lock', public: 'globe', unlisted: 'unlock' };
+    const privacyIcons = {
+      direct: {
+        id: 'envelope',
+        icon: MailIcon,
+      },
+      private: {
+        id: 'lock',
+        icon: LockIcon,
+      },
+      public: {
+        id: 'globe',
+        icon: PublicIcon,
+      },
+      unlisted: {
+        id: 'unlock',
+        icon: LockOpenIcon,
+      },
+    };
 
     let publishText;
     if (isEditing) {
       publishText = intl.formatMessage(messages.saveChanges);
     } else if (privacy === 'private' || privacy === 'direct') {
-      const iconId = privacyIcons[privacy];
+      const icon = privacyIcons[privacy];
       publishText = (
         <span>
-          <Icon id={iconId} /> {intl.formatMessage(messages.publish)}
+          <Icon {...icon} /> {intl.formatMessage(messages.publish)}
         </span>
       );
     } else {
@@ -69,7 +91,7 @@ class Publisher extends ImmutablePureComponent {
               disabled={disabled}
               onClick={onSecondarySubmit}
               style={{ padding: null }}
-              text={<Icon id={privacyIcons[sideArm]} />}
+              text={<Icon {...privacyIcons[sideArm]} />}
               title={`${intl.formatMessage(messages.publish)}: ${intl.formatMessage(privacyNames[sideArm])}`}
             />
           </div>

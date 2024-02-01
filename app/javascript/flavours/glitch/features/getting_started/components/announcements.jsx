@@ -13,6 +13,10 @@ import TransitionMotion from 'react-motion/lib/TransitionMotion';
 import spring from 'react-motion/lib/spring';
 import ReactSwipeableViews from 'react-swipeable-views';
 
+import elephantUIPlane from '@/images/elephant_ui_plane.svg';
+import AddIcon from '@/material-icons/400-24px/add.svg?react';
+import ChevronLeftIcon from '@/material-icons/400-24px/chevron_left.svg?react';
+import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
 import { AnimatedNumber } from 'flavours/glitch/components/animated_number';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { IconButton } from 'flavours/glitch/components/icon_button';
@@ -21,7 +25,6 @@ import { unicodeMapping } from 'flavours/glitch/features/emoji/emoji_unicode_map
 import { autoPlayGif, reduceMotion, disableSwiping, mascot } from 'flavours/glitch/initial_state';
 import { assetHost } from 'flavours/glitch/utils/config';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
-import elephantUIPlane from 'mastodon/../images/elephant_ui_plane.svg';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -294,7 +297,7 @@ class ReactionsBar extends ImmutablePureComponent {
               />
             ))}
 
-            {visibleReactions.size < 8 && <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} button={<Icon id='plus' />} />}
+            {visibleReactions.size < 8 && <EmojiPickerDropdown onPickEmoji={this.handleEmojiPick} button={<Icon id='plus' icon={AddIcon} />} />}
           </div>
         )}
       </TransitionMotion>
@@ -440,9 +443,9 @@ class Announcements extends ImmutablePureComponent {
 
           {announcements.size > 1 && (
             <div className='announcements__pagination'>
-              <IconButton disabled={announcements.size === 1} title={intl.formatMessage(messages.previous)} icon='chevron-left' onClick={this.handlePrevClick} size={13} />
+              <IconButton disabled={announcements.size === 1} title={intl.formatMessage(messages.previous)} icon='chevron-left' iconComponent={ChevronLeftIcon} onClick={this.handlePrevClick} size={13} />
               <span>{index + 1} / {announcements.size}</span>
-              <IconButton disabled={announcements.size === 1} title={intl.formatMessage(messages.next)} icon='chevron-right' onClick={this.handleNextClick} size={13} />
+              <IconButton disabled={announcements.size === 1} title={intl.formatMessage(messages.next)} icon='chevron-right' iconComponent={ChevronRightIcon} onClick={this.handleNextClick} size={13} />
             </div>
           )}
         </div>

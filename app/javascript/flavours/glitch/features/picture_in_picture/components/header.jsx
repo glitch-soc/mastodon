@@ -8,6 +8,8 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
+
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { IconButton } from 'flavours/glitch/components/icon_button';
@@ -40,7 +42,7 @@ class Header extends ImmutablePureComponent {
           <DisplayName account={account} />
         </Link>
 
-        <IconButton icon='times' onClick={onClose} title={intl.formatMessage(messages.close)} />
+        <IconButton icon='times' iconComponent={CloseIcon} onClick={onClose} title={intl.formatMessage(messages.close)} />
       </div>
     );
   }

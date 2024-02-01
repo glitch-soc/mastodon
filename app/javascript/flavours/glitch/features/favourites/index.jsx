@@ -10,6 +10,8 @@ import { connect } from 'react-redux';
 
 import { debounce } from 'lodash';
 
+import RefreshIcon from '@/material-icons/400-24px/refresh.svg?react';
+import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import { fetchFavourites, expandFavourites } from 'flavours/glitch/actions/interactions';
 import ColumnHeader from 'flavours/glitch/components/column_header';
 import { Icon }  from 'flavours/glitch/components/icon';
@@ -80,12 +82,13 @@ class Favourites extends ImmutablePureComponent {
       <Column ref={this.setRef}>
         <ColumnHeader
           icon='star'
+          iconComponent={StarIcon}
           title={intl.formatMessage(messages.heading)}
           onClick={this.handleHeaderClick}
           showBackButton
           multiColumn={multiColumn}
           extraButton={(
-            <button type='button' className='column-header__button' title={intl.formatMessage(messages.refresh)} aria-label={intl.formatMessage(messages.refresh)} onClick={this.handleRefresh}><Icon id='refresh' /></button>
+            <button type='button' className='column-header__button' title={intl.formatMessage(messages.refresh)} aria-label={intl.formatMessage(messages.refresh)} onClick={this.handleRefresh}><Icon id='refresh' icon={RefreshIcon} /></button>
           )}
         />
 

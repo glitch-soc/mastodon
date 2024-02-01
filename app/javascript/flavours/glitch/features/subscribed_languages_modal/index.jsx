@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 
 import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
 
+import { createSelector } from '@reduxjs/toolkit';
 import { is, List as ImmutableList, Set as ImmutableSet } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 
+
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { followAccount } from 'flavours/glitch/actions/accounts';
 import { Button } from 'flavours/glitch/components/button';
 import { IconButton } from 'flavours/glitch/components/icon_button';
@@ -101,7 +103,7 @@ class SubscribedLanguagesModal extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal report-dialog-modal'>
         <div className='report-modal__target'>
-          <IconButton className='report-modal__close' title={intl.formatMessage(messages.close)} icon='times' onClick={onClose} size={20} />
+          <IconButton className='report-modal__close' title={intl.formatMessage(messages.close)} icon='times' iconComponent={CloseIcon} onClick={onClose} size={20} />
           <FormattedMessage id='subscribed_languages.target' defaultMessage='Change subscribed languages for {target}' values={{ target: <strong>{acct}</strong> }} />
         </div>
 

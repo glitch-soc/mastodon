@@ -5,10 +5,13 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
+import CheckIcon from '@/material-icons/400-24px/check.svg?react';
+import CloseIcon from '@/material-icons/400-24px/close.svg?react';
+
 import { Avatar } from '../../../components/avatar';
 import { DisplayName } from '../../../components/display_name';
 import { IconButton } from '../../../components/icon_button';
-import Permalink from '../../../components/permalink';
+import { Permalink } from '../../../components/permalink';
 
 const messages = defineMessages({
   authorize: { id: 'follow_request.authorize', defaultMessage: 'Authorize' },
@@ -40,8 +43,8 @@ class AccountAuthorize extends ImmutablePureComponent {
         </div>
 
         <div className='account--panel'>
-          <div className='account--panel__button'><IconButton title={intl.formatMessage(messages.authorize)} icon='check' onClick={onAuthorize} /></div>
-          <div className='account--panel__button'><IconButton title={intl.formatMessage(messages.reject)} icon='times' onClick={onReject} /></div>
+          <div className='account--panel__button'><IconButton title={intl.formatMessage(messages.authorize)} icon='check' iconComponent={CheckIcon} onClick={onAuthorize} /></div>
+          <div className='account--panel__button'><IconButton title={intl.formatMessage(messages.reject)} icon='times' iconComponent={CloseIcon} onClick={onReject} /></div>
         </div>
       </div>
     );

@@ -4,13 +4,14 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 
 import { Helmet } from 'react-helmet';
 
+import { createSelector } from '@reduxjs/toolkit';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
-import { createSelector } from 'reselect';
 
+
+import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
 import { fetchLists } from 'flavours/glitch/actions/lists';
-import ColumnBackButtonSlim from 'flavours/glitch/components/column_back_button_slim';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import Column from 'flavours/glitch/features/ui/components/column';
@@ -64,9 +65,7 @@ class Lists extends ImmutablePureComponent {
     const emptyMessage = <FormattedMessage id='empty_column.lists' defaultMessage="You don't have any lists yet. When you create one, it will show up here." />;
 
     return (
-      <Column bindToDocument={!multiColumn} icon='bars' heading={intl.formatMessage(messages.heading)}>
-        <ColumnBackButtonSlim />
-
+      <Column bindToDocument={!multiColumn} icon='bars' iconComponent={ListAltIcon} heading={intl.formatMessage(messages.heading)} alwaysShowBackButton>
         <NewListForm />
 
         <ColumnSubheading text={intl.formatMessage(messages.subheading)} />
@@ -76,7 +75,7 @@ class Lists extends ImmutablePureComponent {
           bindToDocument={!multiColumn}
         >
           {lists.map(list =>
-            <ColumnLink key={list.get('id')} to={`/lists/${list.get('id')}`} icon='list-ul' text={list.get('title')} />,
+            <ColumnLink key={list.get('id')} to={`/lists/${list.get('id')}`} icon='list-ul' iconComponent={ListAltIcon} text={list.get('title')} />,
           )}
         </ScrollableList>
 

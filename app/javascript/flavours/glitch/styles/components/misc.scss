@@ -53,7 +53,10 @@
   box-sizing: border-box;
   color: $ui-button-color;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   font-family: inherit;
   font-size: 15px;
   font-weight: 500;
@@ -72,6 +75,10 @@
   &:focus,
   &:hover {
     background-color: $ui-button-focus-background-color;
+  }
+
+  &:focus {
+    outline: $ui-button-icon-focus-outline;
   }
 
   &--destructive {
@@ -153,22 +160,39 @@
   }
 
   &.button--block {
-    display: block;
     width: 100%;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+.icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  aspect-ratio: 1;
+
+  path {
+    fill: currentColor;
   }
 }
 
 .icon-button {
-  display: inline-block;
-  padding: 0;
+  display: inline-flex;
   color: $action-button-color;
   border: 0;
+  padding: 0;
   border-radius: 4px;
   background: transparent;
   cursor: pointer;
-  transition: all 100ms ease-in;
-  transition-property: background-color, color;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
+  gap: 4px;
+  flex: 0 0 auto;
 
   a {
     color: inherit;
@@ -180,12 +204,10 @@
   &:focus {
     color: lighten($action-button-color, 7%);
     background-color: rgba($action-button-color, 0.15);
-    transition: all 200ms ease-out;
-    transition-property: background-color, color;
   }
 
-  &:focus {
-    background-color: rgba($action-button-color, 0.3);
+  &:focus-visible {
+    outline: $ui-button-icon-focus-outline;
   }
 
   &.disabled {
@@ -207,16 +229,6 @@
     transition: none;
   }
 
-  &::-moz-focus-inner {
-    border: 0;
-  }
-
-  &::-moz-focus-inner,
-  &:focus,
-  &:active {
-    outline: 0 !important;
-  }
-
   &.inverted {
     color: $lighter-text-color;
 
@@ -227,21 +239,28 @@
       background-color: rgba($lighter-text-color, 0.15);
     }
 
-    &:focus {
-      background-color: rgba($lighter-text-color, 0.3);
+    &:focus-visible {
+      outline: $ui-button-icon-focus-outline;
     }
 
     &.disabled {
       color: lighten($lighter-text-color, 7%);
       background-color: transparent;
     }
+  }
 
-    &.active {
+  &.active {
+    color: $highlight-text-color;
+
+    &:hover,
+    &:active,
+    &:focus {
       color: $highlight-text-color;
+      background-color: transparent;
+    }
 
-      &.disabled {
-        color: lighten($highlight-text-color, 13%);
-      }
+    &.disabled {
+      color: lighten($highlight-text-color, 13%);
     }
   }
 
@@ -257,19 +276,9 @@
     }
   }
 
-  &--with-counter {
-    display: inline-flex;
-    align-items: center;
-    width: auto !important;
-    padding: 0;
-    padding-inline-end: 4px;
-    padding-inline-start: 2px;
-  }
-
   &__counter {
-    display: inline-block;
+    display: block;
     width: auto;
-    margin-inline-start: 4px;
     font-size: 12px;
     font-weight: 500;
   }
@@ -291,21 +300,16 @@
   cursor: pointer;
   padding: 0 3px;
   white-space: nowrap;
-  outline: 0;
-  transition: all 100ms ease-in;
-  transition-property: background-color, color;
 
   &:hover,
   &:active,
   &:focus {
     color: darken($lighter-text-color, 7%);
     background-color: rgba($lighter-text-color, 0.15);
-    transition: all 200ms ease-out;
-    transition-property: background-color, color;
   }
 
   &:focus {
-    background-color: rgba($lighter-text-color, 0.3);
+    outline: $ui-button-icon-focus-outline;
   }
 
   &.disabled {
@@ -316,16 +320,13 @@
 
   &.active {
     color: $highlight-text-color;
-  }
 
-  &::-moz-focus-inner {
-    border: 0;
-  }
-
-  &::-moz-focus-inner,
-  &:focus,
-  &:active {
-    outline: 0 !important;
+    &:hover,
+    &:active,
+    &:focus {
+      color: $highlight-text-color;
+      background-color: transparent;
+    }
   }
 }
 
@@ -360,10 +361,6 @@ body > [data-popper-placement] {
 .notification__favourite-icon-wrapper {
   inset-inline-start: 0;
   position: absolute;
-
-  .fa.star-icon {
-    color: $gold-star;
-  }
 }
 
 .icon-button.star-icon.active {
@@ -376,14 +373,16 @@ body > [data-popper-placement] {
 
 .no-reduce-motion .icon-button.star-icon {
   &.activate {
-    & > .fa-star {
+    & > .icon {
       animation: spring-rotate-in 1s linear;
+      transform-origin: 50% 55%;
     }
   }
 
   &.deactivate {
-    & > .fa-star {
+    & > .icon {
       animation: spring-rotate-out 1s linear;
+      transform-origin: 50% 55%;
     }
   }
 }
@@ -561,7 +560,8 @@ body > [data-popper-placement] {
   z-index: 9999;
 
   &__text-button {
-    display: inline;
+    display: inline-flex;
+    align-items: center;
     color: inherit;
     background: transparent;
     border: 0;
@@ -571,8 +571,13 @@ body > [data-popper-placement] {
     font-size: inherit;
     line-height: inherit;
 
-    &:focus {
+    &:focus-visible {
       outline: 1px dotted;
+    }
+
+    .icon {
+      width: 15px;
+      height: 15px;
     }
   }
 
@@ -764,6 +769,7 @@ body > [data-popper-placement] {
 }
 
 .icon-with-badge {
+  display: inline-flex;
   position: relative;
 
   &__badge {
@@ -840,6 +846,7 @@ body > [data-popper-placement] {
   cursor: pointer;
   background-color: transparent;
   border: 0;
+  border-radius: 10px;
   padding: 0;
   user-select: none;
   -webkit-tap-highlight-color: rgba($base-overlay-background, 0);
@@ -864,81 +871,41 @@ body > [data-popper-placement] {
 }
 
 .react-toggle-track {
-  width: 50px;
-  height: 24px;
+  width: 32px;
+  height: 20px;
   padding: 0;
-  border-radius: 30px;
-  background-color: $ui-base-color;
-  transition: background-color 0.2s ease;
+  border-radius: 10px;
+  background-color: #626982;
 }
 
-.react-toggle:is(:hover, :focus-within):not(.react-toggle--disabled)
-  .react-toggle-track {
-  background-color: darken($ui-base-color, 10%);
+.react-toggle--focus {
+  outline: $ui-button-focus-outline;
 }
 
 .react-toggle--checked .react-toggle-track {
-  background-color: darken($ui-highlight-color, 2%);
-}
-
-.react-toggle--checked:is(:hover, :focus-within):not(.react-toggle--disabled)
-  .react-toggle-track {
   background-color: $ui-highlight-color;
 }
 
-.react-toggle-track-check {
-  position: absolute;
-  width: 14px;
-  height: 10px;
-  top: 0;
-  bottom: 0;
-  margin-top: auto;
-  margin-bottom: auto;
-  line-height: 0;
-  inset-inline-start: 8px;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-}
-
-.react-toggle--checked .react-toggle-track-check {
-  opacity: 1;
-  transition: opacity 0.25s ease;
-}
-
+.react-toggle-track-check,
 .react-toggle-track-x {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  top: 0;
-  bottom: 0;
-  margin-top: auto;
-  margin-bottom: auto;
-  line-height: 0;
-  inset-inline-end: 10px;
-  opacity: 1;
-  transition: opacity 0.25s ease;
-}
-
-.react-toggle--checked .react-toggle-track-x {
-  opacity: 0;
+  display: none;
 }
 
 .react-toggle-thumb {
   position: absolute;
-  top: 1px;
-  inset-inline-start: 1px;
-  width: 22px;
-  height: 22px;
-  border: 1px solid $ui-base-color;
+  top: 2px;
+  inset-inline-start: 2px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background-color: darken($simple-background-color, 2%);
+  background-color: $primary-text-color;
   box-sizing: border-box;
   transition: all 0.25s ease;
   transition-property: border-color, left;
 }
 
 .react-toggle--checked .react-toggle-thumb {
-  inset-inline-start: 27px;
+  inset-inline-start: 32px - 16px - 2px;
   border-color: $ui-highlight-color;
 }
 
@@ -1082,33 +1049,6 @@ body > [data-popper-placement] {
   }
 }
 
-button.icon-button i.fa-retweet {
-  background-position: 0 0;
-  height: 19px;
-  transition: background-position 0.9s steps(10);
-  transition-duration: 0s;
-  vertical-align: middle;
-  width: 22px;
-
-  &::before {
-    display: none !important;
-  }
-}
-
-button.icon-button.active i.fa-retweet {
-  transition-duration: 0.9s;
-  background-position: 0 100%;
-}
-
-.reduce-motion button.icon-button i.fa-retweet,
-.reduce-motion button.icon-button.active i.fa-retweet {
-  transition: none;
-}
-
-.reduce-motion button.icon-button.disabled i.fa-retweet {
-  color: darken($action-button-color, 13%);
-}
-
 .load-more {
   display: block;
   color: $dark-text-color;
@@ -1219,7 +1159,9 @@ button.icon-button.active i.fa-retweet {
 }
 
 .text-btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   padding: 0;
   font-family: inherit;
   font-size: inherit;
@@ -1227,6 +1169,11 @@ button.icon-button.active i.fa-retweet {
   border: 0;
   background: transparent;
   cursor: pointer;
+
+  .icon {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 .loading-indicator {
@@ -1242,6 +1189,17 @@ button.icon-button.active i.fa-retweet {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.button .loading-indicator {
+  position: static;
+  transform: none;
+
+  .circular-progress {
+    color: $primary-text-color;
+    width: 22px;
+    height: 22px;
+  }
 }
 
 .circular-progress {
@@ -1590,6 +1548,11 @@ button.icon-button.active i.fa-retweet {
         color: $primary-text-color;
         text-decoration: none;
 
+        .icon {
+          width: 15px;
+          height: 15px;
+        }
+
         &:hover,
         &:focus,
         &:active {
@@ -1736,5 +1699,10 @@ noscript {
   &:focus,
   &:active {
     background: rgba($ui-base-color, 0.85);
+  }
+
+  .icon {
+    width: 15px;
+    height: 15px;
   }
 }

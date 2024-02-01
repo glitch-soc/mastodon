@@ -5,8 +5,14 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
+import BlockIcon from '@/material-icons/400-24px/block.svg?react';
+import InfoIcon from '@/material-icons/400-24px/info.svg?react';
+import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
+import PersonCheckIcon from '@/material-icons/400-24px/person_check.svg?react';
+import PushPinIcon from '@/material-icons/400-24px/push_pin.svg?react';
+import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
+import VolumeOffIcon from '@/material-icons/400-24px/volume_off.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
-import ColumnBackButtonSlim from 'flavours/glitch/components/column_back_button_slim';
 import Column from 'flavours/glitch/features/ui/components/column';
 import ColumnLink from 'flavours/glitch/features/ui/components/column_link';
 import ColumnSubheading from 'flavours/glitch/features/ui/components/column_subheading';
@@ -46,18 +52,16 @@ class GettingStartedMisc extends ImmutablePureComponent {
     const { signedIn } = this.context.identity;
 
     return (
-      <Column icon='ellipsis-h' heading={intl.formatMessage(messages.heading)}>
-        <ColumnBackButtonSlim />
-
+      <Column icon='ellipsis-h' iconComponent={MoreHorizIcon} heading={intl.formatMessage(messages.heading)} alwaysShowBackButton>
         <div className='scrollable'>
           <ColumnSubheading text={intl.formatMessage(messages.subheading)} />
-          {signedIn && (<ColumnLink key='favourites' icon='star' text={intl.formatMessage(messages.favourites)} to='/favourites' />)}
-          {signedIn && (<ColumnLink key='pinned' icon='thumb-tack' text={intl.formatMessage(messages.pins)} to='/pinned' />)}
-          {signedIn && (<ColumnLink key='featured_users' icon='users' text={intl.formatMessage(messages.featured_users)} onClick={this.openFeaturedAccountsModal} />)}
-          {signedIn && (<ColumnLink key='mutes' icon='volume-off' text={intl.formatMessage(messages.mutes)} to='/mutes' />)}
-          {signedIn && (<ColumnLink key='blocks' icon='ban' text={intl.formatMessage(messages.blocks)} to='/blocks' />)}
-          {signedIn && (<ColumnLink key='domain_blocks' icon='minus-circle' text={intl.formatMessage(messages.domain_blocks)} to='/domain_blocks' />)}
-          <ColumnLink key='shortcuts' icon='question' text={intl.formatMessage(messages.keyboard_shortcuts)} to='/keyboard-shortcuts' />
+          {signedIn && (<ColumnLink key='favourites' icon='star' iconComponent={StarIcon} text={intl.formatMessage(messages.favourites)} to='/favourites' />)}
+          {signedIn && (<ColumnLink key='pinned' icon='thumb-tack' iconComponent={PushPinIcon} text={intl.formatMessage(messages.pins)} to='/pinned' />)}
+          {signedIn && (<ColumnLink key='featured_users' icon='users' iconComponent={PersonCheckIcon} text={intl.formatMessage(messages.featured_users)} onClick={this.openFeaturedAccountsModal} />)}
+          {signedIn && (<ColumnLink key='mutes' icon='volume-off' iconComponent={VolumeOffIcon} text={intl.formatMessage(messages.mutes)} to='/mutes' />)}
+          {signedIn && (<ColumnLink key='blocks' icon='ban' iconComponent={BlockIcon} text={intl.formatMessage(messages.blocks)} to='/blocks' />)}
+          {signedIn && (<ColumnLink key='domain_blocks' icon='minus-circle' iconComponent={BlockIcon} text={intl.formatMessage(messages.domain_blocks)} to='/domain_blocks' />)}
+          <ColumnLink key='shortcuts' icon='question' iconComponent={InfoIcon} text={intl.formatMessage(messages.keyboard_shortcuts)} to='/keyboard-shortcuts' />
         </div>
       </Column>
     );

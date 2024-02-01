@@ -17,21 +17,29 @@ class CustomFilterKeyword < ApplicationRecord
 
   validates :keyword, presence: true
 
-  # NOTE: We previously used `alias_attribute` but this does not play nicely
-  # with cache
-  def phrase
-    keyword
-  end
-
-  def phrase=(value)
-    self.keyword = value
-  end
+  alias_attribute :phrase, :keyword
 
   before_save :prepare_cache_invalidation!
   before_destroy :prepare_cache_invalidation!
   after_commit :invalidate_cache!
 
+  def to_regex
+    if whole_word?
+      /(?mix:#{to_regex_sb}#{Regexp.escape(keyword)}#{to_regex_eb})/
+    else
+      /#{Regexp.escape(keyword)}/i
+    end
+  end
+
   private
+
+  def to_regex_sb
+    /\A[[:word:]]/.match?(keyword) ? '\b' : ''
+  end
+
+  def to_regex_eb
+    /[[:word:]]\z/.match?(keyword) ? '\b' : ''
+  end
 
   def prepare_cache_invalidation!
     custom_filter.prepare_cache_invalidation!

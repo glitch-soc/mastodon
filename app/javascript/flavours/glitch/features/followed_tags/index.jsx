@@ -10,9 +10,10 @@ import { connect } from 'react-redux';
 
 import { debounce } from 'lodash';
 
+import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import { expandFollowedHashtags, fetchFollowedHashtags } from 'flavours/glitch/actions/tags';
 import ColumnHeader from 'flavours/glitch/components/column_header';
-import Hashtag from 'flavours/glitch/components/hashtag';
+import { Hashtag } from 'flavours/glitch/components/hashtag';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import Column from 'flavours/glitch/features/ui/components/column';
 
@@ -55,6 +56,7 @@ class FollowedTags extends ImmutablePureComponent {
       <Column bindToDocument={!multiColumn}>
         <ColumnHeader
           icon='hashtag'
+          iconComponent={TagIcon}
           title={intl.formatMessage(messages.heading)}
           showBackButton
           multiColumn={multiColumn}

@@ -10,6 +10,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import escapeTextContentForBrowser from 'escape-html';
 import spring from 'react-motion/lib/spring';
 
+import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
 import emojify from 'flavours/glitch/features/emoji/emoji';
 import Motion from 'flavours/glitch/features/ui/util/optional_motion';
@@ -192,7 +193,7 @@ class Poll extends ImmutablePureComponent {
           />
 
           {!!voted && <span className='poll__voted'>
-            <Icon id='check' className='poll__voted__mark' title={intl.formatMessage(messages.voted)} />
+            <Icon id='check' icon={CheckIcon} className='poll__voted__mark' title={intl.formatMessage(messages.voted)} />
           </span>}
         </label>
 
