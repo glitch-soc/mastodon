@@ -101,4 +101,21 @@
 
 .status__quote {
   padding-bottom: 0.5em;
+  pointer-events: none;
+
+  // HACK: adjust quote icon alignment & color icon for emph
+  .quote-display-name > .icon {
+    margin-left: -4px;
+
+    // hopefully this doesn't break user css
+    margin-bottom: -6px;
+
+    // needs to match below: &:is(blockquote)
+    color: $highlight-text-color;
+  }
+
+  // see below: .status_quote|&:is(blockquote)
+  &:is(blockquote) {
+    border-left-color: $highlight-text-color;
+  }
 }
