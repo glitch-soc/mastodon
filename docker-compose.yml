@@ -77,7 +77,7 @@ services:
 
   streaming:
     build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.0
+    image: ghcr.io/glitch-soc/mastodon-streaming:v4.2.0
     restart: always
     env_file: .env.production
     command: node ./streaming
