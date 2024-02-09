@@ -292,10 +292,10 @@ class Status < ApplicationRecord
     @emojis = CustomEmoji.from_text(fields.join(' '), account.domain)
   end
 
-  def reactions(account = nil)
+  def reactions(account_id = nil)
     grouped_ordered_status_reactions.select(
       [:name, :custom_emoji_id, 'COUNT(*) as count'].tap do |values|
-        values << value_for_reaction_me_column(account)
+        values << value_for_reaction_me_column(account_id)
       end
     ).to_a.tap do |records|
       ActiveRecord::Associations::Preloader.new(records: records, associations: :custom_emoji).call
@@ -487,15 +487,15 @@ class Status < ApplicationRecord
       )
   end
 
-  def value_for_reaction_me_column(account)
-    if account.nil?
+  def value_for_reaction_me_column(account_id)
+    if account_id.nil?
       'FALSE AS me'
     else
       <<~SQL.squish
         EXISTS(
           SELECT 1
           FROM status_reactions inner_reactions
-          WHERE inner_reactions.account_id = #{account.id}
+          WHERE inner_reactions.account_id = #{account_id}
             AND inner_reactions.status_id = status_reactions.status_id
             AND inner_reactions.name = status_reactions.name
             AND (
