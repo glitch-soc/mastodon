@@ -155,7 +155,7 @@ module JsonLdHelper
     end
   end
 
-  def fetch_resource(uri, id_is_known, on_behalf_of = nil, request_options: {})
+  def fetch_resource(uri, id_is_known, on_behalf_of = nil)
     unless id_is_known
       json = fetch_resource_without_id_validation(uri, on_behalf_of)
 
@@ -164,14 +164,14 @@ module JsonLdHelper
       uri = json['id']
     end
 
-    json = fetch_resource_without_id_validation(uri, on_behalf_of, request_options: request_options)
+    json = fetch_resource_without_id_validation(uri, on_behalf_of)
     json.present? && json['id'] == uri ? json : nil
   end
 
-  def fetch_resource_without_id_validation(uri, on_behalf_of = nil, raise_on_temporary_error = false, request_options: {})
+  def fetch_resource_without_id_validation(uri, on_behalf_of = nil, raise_on_temporary_error = false)
     on_behalf_of ||= Account.representative
 
-    build_request(uri, on_behalf_of, options: request_options).perform do |response|
+    build_request(uri, on_behalf_of).perform do |response|
       raise Mastodon::UnexpectedResponseError, response unless response_successful?(response) || response_error_unsalvageable?(response) || !raise_on_temporary_error
 
       body_to_json(response.body_with_limit) if response.code == 200
@@ -204,8 +204,8 @@ module JsonLdHelper
     response.code == 501 || ((400...500).cover?(response.code) && ![401, 408, 429].include?(response.code))
   end
 
-  def build_request(uri, on_behalf_of = nil, options: {})
-    Request.new(:get, uri, **options).tap do |request|
+  def build_request(uri, on_behalf_of = nil)
+    Request.new(:get, uri).tap do |request|
       request.on_behalf_of(on_behalf_of) if on_behalf_of
       request.add_headers('Accept' => 'application/activity+json, application/ld+json')
     end
