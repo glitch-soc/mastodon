@@ -3212,6 +3212,29 @@ $ui-header-height: 55px;
   }
 }
 
+input.glitch-setting-text {
+  box-sizing: border-box;
+  color: $darker-text-color;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid $ui-primary-color;
+  outline: 0;
+  font-family: inherit;
+  margin-bottom: 10px;
+  padding: 7px 0;
+  width: 100%;
+
+  &:focus,
+  &:active {
+    color: $primary-text-color;
+    border-bottom-color: $ui-highlight-color;
+  }
+
+  @media screen and (width <= 600px) {
+    font-size: 16px;
+  }
+}
+
 .setting-text {
   display: block;
   box-sizing: border-box;
