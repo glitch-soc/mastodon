@@ -7438,6 +7438,7 @@ img.modal-warning {
     $ui-base-color,
     4%
   ); // deliberate glitch-soc choice for now
+
   border-bottom: 1px solid lighten($ui-base-color, 8%);
   cursor: default;
   display: flex;
@@ -7572,24 +7573,6 @@ noscript {
   }
 
   100% {
-    opacity: 1;
-  }
-}
-
-// glitch-specific “sensitive” label on displayed images; TODO: remove it?
-.sensitive-marker {
-  margin: 0 3px;
-  border-radius: 2px;
-  padding: 2px 6px;
-  color: rgba($primary-text-color, 0.8);
-  background: rgba($base-overlay-background, 0.5);
-  font-size: 12px;
-  line-height: 18px;
-  text-transform: uppercase;
-  opacity: 0.9;
-  transition: opacity 0.1s ease;
-
-  .media-gallery:hover & {
     opacity: 1;
   }
 }
