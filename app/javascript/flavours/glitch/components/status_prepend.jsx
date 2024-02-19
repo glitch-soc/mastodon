@@ -38,11 +38,13 @@ export default class StatusPrepend extends PureComponent {
         href={account.get('url')}
         className='status__display-name'
       >
-        <b
-          dangerouslySetInnerHTML={{
-            __html : account.get('display_name_html') || account.get('username'),
-          }}
-        />
+        <bdi>
+          <strong
+            dangerouslySetInnerHTML={{
+              __html : account.get('display_name_html') || account.get('username'),
+            }}
+          />
+        </bdi>
       </a>
     );
     switch (type) {

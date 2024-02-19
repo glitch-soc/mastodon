@@ -796,22 +796,21 @@ class Status extends ImmutablePureComponent {
           aria-label={textForScreenReader(intl, status, rebloggedByText, !status.get('hidden'))}
           data-nosnippet={status.getIn(['account', 'noindex'], true) || undefined}
         >
-          {!muted && prepend}
+          {prepend}
 
           {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
 
           <header className='status__info'>
-            <span>
-              {muted && prepend}
-              {!muted || !isCollapsed ? (
-                <StatusHeader
-                  status={status}
-                  friend={account}
-                  collapsed={isCollapsed}
-                  parseClick={parseClick}
-                />
-              ) : null}
-            </span>
+            {(!muted || !isCollapsed) ? (
+              <StatusHeader
+                status={status}
+                friend={account}
+                collapsed={isCollapsed}
+                parseClick={parseClick}
+              />
+            ) : (
+              <span />
+            )}
             <StatusIcons
               status={status}
               mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
