@@ -3617,7 +3617,7 @@ a.status-card {
 .status-card__content {
   flex: 1 1 auto;
   overflow: hidden;
-  padding: 15px;
+  padding: 8px 10px; // intentional glitch-soc change to reduce padding
   box-sizing: border-box;
   max-width: 100%;
 }
@@ -3656,7 +3656,7 @@ a.status-card {
 
 .status-card__image {
   flex: 0 0 auto;
-  width: 120px;
+  width: 96px; // intentional glitch-soc change to better use space
   aspect-ratio: 1;
   background: lighten($ui-base-color, 8%);
   position: relative;
