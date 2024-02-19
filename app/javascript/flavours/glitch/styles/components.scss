@@ -412,7 +412,7 @@ body > [data-popper-placement] {
 
   .compose-form__warning {
     color: $inverted-text-color;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     background: $ui-primary-color;
     box-shadow: 0 2px 6px rgba($base-shadow-color, 0.3);
     padding: 8px 10px;
@@ -1033,8 +1033,7 @@ body > [data-popper-placement] {
 
 .status {
   padding: 10px 14px;
-  position: relative;
-  height: auto;
+  min-height: 54px;
   border-bottom: 1px solid lighten($ui-base-color, 8%);
   cursor: auto;
 
@@ -1090,9 +1089,60 @@ body > [data-popper-placement] {
         color: $primary-text-color;
         background: $ui-primary-color;
 
-        &:hover {
+        &:hover,
+        &:focus {
           background: lighten($ui-primary-color, 8%);
         }
+      }
+    }
+  }
+
+  &--in-thread {
+    $thread-margin: 46px + 10px;
+
+    border-bottom: 0;
+
+    .status__content,
+    .status__action-bar {
+      margin-inline-start: $thread-margin;
+      width: calc(100% - ($thread-margin));
+    }
+  }
+
+  &--first-in-thread {
+    border-top: 1px solid lighten($ui-base-color, 8%);
+  }
+
+  &__line {
+    height: 10px - 4px;
+    border-inline-start: 2px solid lighten($ui-base-color, 8%);
+    width: 0;
+    position: absolute;
+    top: 0;
+    inset-inline-start: 14px + ((46px - 2px) * 0.5);
+
+    &--full {
+      top: 0;
+      height: 100%;
+
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 10px - 4px;
+        height: 46px + 4px + 4px;
+        width: 2px;
+        background: $ui-base-color;
+        inset-inline-start: -2px;
+      }
+    }
+
+    &--first {
+      top: 10px + 46px + 4px;
+      height: calc(100% - (10px + 46px + 4px));
+
+      &::before {
+        display: none;
       }
     }
   }
@@ -1223,14 +1273,7 @@ body > [data-popper-placement] {
   align-items: center;
   height: 1em;
   color: $action-button-color;
-
-  .status__media-icon,
-  .status__visibility-icon,
-  .status__reply-icon,
-  .text-icon {
-    padding-inline-start: 2px;
-    padding-inline-end: 2px;
-  }
+  gap: 4px;
 
   & > .icon {
     width: 16px;
@@ -1257,9 +1300,11 @@ body > [data-popper-placement] {
 }
 
 .status__info__account {
+  // corresponds to .status__display-name upstream
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  gap: 10px;
 }
 
 .status-check-box__status {
@@ -1317,14 +1362,14 @@ body > [data-popper-placement] {
 }
 
 .status__action-bar {
-  align-items: center;
   display: flex;
+  align-items: center;
   gap: 18px;
   margin-top: 8px;
-}
 
-.status__action-bar-spacer {
-  flex-grow: 1;
+  &-spacer {
+    flex-grow: 1;
+  }
 }
 
 .detailed-status__action-bar-dropdown {
@@ -1375,7 +1420,7 @@ body > [data-popper-placement] {
 }
 
 .detailed-status__meta {
-  margin-top: 15px;
+  margin-top: 16px;
   color: $dark-text-color;
   font-size: 14px;
   line-height: 18px;
@@ -1698,15 +1743,9 @@ a.status__display-name,
   }
 }
 
-.status__relative-time,
-.detailed-status__datetime {
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
 .status__avatar {
-  margin-inline-end: 10px;
+  width: 46px;
+  height: 46px;
 }
 
 .muted {
@@ -1880,6 +1919,13 @@ a.status__display-name,
 
 .display-name__html {
   font-weight: 500;
+}
+
+.status__relative-time,
+.detailed-status__datetime {
+  &:hover {
+    text-decoration: underline;
+  }
 }
 
 .display-name__account {
@@ -3733,54 +3779,6 @@ a.status-card {
 .notification,
 .status {
   position: relative;
-
-  &--in-thread {
-    border-bottom: 0;
-
-    .status__content,
-    .status__action-bar {
-      margin-inline-start: 46px + 10px;
-      width: calc(100% - (46px + 10px));
-    }
-  }
-
-  &--first-in-thread {
-    border-top: 1px solid lighten($ui-base-color, 8%);
-  }
-
-  &__line {
-    height: 10px - 4px;
-    border-inline-start: 2px solid lighten($ui-base-color, 8%);
-    width: 0;
-    position: absolute;
-    top: 0;
-    inset-inline-start: 14px + ((46px - 2px) * 0.5);
-
-    &--full {
-      top: 0;
-      height: 100%;
-
-      &::before {
-        content: '';
-        display: block;
-        position: absolute;
-        top: 10px - 4px;
-        height: 46px + 4px + 4px;
-        width: 2px;
-        background: $ui-base-color;
-        inset-inline-start: -2px;
-      }
-    }
-
-    &--first {
-      top: 10px + 46px + 4px;
-      height: calc(100% - (10px + 46px + 4px));
-
-      &::before {
-        display: none;
-      }
-    }
-  }
 }
 
 .load-more {
