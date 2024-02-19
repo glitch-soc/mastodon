@@ -23,6 +23,7 @@ import { MediaGallery, Video, Audio } from '../features/ui/util/async-components
 import { displayMedia } from '../initial_state';
 
 import AttachmentList from './attachment_list';
+import { CollapseButton } from './collapse_button';
 import { getHashtagBarForStatus } from './hashtag_bar';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
@@ -763,7 +764,13 @@ class Status extends ImmutablePureComponent {
           account={account}
           parseClick={parseClick}
           notificationId={this.props.notificationId}
-        />
+        >
+          {muted && settings.getIn(['collapsed', 'enabled']) && (
+            <div className='notification__message-collapse-button'>
+              <CollapseButton collapsed={isCollapsed} setCollapsed={setCollapsed} />
+            </div>
+          )}
+        </StatusPrepend>
       );
     }
 
@@ -800,26 +807,24 @@ class Status extends ImmutablePureComponent {
 
           {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
 
-          <header className='status__info'>
-            {(!muted || !isCollapsed) ? (
+          {(!muted || !isCollapsed) && (
+            <header className='status__info'>
               <StatusHeader
                 status={status}
                 friend={account}
                 collapsed={isCollapsed}
                 parseClick={parseClick}
               />
-            ) : (
-              <span />
-            )}
-            <StatusIcons
-              status={status}
-              mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
-              collapsible={settings.getIn(['collapsed', 'enabled'])}
-              collapsed={isCollapsed}
-              setCollapsed={setCollapsed}
-              settings={settings.get('status_icons')}
-            />
-          </header>
+              <StatusIcons
+                status={status}
+                mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
+                collapsible={!muted && settings.getIn(['collapsed', 'enabled'])}
+                collapsed={isCollapsed}
+                setCollapsed={setCollapsed}
+                settings={settings.get('status_icons')}
+              />
+            </header>
+          )}
           <StatusContent
             status={status}
             media={contentMedia}

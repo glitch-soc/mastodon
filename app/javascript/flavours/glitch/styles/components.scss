@@ -1214,22 +1214,25 @@ body > [data-popper-placement] {
 
     .notification__message {
       margin-bottom: 0;
-    }
-
-    .status__info .notification__message > span {
       white-space: nowrap;
     }
   }
+}
 
-  .notification__message {
-    margin: -10px 0 10px;
+.notification__message-collapse-button {
+  text-align: end;
+  flex-grow: 2;
+
+  .status__collapse-button .icon {
+    width: 24px;
+    height: 24px;
   }
 }
 
 .status__relative-time {
-  display: inline-block;
-  color: $dark-text-color;
+  display: block;
   font-size: 14px;
+  color: $dark-text-color;
   text-align: end;
   white-space: nowrap;
   overflow: hidden;
@@ -1277,10 +1280,7 @@ body > [data-popper-placement] {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-
-  .notification__message > span {
-    word-wrap: break-word;
-  }
+  cursor: pointer;
 }
 
 .status__info__icons {
@@ -1294,10 +1294,15 @@ body > [data-popper-placement] {
     width: 16px;
     height: 16px;
   }
+}
 
-  .status__collapse-button.active > .icon {
-    transform: rotate(-180deg);
-  }
+.status__collapse-button {
+  // compensate for large padding built into the icon
+  margin: -4px;
+}
+
+.status__collapse-button.active > .icon {
+  transform: rotate(-180deg);
 }
 
 .no-reduce-motion .status__collapse-button {
@@ -1468,11 +1473,6 @@ body > [data-popper-placement] {
     text-align: center;
     opacity: 0.8;
   }
-}
-
-.notification__favourite-icon-wrapper {
-  inset-inline-start: 0;
-  position: absolute;
 }
 
 .detailed-status__link {
@@ -1811,14 +1811,15 @@ a.account__display-name {
 }
 
 .notification__message {
-  margin-inline-start: 42px;
-  padding-top: 8px;
-  padding-inline-start: 26px;
   cursor: default;
   color: $darker-text-color;
   font-size: 15px;
-  position: relative;
+
+  // line-height: 22px; omitted in glitch-soc for space saving
+  font-weight: 500;
+  display: flex;
   align-items: center;
+  gap: 10px;
 
   .icon {
     color: $highlight-text-color;
@@ -1831,10 +1832,20 @@ a.account__display-name {
   }
 
   > span {
-    display: block;
+    display: inline;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}
+
+// glitch-soc markup changes for now
+// upstream has statuses within notifications, but it's different here
+.status .notification__message {
+  margin-bottom: 10px;
+}
+
+.notification .notification__message {
+  padding: 8px 14px 0;
 }
 
 .icon-button.star-icon.active {
