@@ -374,7 +374,7 @@ body > [data-popper-placement] {
 }
 
 .compose-form {
-  padding: 10px;
+  padding: 10px; // glitch: reduced padding
 
   &__sensitive-button {
     padding: 10px;
@@ -1359,7 +1359,7 @@ body > [data-popper-placement] {
 }
 
 .status__prepend {
-  padding: 8px 14px; // intentionally reduced padding in glitch-soc
+  padding: 8px 14px; // glitch: reduced padding
   padding-bottom: 0;
   display: inline-flex;
   gap: 10px;
@@ -1790,7 +1790,7 @@ a.account__display-name {
 }
 
 .notification__report {
-  padding: 10px; // deliberate glitch-soc change
+  padding: 10px; // glitch: reduced padding
   border-bottom: 1px solid lighten($ui-base-color, 8%);
   display: flex;
   gap: 10px;
@@ -1827,12 +1827,13 @@ a.account__display-name {
 }
 
 .notification__message {
-  padding: 8px 14px 0; // padding intentionally reduced for glitch-soc
+  padding: 8px 14px; // glitch: reduced padding
+  padding-bottom: 0;
   cursor: default;
   color: $darker-text-color;
   font-size: 15px;
 
-  // line-height: 22px; omitted in glitch-soc for space saving
+  // line-height: 22px; glitch: omitted for space saving
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -1885,7 +1886,6 @@ a.account__display-name {
   text-decoration: none;
 
   &:hover {
-    color: $primary-text-color;
     text-decoration: underline;
   }
 }
@@ -1975,7 +1975,7 @@ a.account__display-name {
 }
 
 .navigation-bar {
-  padding: 10px;
+  padding: 10px; // glitch: reduced padding
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -2056,14 +2056,14 @@ a.account__display-name {
 
 .dropdown-menu__separator {
   border-bottom: 1px solid var(--dropdown-border-color);
-  margin: 2px 0;
+  margin: 2px 0; // glitch: reduced margins
   height: 0;
 }
 
 .dropdown-menu {
   background: var(--dropdown-background-color);
   border: 1px solid var(--dropdown-border-color);
-  padding: 2px;
+  padding: 2px; // glitch: reduced padding
   border-radius: 4px;
   box-shadow: var(--dropdown-shadow);
   z-index: 9999;
@@ -2093,8 +2093,8 @@ a.account__display-name {
   &__container {
     &__header {
       border-bottom: 1px solid var(--dropdown-border-color);
-      padding: 6px 14px;
-      padding-bottom: 12px;
+      padding: 6px 14px; // glitch: reduced padding
+      padding-bottom: 12px; // glitch: reduced padding
       margin-bottom: 4px;
       font-size: 13px;
       line-height: 18px;
@@ -2150,7 +2150,7 @@ a.account__display-name {
     font: inherit;
     display: block;
     width: 100%;
-    padding: 6px 14px;
+    padding: 6px 14px; // glitch: reduced padding
     border: 0;
     margin: 0;
     background: transparent;
@@ -2931,6 +2931,8 @@ $ui-header-height: 55px;
     display: flex;
     flex-direction: column;
     min-height: 310px;
+    padding-bottom: 71px;
+    margin-bottom: -71px;
   }
 
   .compose-form__autosuggest-wrapper {
@@ -3645,7 +3647,7 @@ a.status-card {
 .status-card__content {
   flex: 1 1 auto;
   overflow: hidden;
-  padding: 8px 10px; // intentional glitch-soc change to reduce padding
+  padding: 8px 10px; // glitch: reduced padding
   box-sizing: border-box;
   max-width: 100%;
 }
@@ -3684,7 +3686,7 @@ a.status-card {
 
 .status-card__image {
   flex: 0 0 auto;
-  width: 96px; // intentional glitch-soc change to better use space
+  width: 96px; // glitch: intentional change to better use space
   aspect-ratio: 1;
   background: lighten($ui-base-color, 8%);
   position: relative;
@@ -4392,12 +4394,12 @@ a.status-card {
   z-index: 100;
 
   &--minified {
-    display: flex;
+    display: flex; // glitch: media icon in spoiler button
     inset-inline-start: 4px;
     top: 4px;
     width: auto;
     height: auto;
-    align-items: center;
+    align-items: center; // glitch: media icon in spoiler button
   }
 
   &--click-thru {
