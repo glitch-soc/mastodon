@@ -1032,7 +1032,7 @@ body > [data-popper-placement] {
 }
 
 .status {
-  padding: 10px 14px;
+  padding: 10px 14px; // glitch: reduced padding
   min-height: 54px;
   border-bottom: 1px solid lighten($ui-base-color, 8%);
   cursor: auto;
@@ -1050,9 +1050,11 @@ body > [data-popper-placement] {
   opacity: 1;
   animation: fade 150ms linear;
 
+  .media-gallery,
   .video-player,
-  .audio-player {
-    margin-top: 8px;
+  .audio-player,
+  .attachment-list {
+    margin-top: 8px; // glitch: reduced margins
   }
 
   &.status-direct {
@@ -1085,7 +1087,7 @@ body > [data-popper-placement] {
         color: $highlight-text-color;
       }
 
-      a.status__content__spoiler-link {
+      &__spoiler-link {
         color: $primary-text-color;
         background: $ui-primary-color;
 
@@ -1251,7 +1253,6 @@ body > [data-popper-placement] {
 
 .status__display-name {
   color: $dark-text-color;
-  overflow: hidden;
 }
 
 .status__info .status__display-name {
@@ -1400,7 +1401,7 @@ body > [data-popper-placement] {
 
 .detailed-status {
   background: lighten($ui-base-color, 4%);
-  padding: 14px 10px;
+  padding: 14px 10px; // glitch: reduced padding
   border-top: 1px solid lighten($ui-base-color, 8%);
 
   &--flex {
@@ -1456,7 +1457,7 @@ body > [data-popper-placement] {
   border-bottom: 1px solid lighten($ui-base-color, 8%);
   display: flex;
   flex-direction: row;
-  padding: 8px 0;
+  padding: 8px 0; // glitch: reduced padding
 }
 
 .compose-form__textarea-icons {
@@ -1527,7 +1528,7 @@ body > [data-popper-placement] {
 }
 
 .account {
-  padding: 10px;
+  padding: 10px; // glitch: reduced padding
   border-bottom: 1px solid lighten($ui-base-color, 8%);
 
   .account__display-name {
@@ -1832,8 +1833,7 @@ a.account__display-name {
   cursor: default;
   color: $darker-text-color;
   font-size: 15px;
-
-  // line-height: 22px; glitch: omitted for space saving
+  line-height: 22px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -2012,6 +2012,7 @@ a.account__display-name {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  line-height: 20px;
 }
 
 .navigation-bar__profile-account {
@@ -5300,16 +5301,6 @@ a.status-card {
   }
 }
 
-.notification-favourite {
-  .status.status-direct {
-    background: transparent;
-
-    .icon-button.disabled {
-      color: lighten($action-button-color, 13%);
-    }
-  }
-}
-
 .language-dropdown {
   &__dropdown {
     background: $simple-background-color;
@@ -6626,6 +6617,7 @@ a.status-card {
   z-index: 9999;
 }
 
+// glitch: deprecated settings modal
 img.modal-warning {
   display: block;
   margin: auto;
@@ -6633,64 +6625,18 @@ img.modal-warning {
   width: 60px;
 }
 
-.column {
-  overflow: hidden;
-
-  .wide .columns-area:not(.columns-area--mobile) & {
+// glitch: optional wide mode
+.wide .columns-area:not(.columns-area--mobile) {
+  .column {
     flex: auto;
     min-width: 330px;
     max-width: 400px;
   }
 
-  > .scrollable {
-    background: $ui-base-color;
-    border-radius: 0 0 4px 4px;
-  }
-}
-
-.drawer {
-  padding: 10px 5px;
-  flex: none;
-
-  &:first-child {
-    padding-inline-start: 10px;
-  }
-
-  &:last-child {
-    padding-inline-end: 10px;
-  }
-
-  @media screen and (width <= 630px) {
-    flex: auto;
-  }
-
-  @media screen and (width <= 630px) {
-    &,
-    &:first-child,
-    &:last-child {
-      padding: 0;
-    }
-  }
-
-  .wide & {
+  .drawer {
     min-width: 300px;
     max-width: 400px;
     flex: 1 1 200px;
-  }
-
-  @media screen and (width <= 630px) {
-    :root & {
-      //  Overrides `.wide` for single-column view
-      flex: auto;
-      width: 100%;
-      min-width: 0;
-      max-width: none;
-      padding: 0;
-    }
-  }
-
-  .react-swipeable-view-container & {
-    height: 100%;
   }
 }
 
@@ -6729,7 +6675,7 @@ img.modal-warning {
   font-size: 14px;
   border: 1px solid lighten($ui-base-color, 8%);
   border-radius: 4px;
-  margin-top: 14px; // glitch-soc change to reduce margins
+  margin-top: 14px; // glitch: reduced margins
   overflow: hidden;
 
   &__icon {
@@ -6771,7 +6717,7 @@ img.modal-warning {
 
   &.compact {
     border: 0;
-    margin-top: 4px; // glitch-soc addition to reduce margins
+    margin-top: 4px; // glitch: reduced margins
 
     .attachment-list__list {
       padding: 0;
@@ -6868,8 +6814,6 @@ img.modal-warning {
   overflow: hidden;
   position: relative;
   width: 100%;
-  display: flex;
-  justify-content: center;
 }
 
 .media-gallery__item-gifv-thumbnail {
