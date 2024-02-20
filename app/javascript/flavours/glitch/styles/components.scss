@@ -5162,43 +5162,6 @@ a.status-card {
   }
 }
 
-.account__moved-note {
-  padding: 14px 10px;
-  padding-bottom: 16px;
-  background: lighten($ui-base-color, 4%);
-  border-top: 1px solid lighten($ui-base-color, 8%);
-  border-bottom: 1px solid lighten($ui-base-color, 8%);
-
-  &__message {
-    position: relative;
-    margin-inline-start: 58px;
-    color: $dark-text-color;
-    padding: 8px 0;
-    padding-top: 0;
-    padding-bottom: 4px;
-    font-size: 14px;
-
-    > span {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  }
-
-  &__icon-wrapper {
-    inset-inline-start: -26px;
-    position: absolute;
-  }
-
-  .detailed-status__display-avatar {
-    position: relative;
-  }
-
-  .detailed-status__display-name {
-    margin-bottom: 0;
-  }
-}
-
 @keyframes spring-flip-in {
   0% {
     transform: rotate(0deg);
