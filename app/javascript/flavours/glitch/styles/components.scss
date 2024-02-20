@@ -1901,45 +1901,6 @@ a.account__display-name {
     text-overflow: ellipsis;
     overflow: hidden;
   }
-
-  a {
-    color: inherit;
-    text-decoration: inherit;
-  }
-
-  strong {
-    display: block;
-  }
-
-  > a:hover {
-    strong {
-      text-decoration: underline;
-    }
-  }
-
-  &.inline {
-    padding: 0;
-    height: 18px;
-    font-size: 15px;
-    line-height: 18px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-
-    strong {
-      display: inline;
-      height: auto;
-      font-size: inherit;
-      line-height: inherit;
-    }
-
-    span {
-      display: inline;
-      height: auto;
-      font-size: inherit;
-      line-height: inherit;
-    }
-  }
 }
 
 .display-name__html {
