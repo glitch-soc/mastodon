@@ -1280,6 +1280,7 @@ body > [data-popper-placement] {
 
 .status__info {
   font-size: 15px;
+  padding-bottom: 10px;
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -3942,6 +3943,7 @@ a.status-card {
     margin: 0;
     border: 0;
     padding: 13px;
+    padding-inline-end: 0;
     color: inherit;
     background: transparent;
     font: inherit;
@@ -3976,7 +3978,6 @@ a.status-card {
 .column-header__buttons {
   height: 48px;
   display: flex;
-  margin-inline-start: 0;
 }
 
 .column-header__links {
@@ -5283,7 +5284,6 @@ a.status-card {
 
 .status__content {
   position: relative;
-  margin: 10px 0;
   font-size: 15px;
   line-height: 20px;
   word-wrap: break-word;
