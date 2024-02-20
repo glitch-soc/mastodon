@@ -1151,6 +1151,7 @@ body > [data-popper-placement] {
     background-position: center;
     background-size: cover;
     user-select: none;
+    min-height: 0;
 
     &.has-background::before {
       display: block;
@@ -1211,11 +1212,13 @@ body > [data-popper-placement] {
         rgba(mix($ui-base-color, $ui-highlight-color, 95%), 1)
       );
     }
+  }
+}
 
-    .notification__message {
-      margin-bottom: 0;
-      white-space: nowrap;
-    }
+.status__wrapper.collapsed {
+  .notification__message {
+    margin-bottom: 0;
+    white-space: nowrap;
   }
 }
 
@@ -1355,6 +1358,8 @@ body > [data-popper-placement] {
 }
 
 .status__prepend {
+  padding: 8px 14px; // intentionally reduced padding in glitch-soc
+  padding-bottom: 0;
   display: inline-flex;
   gap: 10px;
   font-size: 14px;
@@ -1821,6 +1826,7 @@ a.account__display-name {
 }
 
 .notification__message {
+  padding: 8px 14px 0; // padding intentionally reduced for glitch-soc
   cursor: default;
   color: $darker-text-color;
   font-size: 15px;
@@ -1846,16 +1852,6 @@ a.account__display-name {
     overflow: hidden;
     text-overflow: ellipsis;
   }
-}
-
-// glitch-soc markup changes for now
-// upstream has statuses within notifications, but it's different here
-.status .notification__message {
-  margin-bottom: 10px;
-}
-
-.notification .notification__message {
-  padding: 8px 14px 0;
 }
 
 .icon-button.star-icon.active {
@@ -3798,11 +3794,6 @@ a.status-card {
 
 .status-card.expanded > a {
   width: 100%;
-}
-
-.notification,
-.status {
-  position: relative;
 }
 
 .load-more {
@@ -8756,7 +8747,7 @@ noscript {
 }
 
 .notification,
-.status {
+.status__wrapper {
   position: relative;
 
   &.unread {
