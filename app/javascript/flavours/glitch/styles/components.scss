@@ -1784,29 +1784,39 @@ a.account__display-name {
 }
 
 .notification__report {
-  padding: 8px 10px;
-  padding-inline-start: 68px;
-  position: relative;
+  padding: 10px; // deliberate glitch-soc change
   border-bottom: 1px solid lighten($ui-base-color, 8%);
-  min-height: 54px;
+  display: flex;
+  gap: 10px;
 
   &__avatar {
-    position: absolute;
-    inset-inline-start: 10px;
-    top: 10px;
+    flex: 0 0 auto;
   }
 
   &__details {
+    flex: 1 1 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
     color: $darker-text-color;
+    gap: 10px;
     font-size: 15px;
     line-height: 22px;
+    white-space: nowrap;
+    overflow: hidden;
+
+    & > div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
     strong {
       font-weight: 500;
     }
+  }
+
+  &__actions {
+    flex: 0 0 auto;
   }
 }
 
