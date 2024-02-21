@@ -1064,14 +1064,6 @@ body > [data-popper-placement] {
     outline: 0;
     background: lighten($ui-base-color, 4%);
 
-    &.status.status-direct {
-      background: mix(lighten($ui-base-color, 4%), $ui-highlight-color, 95%);
-
-      &.muted {
-        background: transparent;
-      }
-    }
-
     .detailed-status,
     .detailed-status__action-bar {
       background: lighten($ui-base-color, 8%);
@@ -1103,11 +1095,6 @@ body > [data-popper-placement] {
   .audio-player,
   .attachment-list {
     margin-top: 8px; // glitch: reduced margins
-  }
-
-  &.status-direct {
-    background: mix($ui-base-color, $ui-highlight-color, 95%);
-    border-bottom-color: lighten($ui-base-color, 12%);
   }
 
   &.light {
@@ -1256,6 +1243,7 @@ body > [data-popper-placement] {
       );
     }
 
+    // TODO: review
     &.status-direct > .status__content::after {
       background: linear-gradient(
         rgba(mix($ui-base-color, $ui-highlight-color, 95%), 0),
@@ -1428,6 +1416,18 @@ body > [data-popper-placement] {
   }
 }
 
+.status__wrapper-direct {
+  background: mix($ui-base-color, $ui-highlight-color, 95%);
+
+  &:focus {
+    background: mix(lighten($ui-base-color, 4%), $ui-highlight-color, 95%);
+  }
+
+  .status__prepend {
+    color: $highlight-text-color;
+  }
+}
+
 .status__action-bar {
   display: flex;
   align-items: center;
@@ -1506,6 +1506,32 @@ body > [data-popper-placement] {
   display: flex;
   flex-direction: row;
   padding: 8px 0; // glitch: reduced padding
+}
+
+.detailed-status__wrapper-direct {
+  .detailed-status,
+  .detailed-status__action-bar {
+    background: mix($ui-base-color, $ui-highlight-color, 95%);
+  }
+
+  &:focus {
+    .detailed-status,
+    .detailed-status__action-bar {
+      background: mix(lighten($ui-base-color, 4%), $ui-highlight-color, 95%);
+    }
+  }
+
+  .detailed-status__action-bar {
+    border-top-color: mix(
+      lighten($ui-base-color, 8%),
+      $ui-highlight-color,
+      95%
+    );
+  }
+
+  .status__prepend {
+    color: $highlight-text-color;
+  }
 }
 
 .compose-form__textarea-icons {
@@ -4659,10 +4685,10 @@ a.status-card {
   margin-bottom: 4px;
   display: block;
   background-color: rgba($black, 0.45);
-  text-transform: uppercase;
   font-size: 11px;
-  font-weight: 500;
-  padding: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 2px 6px;
   border-radius: 4px;
   opacity: 0.7;
 
