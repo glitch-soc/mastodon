@@ -415,28 +415,6 @@ class LocalSettingsPage extends PureComponent {
             <FormattedMessage id='settings.auto_collapse_height' defaultMessage='Height (in pixels) for a toot to be considered lengthy' />
           </LocalSettingsPageItem>
         </section>
-        <section>
-          <h2><FormattedMessage id='settings.image_backgrounds' defaultMessage='Image backgrounds' /></h2>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['collapsed', 'backgrounds', 'user_backgrounds']}
-            id='mastodon-settings--collapsed-user-backgrouns'
-            onChange={onChange}
-            dependsOn={[['collapsed', 'enabled']]}
-          >
-            <FormattedMessage id='settings.image_backgrounds_users' defaultMessage='Give collapsed toots an image background' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['collapsed', 'backgrounds', 'preview_images']}
-            id='mastodon-settings--collapsed-preview-images'
-            onChange={onChange}
-            dependsOn={[['collapsed', 'enabled']]}
-          >
-            <FormattedMessage id='settings.image_backgrounds_media' defaultMessage='Preview collapsed toot media' />
-            <span className='hint'><FormattedMessage id='settings.image_backgrounds_media_hint' defaultMessage='If the post has any media attachment, use the first one as a background' /></span>
-          </LocalSettingsPageItem>
-        </section>
       </div>
     ),
     ({ intl, onChange, settings }) => (

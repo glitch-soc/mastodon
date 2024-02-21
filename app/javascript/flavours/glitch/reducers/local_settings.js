@@ -37,10 +37,6 @@ const initialState = ImmutableMap({
       media            : false,
       height           : 400,
     }),
-    backgrounds : ImmutableMap({
-      user_backgrounds : false,
-      preview_images   : false,
-    }),
     show_action_bar : true,
   }),
   media     : ImmutableMap({
