@@ -774,6 +774,28 @@ body > [data-popper-placement] {
     opacity 0.4s ease;
 }
 
+.compose-form__textarea-icons {
+  display: block;
+  position: absolute;
+  top: 29px;
+  inset-inline-end: 5px;
+  bottom: 5px;
+  overflow: hidden;
+
+  & > .textarea_icon {
+    display: block;
+    margin-top: 2px;
+    margin-inline-start: 2px;
+    width: 24px;
+    height: 24px;
+    color: $lighter-text-color;
+    font-size: 18px;
+    line-height: 24px;
+    text-align: center;
+    opacity: 0.8;
+  }
+}
+
 .sign-in-banner {
   padding: 10px;
 
@@ -933,10 +955,6 @@ body > [data-popper-placement] {
       outline: 0 !important;
     }
   }
-}
-
-.status__content {
-  overflow: visible;
 
   .status__content__spoiler {
     display: none;
@@ -945,6 +963,11 @@ body > [data-popper-placement] {
       display: block;
     }
   }
+}
+
+.status__content {
+  // glitch: necessary for fullwidth media options
+  overflow: visible;
 }
 
 .announcements__item__content {
@@ -990,6 +1013,30 @@ body > [data-popper-placement] {
   }
 }
 
+.status__content__read-more-button,
+.status__content__translate-button {
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  line-height: 22px;
+  color: $highlight-text-color;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  padding-top: 16px;
+  text-decoration: none;
+
+  &:hover,
+  &:active {
+    text-decoration: underline;
+  }
+
+  .icon {
+    width: 15px;
+    height: 15px;
+  }
+}
+
 .translate-button {
   margin-top: 16px;
   font-size: 15px;
@@ -1002,7 +1049,7 @@ body > [data-popper-placement] {
 .status__content__spoiler-link {
   display: inline-flex;
   border-radius: 2px;
-  background: lighten($ui-base-color, 30%);
+  background: transparent;
   border: 0;
   color: $inverted-text-color;
   font-weight: 700;
@@ -1143,6 +1190,10 @@ body > [data-popper-placement] {
     .status__action-bar {
       margin-inline-start: $thread-margin;
       width: calc(100% - ($thread-margin));
+    }
+
+    .status__content__read-more-button {
+      margin-inline-start: $thread-margin;
     }
   }
 
@@ -1360,6 +1411,50 @@ body > [data-popper-placement] {
   }
 }
 
+@keyframes spring-flip-in {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  30% {
+    transform: rotate(-242.4deg);
+  }
+
+  60% {
+    transform: rotate(-158.35deg);
+  }
+
+  90% {
+    transform: rotate(-187.5deg);
+  }
+
+  100% {
+    transform: rotate(-180deg);
+  }
+}
+
+@keyframes spring-flip-out {
+  0% {
+    transform: rotate(-180deg);
+  }
+
+  30% {
+    transform: rotate(62.4deg);
+  }
+
+  60% {
+    transform: rotate(-21.635deg);
+  }
+
+  90% {
+    transform: rotate(7.5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 .status-check-box__status {
   display: block;
   box-sizing: border-box;
@@ -1473,6 +1568,11 @@ body > [data-popper-placement] {
       height: 24px;
       margin: -1px 0 0;
     }
+
+    .status__content__spoiler-link {
+      line-height: 24px;
+      margin: -1px 0 0;
+    }
   }
 
   .media-gallery,
@@ -1531,28 +1631,6 @@ body > [data-popper-placement] {
 
   .status__prepend {
     color: $highlight-text-color;
-  }
-}
-
-.compose-form__textarea-icons {
-  display: block;
-  position: absolute;
-  top: 29px;
-  inset-inline-end: 5px;
-  bottom: 5px;
-  overflow: hidden;
-
-  & > .textarea_icon {
-    display: block;
-    margin-top: 2px;
-    margin-inline-start: 2px;
-    width: 24px;
-    height: 24px;
-    color: $lighter-text-color;
-    font-size: 18px;
-    line-height: 24px;
-    text-align: center;
-    opacity: 0.8;
   }
 }
 
@@ -5243,66 +5321,10 @@ a.status-card {
   }
 }
 
-@keyframes spring-flip-in {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  30% {
-    transform: rotate(-242.4deg);
-  }
-
-  60% {
-    transform: rotate(-158.35deg);
-  }
-
-  90% {
-    transform: rotate(-187.5deg);
-  }
-
-  100% {
-    transform: rotate(-180deg);
-  }
-}
-
-@keyframes spring-flip-out {
-  0% {
-    transform: rotate(-180deg);
-  }
-
-  30% {
-    transform: rotate(62.4deg);
-  }
-
-  60% {
-    transform: rotate(-21.635deg);
-  }
-
-  90% {
-    transform: rotate(7.5deg);
-  }
-
-  100% {
-    transform: rotate(0deg);
-  }
-}
-
 .notif-cleaning {
   .status,
   .notification {
     padding-inline-end: ($dismiss-overlay-width + 0.5rem);
-  }
-}
-
-.notification-follow,
-.notification-follow-request {
-  position: relative;
-
-  // same like Status
-  border-bottom: 1px solid lighten($ui-base-color, 8%);
-
-  .account {
-    border-bottom: 0 none;
   }
 }
 
@@ -8640,6 +8662,7 @@ noscript {
   inset-inline-end: 20px;
   width: 300px;
 
+  // glitch: feature to chose which side the pop-in player is displayed
   &.left {
     inset-inline-end: unset;
     inset-inline-start: 20px;
