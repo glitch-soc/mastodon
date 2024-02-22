@@ -295,12 +295,15 @@ const sortHashtagsByUse = (state, tags) => {
 };
 
 const insertEmoji = (state, position, emojiData) => {
-  const emoji = emojiData.native;
+  const oldText = state.get('text');
+  const needSpaceBefore = ![undefined, ' ', '\n'].includes(oldText[position - 1]);
+  const needSpaceAfter = ![' ', '\n'].includes(oldText[position]);
+  const emoji = `${needSpaceBefore ? ' ' : ''}${emojiData.native}${needSpaceAfter ? ' ' : ''}`;
 
   return state.withMutations(map => {
-    map.update('text', oldText => `${oldText.slice(0, position)}${emoji}\u200B${oldText.slice(position)}`);
+    map.update('text', oldText => `${oldText.slice(0, position)}${emoji}${oldText.slice(position)}`);
     map.set('focusDate', new Date());
-    map.set('caretPosition', position + emoji.length + 1);
+    map.set('caretPosition', position + emoji.length);
     map.set('idempotencyKey', uuid());
   });
 };
