@@ -123,12 +123,14 @@ export function cycleElefriendCompose() {
   };
 }
 
-export function replyCompose(status, routerHistory) {
+export function replyCompose(status, routerHistory, statusRebloggedBy) {
   return (dispatch, getState) => {
     const prependCWRe = getState().getIn(['local_settings', 'prepend_cw_re']);
+    const mentionReblogger = getState().getIn(['local_settings', 'mention_reblogger']);
     dispatch({
       type: COMPOSE_REPLY,
       status: status,
+      statusRebloggedBy: mentionReblogger ? statusRebloggedBy : undefined,
       prependCWRe: prependCWRe,
     });
 

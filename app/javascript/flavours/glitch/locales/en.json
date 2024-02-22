@@ -116,6 +116,7 @@
   "settings.pop_in_position": "Pop-in player position:",
   "settings.pop_in_right": "Right",
   "settings.preferences": "User preferences",
+  "settings.mention_reblogger": "Mention booster when replying to a boosted post",
   "settings.prepend_cw_re": "Prepend “re: ” to content warnings when replying",
   "settings.preselect_on_reply": "Pre-select usernames on reply",
   "settings.preselect_on_reply_hint": "When replying to a conversation with multiple participants, pre-select usernames past the first",

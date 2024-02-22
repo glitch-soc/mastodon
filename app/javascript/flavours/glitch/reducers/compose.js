@@ -134,11 +134,14 @@ const initialPoll = ImmutableMap({
   multiple: false,
 });
 
-function statusToTextMentions(state, status) {
+function statusToTextMentions(state, status, statusRebloggedBy) {
   let set = ImmutableOrderedSet([]);
 
   if (status.getIn(['account', 'id']) !== me) {
     set = set.add(`@${status.getIn(['account', 'acct'])} `);
+  }
+  if (statusRebloggedBy) {
+    set = set.add(`@${statusRebloggedBy.get('acct')}`);
   }
 
   return set.union(status.get('mentions').filterNot(mention => mention.get('id') === me).map(mention => `@${mention.get('acct')} `)).join('');
@@ -415,7 +418,7 @@ export default function compose(state = initialState, action) {
     return state.withMutations(map => {
       map.set('id', null);
       map.set('in_reply_to', action.status.get('id'));
-      map.set('text', statusToTextMentions(state, action.status));
+      map.set('text', statusToTextMentions(state, action.status, action.statusRebloggedBy));
       map.set('privacy', privacyPreference(action.status.get('visibility'), state.get('default_privacy')));
       map.update(
         'advanced_options',
