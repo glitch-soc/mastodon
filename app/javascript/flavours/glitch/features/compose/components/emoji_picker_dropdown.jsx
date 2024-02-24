@@ -349,7 +349,6 @@ class EmojiPickerDropdown extends PureComponent {
           onClick={this.onToggle}
           disabled={disabled}
           id="emoji"
-          inverted
         />
 
         <Popover
