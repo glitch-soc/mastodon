@@ -350,16 +350,6 @@ class StatusActionBar extends ImmutablePureComponent {
     );
 
     const canReact = permissions && status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
-    const reactButton = (
-      <IconButton
-        className='status__action-bar-button'
-        onClick={this.handleNoOp} // EmojiPickerDropdown handles that
-        title={intl.formatMessage(messages.react)}
-        disabled={!canReact}
-        icon='add_reaction'
-        iconComponent={AddReactionIcon}
-      />
-    );
     const bookmarkTitle = intl.formatMessage(status.get('bookmarked') ? messages.removeBookmark : messages.bookmark);
     const favouriteTitle = intl.formatMessage(status.get('favourited') ? messages.removeFavourite : messages.favourite);
 
@@ -385,11 +375,7 @@ class StatusActionBar extends ImmutablePureComponent {
           <IconButton className='status__action-bar-button star-icon' animate active={status.get('favourited')} title={favouriteTitle} icon='star' iconComponent={status.get('favourited') ? StarIcon : StarBorderIcon} onClick={this.handleFavouriteClick} counter={withCounters ? status.get('favourites_count') : undefined} />
         </div>
         <div className='status__action-bar__button-wrapper'>
-          {
-            permissions
-              ? <EmojiPickerDropdown className='status__action-bar-button' onPickEmoji={this.handleEmojiPick} button={reactButton} disabled={!canReact} />
-              : reactButton
-          }
+          <EmojiPickerDropdown className='status__action-bar-button' onPickEmoji={this.handleEmojiPick} title={intl.formatMessage(messages.react)} icon={AddReactionIcon} disabled={!canReact} />
         </div>
         <div className='status__action-bar__button-wrapper'>
           <IconButton className='status__action-bar-button bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={bookmarkTitle} icon='bookmark' iconComponent={status.get('bookmarked') ? BookmarkIcon : BookmarkBorderIcon} onClick={this.handleBookmarkClick} />
