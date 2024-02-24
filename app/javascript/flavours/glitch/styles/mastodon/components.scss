@@ -1792,8 +1792,12 @@ body > [data-popper-placement] {
     flex-grow: 1;
   }
 
-  & > .emoji-picker-dropdown > .emoji-button {
-    padding: 0;
+  & > .emoji-picker-dropdown {
+    height: 24px;
+
+    > .emoji-button {
+      padding: 0;
+    }
   }
 }
 
