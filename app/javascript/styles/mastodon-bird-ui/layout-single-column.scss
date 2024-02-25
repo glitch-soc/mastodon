@@ -2537,6 +2537,7 @@ body.embed .detailed-status__meta .detailed-status__link .fa-retweet,
 .layout-single-column .account__header__bio .account__header__fields dl {
   width: 100%;
 }
+
 /* stylelint-enable no-duplicate-selectors */
 
 /* ...except on those that have label with GitHub, github, YouTube or similar */
@@ -3400,7 +3401,8 @@ body.embed .button.logo-button:hover,
 @media (min-width: 889px) {
   .layout-single-column .compose-form .autosuggest-textarea__textarea {
     /* stylelint-disable-next-line */
-    max-height: 20vh !important; /* stylelint-disable-next-line */
+    max-height: 20vh !important;
+    /* stylelint-disable-next-line */
     overflow-y: auto !important;
     resize: none;
   }
@@ -4021,8 +4023,8 @@ body.embed .button.logo-button:hover,
   /* Better blur overlay for ui-header */
   .layout-single-column .ui::after {
     backdrop-filter: blur(12px);
-    /* stylelint-disable-next-line */
     -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
     background-color: var(--color-bg-75);
     content: '';
     /* Height is .ui__header + .tabs-bar__wrapper */
