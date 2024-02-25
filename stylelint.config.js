@@ -7,6 +7,7 @@ module.exports = {
     'public/assets/**/*',
     'public/packs/**/*',
     'public/packs-test/**/*',
+    'app/javascript/styles/mastodon-bird-ui/*',
     'vendor/**/*',
   ],
   reportDescriptionlessDisables: true,
