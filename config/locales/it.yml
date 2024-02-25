@@ -1755,9 +1755,13 @@ it:
   tags:
     does_not_match_previous_name: non corrisponde al nome precedente
   themes:
-    contrast: Mastodon (contrasto elevato)
-    default: Mastodon (scuro)
-    mastodon-light: Mastodon (chiaro)
+    default: Predefinito (galileivr.org)
+    mastodon-dark: Mastodon Classico (Scuro)
+    mastodon-light: Mastodon Classico (Chiaro)
+    contrast: Mastodon Classico (Contrasto elevato)
+    mastodon-bird-ui-light: Bird UI (Chiaro)
+    mastodon-bird-ui-dark: Bird UI (Scuro)
+    mastodon-bird-ui-contrast: Bird UI (Contrasto elevato)
   time:
     formats:
       default: "%d %b %Y, %H:%M"

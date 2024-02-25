@@ -1748,9 +1748,13 @@ en-GB:
   tags:
     does_not_match_previous_name: does not match the previous name
   themes:
-    contrast: Mastodon (High contrast)
-    default: Mastodon (Dark)
-    mastodon-light: Mastodon (Light)
+    default: Default theme (galileivr.org)
+    mastodon-dark: Classic Mastodon (Dark)
+    mastodon-light: Classic Mastodon (Light)
+    contrast: Classic Mastodon (High contrast)
+    mastodon-bird-ui-light: Bird UI (Light)
+    mastodon-bird-ui-dark: Bird UI (Dark)
+    mastodon-bird-ui-contrast: Bird UI (High contrast)
   time:
     formats:
       default: "%b %d, %Y, %H:%M"
