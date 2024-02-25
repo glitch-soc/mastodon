@@ -31,7 +31,8 @@ code {
 }
 
 .simple_form {
-  &.hidden {
+  &.hidden,
+  .ds-none {
     display: none;
   }
 
@@ -39,7 +40,8 @@ code {
     margin-bottom: 16px;
     overflow: hidden;
 
-    &.hidden {
+    &.hidden,
+    .ds-none {
       margin: 0;
     }
 
