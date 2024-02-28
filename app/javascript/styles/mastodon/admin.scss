@@ -532,6 +532,22 @@ body,
   }
 }
 
+.flavour-screen {
+  display: block;
+  margin: 10px auto;
+  max-width: 100%;
+}
+
+.flavour-description {
+  display: block;
+  font-size: 16px;
+  margin: 10px 0;
+
+  & > p {
+    margin: 10px 0;
+  }
+}
+
 .report-accounts {
   display: flex;
   flex-wrap: wrap;
@@ -621,16 +637,6 @@ body,
 
   input.button {
     margin: 0 5px 5px 0;
-  }
-
-  .media-spoiler-toggle-buttons {
-    margin-inline-start: auto;
-
-    .button {
-      overflow: visible;
-      margin: 0 0 5px 5px;
-      float: right;
-    }
   }
 }
 
@@ -1054,6 +1060,7 @@ a.name-tag,
     display: flex;
     justify-content: space-between;
     margin-bottom: 0;
+    word-break: break-word;
   }
 
   &__permissions {

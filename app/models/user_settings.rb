@@ -9,14 +9,18 @@ class UserSettings
 
   setting :always_send_emails, default: false
   setting :aggregate_reblogs, default: true
-  setting :theme, default: -> { ::Setting.theme }
+  setting :flavour, default: -> { ::Setting.flavour }
+  setting :skin, default: -> { ::Setting.skin }
   setting :noindex, default: -> { ::Setting.noindex }
   setting :show_application, default: true
   setting :default_language, default: nil
   setting :default_sensitive, default: false
   setting :default_privacy, default: nil, in: %w(public unlisted private)
+  setting :default_content_type, default: 'text/plain'
+  setting :hide_followers_count, default: false
 
   setting_inverse_alias :indexable, :noindex
+  setting_inverse_alias :show_followers_count, :hide_followers_count
 
   namespace :web do
     setting :advanced_layout, default: false
@@ -28,10 +32,12 @@ class UserSettings
     setting :delete_modal, default: true
     setting :reblog_modal, default: false
     setting :unfollow_modal, default: true
+    setting :favourite_modal, default: false
     setting :reduce_motion, default: false
     setting :expand_content_warnings, default: false
     setting :display_media, default: 'default', in: %w(default show_all hide_all)
     setting :auto_play, default: false
+    setting :use_system_emoji_font, default: false
   end
 
   namespace :notification_emails do
@@ -43,6 +49,8 @@ class UserSettings
     setting :report, default: true
     setting :pending_account, default: true
     setting :trends, default: true
+    setting :link_trends, default: false
+    setting :status_trends, default: false
     setting :appeal, default: true
     setting :software_updates, default: 'critical', in: %w(none critical patch all)
   end

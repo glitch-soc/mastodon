@@ -1,6 +1,6 @@
-import { createRoot }  from 'react-dom/client';
-
 import './public-path';
+
+import { createRoot }  from 'react-dom/client';
 
 import { IntlMessageFormat }  from 'intl-messageformat';
 import { defineMessages } from 'react-intl';
@@ -25,22 +25,6 @@ const messages = defineMessages({
   usernameTaken: { id: 'username.taken', defaultMessage: 'That username is taken. Try another' },
   passwordExceedsLength: { id: 'password_confirmation.exceeds_maxlength', defaultMessage: 'Password confirmation exceeds the maximum password length' },
   passwordDoesNotMatch: { id: 'password_confirmation.mismatching', defaultMessage: 'Password confirmation does not match' },
-});
-
-window.addEventListener('message', e => {
-  const data = e.data || {};
-
-  if (!window.parent || data.type !== 'setHeight') {
-    return;
-  }
-
-  ready(() => {
-    window.parent.postMessage({
-      type: 'setHeight',
-      id: data.id,
-      height: document.getElementsByTagName('html')[0].scrollHeight,
-    }, '*');
-  });
 });
 
 function loaded() {
@@ -191,46 +175,6 @@ function loaded() {
     spoilerLink.textContent = (new IntlMessageFormat(message, locale)).format();
   });
 }
-
-Rails.delegate(document, '#edit_profile input[type=file]', 'change', ({ target }) => {
-  const avatar = document.getElementById(target.id + '-preview');
-  const [file] = target.files || [];
-  const url = file ? URL.createObjectURL(file) : avatar.dataset.originalSrc;
-
-  avatar.src = url;
-});
-
-Rails.delegate(document, '.input-copy input', 'click', ({ target }) => {
-  target.focus();
-  target.select();
-  target.setSelectionRange(0, target.value.length);
-});
-
-Rails.delegate(document, '.input-copy button', 'click', ({ target }) => {
-  const input = target.parentNode.querySelector('.input-copy__wrapper input');
-
-  const oldReadOnly = input.readonly;
-
-  input.readonly = false;
-  input.focus();
-  input.select();
-  input.setSelectionRange(0, input.value.length);
-
-  try {
-    if (document.execCommand('copy')) {
-      input.blur();
-      target.parentNode.classList.add('copied');
-
-      setTimeout(() => {
-        target.parentNode.classList.remove('copied');
-      }, 700);
-    }
-  } catch (err) {
-    console.error(err);
-  }
-
-  input.readonly = oldReadOnly;
-});
 
 const toggleSidebar = () => {
   const sidebar = document.querySelector('.sidebar ul');

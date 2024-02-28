@@ -34,6 +34,13 @@ RSpec.describe FollowRequest do
       expect(follow_request).to have_received(:destroy!)
     end
 
+    it 'generates a Follow' do
+      follow_request = Fabricate.create(:follow_request)
+      follow_request.authorize!
+      target = follow_request.target_account
+      expect(follow_request.account.following?(target)).to be true
+    end
+
     it 'correctly passes show_reblogs when true' do
       follow_request = Fabricate.create(:follow_request, show_reblogs: true)
       follow_request.authorize!

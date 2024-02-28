@@ -81,7 +81,7 @@ const Option = ({ multipleChoice, index, title, autoFocus }) => {
 
       <AutosuggestInput
         placeholder={intl.formatMessage(messages.option_placeholder, { number: index + 1 })}
-        maxLength={50}
+        maxLength={100}
         value={title}
         lang={lang}
         spellCheck

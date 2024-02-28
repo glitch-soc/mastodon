@@ -26,6 +26,7 @@ RSpec.describe 'Sources' do
           id: status.id.to_s,
           text: status.text,
           spoiler_text: status.spoiler_text,
+          content_type: nil,
         })
       end
     end
@@ -55,6 +56,7 @@ RSpec.describe 'Sources' do
           id: status.id.to_s,
           text: status.text,
           spoiler_text: status.spoiler_text,
+          content_type: nil,
         })
       end
     end
