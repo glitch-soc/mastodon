@@ -22,7 +22,9 @@
 #  account_id                   :bigint(8)        not null
 #  application_id               :bigint(8)
 #  in_reply_to_account_id       :bigint(8)
+#  local_only                   :boolean
 #  poll_id                      :bigint(8)
+#  content_type                 :string
 #  deleted_at                   :datetime
 #  edited_at                    :datetime
 #  trendable                    :boolean
@@ -97,6 +99,7 @@ class Status < ApplicationRecord
   validates_with DisallowedHashtagsValidator
   validates :reblog, uniqueness: { scope: :account }, if: :reblog?
   validates :visibility, exclusion: { in: %w(direct limited) }, if: :reblog?
+  validates :content_type, inclusion: { in: %w(text/plain text/markdown text/html) }, allow_nil: true
 
   accepts_nested_attributes_for :poll
 
@@ -123,6 +126,8 @@ class Status < ApplicationRecord
     where('NOT EXISTS (SELECT * FROM statuses_tags forbidden WHERE forbidden.status_id = statuses.id AND forbidden.tag_id IN (?))', tag_ids)
   }
 
+  scope :not_local_only, -> { where(local_only: [false, nil]) }
+
   after_create_commit :trigger_create_webhooks
   after_update_commit :trigger_update_webhooks
 
@@ -137,6 +142,8 @@ class Status < ApplicationRecord
   before_validation :set_visibility
   before_validation :set_conversation
   before_validation :set_local
+
+  before_create :set_local_only
 
   around_create Mastodon::Snowflake::Callbacks
 
@@ -327,6 +334,42 @@ class Status < ApplicationRecord
       visibilities.keys - %w(direct limited)
     end
 
+    def as_direct_timeline(account, limit = 20, max_id = nil, since_id = nil)
+      # direct timeline is mix of direct message from_me and to_me.
+      # 2 queries are executed with pagination.
+      # constant expression using arel_table is required for partial index
+
+      # _from_me part does not require any timeline filters
+      query_from_me = where(account_id: account.id)
+                      .where(Status.arel_table[:visibility].eq(3))
+                      .limit(limit)
+                      .order('statuses.id DESC')
+
+      # _to_me part requires mute and block filter.
+      # FIXME: may we check mutes.hide_notifications?
+      query_to_me = Status
+                    .joins(:mentions)
+                    .merge(Mention.where(account_id: account.id))
+                    .where(Status.arel_table[:visibility].eq(3))
+                    .limit(limit)
+                    .order('mentions.status_id DESC')
+                    .not_excluded_by_account(account)
+
+      if max_id.present?
+        query_from_me = query_from_me.where('statuses.id < ?', max_id)
+        query_to_me = query_to_me.where('mentions.status_id < ?', max_id)
+      end
+
+      if since_id.present?
+        query_from_me = query_from_me.where('statuses.id > ?', since_id)
+        query_to_me = query_to_me.where('mentions.status_id > ?', since_id)
+      end
+
+      # returns ActiveRecord.Relation
+      items = (query_from_me.select(:id).to_a + query_to_me.select(:id).to_a).uniq(&:id).sort_by(&:id).reverse.take(limit)
+      Status.where(id: items.map(&:id))
+    end
+
     def favourites_map(status_ids, account_id)
       Favourite.select('status_id').where(status_id: status_ids).where(account_id: account_id).each_with_object({}) { |f, h| h[f.status_id] = true }
     end
@@ -394,6 +437,15 @@ class Status < ApplicationRecord
     end
   end
 
+  def marked_local_only?
+    # match both with and without U+FE0F (the emoji variation selector)
+    /#{local_only_emoji}\ufe0f?\z/.match?(content)
+  end
+
+  def local_only_emoji
+    '👁'
+  end
+
   def status_stat
     super || build_status_stat
   end
@@ -444,6 +496,12 @@ class Status < ApplicationRecord
     self.visibility = reblog.visibility if reblog? && visibility.nil?
     self.visibility = (account.locked? ? :private : :public) if visibility.nil?
     self.sensitive  = false if sensitive.nil?
+  end
+
+  def set_local_only
+    return unless account.domain.nil? && !attribute_changed?(:local_only)
+
+    self.local_only = marked_local_only?
   end
 
   def set_conversation

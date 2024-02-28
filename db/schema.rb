@@ -943,6 +943,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_11_033014) do
     t.text "spoiler_text", default: "", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "content_type"
     t.bigint "ordered_media_attachment_ids", array: true
     t.text "media_descriptions", array: true
     t.string "poll_options", array: true
@@ -999,7 +1000,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_11_033014) do
     t.bigint "account_id", null: false
     t.bigint "application_id"
     t.bigint "in_reply_to_account_id"
+    t.boolean "local_only"
     t.bigint "poll_id"
+    t.string "content_type"
     t.datetime "deleted_at", precision: nil
     t.datetime "edited_at", precision: nil
     t.boolean "trendable"

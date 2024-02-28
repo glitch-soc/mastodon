@@ -22,6 +22,10 @@ RSpec.describe 'Tag' do
       get "/api/v1/timelines/tag/#{hashtag}", headers: headers, params: params
     end
 
+    before do
+      Setting.timeline_preview = true
+    end
+
     let(:account)         { Fabricate(:account) }
     let!(:private_status) { PostStatusService.new.call(account, visibility: :private, text: '#life could be a dream') } # rubocop:disable RSpec/LetSetup
     let!(:life_status)    { PostStatusService.new.call(account, text: 'tell me what is my #life without your #love') }

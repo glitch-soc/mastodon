@@ -2338,6 +2338,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^7.0.0"
     arrow-key-navigation: "npm:^1.2.0"
     async-mutex: "npm:^0.4.0"
+    atrament: "npm:0.2.4"
     autoprefixer: "npm:^10.4.14"
     axios: "npm:^1.4.0"
     babel-jest: "npm:^29.5.0"
@@ -2371,6 +2372,8 @@ __metadata:
     eslint-plugin-promise: "npm:~6.1.1"
     eslint-plugin-react: "npm:^7.33.2"
     eslint-plugin-react-hooks: "npm:^4.6.0"
+    exif-js: "npm:^2.3.0"
+    favico.js: "npm:^0.3.10"
     file-loader: "npm:^6.2.0"
     font-awesome: "npm:^4.7.0"
     fuzzysort: "npm:^2.0.4"
@@ -4639,6 +4642,13 @@ __metadata:
   version: 1.0.0
   resolution: "atomic-sleep@npm:1.0.0"
   checksum: 10c0/e329a6665512736a9bbb073e1761b4ec102f7926cce35037753146a9db9c8104f5044c1662e4a863576ce544fb8be27cd2be6bc8c1a40147d03f31eb1cfb6e8a
+  languageName: node
+  linkType: hard
+
+"atrament@npm:0.2.4":
+  version: 0.2.4
+  resolution: "atrament@npm:0.2.4"
+  checksum: 10c0/ddd86e3e9c546e3286862f2c1854e796e597e261444623579069426b14c1125dbd210b4158c3967a8c5f9fad07f7ae6cba2b159a860da45ce175c9c9c8888bb2
   languageName: node
   linkType: hard
 
@@ -7775,6 +7785,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"exif-js@npm:^2.3.0":
+  version: 2.3.0
+  resolution: "exif-js@npm:2.3.0"
+  checksum: 10c0/6bcb081cfd141147e9e13c412fa52fa8a6b915d441bdaefb8c9882058f0e12843b8249ecf6f620709ce43ef069ebdd45181176560160a066f03e2cae384a10f7
+  languageName: node
+  linkType: hard
+
 "exit@npm:^0.1.2":
   version: 0.1.2
   resolution: "exit@npm:0.1.2"
@@ -7975,6 +7992,13 @@ __metadata:
   dependencies:
     reusify: "npm:^1.0.4"
   checksum: 10c0/5ce4f83afa5f88c9379e67906b4d31bc7694a30826d6cc8d0f0473c966929017fda65c2174b0ec89f064ede6ace6c67f8a4fe04cef42119b6a55b0d465554c24
+  languageName: node
+  linkType: hard
+
+"favico.js@npm:^0.3.10":
+  version: 0.3.10
+  resolution: "favico.js@npm:0.3.10"
+  checksum: 10c0/ca000181f76ef800d989c2837d072fbb52ffff5c512c67a04d83339f0a3f6bc0af7e656980f2732fe6e5759dd49b6a213071bad95306abb8fbf475e4d4a8463d
   languageName: node
   linkType: hard
 

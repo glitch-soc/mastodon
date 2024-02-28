@@ -86,6 +86,10 @@ class Account < ApplicationRecord
   include DomainNormalizable
   include Paginable
 
+  MAX_DISPLAY_NAME_LENGTH = (ENV['MAX_DISPLAY_NAME_CHARS'] || 30).to_i
+  MAX_NOTE_LENGTH = (ENV['MAX_BIO_CHARS'] || 500).to_i
+  DEFAULT_FIELDS_SIZE = (ENV['MAX_PROFILE_FIELDS'] || 4).to_i
+
   enum :protocol, { ostatus: 0, activitypub: 1 }
   enum :suspension_origin, { local: 0, remote: 1 }, prefix: true
 
@@ -101,9 +105,9 @@ class Account < ApplicationRecord
   # Local user validations
   validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
   validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
-  validates :display_name, length: { maximum: 30 }, if: -> { local? && will_save_change_to_display_name? }
-  validates :note, note_length: { maximum: 500 }, if: -> { local? && will_save_change_to_note? }
-  validates :fields, length: { maximum: 4 }, if: -> { local? && will_save_change_to_fields? }
+  validates :display_name, length: { maximum: MAX_DISPLAY_NAME_LENGTH }, if: -> { local? && will_save_change_to_display_name? }
+  validates :note, note_length: { maximum: MAX_NOTE_LENGTH }, if: -> { local? && will_save_change_to_note? }
+  validates :fields, length: { maximum: DEFAULT_FIELDS_SIZE }, if: -> { local? && will_save_change_to_fields? }
   validates :uri, absence: true, if: :local?, on: :create
   validates :inbox_url, absence: true, if: :local?, on: :create
   validates :shared_inbox_url, absence: true, if: :local?, on: :create
@@ -285,10 +289,6 @@ class Account < ApplicationRecord
     update!(memorial: true)
   end
 
-  def trendable?
-    boolean_with_default('trendable', Setting.trendable_by_default)
-  end
-
   def sign?
     true
   end
@@ -350,8 +350,6 @@ class Account < ApplicationRecord
 
     self[:fields] = fields
   end
-
-  DEFAULT_FIELDS_SIZE = 4
 
   def build_fields
     return if fields.size >= DEFAULT_FIELDS_SIZE

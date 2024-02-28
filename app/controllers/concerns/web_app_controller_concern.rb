@@ -7,6 +7,7 @@ module WebAppControllerConcern
     vary_by 'Accept, Accept-Language, Cookie'
 
     before_action :redirect_unauthenticated_to_permalinks!
+    before_action :set_pack
     before_action :set_app_body_class
   end
 
@@ -19,7 +20,7 @@ module WebAppControllerConcern
   end
 
   def redirect_unauthenticated_to_permalinks!
-    return if user_signed_in? && current_account.moved_to_account_id.nil?
+    return if user_signed_in? # NOTE: Different from upstream because we allow moved users to log in
 
     permalink_redirector = PermalinkRedirector.new(request.path)
     return if permalink_redirector.redirect_path.blank?
@@ -35,5 +36,9 @@ module WebAppControllerConcern
         redirect_to(permalink_redirector.redirect_uri, allow_other_host: true)
       end
     end
+  end
+
+  def set_pack
+    use_pack 'home'
   end
 end

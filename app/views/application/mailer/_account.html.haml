@@ -26,5 +26,5 @@
                   %b= account_formatted_stat(account.following_count)
                   %span= t('accounts.following')
                 %td
-                  %b= account_formatted_stat(account.followers_count)
+                  %b= hide_followers_count?(account) ? '-' : account_formatted_stat(account.followers_count)
                   %span= t('accounts.followers', count: account.followers_count)
