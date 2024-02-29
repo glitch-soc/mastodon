@@ -328,12 +328,13 @@ class DetailedStatus extends ImmutablePureComponent {
             disabled
             {...statusContentProps}
           />
-
+// Set year 7 years into the future
           <div className='detailed-status__meta'>
-            <a className='detailed-status__datetime' href={status.get('url')} target='_blank' rel='noopener noreferrer'>
-              <FormattedDate value={new Date(status.get('created_at'))} hour12={false} year='numeric' month='short' day='2-digit' hour='2-digit' minute='2-digit' />
-            </a>{edited}{visibilityLink}{applicationLink}{reblogLink} · {favouriteLink}
-          </div>
+              <a className='detailed-status__datetime' href={status.get('url')} target='_blank' rel='noopener noreferrer'>
+                {new Date(status.get('created_at')).getFullYear() + 7}-{new Date(status.get('created_at')).toLocaleString('en-US', { month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}
+              </a>
+              {edited}{visibilityLink}{applicationLink}{reblogLink} · {favouriteLink}
+            </div>
         </div>
       </div>
     );
