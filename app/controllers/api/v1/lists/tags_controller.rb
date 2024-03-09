@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Api::V1::Lists::AccountsController < Api::BaseController
+class Api::V1::Lists::TagsController < Api::BaseController
   before_action -> { doorkeeper_authorize! :read, :'read:lists' }, only: [:show]
   before_action -> { doorkeeper_authorize! :write, :'write:lists' }, except: [:show]
 
@@ -10,14 +10,14 @@ class Api::V1::Lists::AccountsController < Api::BaseController
   after_action :insert_pagination_headers, only: :show
 
   def show
-    @accounts = load_accounts
-    render json: @accounts, each_serializer: REST::AccountSerializer
+    @tags = load_tags
+    render json: @tags, each_serializer: REST::TagSerializer
   end
 
   def create
     ApplicationRecord.transaction do
-      list_accounts.each do |account|
-        @list.accounts << account
+      list_tags.each do |tag|
+        @list.tags << tag
       end
     end
 
@@ -25,35 +25,35 @@ class Api::V1::Lists::AccountsController < Api::BaseController
   end
 
   def destroy
-    ListAccount.where(list: @list, account_id: account_ids).destroy_all
+    ListTag.where(list: @list, tag_id: tag_id).destroy_all
     render_empty
   end
 
   private
 
   def set_list
-    Rails.logger.warn "This is concerning! #{current_account} and #{params}"
+    Rails.logger.warn "This is tagged concerning! #{current_account} and #{params}"
     @list = List.where(account: current_account).find(params[:list_id])
   end
 
-  def load_accounts
+  def load_tags
     if unlimited?
-      @list.accounts.without_suspended.includes(:account_stat, :user).all
+      @list.tags.all
     else
-      @list.accounts.without_suspended.includes(:account_stat, :user).paginate_by_max_id(limit_param(DEFAULT_ACCOUNTS_LIMIT), params[:max_id], params[:since_id])
+      @list.tags.paginate_by_max_id(limit_param(DEFAULT_TAGS_LIMIT), params[:max_id], params[:since_id])
     end
   end
 
-  def list_accounts
-    Account.find(account_ids)
+  def list_tags
+    Tag.find(tag_ids)
   end
 
-  def account_ids
-    Array(resource_params[:account_ids])
+  def tag_ids
+    Array(resource_params[:tag_ids])
   end
 
   def resource_params
-    params.permit(account_ids: [])
+    params.permit(tag_ids: [])
   end
 
   def insert_pagination_headers
@@ -63,25 +63,25 @@ class Api::V1::Lists::AccountsController < Api::BaseController
   def next_path
     return if unlimited?
 
-    api_v1_list_accounts_url pagination_params(max_id: pagination_max_id) if records_continue?
+    api_v1_list_tags_url pagination_params(max_id: pagination_max_id) if records_continue?
   end
 
   def prev_path
     return if unlimited?
 
-    api_v1_list_accounts_url pagination_params(since_id: pagination_since_id) unless @accounts.empty?
+    api_v1_list_tags_url pagination_params(since_id: pagination_since_id) unless @tags.empty?
   end
 
   def pagination_max_id
-    @accounts.last.id
+    @tags.last.id
   end
 
   def pagination_since_id
-    @accounts.first.id
+    @tags.first.id
   end
 
   def records_continue?
-    @accounts.size == limit_param(DEFAULT_ACCOUNTS_LIMIT)
+    @tags.size == limit_param(DEFAULT_TAGS_LIMIT)
   end
 
   def pagination_params(core_params)
