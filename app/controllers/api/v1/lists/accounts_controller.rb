@@ -32,7 +32,6 @@ class Api::V1::Lists::AccountsController < Api::BaseController
   private
 
   def set_list
-    Rails.logger.warn "This is concerning! #{current_account} and #{params}"
     @list = List.where(account: current_account).find(params[:list_id])
   end
 
