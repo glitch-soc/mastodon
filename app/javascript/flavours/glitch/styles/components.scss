@@ -7791,6 +7791,8 @@ noscript {
       padding: 5px;
       background: $ui-base-color;
       text-align: center;
+      border: 0;
+      color: $primary-text-color;
     }
 
     .tab.tab__active {
@@ -7815,6 +7817,7 @@ noscript {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 36px;
 
     .list_tag__display-name {
       flex-grow: 1;

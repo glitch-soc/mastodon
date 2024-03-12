@@ -44,11 +44,11 @@ class Api::V1::Lists::TagsController < Api::BaseController
   end
 
   def list_tags
-    names = tag_ids.reject { |t| t =~ /\A[0-9]+\Z/ }
-    ids = tag_ids.select { |t| t =~ /\A[0-9]+\Z/ }
+    names = tag_ids.grep_v(/\A[0-9]+\Z/)
+    ids = tag_ids.grep(/\A[0-9]+\Z/)
     existing_by_name = Tag.where(name: names.map { |n| Tag.normalize(n) }).select(:id, :name)
-    ids.push(*existing_by_name.map { |t| t.id })
-    not_existing_by_name = names.reject { |n| existing_by_name.any? { |e| e.name == Tag.normalize(n) }}
+    ids.push(*existing_by_name.map(&:id))
+    not_existing_by_name = names.reject { |n| existing_by_name.any? { |e| e.name == Tag.normalize(n) } }
     created = Tag.find_or_create_by_names(not_existing_by_name)
     ids.push(*created.map(&:id))
     Tag.find(ids)

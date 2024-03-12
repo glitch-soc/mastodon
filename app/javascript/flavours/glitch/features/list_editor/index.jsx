@@ -37,7 +37,8 @@ const mapDispatchToProps = dispatch => ({
 class ListEditor extends ImmutablePureComponent {
   state = {
     currentTab: 'accounts',
-  }
+  };
+
   static propTypes = {
     listId: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
@@ -60,6 +61,20 @@ class ListEditor extends ImmutablePureComponent {
     onReset();
   }
 
+  constructor(props) {
+    super(props);
+    this.switchToAccounts = this.switchToAccounts.bind(this);
+    this.switchToTags = this.switchToTags.bind(this);
+  }
+
+  switchToAccounts() {
+    this.setState({ currentTab: 'accounts' });
+  }
+
+  switchToTags() {
+    this.setState({ currentTab: 'tags' });
+  }
+
   render() {
     const { accountIds, tags, searchAccountIds, onClear, intl } = this.props;
     const showSearch = searchAccountIds.size > 0;
@@ -67,8 +82,8 @@ class ListEditor extends ImmutablePureComponent {
       <div className='modal-root__modal list-editor'>{this.state.currentTab}
         <EditListForm />
         <div className='tab__container'>
-          <button onClick={() => this.setState({ currentTab: 'accounts' })} className={'tab ' + ('accounts' === this.state.currentTab ? 'tab__active' : '')}>{intl.formatMessage(messages.account_tab)} ({accountIds.size})</button>
-          <button onClick={() => this.setState({ currentTab: 'tags' })} className={'tab ' + ('tags' === this.state.currentTab ? 'tab__active' : '')}>{intl.formatMessage(messages.tag_tab)} ({tags.size})</button>
+          <button onClick={this.switchToAccounts} className={'tab ' + ('accounts' === this.state.currentTab ? 'tab__active' : '')}>{intl.formatMessage(messages.account_tab)} ({accountIds.size})</button>
+          <button onClick={this.switchToTags} className={'tab ' + ('tags' === this.state.currentTab ? 'tab__active' : '')}>{intl.formatMessage(messages.tag_tab)} ({tags.size})</button>
         </div>
         <div id='list_editor_accounts' className={'accounts' === this.state.currentTab ? 'tab__active' : 'tab__inactive'}>
           <Search />
