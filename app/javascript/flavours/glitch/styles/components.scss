@@ -2042,7 +2042,8 @@ body > [data-popper-placement] {
   }
 }
 
-.account__wrapper, .tag__wrapper {
+.account__wrapper,
+.tag__wrapper {
   display: flex;
   gap: 10px;
   align-items: center;
@@ -2114,7 +2115,8 @@ a .account__avatar {
   }
 }
 
-.account__relationship, .tag__relationship {
+.account__relationship,
+.tag__relationship {
   white-space: nowrap;
   display: flex;
   align-items: center;
