@@ -3,6 +3,7 @@
 class Api::BaseController < ApplicationController
   DEFAULT_STATUSES_LIMIT = 20
   DEFAULT_ACCOUNTS_LIMIT = 40
+  DEFAULT_TAGS_LIMIT     = 40
 
   include Api::RateLimitHeaders
   include Api::AccessTokenTrackingConcern

@@ -1,7 +1,7 @@
 import api from '../api';
 
 import { showAlertForError } from './alerts';
-import { importFetchedAccounts } from './importer';
+import { importFetchedAccounts, importFetchedTags } from './importer';
 
 export const LIST_FETCH_REQUEST = 'LIST_FETCH_REQUEST';
 export const LIST_FETCH_SUCCESS = 'LIST_FETCH_SUCCESS';
@@ -30,6 +30,10 @@ export const LIST_DELETE_FAIL    = 'LIST_DELETE_FAIL';
 export const LIST_ACCOUNTS_FETCH_REQUEST = 'LIST_ACCOUNTS_FETCH_REQUEST';
 export const LIST_ACCOUNTS_FETCH_SUCCESS = 'LIST_ACCOUNTS_FETCH_SUCCESS';
 export const LIST_ACCOUNTS_FETCH_FAIL    = 'LIST_ACCOUNTS_FETCH_FAIL';
+
+export const LIST_TAGS_FETCH_REQUEST = 'LIST_TAGS_FETCH_REQUEST';
+export const LIST_TAGS_FETCH_SUCCESS = 'LIST_TAGS_FETCH_SUCCESS';
+export const LIST_TAGS_FETCH_FAIL    = 'LIST_TAGS_FETCH_FAIL';
 
 export const LIST_EDITOR_SUGGESTIONS_CHANGE = 'LIST_EDITOR_SUGGESTIONS_CHANGE';
 export const LIST_EDITOR_SUGGESTIONS_READY  = 'LIST_EDITOR_SUGGESTIONS_READY';
@@ -118,6 +122,7 @@ export const setupListEditor = listId => (dispatch, getState) => {
   });
 
   dispatch(fetchListAccounts(listId));
+  dispatch(fetchListTags(listId));
 };
 
 export const changeListEditorTitle = value => ({
@@ -234,6 +239,33 @@ export const fetchListAccountsFail = (id, error) => ({
   error,
 });
 
+export const fetchListTags = listId => (dispatch, getState) => {
+  dispatch(fetchListTagsRequest(listId));
+
+  api(getState).get(`/api/v1/lists/${listId}/tags`, { params: { limit: 0 } }).then(({ data }) => {
+    dispatch(importFetchedTags(data));
+    dispatch(fetchListTagsSuccess(listId, data));
+  }).catch(err => dispatch(fetchListTagsFail(listId, err)));
+};
+
+export const fetchListTagsFail = (id, error) => ({
+  type: LIST_TAGS_FETCH_FAIL,
+  id,
+  error,
+});
+
+export const fetchListTagsRequest = id => ({
+  type: LIST_TAGS_FETCH_REQUEST,
+  id,
+});
+
+export const fetchListTagsSuccess = (id, tags, next) => ({
+  type: LIST_TAGS_FETCH_SUCCESS,
+  id,
+  tags,
+  next,
+});
+
 export const fetchListSuggestions = q => (dispatch, getState) => {
   const params = {
     q,
@@ -263,65 +295,84 @@ export const changeListSuggestions = value => ({
   value,
 });
 
-export const addToListEditor = accountId => (dispatch, getState) => {
-  dispatch(addToList(getState().getIn(['listEditor', 'listId']), accountId));
+export const addToListEditor = (id, type) => (dispatch, getState) => {
+  dispatch(addToList(getState().getIn(['listEditor', 'listId']), id, type));
 };
 
-export const addToList = (listId, accountId) => (dispatch, getState) => {
-  dispatch(addToListRequest(listId, accountId));
-
-  api(getState).post(`/api/v1/lists/${listId}/accounts`, { account_ids: [accountId] })
-    .then(() => dispatch(addToListSuccess(listId, accountId)))
-    .catch(err => dispatch(addToListFail(listId, accountId, err)));
+export const addToList = (listId, id, type) => (dispatch, getState) => {
+  dispatch(addToListRequest(listId, id, type));
+  
+  if ('tags' === type) {
+    api(getState).post(`/api/v1/lists/${listId}/tags`, { tag_ids: [id] })
+      .then((data) => dispatch(addToListSuccess(listId, id, type, data)))
+      .catch(err => dispatch(addToListFail(listId, id, type, err)));
+  } else {
+    api(getState).post(`/api/v1/lists/${listId}/accounts`, { account_ids: [id] })
+      .then(() => dispatch(addToListSuccess(listId, id, type)))
+      .catch(err => dispatch(addToListFail(listId, id, type, err)));
+  }
 };
 
-export const addToListRequest = (listId, accountId) => ({
+export const addToListRequest = (listId, id, type) => ({
   type: LIST_EDITOR_ADD_REQUEST,
+  addType: type,
   listId,
-  accountId,
+  id,
 });
 
-export const addToListSuccess = (listId, accountId) => ({
+export const addToListSuccess = (listId, id, type, data) => ({
   type: LIST_EDITOR_ADD_SUCCESS,
+  addType: type,
   listId,
-  accountId,
+  id,
+  data,
 });
 
-export const addToListFail = (listId, accountId, error) => ({
+export const addToListFail = (listId, id, type, error) => ({
   type: LIST_EDITOR_ADD_FAIL,
+  addType: type,
   listId,
-  accountId,
+  id,
   error,
 });
 
-export const removeFromListEditor = accountId => (dispatch, getState) => {
-  dispatch(removeFromList(getState().getIn(['listEditor', 'listId']), accountId));
+export const removeFromListEditor = (id, type) => (dispatch, getState) => {
+  dispatch(removeFromList(getState().getIn(['listEditor', 'listId']), id, type));
 };
 
-export const removeFromList = (listId, accountId) => (dispatch, getState) => {
-  dispatch(removeFromListRequest(listId, accountId));
+export const removeFromList = (listId, id, type) => (dispatch, getState) => {
+  dispatch(removeFromListRequest(listId, id, type));
 
-  api(getState).delete(`/api/v1/lists/${listId}/accounts`, { params: { account_ids: [accountId] } })
-    .then(() => dispatch(removeFromListSuccess(listId, accountId)))
-    .catch(err => dispatch(removeFromListFail(listId, accountId, err)));
+  if ('tags' === type) {
+    api(getState).delete(`/api/v1/lists/${listId}/tags`, { params: { tag_ids: [id] } })
+      .then(() => dispatch(removeFromListSuccess(listId, id, type)))
+      .catch(err => dispatch(removeFromListFail(listId, id, type, err)));
+  } else {
+    api(getState).delete(`/api/v1/lists/${listId}/accounts`, { params: { account_ids: [id] } })
+      .then(() => dispatch(removeFromListSuccess(listId, id, type)))
+      .catch(err => dispatch(removeFromListFail(listId, id, type, err)));
+  }
 };
 
-export const removeFromListRequest = (listId, accountId) => ({
+export const removeFromListRequest = (listId, id, type) => ({
   type: LIST_EDITOR_REMOVE_REQUEST,
+  removeType: type,
   listId,
-  accountId,
+  id,
 });
 
-export const removeFromListSuccess = (listId, accountId) => ({
+export const removeFromListSuccess = (listId, id, type) => ({
   type: LIST_EDITOR_REMOVE_SUCCESS,
+  removeType: type,
   listId,
-  accountId,
+  id,
 });
 
-export const removeFromListFail = (listId, accountId, error) => ({
+export const removeFromListFail = (listId, id, type, error) => ({
   type: LIST_EDITOR_REMOVE_FAIL,
+  removeType: type,
   listId,
-  accountId,
+  id,
   error,
 });
 

@@ -6,6 +6,7 @@ export const STATUS_IMPORT   = 'STATUS_IMPORT';
 export const STATUSES_IMPORT = 'STATUSES_IMPORT';
 export const POLLS_IMPORT    = 'POLLS_IMPORT';
 export const FILTERS_IMPORT  = 'FILTERS_IMPORT';
+export const TAGS_IMPORT = 'TAGS_IMPORT';
 
 function pushUnique(array, object) {
   if (array.every(element => element.id !== object.id)) {
@@ -29,6 +30,10 @@ export function importPolls(polls) {
   return { type: POLLS_IMPORT, polls };
 }
 
+export function importTags(tags) {
+  return { type: TAGS_IMPORT, tags };
+}
+
 export function importFetchedAccount(account) {
   return importFetchedAccounts([account]);
 }
@@ -47,6 +52,17 @@ export function importFetchedAccounts(accounts) {
   accounts.forEach(processAccount);
 
   return importAccounts({ accounts: normalAccounts });
+}
+
+export function importFetchedTags(tags) {
+  return (dispatch, getState) => {
+    const uniqueTags = [];
+    function processTag(tag) {
+      pushUnique(uniqueTags, tag);
+    }
+    tags.forEach(processTag);
+    dispatch(importTags(uniqueTags));
+  };
 }
 
 export function importFetchedStatus(status) {

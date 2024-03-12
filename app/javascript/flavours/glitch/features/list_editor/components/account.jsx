@@ -32,8 +32,8 @@ const makeMapStateToProps = () => {
 };
 
 const mapDispatchToProps = (dispatch, { accountId }) => ({
-  onRemove: () => dispatch(removeFromListEditor(accountId)),
-  onAdd: () => dispatch(addToListEditor(accountId)),
+  onRemove: () => dispatch(removeFromListEditor(accountId, 'accounts')),
+  onAdd: () => dispatch(addToListEditor(accountId, 'accounts')),
 });
 
 class Account extends ImmutablePureComponent {

@@ -20,12 +20,12 @@ class Api::V1::Lists::TagsController < Api::BaseController
         @list.tags << tag
       end
     end
-
-    render_empty
+    @tags = load_tags
+    render json: @tags, each_serializer: REST::TagSerializer
   end
 
   def destroy
-    ListTag.where(list: @list, tag_id: tag_id).destroy_all
+    ListTag.where(list: @list, tag_id: tag_ids).destroy_all
     render_empty
   end
 
@@ -44,7 +44,14 @@ class Api::V1::Lists::TagsController < Api::BaseController
   end
 
   def list_tags
-    Tag.find(tag_ids)
+    names = tag_ids.select{|t| t !=~ /\A[0-9]+\Z/}
+    ids = tag_ids.select{|t| t =~ /\A[0-9]+\Z/}
+    existing_by_name = Tag.where(name: names.map{|n| Tag.normalize(n)}).select(:id, :name)
+    ids.push(*existing_by_name.map {|t| t.id})
+    not_existing_by_name = names.select{|n| !existing_by_name.any? {|e| e.name == Tag.normalize(n)}}
+    created = Tag.find_or_create_by_names(not_existing_by_name)
+    ids.push(*created.map {|t| t.id})
+    Tag.find(ids)
   end
 
   def tag_ids
