@@ -50,7 +50,7 @@ class Api::V1::Lists::TagsController < Api::BaseController
     ids.push(*existing_by_name.map { |t| t.id })
     not_existing_by_name = names.reject { |n| existing_by_name.any? { |e| e.name == Tag.normalize(n) }}
     created = Tag.find_or_create_by_names(not_existing_by_name)
-    ids.push(*created.map(&:id)
+    ids.push(*created.map(&:id))
     Tag.find(ids)
   end
 
