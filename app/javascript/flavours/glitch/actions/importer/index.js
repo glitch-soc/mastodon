@@ -55,7 +55,7 @@ export function importFetchedAccounts(accounts) {
 }
 
 export function importFetchedTags(tags) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     const uniqueTags = [];
     function processTag(tag) {
       pushUnique(uniqueTags, tag);

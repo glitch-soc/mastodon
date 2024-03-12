@@ -5,8 +5,8 @@ import { defineMessages, injectIntl } from 'react-intl';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
-import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
+import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
 
 import { removeFromListEditor, addToListEditor } from '../../../actions/lists';
@@ -18,12 +18,10 @@ const messages = defineMessages({
 });
 
 const makeMapStateToProps = () => {
-  const mapStateToProps = (state, { tag, added }) => {
-    return {
-      tag: tag,
-      added: typeof added === 'undefined' ? state.getIn(['listEditor', 'tags', 'items']).includes(tag) : added,
-    }
-  };
+  const mapStateToProps = (state, { tag, added }) => ({
+    tag: tag,
+    added: typeof added === 'undefined' ? state.getIn(['listEditor', 'tags', 'items']).includes(tag) : added,
+  });
 
   return mapStateToProps;
 };

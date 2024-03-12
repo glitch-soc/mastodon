@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { injectIntl } from 'react-intl';
+import { defineMessages, injectIntl } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
@@ -12,10 +12,15 @@ import { setupListEditor, clearListSuggestions, resetListEditor } from '../../ac
 import Motion from '../ui/util/optional_motion';
 
 import Account from './components/account';
-import Tag from './components/tag';
+import AddTag from './components/add_tag';
 import EditListForm from './components/edit_list_form';
 import Search from './components/search';
-import AddTag from './components/add_tag';
+import Tag from './components/tag';
+
+const messages = defineMessages({
+  account_tab: { id: 'lists.account_tab', defaultMessage: 'Accounts' },
+  tag_tab: { id: 'lists.tag_tab', defaultMessage: 'Tags' },
+});
 
 const mapStateToProps = state => ({
   tags: state.getIn(['listEditor', 'tags', 'items']),
@@ -35,6 +40,7 @@ class ListEditor extends ImmutablePureComponent {
   };
 
   static propTypes = {
+    intl: PropTypes.object.isRequired,
     listId: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     intl: PropTypes.object.isRequired,
@@ -46,31 +52,39 @@ class ListEditor extends ImmutablePureComponent {
     searchAccountIds: ImmutablePropTypes.list.isRequired,
   };
 
-  componentDidMount () {
+  componentDidMount() {
     const { onInitialize, listId } = this.props;
     onInitialize(listId);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     const { onReset } = this.props;
     onReset();
+  }
+
+  switchToAccounts() {
+    this.switchToTab('accounts');
+  }
+
+  switchToTags() {
+    this.switchToTab('tags');
   }
 
   switchToTab(tab) {
     this.setState({ ...this.state, currentTab: tab });
   }
 
-  render () {
-    const { accountIds, tags, searchAccountIds, onClear } = this.props;
+  render() {
+    const { accountIds, tags, searchAccountIds, onClear, intl } = this.props;
     const showSearch = searchAccountIds.size > 0;
     return (
       <div className='modal-root__modal list-editor'>
         <EditListForm />
         <div className='tab__container'>
-          <span onClick={() => this.switchToTab('accounts')} className={'tab ' + ('accounts' == this.state.currentTab ? 'tab__active' : '')}>Accounts ({accountIds.size})</span>
-          <span onClick={() => this.switchToTab('tags')} className={'tab ' + ('tags' == this.state.currentTab ? 'tab__active' : '')}>Tags ({tags.size})</span>
+          <div onClick={this.switchToAccounts} className={'tab ' + ('accounts' === this.state.currentTab ? 'tab__active' : '')}>{intl.formatMessage(messages.account_tab)} ({accountIds.size})</div>
+          <div onClick={this.switchToTags} className={'tab ' + ('tags' === this.state.currentTab ? 'tab__active' : '')}>{intl.formatMessage(messages.tag_tab)} ({tags.size})</div>
         </div>
-        <div id='list_editor_accounts' className={'accounts' == this.state.currentTab ? 'tab__active' : 'tab__inactive'}>
+        <div id='list_editor_accounts' className={'accounts' === this.state.currentTab ? 'tab__active' : 'tab__inactive'}>
           <Search />
           <div className='drawer__pager'>
             <div className='drawer__inner list-editor__accounts'>
@@ -88,7 +102,7 @@ class ListEditor extends ImmutablePureComponent {
             </Motion>
           </div>
         </div>
-        <div id='list_editor_tags' className={'tags' == this.state.currentTab ? 'tab__active' : 'tab__inactive'}>
+        <div id='list_editor_tags' className={'tags' === this.state.currentTab ? 'tab__active' : 'tab__inactive'}>
           <AddTag />
           <div className='drawer__pager'>
             <div className='drawer__inner list-editor__accounts'>

@@ -14,7 +14,4 @@ class ListTag < ApplicationRecord
   belongs_to :tag
 
   validates :tag_id, uniqueness: { scope: :list_id }
-
-  private
-
 end

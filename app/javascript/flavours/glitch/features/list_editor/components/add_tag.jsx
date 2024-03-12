@@ -11,8 +11,7 @@ import CancelIcon from '@/material-icons/400-24px/cancel.svg?react';
 import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
 
-import { changeListSuggestions } from '../../../actions/lists';
-import { addToListEditor } from '../../../actions/lists';
+import { addToListEditor, changeListSuggestions } from '../../../actions/lists';
 
 const messages = defineMessages({
   addtag: { id: 'lists.addtag', defaultMessage: 'Enter a tag you\'d like to follow' },
@@ -33,6 +32,7 @@ class AddTag extends PureComponent {
     intl: PropTypes.object.isRequired,
     value: PropTypes.string.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
   };
 
   handleChange = e => {

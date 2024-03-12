@@ -7783,6 +7783,7 @@ noscript {
 
   .tab__container {
     display: flex;
+
     .tab {
       flex-grow: 1;
       flex-basis: 0;
@@ -7791,11 +7792,13 @@ noscript {
       background: $ui-base-color;
       text-align: center;
     }
+
     .tab.tab__active {
       font-weight: bold;
       background: lighten($ui-base-color, 13%);
     }
   }
+
   .tab__inactive {
     display: none;
   }
@@ -7806,12 +7809,17 @@ noscript {
   }
 
   .list_tag {
+    padding: 10px; // glitch: reduced padding
+    border-bottom: 1px solid lighten($ui-base-color, 8%);
+    gap: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .list_tag__display-name {
       flex-grow: 1;
     }
+
     .list_tag__relationship {
       flex-grow: 0;
     }

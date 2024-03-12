@@ -114,9 +114,9 @@ class FanOutOnWriteService < BaseService
 
   def deliver_to_lists!
     @status.tags.each do |tag|
-        FeedInsertWorker.push_bulk(tag.lists) do |list|
-            [@status.id, list.id, 'list', { 'update' => update? }]
-        end
+      FeedInsertWorker.push_bulk(tag.lists) do |list|
+        [@status.id, list.id, 'list', { 'update' => update? }]
+      end
     end
     @account.lists_for_local_distribution.select(:id).reorder(nil).find_in_batches do |lists|
       FeedInsertWorker.push_bulk(lists) do |list|
