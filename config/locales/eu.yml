@@ -599,6 +599,9 @@ eu:
       actions_description_html: Erabaki txosten hau konpontzeko ze ekintza hartu. Salatutako kontuaren aurka zigor ekintza bat hartzen baduzu, eposta jakinarazpen bat bidaliko zaie, <strong>Spam</strong> kategoria hautatzean ezik.
       actions_description_remote_html: Hautatu txosten honi konponbidea aurkitzeko zein neurri hartu. Hau soilik <strong>zure</strong> zerbitzaria urruneko kontu honekin nola komunikatu eta bere edukia nola maneiatzeko da.
       add_to_report: Gehitu gehiago txostenera
+      already_suspended_badges:
+        local: Dagoeneko kanporatu da zerbitzari honetatik
+        remote: Dagoeneko kanporatu da bere zerbitzaritik
       are_you_sure: Ziur zaude?
       assign_to_self: Esleitu niri
       assigned: Esleitutako moderatzailea
@@ -970,6 +973,9 @@ eu:
       title: Webhook-ak
       webhook: Webhook
   admin_mailer:
+    auto_close_registrations:
+      body: Duela gutxi moderatzaile gutxi aritu direla eta, %{instance} instantziako izen-emateek eskuzko berrikuspena beharko dute automatikoki, %{instance} instantzia eragile okerren plataforma gisa erabili dadin ekiditeko. Izen-emate irekiak berriro gai ditzakezu nahi duzunean.
+      subject: "%{instance} instantziako izen-emateek onarpena beharko dute orain"
     new_appeal:
       actions:
         delete_statuses: bidalketak ezabatzea
@@ -1496,7 +1502,6 @@ eu:
     administration_emails: Administratzailearen posta elektroniko bidezko jakinarazpenak
     email_events: E-mail jakinarazpenentzako gertaerak
     email_events_hint: 'Hautatu jaso nahi dituzun gertaeren jakinarazpenak:'
-    other_settings: Bezte jakinarazpen konfigurazioak
   number:
     human:
       decimal_units:
@@ -1654,7 +1659,7 @@ eu:
     import: Inportazioa
     import_and_export: Inportatu eta esportatu
     migrate: Kontuaren migrazioa
-    notifications: Jakinarazpenak
+    notifications: Posta bidezko jakinarazpenak
     preferences: Hobespenak
     profile: Profila
     relationships: Jarraitutakoak eta jarraitzaileak
@@ -1699,8 +1704,6 @@ eu:
         other: "%{count} boto"
       vote: Bozkatu
     show_more: Erakutsi gehiago
-    show_newer: Erakutsi berriagoak
-    show_older: Erakutsi zaharragoak
     show_thread: Erakutsi haria
     title: '%{name}: "%{quote}"'
     visibilities:
@@ -1844,9 +1847,44 @@ eu:
         silence: Kontu murriztua
         suspend: Kontu kanporatua
     welcome:
-      edit_profile_action: Ezarri profila
-      edit_profile_step: Pertsonalizatu profila abatar bat igoz, zure pantaila-izena aldatuz eta gehiago. Jarraitzaile berriak onartu aurretik berrikusi nahi badituzu, kontuari giltzarrapoa jarri diezaiokezu.
+      apps_android_action: Eskuratu Google Play-en
+      apps_ios_action: Deskargatu App Store-n
+      apps_step: Deskargatu gure aplikazio ofizialak.
+      apps_title: Mastodon-en aplikazioak
+      checklist_subtitle: 'Murgil zaitez sare sozialen aro berri honetan:'
+      checklist_title: Ongietorrien kontrol-zerrenda
+      edit_profile_action: Pertsonalizatu
+      edit_profile_step: Handiagotu elkarreragina profil ulerkor bat sortuz.
+      edit_profile_title: Pertsonalizatu profila
       explanation: Hona hasteko aholku batzuk
+      feature_action: Informazio gehiago
+      feature_audience: Mastodon-ek hartzaileak kudeatzeko aukera paregabea eskaintzen dizu tartean inor egon gabe. Mastodon zeure azpiegituran inplementatua izanik, lineako beste edozein Mastodon zerbitzarko edonor jarrai dezakezu, baita edonork zeu jarraitu ere. Soilik zeure kontrolpean.
+      feature_audience_title: Bildu hartzaileak uste osoarekin
+      feature_control: Aski ondo dakizu zer ikusi nahi duzun hasierako jarioan. Denbora galarazten duten algoritmorik edo iragarkirik gabe. Jarraitu beste Mastodon zerbitzarietako edozein kontu bakarretik eta jaso bere argitalpenak ordena kronologikoan. Zure interneteko txokoa zu bezala izan dadila.
+      feature_control_title: Egon zure denbora-lerroaren kontrolpean
+      feature_creativity: Mastodon-ek audioa, bideoa edo irudia duen argitalpenak, erabilerraztasun-azalpenak, inkestak, edukiaren abisuak, abatar animatuak, emoji pertsonalizatuak, miniaturen mozketaren kontrola eta funtzio gehiago onartzen ditu, linean aditzera eman zaitezen laguntzeko. Artea, musika edo podcastak partekatzen badituzu, Mastodon hortxe duzu.
+      feature_creativity_title: Sormen paregabea
+      feature_moderation: Mastodon-ek erabakiak hartzeko ahalmena dakar bueltan. Zerbitzari bakoitzak bere arau eta murrizketa propioak sortzen ditu, lokalki indarrean jartzen dira eta ez orokorki korporazioen sare-sozialen gisa. Era honetara, jende talde ezberdinen mesedeak asetzeko malguago bilakatzen da. Batu bertako arauekin ados zauden zerbitzari batera edo ostatatu zeurea.
+      feature_moderation_title: Moderazioa behar lukeen bezalaxe
+      follow_action: Jarraitu
+      follow_step: Jende interesgarria jarraitzean datza Mastodon.
+      follow_title: Pertsonalizatu hasierako jarioa
+      follows_subtitle: Jarraitu kontu ospetsuak
+      follows_title: Nor jarraitu
+      follows_view_more: Ikusi jarrai dezakezun jende gehiago
+      hashtags_recent_count:
+        one: Pertson %{people} azken 2 egunetan
+        other: "%{people} pertson azken 2 egunetan"
+      hashtags_subtitle: Arakatu azken 2 egunetan pil-pilean dagoena
+      hashtags_title: Pil-pilean dauden traolak
+      hashtags_view_more: Ikusi pil-pilean dauden traol gehiago
+      post_action: Idatzi
+      post_step: Agurtu munduari testu, argazki, bideo zein inkesta batekin.
+      post_title: Idatzi zeure lehen argitalpena
+      share_action: Partekatu
+      share_step: Esaiezu lagunei nola aurki zaitzaketen Mastodon-en.
+      share_title: Partekatu Mastodon profila
+      sign_in_action: Hasi saioa
       subject: Ongi etorri Mastodon-era
       title: Ongi etorri, %{name}!
   users:
