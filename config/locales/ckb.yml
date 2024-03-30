@@ -840,7 +840,6 @@ ckb:
   notifications:
     email_events: رووداوەکان بۆ ئاگاداری ئیمەیلی
     email_events_hint: 'ئەو ڕووداوانە دیاریبکە کە دەتەوێت ئاگانامەکان وەربگری بۆ:'
-    other_settings: ڕێکبەندەکانی ئاگانامەکانی تر
   otp_authentication:
     code_hint: کۆدێک داخڵ بکە کە دروست کراوە لەلایەن ئەپی ڕەسەنایەتیەوە بۆ دڵنیابوون
     description_html: ئەگەر تۆ <strong> هاتنەژوورەوەی دوو قۆناغی</strong> بە یارمەتی ئەپێکی پەسەندکردن چالاک بکەن، پێویستە بۆ چوونەژوورەوە ، بە تەلەفۆنەکەتان کە کۆدیکتان بۆ دروستدەکات دەستپێگەیشتنتان هەبێت.
@@ -943,7 +942,6 @@ ckb:
     import: هاوردن
     import_and_export: هاوردەکردن و ناردن
     migrate: گواستنەوەی هەژمارە
-    notifications: ئاگادارییەکان
     preferences: پەسەندەکان
     profile: پرۆفایل
     relationships: شوێنکەوتوو و شوێنکەوتوان
@@ -983,8 +981,6 @@ ckb:
         other: "%{count} دەنگەکان"
       vote: دەنگ
     show_more: زیاتر پیشان بدە
-    show_newer: نوێتر پیشان بدە
-    show_older: پیشاندانی کۆنتر
     show_thread: نیشاندانی ڕشتە
     visibilities:
       private: شوێنکەوتوانی تەنها
@@ -1033,7 +1029,6 @@ ckb:
         silence: هەژماری سنووردار
         suspend: هەژمار ڕاگیرا
     welcome:
-      edit_profile_action: پرۆفایلی جێگیرکردن
       explanation: ئەمە چەند ئامۆژگارییەکن بۆ دەست پێکردنت
       subject: بەخێربیت بۆ ماستۆدۆن
       title: بەخێربێیت، بەکارهێنەر %{name}!

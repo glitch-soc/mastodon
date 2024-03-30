@@ -7,7 +7,6 @@ import { accountsReducer } from './accounts';
 import accounts_map from './accounts_map';
 import alerts from './alerts';
 import announcements from './announcements';
-import blocks from './blocks';
 import boosts from './boosts';
 import compose from './compose';
 import contexts from './contexts';
@@ -26,7 +25,8 @@ import markers from './markers';
 import media_attachments from './media_attachments';
 import meta from './meta';
 import { modalReducer } from './modal';
-import mutes from './mutes';
+import { notificationPolicyReducer } from './notification_policy';
+import { notificationRequestsReducer } from './notification_requests';
 import notifications from './notifications';
 import picture_in_picture from './picture_in_picture';
 import polls from './polls';
@@ -60,8 +60,6 @@ const reducers = {
   relationships: relationshipsReducer,
   settings,
   push_notifications,
-  mutes,
-  blocks,
   boosts,
   server,
   contexts,
@@ -84,6 +82,8 @@ const reducers = {
   history,
   tags,
   followed_tags,
+  notificationPolicy: notificationPolicyReducer,
+  notificationRequests: notificationRequestsReducer,
 };
 
 // We want the root state to be an ImmutableRecord, which is an object with a defined list of keys,
