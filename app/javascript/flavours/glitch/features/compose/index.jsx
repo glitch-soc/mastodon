@@ -21,9 +21,9 @@ import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
 import Column from 'flavours/glitch/components/column';
 import { Icon }  from 'flavours/glitch/components/icon';
-import glitchedElephant1 from 'flavours/glitch/images/mbstobon-ui-0.png';
-import glitchedElephant2 from 'flavours/glitch/images/mbstobon-ui-1.png';
-import glitchedElephant3 from 'flavours/glitch/images/mbstobon-ui-2.png';
+// import glitchedElephant1 from 'flavours/glitch/images/mbstobon-ui-0.png';
+// import glitchedElephant2 from 'flavours/glitch/images/mbstobon-ui-1.png';
+// import glitchedElephant3 from 'flavours/glitch/images/mbstobon-ui-2.png';
 import { logOut } from 'flavours/glitch/utils/log_out';
 
 import elephantUIPlane from '../../../../images/elephant_ui_plane.svg';
