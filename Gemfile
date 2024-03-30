@@ -59,6 +59,7 @@ gem 'http', '~> 5.1'
 gem 'http_accept_language', '~> 2.1'
 gem 'httplog', '~> 1.6.2'
 gem 'idn-ruby', require: 'idn'
+gem 'inline_svg'
 gem 'kaminari', '~> 1.2'
 gem 'link_header', '~> 0.0'
 gem 'mime-types', '~> 3.5.0', require: 'mime/types/columnar'
@@ -112,7 +113,7 @@ group :test do
   # RSpec helpers for email specs
   gem 'email_spec'
 
-  # Extra RSpec extenion methods and helpers for sidekiq
+  # Extra RSpec extension methods and helpers for sidekiq
   gem 'rspec-sidekiq', '~> 4.0'
 
   # Browser integration testing
@@ -124,12 +125,6 @@ group :test do
 
   # Used to mock environment variables
   gem 'climate_control'
-
-  # Generating fake data for specs
-  gem 'faker', '~> 3.2'
-
-  # Generate test objects for specs
-  gem 'fabrication', '~> 2.30'
 
   # Add back helpers functions removed in Rails 5.1
   gem 'rails-controller-testing', '~> 1.0'
@@ -181,6 +176,12 @@ end
 group :development, :test do
   # Interactive Debugging tools
   gem 'debug', '~> 1.8'
+
+  # Generate fake data values
+  gem 'faker', '~> 3.2'
+
+  # Generate factory objects
+  gem 'fabrication', '~> 2.30'
 
   # Profiling tools
   gem 'memory_profiler', require: false

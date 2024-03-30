@@ -31,7 +31,7 @@ nn:
       created_msg: Moderatormerknad er laga!
       destroyed_msg: Moderatormerknad er utsletta!
     accounts:
-      add_email_domain_block: Gøym e-postdomene
+      add_email_domain_block: Blokker e-postdomene
       approve: Godtak
       approved_msg: Godkjende %{username} sin registreringssøknad
       are_you_sure: Er du sikker?
@@ -152,7 +152,7 @@ nn:
       suspend: Utvis og slett kontodata for godt
       suspended: Utvist
       suspension_irreversible: Data frå denne kontoen har blitt ikkje-reverserbart sletta. Du kan oppheve suspenderinga av kontoen for å bruke den, men det vil ikkje gjenopprette alle data den tidligare har hatt.
-      suspension_reversible_hint_html: Kontoen har blitt suspendert, og data vil bli fullstendig fjerna den %{date}. Fram til då kan kontoen gjenopprettes uten negative effekter. Om du ynskjer å fjerne kontodata no, kan du gjere det nedanfor.
+      suspension_reversible_hint_html: Kontoen har vorte stengd, og data vil bli fullstendig fjerna den %{date}. Fram til då kandu gjenoppretta kontoen utan negative konsekvensar. Om du ynskjer å fjerna kontodata no, kan du gjera det nedanfor.
       title: Kontoar
       unblock_email: Avblokker e-postadresse
       unblocked_email_msg: Avblokkerte %{username} si e-postadresse
@@ -221,7 +221,7 @@ nn:
         unblock_email_account: Avblokker e-postadresse
         unsensitive_account: Angr tving ømtolig konto
         unsilence_account: Angre avgrensing av konto
-        unsuspend_account: Opphev suspensjonen av kontoen
+        unsuspend_account: Opphev utestenginga av kontoen
         update_announcement: Oppdater kunngjøringen
         update_custom_emoji: Oppdater tilpassa emoji
         update_domain_block: Oppdater domene-sperring
@@ -385,9 +385,9 @@ nn:
       add_new: Lag ny
       confirm_suspension:
         cancel: Avbryt
-        confirm: Suspender
+        confirm: Utvis
         permanent_action: Å oppheve suspensjonen vil ikkje gjenopprette data eller koplingar.
-        preamble_html: Du er i ferd med å suspendera <strong>%{domain}</strong> inkludert underdomener.
+        preamble_html: Du er i ferd med å utestenga <strong>%{domain}</strong> inkludert underdomene.
         remove_all_data: Dette vil fjerna alt innhald, media og profildata for kontoar som tilhøyrer dette domenet frå din tenar.
         stop_communication: Tenaren din vil slutta å kommunisera med desse tenarane.
         title: Stadfest domeneblokkering for %{domain}
@@ -492,7 +492,7 @@ nn:
           reject_media: Avvis media
           reject_reports: Avvis rapporter
           silence: Begrens
-          suspend: Suspender
+          suspend: Utvis
         policy: Vilkår
         reason: Offentlig årsak
         title: Retningslinjer for innhold
@@ -597,6 +597,9 @@ nn:
       actions_description_html: Avgjer kva som skal gjerast med denne rapporteringa. Dersom du utfører straffetiltak mot den rapporterte kontoen, vil dei motta ein e-post – så sant du ikkje har valt kategorien <strong>Spam</strong>.
       actions_description_remote_html: Avgjer kva du vil gjera for å løysa denne rapporten. Dette påverkar berre korleis tenaren <strong>din</strong> kommuniserer med kontoen på ein annan tenar, og korleis tenaren din handterer innhald derifrå.
       add_to_report: Legg til i rapporten
+      already_suspended_badges:
+        local: Allereie utestengd på denne tenaren
+        remote: Allereie utestengd på tenaren deira
       are_you_sure: Er du sikker?
       assign_to_self: Tilegn til meg
       assigned: Tilsett moderator
@@ -767,13 +770,15 @@ nn:
         disabled: Til ingen
         users: Til lokale brukarar som er logga inn
       registrations:
+        moderation_recommandation: Pass på at du har mange og kjappe redaktørar og moderatorar på laget ditt før du opnar for allmenn registrering!
         preamble: Kontroller kven som kan oppretta konto på tenaren din.
         title: Registreringar
       registrations_mode:
         modes:
-          approved: Godkjenning kreves for påmelding
+          approved: Godkjenning krevst for å registrera seg
           none: Ingen kan melda seg inn
           open: Kven som helst kan melda seg inn
+        warning_hint: Me rår til at du bruker "Godkjenning krevst for å registrera seg" viss du ikkje er sikker på at moderatorane kan handtera søppel og illmeinte registreringar kvikt.
       security:
         authorized_fetch: Krev autentisering frå fødererte tenarar
         authorized_fetch_hint: Krav om autentisering frå fødererte tenarar gjer det mogleg med strengare handheving av blokkering, både på brukar- og tenar-nivå. Likevel, dette har ein kostnad når det gjeld yting, reduserer rekkevidda til svara dine og kan medføra kompabilitetsproblem med enkelte fødererte tenester. Dette vil heller ikkje hindra dei som verkeleg vil i å henta dei offentlege innlegga eller kontoane dine.
@@ -966,6 +971,9 @@ nn:
       title: Webhooker
       webhook: Webhook
   admin_mailer:
+    auto_close_registrations:
+      body: På grunn av mangel på nyleg moderatoraktivitet, er registreringar på %{instance} automatisk bytt til å krevje manuell gjennomgang, for å hindre at %{instance} vert brukt som ein plattform for potensielle dårlege aktørar. Du kan byte tilbake for å opne registreringar når som helst.
+      subject: Registreringar for %{instance} er automatisk bytt til å krevje godkjenning
     new_appeal:
       actions:
         delete_statuses: å slette sine innlegg
@@ -974,7 +982,7 @@ nn:
         none: en advarsel
         sensitive: å merke kontoen sin som følsom
         silence: for å begrense deres konto
-        suspend: for å suspendere kontoen deres
+        suspend: for å stenga kontoen deira
       body: "%{target} ankar på ei modereringsavgjerd av %{action_taken_by} den %{date}, som var %{type}. Dei skreiv:"
       next_steps: Du kan godkjenna anken for å endra modereringsavgjerda, eller du kan oversjå anken.
       subject: "%{username} ankar ei modereringsavgjer på %{instance}"
@@ -1184,7 +1192,7 @@ nn:
         none: Advarsel
         sensitive: Markering av konto som ømtolig
         silence: Begrensning av konto
-        suspend: Suspensjon av konto
+        suspend: Utestenging av konto
       your_appeal_approved: Din klage har blitt godkjent
       your_appeal_pending: Du har levert en klage
       your_appeal_rejected: Din klage har blitt avvist
@@ -1447,7 +1455,7 @@ nn:
   moderation:
     title: Moderasjon
   move_handler:
-    carry_blocks_over_text: Denne brukaren flytta frå %{acct}, som du gøymde.
+    carry_blocks_over_text: Denne brukaren flytta frå %{acct}, som du hadde blokkert.
     carry_mutes_over_text: Denne brukeren flyttet fra %{acct}, som du hadde dempet.
     copy_account_note_text: 'Denne brukeren flyttet fra %{acct}, her var dine tidligere notater om dem:'
   navigation:
@@ -1490,7 +1498,6 @@ nn:
     administration_emails: Administrator sine epost-varsler
     email_events: E-postvarslinger for hendelser
     email_events_hint: 'Velg hendelser som du vil motta varslinger for:'
-    other_settings: Andre varslingsinnstillinger
   number:
     human:
       decimal_units:
@@ -1534,7 +1541,7 @@ nn:
   privacy:
     hint_html: "<strong>Tilpass korleis du vil at andre skal finna profilen og innlegga dine.</strong> Mastodon har fleire funksjonar du kan ta i bruk for å få kontakt med eit større publikum. Sjå gjerne gjennom innstillingane slik at du er sikker på at dei passar til deg og din bruk."
     privacy: Personvern
-    privacy_hint_html: Ha kontroll over kor mykje du vil dela. Folk finn interessante profilar og fine appar ved å sjå gjennom kva andre fylgjer og kva appar dei legg ut innlegg med, men det kan henda du vil gøyma desse opplysingane.
+    privacy_hint_html: Kontroller kor mykje du vil dela. Folk finn interessante profilar og fine appar ved å sjå gjennom kva andre fylgjer og kva appar dei legg ut innlegg med, men det kan henda du vil gøyma desse opplysingane.
     reach: Nå andre
     reach_hint_html: Hald styring med om du vil at andre skal kunna oppdaga og fylgja deg. Vil du at innlegga dine skal stå på Utforsk-sida? Vil du at andre skal sjå deg i tilrådingane for kven dei skal fylgja? Vil du ta imot nye fylgjarar automatisk, eller vil du kontrollera kvar einskild fylgjar?
     search: Søk
@@ -1547,8 +1554,8 @@ nn:
       limit_reached: Grensen for forskjellige reaksjoner nådd
       unrecognized_emoji: er ikke en gjenkjent emoji
   redirects:
-    prompt: Hvis du stoler på denne lenken, så trykk på den for å fortsette.
-    title: Du forlater %{instance}.
+    prompt: Viss du stolar på denne lenka, klikkar du på ho for å halda fram.
+    title: No forlèt du %{instance}.
   relationships:
     activity: Kontoaktivitet
     confirm_follow_selected_followers: Er du sikker på at du ynskjer å fylgja dei valde fylgjarane?
@@ -1648,7 +1655,7 @@ nn:
     import: Hent inn
     import_and_export: Importer og eksporter
     migrate: Kontoflytting
-    notifications: Varsel
+    notifications: E-postvarslingar
     preferences: Innstillingar
     profile: Profil
     relationships: Fylgjar og fylgjarar
@@ -1693,8 +1700,6 @@ nn:
         other: "%{count} røyster"
       vote: Røyst
     show_more: Vis meir
-    show_newer: Vis nyere
-    show_older: Vis eldre
     show_thread: Vis tråden
     title: "%{name}: «%{quote}»"
     visibilities:
@@ -1778,7 +1783,7 @@ nn:
     webauthn: Sikkerhetsnøkler
   user_mailer:
     appeal_approved:
-      action: Kontoinnstillinger
+      action: Kontoinnstillingar
       explanation: Apellen på prikken mot din kontor på %{strike_date} som du la inn på %{appeal_date} har blitt godkjend. Din konto er nok ein gong i god stand.
       subject: Din klage fra %{date} er godkjent
       subtitle: Kontoen din er tilbake i god stand.
@@ -1786,11 +1791,11 @@ nn:
     appeal_rejected:
       explanation: Klagen på advarselen mot din konto den %{strike_date} som du sendte inn den %{appeal_date} har blitt avvist.
       subject: Din klage fra %{date} er avvist
-      subtitle: Anken din har blitt avvist.
+      subtitle: Klaga di vart avvist.
       title: Anke avvist
     backup_ready:
-      explanation: Du etterspurte en fullstendig sikkerhetskopi av din Mastodon-konto.
-      extra: Den er nå klar for nedlasting!
+      explanation: Du ba om ein fullstendig tryggingskopi av Mastodon-kontoen din.
+      extra: No kan du lasta han ned!
       subject: Arkivet ditt er klart til å lastes ned
       title: Nedlasting av arkiv
     failed_2fa:
@@ -1818,7 +1823,7 @@ nn:
         mark_statuses_as_sensitive: Nokre av innlegga dine har vorte markerte som ømtolige av moderatorane ved %{instance}. Dette tyder at folk må trykkje på mediane i innlegga for å førehandsvise dei. Du kan markera media som ømtolig sjølv når du legg ut nye innlegg.
         sensitive: Frå no av vil alle dine opplasta mediefiler bli markert som ømtolig og skjult bak ei klikk-åtvaring.
         silence: Medan kontoen din er avgrensa, vil berre folk som allereie fylgjer deg sjå dine tutar på denne tenaren, og du kan bli ekskludert fra diverse offentlige oppføringer. Andre kan framleis fylgje deg manuelt.
-        suspend: Du kan ikkje lenger bruke kontoen din, og profilen og andre data er ikkje lenger tilgjengelege. Du kan framleis logge inn for å be om ein sikkerheitskopi av data før dei blir fullstendig sletta om omtrent 30 dagar, men vi beheld nokre grunnleggjande data for å forhindre deg å omgå suspenderinga.
+        suspend: Du kan ikkje lenger bruka kontoen din, og profilen og andre data er ikkje lenger tilgjengelege. Du kan framleis logga inn for å be om ein sikkerheitskopi av data før dei blir fullstendig sletta om omtrent 30 dagar, men me vil lagra nokre grunnleggjande data for å syta for at du ikkje omgår utestenginga.
       reason: 'Årsak:'
       statuses: 'Innlegg sitert:'
       subject:
@@ -1838,13 +1843,44 @@ nn:
         silence: Konto avgrensa
         suspend: Konto utvist
     welcome:
-      edit_profile_action: Lag til profil
-      edit_profile_step: Du kan tilpasse profilen din ved å laste opp et profilbilde, endre visningsnavnet ditt og mer. Du kan velge at nye følgere må godkjennes av deg før de får lov til å følge deg.
+      apps_android_action: Få det på Google Play
+      apps_ios_action: Last ned på App Store
+      apps_step: Last ned dei offisielle appane våre.
+      apps_title: Mastodon-appar
+      checklist_subtitle: 'La oss hjelpa deg i gang på denne nye sosiale reisa:'
+      checklist_title: Kom i gang
+      edit_profile_action: Tilpass til deg
+      edit_profile_step: Få fleire samhandlingar ved å fylla ut profilen din.
+      edit_profile_title: Tilpass profilen din
       explanation: Her er nokre tips for å koma i gang
-      final_action: Kom i gang med å leggja ut
-      final_step: 'Skriv innlegg! Selv uten følgere kan dine offentlige innlegg bli sett av andre, for eksempel på den lokale tidslinjen og i emneknagger. Du kan introdusere deg selv ved å bruke emneknaggen #introduksjon.'
-      full_handle: Det fulle brukarnamnet ditt
-      full_handle_hint: Dette er det du fortel venene dine for at dei skal kunna senda deg meldingar eller fylgja deg frå ein annan tenar.
+      feature_action: Lær meir
+      feature_audience: Mastodon gjev deg eit unikt høve til å styra kven som ser innhaldet ditt, utan mellommenn. Viss du installerer Mastodon på din eigen tenar, kan du fylgja og bli fylgt frå alle andre Mastodon-tenarar på nett, og det er ingen andre enn du som har kontrollen.
+      feature_audience_title: Få tilhengjarar på ein trygg måte
+      feature_control: Du veit best kva du vil ha på tidslina di. Her er ingen algoritmar eller reklame som kastar bort tida. Du kan fylgja folk på ein kvar Mastodon-tenar frå brukarkontoen din, få innlegga deira i kronologisk rekkjefylgje, og gjera ditt eige hjørne av internett litt meir ditt.
+      feature_control_title: Hald kontroll over tidslina di
+      feature_creativity: På Mastodon kan du laga innlegg med lyd, film og bilete, du kan skildra media for betre tilgjenge, du kan laga avrøystingar, innhaldsåtvaringar og eigne smilefjes, du kan klyppa til småbilete og endå meir for å uttrykkja deg på nettet. Mastodon passar for deg, anten du vil skriva eller leggja ut kunst, musikk eller podkastar.
+      feature_creativity_title: Ustoppeleg kreativt
+      feature_moderation: Med Mastodon bestemmer du sjølv. Kvar tenar har sine eigne reglar og retningsliner som blir laga lokalt og ikkje sentralt i eit stort firma, slik det er med andre sosiale nettverk. Det gjer at alle slags grupper kan få ein Mastodon-tenar som passar til dei. Du kan bli med på ein tenar som har reglar du er samd med, eller du kan laga din eigen tenar.
+      feature_moderation_title: Moderering slik det bør vera
+      follow_action: Fylg
+      follow_step: Å fylgja interessante folk er det det handlar om på Mastodon.
+      follow_title: Tilpass tidslina di
+      follows_subtitle: Fylg kjende folk
+      follows_title: Kven du kan fylgja
+      follows_view_more: Sjå fleire du kan fylgja
+      hashtags_recent_count:
+        one: "%{people} person dei siste to dagane"
+        other: "%{people} personar dei siste to dagane"
+      hashtags_subtitle: Sjå kva som har vore populært dei siste to dagane
+      hashtags_title: Populære emneknaggar
+      hashtags_view_more: Sjå fleire populære emneknaggar
+      post_action: Skriv
+      post_step: Sei hei til verda med tekst, bilete, filmar eller meiningsmålingar.
+      post_title: Skriv ditt fyrste innlegg
+      share_action: Del
+      share_step: Fortel venene dine korleis dei finn deg på Mastodon.
+      share_title: Del Mastodon-profilen din
+      sign_in_action: Logg inn
       subject: Velkomen til Mastodon
       title: Velkomen om bord, %{name}!
   users:

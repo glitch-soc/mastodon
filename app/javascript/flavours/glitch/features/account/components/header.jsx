@@ -9,25 +9,29 @@ import { withRouter } from 'react-router-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-
 import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import LockIcon from '@/material-icons/400-24px/lock.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
 import NotificationsActiveIcon from '@/material-icons/400-24px/notifications_active-fill.svg?react';
+import ShareIcon from '@/material-icons/400-24px/share.svg?react';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { Badge, AutomatedBadge, GroupBadge } from 'flavours/glitch/components/badge';
 import { Button } from 'flavours/glitch/components/button';
+import { CopyIconButton } from 'flavours/glitch/components/copy_icon_button';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { IconButton } from 'flavours/glitch/components/icon_button';
+import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import DropdownMenuContainer from 'flavours/glitch/containers/dropdown_menu_container';
-import { autoPlayGif, me, domain } from 'flavours/glitch/initial_state';
+import { autoPlayGif, me, domain as localDomain } from 'flavours/glitch/initial_state';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_FEDERATION } from 'flavours/glitch/permissions';
 import { preferencesLink, profileLink, accountAdminLink } from 'flavours/glitch/utils/backend_links';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import AccountNoteContainer from '../containers/account_note_container';
 import FollowRequestNoteContainer from '../containers/follow_request_note_container';
+
+import { DomainPill } from './domain_pill';
 
 const messages = defineMessages({
   unfollow: { id: 'account.unfollow', defaultMessage: 'Unfollow' },
@@ -45,6 +49,7 @@ const messages = defineMessages({
   mute: { id: 'account.mute', defaultMessage: 'Mute @{name}' },
   report: { id: 'account.report', defaultMessage: 'Report @{name}' },
   share: { id: 'account.share', defaultMessage: 'Share @{name}\'s profile' },
+  copy: { id: 'account.copy', defaultMessage: 'Copy link to profile' },
   media: { id: 'account.media', defaultMessage: 'Media' },
   blockDomain: { id: 'account.block_domain', defaultMessage: 'Block domain {domain}' },
   unblockDomain: { id: 'account.unblock_domain', defaultMessage: 'Unblock domain {domain}' },
@@ -72,7 +77,7 @@ const messages = defineMessages({
 
 const titleFromAccount = account => {
   const displayName = account.get('display_name');
-  const acct = account.get('acct') === account.get('username') ? `${account.get('username')}@${domain}` : account.get('acct');
+  const acct = account.get('acct') === account.get('username') ? `${account.get('username')}@${localDomain}` : account.get('acct');
   const prefix = displayName.trim().length === 0 ? account.get('username') : displayName;
 
   return `${prefix} (@${acct})`;
@@ -82,7 +87,6 @@ const dateFormatOptions = {
   month: 'short',
   day: 'numeric',
   year: 'numeric',
-  hour12: false,
   hour: '2-digit',
   minute: '2-digit',
 };
@@ -165,7 +169,7 @@ class Header extends ImmutablePureComponent {
   };
 
   render () {
-    const { account, hidden, intl, domain } = this.props;
+    const { account, hidden, intl } = this.props;
     const { signedIn, permissions } = this.context.identity;
 
     if (!account) {
@@ -176,11 +180,10 @@ class Header extends ImmutablePureComponent {
     const isRemote     = account.get('acct') !== account.get('username');
     const remoteDomain = isRemote ? account.get('acct').split('@')[1] : null;
 
-    let info        = [];
-    let actionBtn   = '';
-    let bellBtn     = '';
-    let lockedIcon  = '';
-    let menu        = [];
+    let actionBtn, bellBtn, lockedIcon, shareBtn;
+
+    let info = [];
+    let menu = [];
 
     if (me !== account.get('id') && account.getIn(['relationship', 'followed_by'])) {
       info.push(<span className='relationship-tag'><FormattedMessage id='account.follows_you' defaultMessage='Follows you' /></span>);
@@ -198,9 +201,15 @@ class Header extends ImmutablePureComponent {
       bellBtn = <IconButton icon={account.getIn(['relationship', 'notifying']) ? 'bell' : 'bell-o'} iconComponent={account.getIn(['relationship', 'notifying']) ? NotificationsActiveIcon : NotificationsIcon} active={account.getIn(['relationship', 'notifying'])} title={intl.formatMessage(account.getIn(['relationship', 'notifying']) ? messages.disableNotifications : messages.enableNotifications, { name: account.get('username') })} onClick={this.props.onNotifyToggle} />;
     }
 
+    if ('share' in navigator) {
+      shareBtn = <IconButton className='optional' iconComponent={ShareIcon} title={intl.formatMessage(messages.share, { name: account.get('username') })} onClick={this.handleShare} />;
+    } else {
+      shareBtn = <CopyIconButton className='optional' title={intl.formatMessage(messages.copy)} value={account.get('url')} />;
+    }
+
     if (me !== account.get('id')) {
       if (signedIn && !account.get('relationship')) { // Wait until the relationship is loaded
-        actionBtn = '';
+        actionBtn = <Button disabled><LoadingIndicator /></Button>;
       } else if (account.getIn(['relationship', 'requested'])) {
         actionBtn = <Button text={intl.formatMessage(messages.cancel_follow_request)} title={intl.formatMessage(messages.requested)} onClick={this.props.onFollow} />;
       } else if (!account.getIn(['relationship', 'blocking'])) {
@@ -232,11 +241,6 @@ class Header extends ImmutablePureComponent {
 
     if (isRemote) {
       menu.push({ text: intl.formatMessage(messages.openOriginalPage), href: account.get('url') });
-      menu.push(null);
-    }
-
-    if ('share' in navigator && !account.get('suspended')) {
-      menu.push({ text: intl.formatMessage(messages.share, { name: account.get('username') }), action: this.handleShare });
       menu.push(null);
     }
 
@@ -308,11 +312,12 @@ class Header extends ImmutablePureComponent {
       }
     }
 
-    const content          = { __html: account.get('note_emojified') };
+    const content         = { __html: account.get('note_emojified') };
     const displayNameHtml = { __html: account.get('display_name_html') };
     const fields          = account.get('fields');
     const isLocal         = account.get('acct').indexOf('@') === -1;
-    const acct            = isLocal && domain ? `${account.get('acct')}@${domain}` : account.get('acct');
+    const username        = account.get('acct').split('@')[0];
+    const domain          = isLocal ? localDomain : account.get('acct').split('@')[1];
     const isIndexable     = !account.get('noindex');
 
     const badges = [];
@@ -346,14 +351,10 @@ class Header extends ImmutablePureComponent {
             </a>
 
             <div className='account__header__tabs__buttons'>
-              {!hidden && (
-                <>
-                  {actionBtn}
-                  {bellBtn}
-                </>
-              )}
-
+              {!hidden && bellBtn}
+              {!hidden && shareBtn}
               <DropdownMenuContainer disabled={menu.length === 0} items={menu} icon='ellipsis-v' iconComponent={MoreHorizIcon} size={24} direction='right' />
+              {!hidden && actionBtn}
             </div>
           </div>
 
@@ -361,7 +362,9 @@ class Header extends ImmutablePureComponent {
             <h1>
               <span dangerouslySetInnerHTML={displayNameHtml} />
               <small>
-                <span>@{acct}</span> {lockedIcon}
+                <span>@{username}<span className='invisible'>@{domain}</span></span>
+                <DomainPill username={username} domain={domain} isSelf={me === account.get('id')} />
+                {lockedIcon}
               </small>
             </h1>
           </div>
@@ -372,28 +375,29 @@ class Header extends ImmutablePureComponent {
             </div>
           )}
 
-          {signedIn && <AccountNoteContainer account={account} />}
-
           {!(suspended || hidden) && (
             <div className='account__header__extra'>
               <div className='account__header__bio'>
-                { fields.size > 0 && (
-                  <div className='account__header__fields'>
-                    {fields.map((pair, i) => (
-                      <dl key={i}>
-                        <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} />
-
-                        <dd className={pair.get('verified_at') && 'verified'} title={pair.get('value_plain')}>
-                          {pair.get('verified_at') && <span title={intl.formatMessage(messages.linkVerifiedOn, { date: intl.formatDate(pair.get('verified_at'), dateFormatOptions) })}><Icon id='check' icon={CheckIcon} className='verified__mark' /></span>} <span dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} className='translate' />
-                        </dd>
-                      </dl>
-                    ))}
-                  </div>
-                )}
+                {(account.get('id') !== me && signedIn) && <AccountNoteContainer account={account} />}
 
                 {account.get('note').length > 0 && account.get('note') !== '<p></p>' && <div className='account__header__content translate' dangerouslySetInnerHTML={content} />}
 
-                <div className='account__header__joined'><FormattedMessage id='account.joined' defaultMessage='Joined {date}' values={{ date: intl.formatDate(account.get('created_at'), { year: 'numeric', month: 'short', day: '2-digit' }) }} /></div>
+                <div className='account__header__fields'>
+                  <dl>
+                    <dt><FormattedMessage id='account.joined_short' defaultMessage='Joined' /></dt>
+                    <dd>{intl.formatDate(account.get('created_at'), { year: 'numeric', month: 'short', day: '2-digit' })}</dd>
+                  </dl>
+
+                  {fields.map((pair, i) => (
+                    <dl key={i} className={classNames({ verified: pair.get('verified_at') })}>
+                      <dt dangerouslySetInnerHTML={{ __html: pair.get('name_emojified') }} title={pair.get('name')} className='translate' />
+
+                      <dd className='translate' title={pair.get('value_plain')}>
+                        {pair.get('verified_at') && <span title={intl.formatMessage(messages.linkVerifiedOn, { date: intl.formatDate(pair.get('verified_at'), dateFormatOptions) })}><Icon id='check' icon={CheckIcon} className='verified__mark' /></span>} <span dangerouslySetInnerHTML={{ __html: pair.get('value_emojified') }} />
+                      </dd>
+                    </dl>
+                  ))}
+                </div>
               </div>
             </div>
           )}

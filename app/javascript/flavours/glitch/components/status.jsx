@@ -20,9 +20,11 @@ import Card from '../features/status/components/card';
 // to use the progress bar to show download progress
 import Bundle from '../features/ui/components/bundle';
 import { MediaGallery, Video, Audio } from '../features/ui/util/async-components';
+import { SensitiveMediaContext } from '../features/ui/util/sensitive_media_context';
 import { displayMedia } from '../initial_state';
 
 import AttachmentList from './attachment_list';
+import { CollapseButton } from './collapse_button';
 import { getHashtagBarForStatus } from './hashtag_bar';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
@@ -70,6 +72,8 @@ export const defaultMediaVisibility = (status, settings) => {
 };
 
 class Status extends ImmutablePureComponent {
+
+  static contextType = SensitiveMediaContext;
 
   static propTypes = {
     containerId: PropTypes.string,
@@ -124,8 +128,7 @@ class Status extends ImmutablePureComponent {
     isCollapsed: false,
     autoCollapsed: false,
     isExpanded: undefined,
-    showMedia: undefined,
-    statusId: undefined,
+    showMedia: defaultMediaVisibility(this.props.status, this.props.settings) && !(this.context?.hideMediaByDefault),
     revealBehindCW: undefined,
     showCard: false,
     forceFilter: undefined,
@@ -207,12 +210,6 @@ class Status extends ImmutablePureComponent {
 
     if (prevState.isExpanded === undefined && update.isExpanded === undefined) {
       update.isExpanded = autoUnfoldCW(nextProps.settings, nextProps.status);
-      updated = true;
-    }
-
-    if (nextProps.status && nextProps.status.get('id') !== prevState.statusId) {
-      update.showMedia = defaultMediaVisibility(nextProps.status, nextProps.settings);
-      update.statusId = nextProps.status.get('id');
       updated = true;
     }
 
@@ -310,6 +307,18 @@ class Status extends ImmutablePureComponent {
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (snapshot !== null && this.props.updateScrollBottom && this.node.offsetTop < snapshot.top) {
       this.props.updateScrollBottom(snapshot.height - snapshot.top);
+    }
+
+    // This will potentially cause a wasteful redraw, but in most cases `Status` components are used
+    // with a `key` directly depending on their `id`, preventing re-use of the component across
+    // different IDs.
+    // But just in case this does change, reset the state on status change.
+
+    if (this.props.status?.get('id') !== prevProps.status?.get('id')) {
+      this.setState({
+        showMedia: defaultMediaVisibility(this.props.status, this.props.settings) && !(this.context?.hideMediaByDefault),
+        forceFilter: undefined,
+      });
     }
   }
 
@@ -510,7 +519,6 @@ class Status extends ImmutablePureComponent {
 
   render () {
     const {
-      handleRef,
       parseClick,
       setCollapsed,
     } = this;
@@ -729,7 +737,6 @@ class Status extends ImmutablePureComponent {
         <Card
           onOpenMedia={this.handleOpenMedia}
           card={status.get('card')}
-          compact
           sensitive={status.get('sensitive')}
         />,
       );
@@ -764,7 +771,13 @@ class Status extends ImmutablePureComponent {
           account={account}
           parseClick={parseClick}
           notificationId={this.props.notificationId}
-        />
+        >
+          {muted && settings.getIn(['collapsed', 'enabled']) && (
+            <div className='notification__message-collapse-button'>
+              <CollapseButton collapsed={isCollapsed} setCollapsed={setCollapsed} />
+            </div>
+          )}
+        </StatusPrepend>
       );
     }
 
@@ -772,85 +785,77 @@ class Status extends ImmutablePureComponent {
       rebloggedByText = intl.formatMessage({ id: 'status.reblogged_by', defaultMessage: '{name} boosted' }, { name: account.get('acct') });
     }
 
-    const computedClass = classNames('status', `status-${status.get('visibility')}`, {
-      collapsed: isCollapsed,
-      'has-background': isCollapsed && background,
-      'status__wrapper-reply': !!status.get('in_reply_to_id'),
-      'status--in-thread': !!rootId,
-      'status--first-in-thread': previousId && (!connectUp || connectToRoot),
-      unread,
-      muted,
-    }, 'focusable');
-
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
     contentMedia.push(hashtagBar);
 
     return (
       <HotKeys handlers={handlers}>
         <div
-          className={computedClass}
-          style={isCollapsed && background ? { backgroundImage: `url(${background})` } : null}
+          className={classNames('status__wrapper', 'focusable', `status__wrapper-${status.get('visibility')}`, { 'status__wrapper-reply': !!status.get('in_reply_to_id'), unread, collapsed: isCollapsed })}
           {...selectorAttribs}
-          ref={handleRef}
           tabIndex={0}
           data-featured={featured ? 'true' : null}
           aria-label={textForScreenReader(intl, status, rebloggedByText, !status.get('hidden'))}
+          ref={this.handleRef}
           data-nosnippet={status.getIn(['account', 'noindex'], true) || undefined}
         >
-          {!muted && prepend}
+          {prepend}
 
-          {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
+          <div
+            className={classNames('status', `status-${status.get('visibility')}`, { 'status-reply': !!status.get('in_reply_to_id'), 'status--in-thread': !!rootId, 'status--first-in-thread': previousId && (!connectUp || connectToRoot), muted: this.props.muted, 'has-background': isCollapsed && background, collapsed: isCollapsed })}
+            data-id={status.get('id')}
+            style={isCollapsed && background ? { backgroundImage: `url(${background})` } : null}
+          >
+            {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
 
-          <header className='status__info'>
-            <span>
-              {muted && prepend}
-              {!muted || !isCollapsed ? (
+            {(!muted || !isCollapsed) && (
+              <header className='status__info'>
                 <StatusHeader
                   status={status}
                   friend={account}
                   collapsed={isCollapsed}
                   parseClick={parseClick}
                 />
-              ) : null}
-            </span>
-            <StatusIcons
+                <StatusIcons
+                  status={status}
+                  mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
+                  collapsible={!muted && settings.getIn(['collapsed', 'enabled'])}
+                  collapsed={isCollapsed}
+                  setCollapsed={setCollapsed}
+                  settings={settings.get('status_icons')}
+                />
+              </header>
+            )}
+            <StatusContent
               status={status}
-              mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
-              collapsible={settings.getIn(['collapsed', 'enabled'])}
-              collapsed={isCollapsed}
-              setCollapsed={setCollapsed}
-              settings={settings.get('status_icons')}
+              media={contentMedia}
+              extraMedia={extraMedia}
+              mediaIcons={contentMediaIcons}
+              expanded={isExpanded}
+              onExpandedToggle={this.handleExpandedToggle}
+              onTranslate={this.handleTranslate}
+              parseClick={parseClick}
+              disabled={!history}
+              tagLinks={settings.get('tag_misleading_links')}
+              rewriteMentions={settings.get('rewrite_mentions')}
+              {...statusContentProps}
             />
-          </header>
-          <StatusContent
-            status={status}
-            media={contentMedia}
-            extraMedia={extraMedia}
-            mediaIcons={contentMediaIcons}
-            expanded={isExpanded}
-            onExpandedToggle={this.handleExpandedToggle}
-            onTranslate={this.handleTranslate}
-            parseClick={parseClick}
-            disabled={!history}
-            tagLinks={settings.get('tag_misleading_links')}
-            rewriteMentions={settings.get('rewrite_mentions')}
-            {...statusContentProps}
-          />
 
-          {!isCollapsed || !(muted || !settings.getIn(['collapsed', 'show_action_bar'])) ? (
-            <StatusActionBar
-              status={status}
-              account={status.get('account')}
-              showReplyCount={settings.get('show_reply_count')}
-              onFilter={matchedFilters ? this.handleFilterClick : null}
-              {...other}
-            />
-          ) : null}
-          {notification ? (
-            <NotificationOverlayContainer
-              notification={notification}
-            />
-          ) : null}
+            {(!isCollapsed || !(muted || !settings.getIn(['collapsed', 'show_action_bar']))) && (
+              <StatusActionBar
+                status={status}
+                account={status.get('account')}
+                showReplyCount={settings.get('show_reply_count')}
+                onFilter={matchedFilters ? this.handleFilterClick : null}
+                {...other}
+              />
+            )}
+            {notification && (
+              <NotificationOverlayContainer
+                notification={notification}
+              />
+            )}
+          </div>
         </div>
       </HotKeys>
     );

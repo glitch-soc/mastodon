@@ -12,9 +12,6 @@ import { uuid } from '../uuid';
 const initialState = ImmutableMap({
   saved: true,
 
-  onboarded: false,
-  layout: 'auto',
-
   skinTone: 1,
 
   trends: ImmutableMap({
@@ -114,7 +111,7 @@ const initialState = ImmutableMap({
   dismissed_banners: ImmutableMap({
     'public_timeline': false,
     'community_timeline': false,
-    'home.explore_prompt': false,
+    'home/follow-suggestions': false,
     'explore/links': false,
     'explore/statuses': false,
     'explore/tags': false,

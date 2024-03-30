@@ -767,6 +767,7 @@ ie:
         disabled: A necun
         users: A local usatores qui ha initiat session
       registrations:
+        moderation_recommandation: Ples assecurar que tu have un equip de moderation quel es adequat e reactiv ante que tu aperte registrationes a omnes!
         preamble: Decider qui posse crear un conto che vor servitor.
         title: Registrationes
       registrations_mode:
@@ -774,6 +775,7 @@ ie:
           approved: Aprobation besonat por adhesion
           none: Nequi posse registrar se
           open: Quicunc posse registrar se
+        warning_hint: Noi recomanda usar "Aprobation besonat por inscrir" si tu ne es confident que tui equip de moderation posse gerer spam e maliciosi registrationes in un curt témpor.
       security:
         authorized_fetch: Postular autentication de federat servitores
         authorized_fetch_hint: Postular autentication de federat servitores possibilisa plu strict infortiament de ambi usatori e servitori bloccas. Támen, ti fórsan va limitar li potentie de vor servitor, reducter li atingement de vor responses, e possibilmen introducter problemas de compatibilitá con quelc federat servicies. Additionalmen, ti ne va preventer dedicat actores de accesser vor public postas e contos.
@@ -966,6 +968,9 @@ ie:
       title: Webcrocs
       webhook: Webcroc
   admin_mailer:
+    auto_close_registrations:
+      body: Pro un manca de recent activitá moderatori, registrationes sur %{instance} ha esset automaticmen changeat al mode quel besona un manual recension, por que %{instance} ne mey esser usat quam un platform por malfatores. Tu posse rechangear a apert registrationes quandecunc.
+      subject: Registrationes por %{instance} ha esset automaticmen changeat al mode quel besona aprobation
     new_appeal:
       actions:
         delete_statuses: deleter su postas
@@ -1490,7 +1495,6 @@ ie:
     administration_emails: Email-notificationes pri administration
     email_events: Evenimentes por email-notificationes
     email_events_hint: 'Selecte li evenimentes pri queles tu vole reciver notificationes:'
-    other_settings: Parametres pri altri notificationes
   number:
     human:
       decimal_units:
@@ -1546,6 +1550,9 @@ ie:
     errors:
       limit_reached: Límite de diferent reactiones atinget
       unrecognized_emoji: ne es un reconosset emoji
+  redirects:
+    prompt: Si tu fide ti ligament, clicca it por continuar.
+    title: Tu exea de %{instance}.
   relationships:
     activity: Activitá de conto
     confirm_follow_selected_followers: Esque tu vermen vole sequer selectet sequitores?
@@ -1645,7 +1652,6 @@ ie:
     import: Importar
     import_and_export: Importation e exportation
     migrate: Migration de conto
-    notifications: Notificationes
     preferences: Preferenties
     profile: Public profil
     relationships: Sequetes e sequitores
@@ -1690,8 +1696,6 @@ ie:
         other: "%{count} votes"
       vote: Votar
     show_more: Monstrar plu
-    show_newer: Monstrar plu nov
-    show_older: Monstrar plu old
     show_thread: Monstrar fil
     title: "%{name}: «%{quote}»"
     visibilities:
@@ -1790,6 +1794,12 @@ ie:
       extra: It es ja pret a descargar!
       subject: Tui archive es pret por descargar
       title: Descargar archive
+    failed_2fa:
+      details: 'Vi li detallies del prova de intrar:'
+      explanation: Alqui provat accesser tui conto ma usat un ínvalid duesim factor de autentication.
+      further_actions_html: Si it ne esset tu, noi recomanda que tu strax %{action} nam li conto posse esser compromisset.
+      subject: Falliment de autentication de duesim factor
+      title: Fallit autentication de duesim factor
     suspicious_sign_in:
       change_password: changear tui passa-parol
       details: 'Vi li detallies del apertion de session:'
@@ -1829,13 +1839,41 @@ ie:
         silence: Conto limitat
         suspend: Conto suspendet
     welcome:
-      edit_profile_action: Configuration de profil
-      edit_profile_step: Tu posse personalisar tui profil por cargar un profil-image, changear tui monstrat nómine e plu. Tu posse optar tractar nov sequitores ante que ili es permisset sequer te.
+      apps_android_action: Obtener it sur Google Play
+      apps_ios_action: Descargar sur li App Store
+      apps_step: Descargar nor aplis oficial.
+      apps_title: Aplis de Mastodon
+      checklist_subtitle: 'Lass nos auxiliar te comensar sur ti-ci frontiera social:'
+      checklist_title: Lista de benevenit
+      edit_profile_action: Personalisar
+      edit_profile_step: Agranda tui interactiones per un profil detalliat.
+      edit_profile_title: Personalisar tui profil
       explanation: Vi quelc suggestiones por que tu mey comensar
-      final_action: Comensar postar
-      final_step: 'Comensa a postar! Mem sin sequitores, tui public postas posse esser videt de altres, per exemple in li local témpor-linea o in hashtags. Tu fórsan vole introducter te per li hashtag #introductions.'
-      full_handle: Tui plen usator-nómine
-      full_handle_hint: Ti-ci es ti quel tu vell dir a tui amics por que ili mey inviar missages a te o sequer te de un altri servitor.
+      feature_action: Aprender plu
+      feature_audience: Mastodon te da un possibilitá unic de administrar tui audientie sin intervenitores. Mastodon, desplegat che tui propri servitor, permisse que tu sequeye e esseye sequet de quelcunc altri Mastodon-servitores in li internet, e ne es controlat de quicunc quam tu.
+      feature_audience_title: Agrandar tui audientie in confidentie
+      feature_control: Tu save max bon ti quel tu vole vider sur tui initial témpor-linea. Null algoritmes o reclames por prodigar tui témpor. Seque quicunc che quelcunc Mastodon-servitor de un singul conto e recive lor postas in órdine cronologic, e fa que tui parte del internet esseye un poc plu quam tu.
+      feature_control_title: Resta in control de tui propri témpor-linea
+      feature_creativity: Mastodon permisse postas con audio, video e images, descriptiones de accessibilitá, avises de contenete, animat profil-images, personalisat emojis, control del acurtation de images de previse, a plu, por auxiliar te expresser te. Si tu publica tui art, tui musica, o tui podcast, Mastodon va apoyar te.
+      feature_creativity_title: Ínparalelat creativitá
+      feature_moderation: Mastodon retromette li potentie de far decisiones in tui manus. Chascun servitor crea su propri regules, queles es infortiat localmen e ne universalmen quam che social medies corporat, dunc it es li max flexibil pri responder al besones de diferent gruppes de gente. Adhere a un servitor con regules con queles tu concorda, o mantene tui propri.
+      feature_moderation_title: Moderandi moderation
+      follow_action: Sequer
+      follow_step: Sequer interessant gente es to quo importa in Mastodon.
+      follow_title: Personalisar tui hemal témpor-linea
+      follows_subtitle: Sequer famosi contos
+      follows_title: Persones a sequer
+      follows_view_more: Vider plu persones a sequer
+      hashtags_subtitle: Explorar li postas de tendentie durant li passat 2 dies
+      hashtags_title: Populari hashtags
+      hashtags_view_more: Vider plu hashtags in tendentie
+      post_action: Composir
+      post_step: Saluta li munde con textu, images, videos o balotationes.
+      post_title: Crear tui unesim posta
+      share_action: Compartir
+      share_step: Informar tui amics qualmen trovar te che Mastodon.
+      share_title: Partir tui profil Mastodon
+      sign_in_action: Intrar
       subject: Benevenit a Mastodon
       title: Benevenit, %{name}!
   users:

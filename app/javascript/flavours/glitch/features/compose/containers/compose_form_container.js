@@ -11,8 +11,6 @@ import {
   fetchComposeSuggestions,
   selectComposeSuggestion,
   changeComposeSpoilerText,
-  changeComposeSpoilerness,
-  changeComposeVisibility,
   insertEmojiCompose,
   uploadCompose,
 } from '../../../actions/compose';
@@ -58,11 +56,13 @@ const mapStateToProps = state => ({
   text: state.getIn(['compose', 'text']),
   suggestions: state.getIn(['compose', 'suggestions']),
   spoiler: state.getIn(['local_settings', 'always_show_spoilers_field']) || state.getIn(['compose', 'spoiler']),
+  spoilerAlwaysOn: state.getIn(['local_settings', 'always_show_spoilers_field']),
   spoilerText: state.getIn(['compose', 'spoiler_text']),
   privacy: state.getIn(['compose', 'privacy']),
   focusDate: state.getIn(['compose', 'focusDate']),
   caretPosition: state.getIn(['compose', 'caretPosition']),
   preselectDate: state.getIn(['compose', 'preselectDate']),
+  preselectOnReply: state.getIn(['local_settings', 'preselect_on_reply']),
   isSubmitting: state.getIn(['compose', 'is_submitting']),
   isEditing: state.getIn(['compose', 'id']) !== null,
   isChangingUpload: state.getIn(['compose', 'is_changing_upload']),
@@ -70,15 +70,10 @@ const mapStateToProps = state => ({
   anyMedia: state.getIn(['compose', 'media_attachments']).size > 0,
   isInReply: state.getIn(['compose', 'in_reply_to']) !== null,
   lang: state.getIn(['compose', 'language']),
-  advancedOptions: state.getIn(['compose', 'advanced_options']),
-  layout: state.getIn(['local_settings', 'layout']),
-  media: state.getIn(['compose', 'media_attachments']),
   sideArm: sideArmPrivacy(state),
-  sensitive: state.getIn(['compose', 'sensitive']),
-  showSearch: state.getIn(['search', 'submitted']) && !state.getIn(['search', 'hidden']),
-  spoilersAlwaysOn: state.getIn(['local_settings', 'always_show_spoilers_field']),
+  media: state.getIn(['compose', 'media_attachments']),
   mediaDescriptionConfirmation: state.getIn(['local_settings', 'confirm_missing_media_description']),
-  preselectOnReply: state.getIn(['local_settings', 'preselect_on_reply']),
+  maxChars: state.getIn(['server', 'server', 'configuration', 'statuses', 'max_characters'], 500),
 });
 
 const mapDispatchToProps = (dispatch, { intl }) => ({
@@ -87,8 +82,8 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     dispatch(changeCompose(text));
   },
 
-  onSubmit (router) {
-    dispatch(submitCompose(router));
+  onSubmit (router, overridePrivacy = null) {
+    dispatch(submitCompose(router, overridePrivacy));
   },
 
   onClearSuggestions () {
@@ -103,37 +98,26 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     dispatch(selectComposeSuggestion(position, token, suggestion, path));
   },
 
-  onChangeSpoilerText (text) {
-    dispatch(changeComposeSpoilerText(text));
+  onChangeSpoilerText (checked) {
+    dispatch(changeComposeSpoilerText(checked));
   },
 
   onPaste (files) {
     dispatch(uploadCompose(files));
   },
 
-  onPickEmoji (position, emoji) {
-    dispatch(insertEmojiCompose(position, emoji));
+  onPickEmoji (position, data, needsSpace) {
+    dispatch(insertEmojiCompose(position, data, needsSpace));
   },
 
-  onChangeSpoilerness() {
-    dispatch(changeComposeSpoilerness());
-  },
-
-  onChangeVisibility(value) {
-    dispatch(changeComposeVisibility(value));
-  },
-
-  onMediaDescriptionConfirm(routerHistory, mediaId, overriddenVisibility = null) {
+  onMediaDescriptionConfirm (routerHistory, mediaId, overridePrivacy = null) {
     dispatch(openModal({
       modalType: 'CONFIRM',
       modalProps: {
         message: intl.formatMessage(messages.missingDescriptionMessage),
         confirm: intl.formatMessage(messages.missingDescriptionConfirm),
         onConfirm: () => {
-          if (overriddenVisibility) {
-            dispatch(changeComposeVisibility(overriddenVisibility));
-          }
-          dispatch(submitCompose(routerHistory));
+          dispatch(submitCompose(routerHistory, overridePrivacy));
         },
         secondary: intl.formatMessage(messages.missingDescriptionEdit),
         onSecondary: () => dispatch(openModal({

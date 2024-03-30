@@ -37,10 +37,10 @@ class Account extends ImmutablePureComponent {
   static propTypes = {
     size: PropTypes.number,
     account: ImmutablePropTypes.record,
-    onFollow: PropTypes.func.isRequired,
-    onBlock: PropTypes.func.isRequired,
-    onMute: PropTypes.func.isRequired,
-    onMuteNotifications: PropTypes.func.isRequired,
+    onFollow: PropTypes.func,
+    onBlock: PropTypes.func,
+    onMute: PropTypes.func,
+    onMuteNotifications: PropTypes.func,
     intl: PropTypes.object.isRequired,
     hidden: PropTypes.bool,
     minimal: PropTypes.bool,
@@ -147,7 +147,7 @@ class Account extends ImmutablePureComponent {
             </div>
 
             <div className='account__contents'>
-              <DisplayName account={account} inline />
+              <DisplayName account={account} />
               {!minimal && (
                 <div className='account__details'>
                   {account.get('followers_count') !== -1 && (

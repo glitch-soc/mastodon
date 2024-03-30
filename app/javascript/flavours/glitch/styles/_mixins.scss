@@ -10,37 +10,6 @@
   background-size: $size $size;
 }
 
-@mixin single-column($media, $parent: '&') {
-  .auto-columns #{$parent} {
-    @media #{$media} {
-      @content;
-    }
-  }
-  .single-column #{$parent} {
-    @content;
-  }
-}
-
-@mixin limited-single-column($media, $parent: '&') {
-  .auto-columns #{$parent},
-  .single-column #{$parent} {
-    @media #{$media} {
-      @content;
-    }
-  }
-}
-
-@mixin multi-columns($media, $parent: '&') {
-  .auto-columns #{$parent} {
-    @media #{$media} {
-      @content;
-    }
-  }
-  .multi-columns #{$parent} {
-    @content;
-  }
-}
-
 @mixin fullwidth-gallery {
   &.full-width {
     margin-left: -14px;
@@ -55,13 +24,14 @@
   outline: 0;
   box-sizing: border-box;
   width: 100%;
-  border: 0;
   box-shadow: none;
   font-family: inherit;
   background: $ui-base-color;
   color: $darker-text-color;
   border-radius: 4px;
-  font-size: 14px;
+  border: 1px solid lighten($ui-base-color, 8%);
+  font-size: 17px;
+  line-height: normal;
   margin: 0;
 }
 
