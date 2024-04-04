@@ -191,7 +191,7 @@
     "react-test-renderer": "^18.2.0",
     "stylelint": "^16.0.2",
     "stylelint-config-standard-scss": "^13.0.0",
-    "typescript": "^5.0.4",
+    "typescript": "^5.4.3",
     "webpack-dev-server": "^3.11.3"
   },
   "resolutions": {

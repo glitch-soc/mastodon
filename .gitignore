@@ -72,3 +72,7 @@ docker-compose.override.yml
 
 
 .yarn/releases/yarn*.cjs
+
+**/node_modules
+
+**/yarn.lock
