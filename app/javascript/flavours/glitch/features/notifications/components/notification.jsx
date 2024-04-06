@@ -251,6 +251,31 @@ class Notification extends ImmutablePureComponent {
     );
   }
 
+  renderUpdate (notification) {
+    return (
+      <StatusContainer
+        containerId={notification.get('id')}
+        hidden={!!this.props.hidden}
+        id={notification.get('status')}
+        account={notification.get('account')}
+        prepend='update'
+        muted
+        notification={notification}
+        onMoveDown={this.handleMoveDown}
+        onMoveUp={this.handleMoveUp}
+        onMention={this.props.onMention}
+        contextType='notifications'
+        getScrollPosition={this.props.getScrollPosition}
+        updateScrollBottom={this.props.updateScrollBottom}
+        cachedMediaWidth={this.props.cachedMediaWidth}
+        cacheMediaWidth={this.props.cacheMediaWidth}
+        onUnmount={this.props.onUnmount}
+        withDismiss
+        unread={this.props.unread}
+      />
+    );
+  }
+
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
@@ -289,6 +314,8 @@ class Notification extends ImmutablePureComponent {
       return this.renderReblog(notification);
     case 'status':
       return this.renderStatus(notification);
+    case 'update':
+      return this.renderUpdate(notification);
     case 'poll':
       return (
         <StatusContainer
@@ -297,29 +324,6 @@ class Notification extends ImmutablePureComponent {
           id={notification.get('status')}
           account={notification.get('account')}
           prepend='poll'
-          muted
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          contextType='notifications'
-          getScrollPosition={getScrollPosition}
-          updateScrollBottom={updateScrollBottom}
-          cachedMediaWidth={this.props.cachedMediaWidth}
-          cacheMediaWidth={this.props.cacheMediaWidth}
-          onUnmount={this.props.onUnmount}
-          withDismiss
-          unread={this.props.unread}
-        />
-      );
-    case 'update':
-      return (
-        <StatusContainer
-          containerId={notification.get('id')}
-          hidden={hidden}
-          id={notification.get('status')}
-          account={notification.get('account')}
-          prepend='update'
           muted
           notification={notification}
           onMoveDown={onMoveDown}
