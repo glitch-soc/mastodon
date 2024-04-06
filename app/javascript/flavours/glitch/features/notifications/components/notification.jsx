@@ -154,6 +154,28 @@ class Notification extends ImmutablePureComponent {
     );
   }
 
+  renderMention (notification) {
+    return (
+      <StatusContainer
+        id={notification.get('status')}
+        containerId={notification.get('id')}
+        withDismiss
+        hidden={this.props.hidden}
+        onMoveDown={this.handleMoveDown}
+        onMoveUp={this.handleMoveUp}
+        onMention={this.props.onMention}
+        contextType='notifications'
+        getScrollPosition={this.props.getScrollPosition}
+        updateScrollBottom={this.props.updateScrollBottom}
+        notification={notification}
+        cachedMediaWidth={this.props.cachedMediaWidth}
+        cacheMediaWidth={this.props.cacheMediaWidth}
+        unread={this.props.unread}
+        onUnmount={this.props.onUnmount}
+      />
+    );
+  }
+
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
@@ -184,52 +206,8 @@ class Notification extends ImmutablePureComponent {
       return this.renderFollow(notification, account, link);
     case 'follow_request':
       return this.renderFollowRequest(notification, account, link);
-    case 'admin.sign_up':
-      return (
-        <NotificationAdminSignup
-          hidden={hidden}
-          id={notification.get('id')}
-          account={notification.get('account')}
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          unread={this.props.unread}
-        />
-      );
-    case 'admin.report':
-      return (
-        <NotificationAdminReportContainer
-          hidden={hidden}
-          id={notification.get('id')}
-          account={notification.get('account')}
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          unread={this.props.unread}
-        />
-      );
     case 'mention':
-      return (
-        <StatusContainer
-          containerId={notification.get('id')}
-          hidden={hidden}
-          id={notification.get('status')}
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          contextType='notifications'
-          getScrollPosition={getScrollPosition}
-          updateScrollBottom={updateScrollBottom}
-          cachedMediaWidth={this.props.cachedMediaWidth}
-          cacheMediaWidth={this.props.cacheMediaWidth}
-          onUnmount={this.props.onUnmount}
-          withDismiss
-          unread={this.props.unread}
-        />
-      );
+      return this.renderMention(notification);
     case 'status':
       return (
         <StatusContainer
@@ -342,6 +320,32 @@ class Notification extends ImmutablePureComponent {
           cacheMediaWidth={this.props.cacheMediaWidth}
           onUnmount={this.props.onUnmount}
           withDismiss
+          unread={this.props.unread}
+        />
+      );
+    case 'admin.sign_up':
+      return (
+        <NotificationAdminSignup
+          hidden={hidden}
+          id={notification.get('id')}
+          account={notification.get('account')}
+          notification={notification}
+          onMoveDown={onMoveDown}
+          onMoveUp={onMoveUp}
+          onMention={onMention}
+          unread={this.props.unread}
+        />
+      );
+    case 'admin.report':
+      return (
+        <NotificationAdminReportContainer
+          hidden={hidden}
+          id={notification.get('id')}
+          account={notification.get('account')}
+          notification={notification}
+          onMoveDown={onMoveDown}
+          onMoveUp={onMoveUp}
+          onMention={onMention}
           unread={this.props.unread}
         />
       );
