@@ -226,6 +226,31 @@ class Notification extends ImmutablePureComponent {
     );
   }
 
+  renderStatus (notification) {
+    return (
+      <StatusContainer
+        containerId={notification.get('id')}
+        hidden={!!this.props.hidden}
+        id={notification.get('status')}
+        account={notification.get('account')}
+        prepend='status'
+        muted
+        notification={notification}
+        onMoveDown={this.handleMoveDown}
+        onMoveUp={this.handleMoveUp}
+        onMention={this.props.onMention}
+        contextType='notifications'
+        getScrollPosition={this.props.getScrollPosition}
+        updateScrollBottom={this.props.updateScrollBottom}
+        cachedMediaWidth={this.props.cachedMediaWidth}
+        cacheMediaWidth={this.props.cacheMediaWidth}
+        onUnmount={this.props.onUnmount}
+        withDismiss
+        unread={this.props.unread}
+      />
+    );
+  }
+
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
@@ -263,28 +288,7 @@ class Notification extends ImmutablePureComponent {
     case 'reblog':
       return this.renderReblog(notification);
     case 'status':
-      return (
-        <StatusContainer
-          containerId={notification.get('id')}
-          hidden={hidden}
-          id={notification.get('status')}
-          account={notification.get('account')}
-          prepend='status'
-          muted
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          contextType='notifications'
-          getScrollPosition={getScrollPosition}
-          updateScrollBottom={updateScrollBottom}
-          cachedMediaWidth={this.props.cachedMediaWidth}
-          cacheMediaWidth={this.props.cacheMediaWidth}
-          onUnmount={this.props.onUnmount}
-          withDismiss
-          unread={this.props.unread}
-        />
-      );
+      return this.renderStatus(notification);
     case 'poll':
       return (
         <StatusContainer
