@@ -176,6 +176,31 @@ class Notification extends ImmutablePureComponent {
     );
   }
 
+  renderFavourite (notification) {
+    return (
+      <StatusContainer
+        containerId={notification.get('id')}
+        hidden={!!this.props.hidden}
+        id={notification.get('status')}
+        account={notification.get('account')}
+        prepend='favourite'
+        muted
+        withDismiss
+        notification={notification}
+        onMoveDown={this.handleMoveDown}
+        onMoveUp={this.handleMoveUp}
+        onMention={this.props.onMention}
+        contextType='notifications'
+        getScrollPosition={this.props.getScrollPosition}
+        updateScrollBottom={this.props.updateScrollBottom}
+        cachedMediaWidth={this.props.cachedMediaWidth}
+        cacheMediaWidth={this.props.cacheMediaWidth}
+        onUnmount={this.props.onUnmount}
+        unread={this.props.unread}
+      />
+    );
+  }
+
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
@@ -208,6 +233,8 @@ class Notification extends ImmutablePureComponent {
       return this.renderFollowRequest(notification, account, link);
     case 'mention':
       return this.renderMention(notification);
+    case 'favourite':
+      return this.renderFavourite(notification);
     case 'status':
       return (
         <StatusContainer
@@ -216,29 +243,6 @@ class Notification extends ImmutablePureComponent {
           id={notification.get('status')}
           account={notification.get('account')}
           prepend='status'
-          muted
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          contextType='notifications'
-          getScrollPosition={getScrollPosition}
-          updateScrollBottom={updateScrollBottom}
-          cachedMediaWidth={this.props.cachedMediaWidth}
-          cacheMediaWidth={this.props.cacheMediaWidth}
-          onUnmount={this.props.onUnmount}
-          withDismiss
-          unread={this.props.unread}
-        />
-      );
-    case 'favourite':
-      return (
-        <StatusContainer
-          containerId={notification.get('id')}
-          hidden={hidden}
-          id={notification.get('status')}
-          account={notification.get('account')}
-          prepend='favourite'
           muted
           notification={notification}
           onMoveDown={onMoveDown}
