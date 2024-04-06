@@ -10,6 +10,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import { HotKeys } from 'react-hotkeys';
 
+import FlagIcon from '@/material-icons/400-24px/flag-fill.svg?react';
 import PersonIcon from '@/material-icons/400-24px/person-fill.svg?react';
 import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
@@ -18,13 +19,15 @@ import AccountContainer from 'flavours/glitch/containers/account_container';
 import StatusContainer from 'flavours/glitch/containers/status_container';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
-import NotificationAdminReportContainer from '../containers/admin_report_container';
 import FollowRequestContainer from '../containers/follow_request_container';
 import NotificationOverlayContainer from '../containers/overlay_container';
+
+import Report from './report';
 
 const messages = defineMessages({
   follow: { id: 'notification.follow', defaultMessage: '{name} followed you' },
   adminSignUp: { id: 'notification.admin.sign_up', defaultMessage: '{name} signed up' },
+  adminReport: { id: 'notification.admin.report', defaultMessage: '{name} reported {target}' },
 });
 
 const notificationForScreenReader = (intl, message, timestamp) => {
@@ -321,6 +324,45 @@ class Notification extends ImmutablePureComponent {
     );
   }
 
+  renderAdminReport (notification, account, link) {
+    const { intl, unread, report } = this.props;
+
+    if (!report) {
+      return null;
+    }
+
+    const targetAccount = report.get('target_account');
+    const targetDisplayNameHtml = { __html: targetAccount.get('display_name_html') };
+    const targetLink = (
+      <bdi>
+        <Permalink
+          className='notification__display-name'
+          href={account.get('url')}
+          title={targetAccount.get('acct')}
+          to={`/@${targetAccount.get('acct')}`}
+          dangerouslySetInnerHTML={targetDisplayNameHtml}
+        />
+      </bdi>
+    );
+
+    return (
+      <HotKeys handlers={this.getHandlers()}>
+        <div className={classNames('notification notification-admin-report focusable', { unread })} tabIndex={0} aria-label={notificationForScreenReader(intl, intl.formatMessage(messages.adminReport, { name: account.get('acct'), target: notification.getIn(['report', 'target_account', 'acct']) }), notification.get('created_at'))}>
+          <div className='notification__message'>
+            <Icon id='flag' icon={FlagIcon} />
+
+            <span title={notification.get('created_at')}>
+              <FormattedMessage id='notification.admin.report' defaultMessage='{name} reported {target}' values={{ name: link, target: targetLink }} />
+            </span>
+          </div>
+
+          <Report account={account} report={notification.get('report')} hidden={this.props.hidden} />
+          <NotificationOverlayContainer notification={notification} />
+        </div>
+      </HotKeys>
+    );
+  }
+
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
@@ -336,13 +378,6 @@ class Notification extends ImmutablePureComponent {
         />
       </bdi>
     );
-
-    const {
-      hidden,
-      onMoveDown,
-      onMoveUp,
-      onMention,
-    } = this.props;
 
     switch(notification.get('type')) {
     case 'follow':
@@ -364,21 +399,10 @@ class Notification extends ImmutablePureComponent {
     case 'admin.sign_up':
       return this.renderAdminSignUp(notification, account, link);
     case 'admin.report':
-      return (
-        <NotificationAdminReportContainer
-          hidden={hidden}
-          id={notification.get('id')}
-          account={notification.get('account')}
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          unread={this.props.unread}
-        />
-      );
-    default:
-      return null;
+      return this.renderAdminReport(notification, account, link);
     }
+
+    return null;
   }
 
 }
