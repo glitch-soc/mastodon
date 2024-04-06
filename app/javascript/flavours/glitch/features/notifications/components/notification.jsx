@@ -10,6 +10,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import { HotKeys } from 'react-hotkeys';
 
+import PersonIcon from '@/material-icons/400-24px/person-fill.svg?react';
 import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { Permalink } from 'flavours/glitch/components/permalink';
@@ -18,7 +19,7 @@ import StatusContainer from 'flavours/glitch/containers/status_container';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import NotificationAdminReportContainer from '../containers/admin_report_container';
-import NotificationFollowRequestContainer from '../containers/follow_request_container';
+import FollowRequestContainer from '../containers/follow_request_container';
 import NotificationOverlayContainer from '../containers/overlay_container';
 
 import NotificationAdminSignup from './admin_signup';
@@ -132,6 +133,27 @@ class Notification extends ImmutablePureComponent {
     );
   }
 
+  renderFollowRequest (notification, account, link) {
+    const { intl, unread } = this.props;
+
+    return (
+      <HotKeys handlers={this.getHandlers()}>
+        <div className={classNames('notification notification-follow-request focusable', { unread })} tabIndex={0} aria-label={notificationForScreenReader(intl, intl.formatMessage({ id: 'notification.follow_request', defaultMessage: '{name} has requested to follow you' }, { name: account.get('acct') }), notification.get('created_at'))}>
+          <div className='notification__message'>
+            <Icon id='user' icon={PersonIcon} />
+
+            <span title={notification.get('created_at')}>
+              <FormattedMessage id='notification.follow_request' defaultMessage='{name} has requested to follow you' values={{ name: link }} />
+            </span>
+          </div>
+
+          <FollowRequestContainer id={account.get('id')} withNote={false} hidden={this.props.hidden} />
+          <NotificationOverlayContainer notification={notification} />
+        </div>
+      </HotKeys>
+    );
+  }
+
   render () {
     const { notification } = this.props;
     const account          = notification.get('account');
@@ -161,18 +183,7 @@ class Notification extends ImmutablePureComponent {
     case 'follow':
       return this.renderFollow(notification, account, link);
     case 'follow_request':
-      return (
-        <NotificationFollowRequestContainer
-          hidden={hidden}
-          id={notification.get('id')}
-          account={notification.get('account')}
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          unread={this.props.unread}
-        />
-      );
+      return this.renderFollowRequest(notification, account, link);
     case 'admin.sign_up':
       return (
         <NotificationAdminSignup
