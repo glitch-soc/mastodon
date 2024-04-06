@@ -1,38 +1,155 @@
-//  Package imports.
 import PropTypes from 'prop-types';
+
+import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+
+import classNames from 'classnames';
+import { withRouter } from 'react-router-dom';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-//  Our imports,
+import { HotKeys } from 'react-hotkeys';
+
+import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
+import { Icon }  from 'flavours/glitch/components/icon';
+import { Permalink } from 'flavours/glitch/components/permalink';
+import AccountContainer from 'flavours/glitch/containers/account_container';
 import StatusContainer from 'flavours/glitch/containers/status_container';
+import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import NotificationAdminReportContainer from '../containers/admin_report_container';
 import NotificationFollowRequestContainer from '../containers/follow_request_container';
+import NotificationOverlayContainer from '../containers/overlay_container';
 
 import NotificationAdminSignup from './admin_signup';
-import NotificationFollow from './follow';
 
-export default class Notification extends ImmutablePureComponent {
+const messages = defineMessages({
+  follow: { id: 'notification.follow', defaultMessage: '{name} followed you' },
+});
 
+const notificationForScreenReader = (intl, message, timestamp) => {
+  const output = [message];
+
+  output.push(intl.formatDate(timestamp, { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }));
+
+  return output.join(', ');
+};
+
+class Notification extends ImmutablePureComponent {
   static propTypes = {
     notification: ImmutablePropTypes.map.isRequired,
     hidden: PropTypes.bool,
     onMoveUp: PropTypes.func.isRequired,
     onMoveDown: PropTypes.func.isRequired,
     onMention: PropTypes.func.isRequired,
+    onFavourite: PropTypes.func.isRequired,
+    onReblog: PropTypes.func.isRequired,
+    onToggleHidden: PropTypes.func.isRequired,
+    status: ImmutablePropTypes.map,
+    intl: PropTypes.object.isRequired,
     getScrollPosition: PropTypes.func,
     updateScrollBottom: PropTypes.func,
     cacheMediaWidth: PropTypes.func,
     cachedMediaWidth: PropTypes.number,
     onUnmount: PropTypes.func,
     unread: PropTypes.bool,
+    ...WithRouterPropTypes,
   };
 
+  handleMoveUp = () => {
+    const { notification, onMoveUp } = this.props;
+    onMoveUp(notification.get('id'));
+  };
+
+  handleMoveDown = () => {
+    const { notification, onMoveDown } = this.props;
+    onMoveDown(notification.get('id'));
+  };
+
+  handleOpen = () => {
+    const { notification } = this.props;
+
+    if (notification.get('status')) {
+      this.props.history.push(`/@${notification.getIn(['status', 'account', 'acct'])}/${notification.get('status')}`);
+    } else {
+      this.handleOpenProfile();
+    }
+  };
+
+  handleOpenProfile = () => {
+    const { notification } = this.props;
+    this.props.history.push(`/@${notification.getIn(['account', 'acct'])}`);
+  };
+
+  handleMention = e => {
+    e.preventDefault();
+
+    const { notification, onMention } = this.props;
+    onMention(notification.get('account'), this.props.history);
+  };
+
+  handleHotkeyFavourite = () => {
+    const { status } = this.props;
+    if (status) this.props.onFavourite(status);
+  };
+
+  handleHotkeyBoost = e => {
+    const { status } = this.props;
+    if (status) this.props.onReblog(status, e);
+  };
+
+  getHandlers () {
+    return {
+      reply: this.handleMention,
+      favourite: this.handleHotkeyFavourite,
+      boost: this.handleHotkeyBoost,
+      mention: this.handleMention,
+      open: this.handleOpen,
+      openProfile: this.handleOpenProfile,
+      moveUp: this.handleMoveUp,
+      moveDown: this.handleMoveDown,
+    };
+  }
+
+  renderFollow (notification, account, link) {
+    const { intl, unread } = this.props;
+
+    return (
+      <HotKeys handlers={this.getHandlers()}>
+        <div className={classNames('notification notification-follow focusable', { unread })} tabIndex={0} aria-label={notificationForScreenReader(intl, intl.formatMessage(messages.follow, { name: account.get('acct') }), notification.get('created_at'))}>
+          <div className='notification__message'>
+            <Icon id='user-plus' icon={PersonAddIcon} />
+
+            <span title={notification.get('created_at')}>
+              <FormattedMessage id='notification.follow' defaultMessage='{name} followed you' values={{ name: link }} />
+            </span>
+          </div>
+
+          <AccountContainer id={account.get('id')} hidden={this.props.hidden} />
+          <NotificationOverlayContainer notification={notification} />
+        </div>
+      </HotKeys>
+    );
+  }
+
   render () {
+    const { notification } = this.props;
+    const account          = notification.get('account');
+    const displayNameHtml  = { __html: account.get('display_name_html') };
+    const link             = (
+      <bdi>
+        <Permalink
+          className='notification__display-name'
+          href={`/@${account.get('acct')}`}
+          title={account.get('acct')}
+          to={`/@${account.get('acct')}`}
+          dangerouslySetInnerHTML={displayNameHtml}
+        />
+      </bdi>
+    );
+
     const {
       hidden,
-      notification,
       onMoveDown,
       onMoveUp,
       onMention,
@@ -42,18 +159,7 @@ export default class Notification extends ImmutablePureComponent {
 
     switch(notification.get('type')) {
     case 'follow':
-      return (
-        <NotificationFollow
-          hidden={hidden}
-          id={notification.get('id')}
-          account={notification.get('account')}
-          notification={notification}
-          onMoveDown={onMoveDown}
-          onMoveUp={onMoveUp}
-          onMention={onMention}
-          unread={this.props.unread}
-        />
-      );
+      return this.renderFollow(notification, account, link);
     case 'follow_request':
       return (
         <NotificationFollowRequestContainer
@@ -234,3 +340,5 @@ export default class Notification extends ImmutablePureComponent {
   }
 
 }
+
+export default withRouter(injectIntl(Notification));
