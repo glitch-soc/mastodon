@@ -20,7 +20,7 @@ jobs:
           curl --location 'https://api.darkvisitors.com/robots-txts' \
           --header 'Content-Type: application/json' \
           --header "Authorization: Bearer $API_KEY" \
-          --data '{ "agent_types": [ "AI Data Scraper", "AI Assistant", "AI Search Crawler" ], "disallow": "/" }' >> public/robots.txt
+          --data '{ "agent_types": [ "AI Data Scraper", "AI Assistant", "AI Search Crawler", "Undocumented AI Agent" ], "disallow": "/" }' >> public/robots.txt
       - name: Create pull request
         uses: peter-evans/create-pull-request@v6
         with:
