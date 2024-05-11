@@ -1,135 +1,154 @@
-# This file is designed for production server deployment, not local development work
-# For a containerized local dev environment, see: https://github.com/mastodon/mastodon/blob/main/README.md#docker
+version: '3.6'
+
+networks:
+  backend:
+    external: true
+    name: "backend"
+
+volumes:
+  mastodon_redis:
+    external: false
+    name: mastodon_redis
 
 services:
-  db:
-    restart: always
-    image: postgres:14-alpine
-    shm_size: 256mb
-    networks:
-      - internal_network
-    healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'postgres']
-    volumes:
-      - ./postgres14:/var/lib/postgresql/data
+  es:
+    restart: unless-stopped
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
     environment:
-      - 'POSTGRES_HOST_AUTH_METHOD=trust'
-
-  redis:
-    restart: always
-    image: redis:7-alpine
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m -Des.enforce.bootstrap.checks=true"
+      - "xpack.license.self_generated.type=basic"
+      - "xpack.security.enabled=false"
+      - "xpack.watcher.enabled=false"
+      - "xpack.graph.enabled=false"
+      - "xpack.ml.enabled=false"
+      - "bootstrap.memory_lock=true"
+      - "cluster.name=es-mastodon"
+      - "discovery.type=single-node"
+      - "thread_pool.write.queue_size=1000"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
     networks:
-      - internal_network
+       - backend
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+       test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
     volumes:
-      - ./redis:/data
-
-  # es:
-  #   restart: always
-  #   image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
-  #   environment:
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m -Des.enforce.bootstrap.checks=true"
-  #     - "xpack.license.self_generated.type=basic"
-  #     - "xpack.security.enabled=false"
-  #     - "xpack.watcher.enabled=false"
-  #     - "xpack.graph.enabled=false"
-  #     - "xpack.ml.enabled=false"
-  #     - "bootstrap.memory_lock=true"
-  #     - "cluster.name=es-mastodon"
-  #     - "discovery.type=single-node"
-  #     - "thread_pool.write.queue_size=1000"
-  #   networks:
-  #      - external_network
-  #      - internal_network
-  #   healthcheck:
-  #      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
-  #   volumes:
-  #      - ./elasticsearch:/usr/share/elasticsearch/data
-  #   ulimits:
-  #     memlock:
-  #       soft: -1
-  #       hard: -1
-  #     nofile:
-  #       soft: 65536
-  #       hard: 65536
-  #   ports:
-  #     - '127.0.0.1:9200:9200'
+       - /mnt/dftba-data/es:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    expose:
+      - '9200/tcp'
+    hostname: "es"
 
   web:
-    build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.9
-    restart: always
+    #build: .
+    #image: ghcr.io/mastodon/mastodon:v4.2.7
+    image: mglennon/mastodon:${MY_BRANCH}
+    restart: unless-stopped
     env_file: .env.production
     command: bundle exec puma -C config/puma.rb
     networks:
-      - external_network
-      - internal_network
+      - backend
     healthcheck:
       # prettier-ignore
       test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:3000/health || exit 1']
-    ports:
-      - '127.0.0.1:3000:3000'
-    depends_on:
-      - db
-      - redis
-      # - es
+    expose:
+      - '3000/tcp'
     volumes:
-      - ./public/system:/mastodon/public/system
+      - /mnt/dftba-data/mastodon/system:/mastodon/public/system
+    hostname: "mastoweb"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
 
   streaming:
-    build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.9
-    restart: always
+    #build: .
+      #dockerfile: ./streaming/Dockerfile
+      #context: .
+    #image: ghcr.io/mastodon/mastodon:v4.2.7
+    image: mglennon/mastodon-streaming:${MY_BRANCH}
+    restart: unless-stopped
     env_file: .env.production
     command: node ./streaming
     networks:
-      - external_network
-      - internal_network
+      - backend
     healthcheck:
       # prettier-ignore
       test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1']
-    ports:
-      - '127.0.0.1:4000:4000'
-    depends_on:
-      - db
-      - redis
+    expose:
+      - '4000/tcp'
+    hostname: "mastostreaming"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
 
   sidekiq:
-    build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.9
-    restart: always
+    #build: .
+    #image: ghcr.io/mastodon/mastodon:v4.2.7
+    image: mglennon/mastodon:${MY_BRANCH}
+    restart: unless-stopped
     env_file: .env.production
     command: bundle exec sidekiq
-    depends_on:
-      - db
-      - redis
     networks:
-      - external_network
-      - internal_network
+      - backend
     volumes:
-      - ./public/system:/mastodon/public/system
+      - /mnt/dftba-data/mastodon/system:/mastodon/public/system
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 6' || false"]
+    hostname: "sidekiq"
+  redis:
+    restart: unless-stopped
+    image: redis:7-alpine
+    hostname: "mastoredis"
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    volumes:
+      - mastodon_redis:/data
+    labels:
+      - "com.centurylinklabs.watchtower.enable=false"
+  
+  prom_statsd:
+    image: prom/statsd-exporter
+    container_name: mastodon_statsd
+    command: "--statsd.mapping-config=/tmp/statsd_mapping.conf"
+    expose:
+      - 9125/udp
+      - 9102/tcp
+    restart: unless-stopped
+    hostname: mastostats
+    networks:
+      - backend
+    volumes:
+      - ./statsd/statsd-mapping.yaml:/tmp/statsd_mapping.conf
 
-  ## Uncomment to enable federation with tor instances along with adding the following ENV variables
-  ## http_hidden_proxy=http://privoxy:8118
-  ## ALLOW_ACCESS_TO_HIDDEN_SERVICE=true
-  # tor:
-  #   image: sirboops/tor
-  #   networks:
-  #      - external_network
-  #      - internal_network
-  #
-  # privoxy:
-  #   image: sirboops/privoxy
-  #   volumes:
-  #     - ./priv-config:/opt/config
-  #   networks:
-  #     - external_network
-  #     - internal_network
+  sidekiq_exporter:
+    image: strech/sidekiq-prometheus-exporter
+    container_name: mastodon_sidekiq_exporter
+    expose:
+      - 9292/tcp
+    restart: unless-stopped
+    hostname: sidekiq-export
+    networks:
+      - backend
+    env_file: .env.production
 
-networks:
-  external_network:
-  internal_network:
-    internal: true
+  es_exporter:
+    image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+    container_name: mastodon_es_exporter
+    command:
+      - '--es.uri=http://es:9200'
+    restart: unless-stopped
+    expose:
+      - "9114/tcp"
+    networks:
+      - backend
+    hostname: es-export
+    env_file: .env.production

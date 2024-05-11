@@ -35,6 +35,10 @@ Click below to **learn more** in a video:
 
 [youtube_demo]: https://www.youtube.com/watch?v=IPSbNdBmWKE
 
+| :warning: This is a fork specific for the dftba.club instance. |
+|:---------------------------------------------------------------|
+| This won't work for anyone else right out of the box.          |
+
 ## Navigation
 
 - [Project homepage 🐘](https://joinmastodon.org)
@@ -87,6 +91,7 @@ Mastodon acts as an OAuth2 provider, so 3rd party apps can use the REST and Stre
 - **Redis** 4+
 - **Ruby** 3.1+
 - **Node.js** 18+
+- **Node.js** 18+
 
 The repository includes deployment configurations for **Docker and docker-compose** as well as specific platforms like **Heroku**, and **Scalingo**. For Helm charts, reference the [mastodon/chart repository](https://github.com/mastodon/chart). The [**standalone** installation guide](https://docs.joinmastodon.org/admin/install/) is available in the documentation.
 
@@ -106,14 +111,14 @@ A **Vagrant** configuration is included for development purposes. To use it, com
 
 To set up **macOS** for native development, complete the following steps:
 
-- Install [Homebrew] and run `brew install postgresql@14 redis imagemagick
-libidn nvm` to install the required project dependencies
-- Use a Ruby version manager to activate the ruby in `.ruby-version` and run
-  `nvm use` to activate the node version from `.nvmrc`
-- Run the `bin/setup` script, which will install the required ruby gems and node
-  packages and prepare the database for local development
-- Finally, run the `bin/dev` script which will launch services via `overmind`
-  (if installed) or `foreman`
+- Use a Ruby version manager to install the specified version from `.ruby-version`
+- Run `bundle` to install required gems
+- Run `brew install postgresql@14 redis imagemagick libidn` to install required dependencies
+- Navigate to Mastodon's root directory and run `brew install nvm` then `nvm use` to use the version from `.nvmrc`
+- Run `yarn` to install required packages
+- Run `corepack enable && corepack prepare`
+- Run `RAILS_ENV=development bundle exec rails db:setup`
+- Finally, run `bin/dev` which will launch the local services via `overmind` (if installed) or `foreman`
 
 ### Docker
 

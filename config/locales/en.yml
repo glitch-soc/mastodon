@@ -1208,17 +1208,17 @@ en:
   errors:
     '400': The request you submitted was invalid or malformed.
     '403': You don't have permission to view this page.
-    '404': The page you are looking for isn't here.
+    '404': The turtle you're looking for isn't here. Sorry.
     '406': This page is not available in the requested format.
-    '410': The page you were looking for doesn't exist here anymore.
+    '410': The turtle you were looking for doesn't exist here anymore.
     '422':
       content: Security verification failed. Are you blocking cookies?
       title: Security verification failed
     '429': Too many requests
     '500':
-      content: We're sorry, but something went wrong on our end.
+      content: Our turtles are having a problem generating a response to your request. Please try again later.
       title: This page is not correct
-    '503': The page could not be served due to a temporary server failure.
+    '503': Our turtles are having a problem generating a response to your request at the moment. Please try again later.
     noscript_html: To use the Mastodon web application, please enable JavaScript. Alternatively, try one of the <a href="%{apps_path}">native apps</a> for Mastodon for your platform.
   existing_username_validator:
     not_found: could not find a local user with that username

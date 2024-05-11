@@ -1,10 +1,12 @@
-This privacy policy describes how %{domain} ("%{domain}", "we", "us") collects,
-protects and uses the personally identifiable information you may provide
-through the %{domain} website or its API. The policy also describes the choices
-available to you regarding our use of your personal information and how you can
-access and update this information. This policy does not apply to the practices
-of companies that %{domain} does not own or control, or to individuals that
-%{domain} does not employ or manage.
+This privacy policy describes how dftba.club ("dftba.clubs", "we", "us")
+collects, protects and uses the personally identifiable information you may
+provide through the dftba.club website or its API. The policy also
+describes the choices available to you regarding our use of your personal
+information and how you can access and update this information. This policy
+does not apply to the practices of companies that dftba.club does not own
+or control, or to individuals that dftba.club does not employ or manage.
+
+This server is located within and is governed by the laws of the United States. 
 
 # What information do we collect?
 
@@ -110,17 +112,10 @@ Applications can never access your e-mail address or password.
 
 # Site usage by children
 
-If this server is in the EU or the EEA: Our site, products and services are all
-directed to people who are at least 16 years old. If you are under the age of
-16, per the requirements of the GDPR (General Data Protection Regulation) do not
-use this site.
-
-If this server is in the USA: Our site, products and services are all directed
-to people who are at least 13 years old. If you are under the age of 13, per the
+Our site, products and services are all directed to people who are at 
+least 13 years old. If you are under the age of 13, per the
 requirements of COPPA (Children's Online Privacy Protection Act) do not use this
 site.
-
-Law requirements can be different if this server is in another jurisdiction.
 
 ---
 
