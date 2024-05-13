@@ -26,7 +26,7 @@ Disallow: /interact/
 User-agent: Amazonbot
 Disallow: /
 
-# AI Data Scraper
+# Undocumented AI Agent
 # https://darkvisitors.com/agents/anthropic-ai
 
 User-agent: anthropic-ai
@@ -56,7 +56,19 @@ Disallow: /
 User-agent: ChatGPT-User
 Disallow: /
 
-# AI Assistant
+# Undocumented AI Agent
+# https://darkvisitors.com/agents/claude-web
+
+User-agent: Claude-Web
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/claudebot
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Undocumented AI Agent
 # https://darkvisitors.com/agents/cohere-ai
 
 User-agent: cohere-ai
