@@ -186,7 +186,7 @@ export function submitCompose(routerHistory, overridePrivacy = null) {
     }
 
     if (getState().getIn(['compose', 'advanced_options', 'do_not_federate'])) {
-      status = status + ' 👁️';
+      status = status + ' 🏘️';
     }
 
     dispatch(submitComposeRequest());
