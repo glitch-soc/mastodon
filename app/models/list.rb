@@ -25,6 +25,9 @@ class List < ApplicationRecord
   has_many :list_accounts, inverse_of: :list, dependent: :destroy
   has_many :accounts, through: :list_accounts
 
+  has_many :list_tags, inverse_of: :list, dependent: :destroy
+  has_many :tags, through: :list_tags
+
   validates :title, presence: true
 
   validates_each :account_id, on: :create do |record, _attr, value|

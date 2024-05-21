@@ -599,6 +599,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_10_192043) do
     t.index ["list_id", "account_id"], name: "index_list_accounts_on_list_id_and_account_id"
   end
 
+  create_table "list_tags", force: :cascade do |t|
+    t.bigint "list_id", null: false
+    t.bigint "tag_id", null: false
+    t.index ["list_id", "tag_id"], name: "index_list_tags_on_list_id_and_tag_id"
+    t.index ["list_id"], name: "index_list_tags_on_list_id"
+    t.index ["tag_id", "list_id"], name: "index_list_tags_on_tag_id_and_list_id", unique: true
+    t.index ["tag_id"], name: "index_list_tags_on_tag_id"
+  end
+
   create_table "lists", force: :cascade do |t|
     t.bigint "account_id", null: false
     t.string "title", default: "", null: false
@@ -1326,6 +1335,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_10_192043) do
   add_foreign_key "list_accounts", "follow_requests", on_delete: :cascade
   add_foreign_key "list_accounts", "follows", on_delete: :cascade
   add_foreign_key "list_accounts", "lists", on_delete: :cascade
+  add_foreign_key "list_tags", "lists", on_delete: :cascade
+  add_foreign_key "list_tags", "tags", on_delete: :cascade
   add_foreign_key "lists", "accounts", on_delete: :cascade
   add_foreign_key "login_activities", "users", on_delete: :cascade
   add_foreign_key "markers", "users", on_delete: :cascade

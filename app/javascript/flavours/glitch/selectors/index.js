@@ -116,3 +116,7 @@ export const getAccountHidden = createSelector([
 export const getStatusList = createSelector([
   (state, type) => state.getIn(['status_lists', type, 'items']),
 ], (items) => items.toList());
+
+export const getListEditorTagList = createSelector([
+  (state) => state.getIn(['listEditor', 'tags', 'items']),
+], (items) => items.toList());

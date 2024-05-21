@@ -13,6 +13,9 @@ import {
   LIST_ACCOUNTS_FETCH_REQUEST,
   LIST_ACCOUNTS_FETCH_SUCCESS,
   LIST_ACCOUNTS_FETCH_FAIL,
+  LIST_TAGS_FETCH_REQUEST,
+  LIST_TAGS_FETCH_SUCCESS,
+  LIST_TAGS_FETCH_FAIL,
   LIST_EDITOR_SUGGESTIONS_READY,
   LIST_EDITOR_SUGGESTIONS_CLEAR,
   LIST_EDITOR_SUGGESTIONS_CHANGE,
@@ -28,6 +31,12 @@ const initialState = ImmutableMap({
   isExclusive: false,
 
   accounts: ImmutableMap({
+    items: ImmutableList(),
+    loaded: false,
+    isLoading: false,
+  }),
+
+  tags: ImmutableMap({
     items: ImmutableList(),
     loaded: false,
     isLoading: false,
@@ -80,6 +89,16 @@ export default function listEditorReducer(state = initialState, action) {
       map.set('loaded', true);
       map.set('items', ImmutableList(action.accounts.map(item => item.id)));
     }));
+  case LIST_TAGS_FETCH_REQUEST:
+    return state.setIn(['tags', 'isLoading'], true);
+  case LIST_TAGS_FETCH_FAIL:
+    return state.setIn(['tags', 'isLoading'], false);
+  case LIST_TAGS_FETCH_SUCCESS:
+    return state.update('tags', tags => tags.withMutations(map => {
+      map.set('isLoading', false);
+      map.set('loaded', true);
+      map.set('items', ImmutableList(action.tags));
+    }));
   case LIST_EDITOR_SUGGESTIONS_CHANGE:
     return state.setIn(['suggestions', 'value'], action.value);
   case LIST_EDITOR_SUGGESTIONS_READY:
@@ -90,9 +109,12 @@ export default function listEditorReducer(state = initialState, action) {
       map.set('value', '');
     }));
   case LIST_EDITOR_ADD_SUCCESS:
-    return state.updateIn(['accounts', 'items'], list => list.unshift(action.accountId));
+    if (action.data && action.data.data !== undefined) {
+      return state.setIn([action.addType, 'items'], ImmutableList(action.data.data));
+    }
+    return state.updateIn([action.addType, 'items'], list => list.unshift(action.id));
   case LIST_EDITOR_REMOVE_SUCCESS:
-    return state.updateIn(['accounts', 'items'], list => list.filterNot(item => item === action.accountId));
+    return state.updateIn([action.removeType, 'items'], list => list.filterNot(item => item === action.id || item.id === action.id));
   default:
     return state;
   }

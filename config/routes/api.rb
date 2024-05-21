@@ -220,6 +220,7 @@ namespace :api, format: false do
 
     resources :lists, only: [:index, :create, :show, :update, :destroy] do
       resource :accounts, only: [:show, :create, :destroy], controller: 'lists/accounts'
+      resource :tags, only: [:show, :create, :destroy], controller: 'lists/tags'
     end
 
     namespace :featured_tags do

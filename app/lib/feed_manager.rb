@@ -443,13 +443,11 @@ class FeedManager
       should_filter   = !crutches[:following][status.in_reply_to_account_id]                                                     # and I'm not following the person it's a reply to
       should_filter &&= receiver_id != status.in_reply_to_account_id                                                             # and it's not a reply to me
       should_filter &&= status.account_id != status.in_reply_to_account_id                                                       # and it's not a self-reply
-
       return !!should_filter
     elsif status.reblog?                                                                                                         # Filter out a reblog
       should_filter   = crutches[:hiding_reblogs][status.account_id]                                                             # if the reblogger's reblogs are suppressed
       should_filter ||= crutches[:blocked_by][status.reblog.account_id]                                                          # or if the author of the reblogged status is blocking me
       should_filter ||= crutches[:domain_blocking][status.reblog.account.domain]                                                 # or the author's domain is blocked
-
       return !!should_filter
     end
 

@@ -2152,7 +2152,8 @@ body > [data-popper-placement] {
   }
 }
 
-.account__wrapper {
+.account__wrapper,
+.tag__wrapper {
   display: flex;
   gap: 10px;
   align-items: center;
@@ -2224,7 +2225,8 @@ a .account__avatar {
   }
 }
 
-.account__relationship {
+.account__relationship,
+.tag__relationship {
   white-space: nowrap;
   display: flex;
   align-items: center;
@@ -8258,9 +8260,51 @@ noscript {
     border-radius: 8px 8px 0 0;
   }
 
+  .tab__container {
+    display: flex;
+
+    .tab {
+      flex-grow: 1;
+      flex-basis: 0;
+      display: block;
+      padding: 5px;
+      background: $ui-base-color;
+      text-align: center;
+      border: 0;
+      color: $primary-text-color;
+    }
+
+    .tab.tab__active {
+      font-weight: bold;
+      background: lighten($ui-base-color, 13%);
+    }
+  }
+
+  .tab__inactive {
+    display: none;
+  }
+
   .drawer__pager {
     height: 50vh;
     border-radius: 4px;
+  }
+
+  .list_tag {
+    padding: 10px; // glitch: reduced padding
+    border-bottom: 1px solid lighten($ui-base-color, 8%);
+    gap: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 36px;
+
+    .list_tag__display-name {
+      flex-grow: 1;
+    }
+
+    .list_tag__relationship {
+      flex-grow: 0;
+    }
   }
 
   .drawer__inner {
