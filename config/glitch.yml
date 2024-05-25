@@ -1,0 +1,5 @@
+shared:
+  statuses:
+    max_media_attachments:
+      local: <%= ENV['GLITCH_MAX_LOCAL_MEDIA_ATTACHMENTS'] || 4 %>
+      remote: <%= ENV['GLITCH_MAX_REMOTE_MEDIA_ATTACHMENTS'] || 16 %>
