@@ -112,6 +112,10 @@ html {
   background: lighten($white, 4%);
 }
 
+.status.collapsed.has-background::before {
+  background-image: linear-gradient(to bottom, rgba($ui-base-color, .75), rgba($ui-base-color, .65) 24px, rgba($ui-base-color, .8));
+}
+
 // Change the background colors of status__content__spoiler-link
 .reply-indicator__content .status__content__spoiler-link,
 .status__content .status__content__spoiler-link {
