@@ -20,3 +20,9 @@
     }
   }
 }
+
+// Fix background color after upstream moved how the
+// normal button is placed in the DOM
+.status.collapsed .status__content__spoiler-link {
+  background: $action-button-color;
+}
