@@ -7,8 +7,6 @@ import { accountsReducer } from './accounts';
 import accounts_map from './accounts_map';
 import alerts from './alerts';
 import announcements from './announcements';
-import blocks from './blocks';
-import boosts from './boosts';
 import compose from './compose';
 import contexts from './contexts';
 import conversations from './conversations';
@@ -23,13 +21,14 @@ import listAdder from './list_adder';
 import listEditor from './list_editor';
 import lists from './lists';
 import local_settings from './local_settings';
-import markers from './markers';
+import { markersReducer } from './markers';
 import media_attachments from './media_attachments';
 import meta from './meta';
 import { modalReducer } from './modal';
-import mutes from './mutes';
+import { notificationPolicyReducer } from './notification_policy';
+import { notificationRequestsReducer } from './notification_requests';
 import notifications from './notifications';
-import picture_in_picture from './picture_in_picture';
+import { pictureInPictureReducer } from './picture_in_picture';
 import pinnedAccountsEditor from './pinned_accounts_editor';
 import polls from './polls';
 import push_notifications from './push_notifications';
@@ -63,9 +62,6 @@ const reducers = {
   settings,
   local_settings,
   push_notifications,
-  mutes,
-  blocks,
-  boosts,
   server,
   contexts,
   compose,
@@ -83,11 +79,13 @@ const reducers = {
   pinnedAccountsEditor,
   polls,
   trends,
-  markers,
-  picture_in_picture,
+  markers: markersReducer,
+  picture_in_picture: pictureInPictureReducer,
   history,
   tags,
   followed_tags,
+  notificationPolicy: notificationPolicyReducer,
+  notificationRequests: notificationRequestsReducer,
 };
 
 // We want the root state to be an ImmutableRecord, which is an object with a defined list of keys,

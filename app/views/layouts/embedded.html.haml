@@ -24,19 +24,15 @@
         };
     %script{ src: '/MathJax/es5/tex-chtml.js' }
 
-
+    = flavoured_stylesheet_pack_tag 'common', media: 'all', crossorigin: 'anonymous' # upstream uses `common` but that's implicitly defined
+    = theme_style_tags current_theme
+    = javascript_pack_tag 'common', integrity: true, crossorigin: 'anonymous'
+    = preload_locale_pack
     = render_initial_state
-    = javascript_pack_tag 'common', crossorigin: 'anonymous'
-    - if @theme
-      - if @theme[:supported_locales].include? I18n.locale.to_s
-        = preload_pack_asset "locales/#{@theme[:flavour]}/#{I18n.locale}-json.js"
-      - elsif @theme[:supported_locales].include? 'en'
-        = preload_pack_asset "locales/#{@theme[:flavour]}/en-json.js"
-    = render partial: 'layouts/theme', object: @core
-    = render partial: 'layouts/theme', object: @theme
+    = flavoured_javascript_pack_tag 'public', integrity: true, crossorigin: 'anonymous'
 
   %body.embed
     = yield
 
     .logo-resources{ 'tabindex' => '-1', 'inert' => true, 'aria-hidden' => true }
-      = render_symbol :icon
+      = inline_svg_tag 'logo-symbol-icon.svg'

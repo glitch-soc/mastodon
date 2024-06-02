@@ -17,7 +17,6 @@ class FakeIdentityWrapper extends Component<
       signedIn: PropTypes.bool.isRequired,
       accountId: PropTypes.string,
       disabledAccountId: PropTypes.string,
-      accessToken: PropTypes.string,
     }).isRequired,
   };
 
@@ -26,7 +25,6 @@ class FakeIdentityWrapper extends Component<
       identity: {
         signedIn: this.props.signedIn,
         accountId: '123',
-        accessToken: 'test-access-token',
       },
     };
   }
@@ -40,7 +38,7 @@ function render(
   ui: React.ReactElement,
   { locale = 'en', signedIn = true, ...renderOptions } = {},
 ) {
-  const Wrapper = (props: { children: React.ReactElement }) => {
+  const Wrapper = (props: { children: React.ReactNode }) => {
     return (
       <MemoryRouter>
         <IntlProvider locale={locale}>
