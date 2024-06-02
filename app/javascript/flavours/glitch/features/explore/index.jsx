@@ -8,12 +8,12 @@ import { NavLink, Switch, Route } from 'react-router-dom';
 
 import { connect } from 'react-redux';
 
-
+import ExploreIcon from '@/material-icons/400-24px/explore.svg?react';
 import SearchIcon from '@/material-icons/400-24px/search.svg?react';
-import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import Column from 'flavours/glitch/components/column';
 import ColumnHeader from 'flavours/glitch/components/column_header';
 import Search from 'flavours/glitch/features/compose/containers/search_container';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { trendsEnabled } from 'flavours/glitch/initial_state';
 
 import Links from './links';
@@ -33,12 +33,8 @@ const mapStateToProps = state => ({
 });
 
 class Explore extends PureComponent {
-
-  static contextTypes = {
-    identity: PropTypes.object,
-  };
-
   static propTypes = {
+    identity: identityContextPropShape,
     intl: PropTypes.object.isRequired,
     multiColumn: PropTypes.bool,
     isSearching: PropTypes.bool,
@@ -54,13 +50,13 @@ class Explore extends PureComponent {
 
   render() {
     const { intl, multiColumn, isSearching } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     return (
       <Column bindToDocument={!multiColumn} ref={this.setRef} label={intl.formatMessage(messages.title)}>
         <ColumnHeader
-          icon={isSearching ? 'search' : 'hashtag'}
-          iconComponent={isSearching ? SearchIcon : TagIcon}
+          icon={isSearching ? 'search' : 'explore'}
+          iconComponent={isSearching ? SearchIcon : ExploreIcon}
           title={intl.formatMessage(isSearching ? messages.searchResults : messages.title)}
           onClick={this.handleHeaderClick}
           multiColumn={multiColumn}
@@ -115,4 +111,4 @@ class Explore extends PureComponent {
 
 }
 
-export default connect(mapStateToProps)(injectIntl(Explore));
+export default withIdentity(connect(mapStateToProps)(injectIntl(Explore)));

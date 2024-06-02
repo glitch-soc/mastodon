@@ -1082,6 +1082,7 @@ code {
 
       &__type {
         color: $darker-text-color;
+        word-break: break-word;
       }
     }
 
@@ -1342,6 +1343,12 @@ pre code::before {
       strong {
         color: $primary-text-color;
         font-weight: 600;
+      }
+
+      .hint {
+        display: block;
+        font-size: 14px;
+        color: $darker-text-color;
       }
 
       .recommended {

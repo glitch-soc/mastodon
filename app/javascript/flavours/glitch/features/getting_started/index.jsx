@@ -11,6 +11,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
 import BookmarksIcon from '@/material-icons/400-24px/bookmarks-fill.svg?react';
+import ExploreIcon from '@/material-icons/400-24px/explore.svg?react';
 import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home-fill.svg?react';
 import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
@@ -22,17 +23,17 @@ import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react
 import PersonAddIcon from '@/material-icons/400-24px/person_add.svg?react';
 import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import SettingsIcon from '@/material-icons/400-24px/settings-fill.svg?react';
-import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import { fetchFollowRequests } from 'flavours/glitch/actions/accounts';
 import { fetchLists } from 'flavours/glitch/actions/lists';
 import { openModal } from 'flavours/glitch/actions/modal';
 import Column from 'flavours/glitch/features/ui/components/column';
 import LinkFooter from 'flavours/glitch/features/ui/components/link_footer';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { preferencesLink } from 'flavours/glitch/utils/backend_links';
 
 
 import { me, showTrends } from '../../initial_state';
-import NavigationBar from '../compose/components/navigation_bar';
+import { NavigationBar } from '../compose/components/navigation_bar';
 import ColumnLink from '../ui/components/column_link';
 import ColumnSubheading from '../ui/components/column_subheading';
 
@@ -99,14 +100,10 @@ const badgeDisplay = (number, limit) => {
 };
 
 class GettingStarted extends ImmutablePureComponent {
-
-  static contextTypes = {
-    identity: PropTypes.object,
-  };
-
   static propTypes = {
+    identity: identityContextPropShape,
     intl: PropTypes.object.isRequired,
-    myAccount: ImmutablePropTypes.map,
+    myAccount: ImmutablePropTypes.record,
     columns: ImmutablePropTypes.list,
     multiColumn: PropTypes.bool,
     fetchFollowRequests: PropTypes.func.isRequired,
@@ -123,7 +120,7 @@ class GettingStarted extends ImmutablePureComponent {
 
   componentDidMount () {
     const { fetchFollowRequests } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (!signedIn) {
       return;
@@ -134,7 +131,7 @@ class GettingStarted extends ImmutablePureComponent {
 
   render () {
     const { intl, myAccount, columns, multiColumn, unreadFollowRequests, unreadNotifications, lists, openSettings } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     const navItems = [];
     let listItems = [];
@@ -158,7 +155,7 @@ class GettingStarted extends ImmutablePureComponent {
     }
 
     if (showTrends) {
-      navItems.push(<ColumnLink key='explore' icon='hashtag' iconComponent={TagIcon} text={intl.formatMessage(messages.explore)} to='/explore' />);
+      navItems.push(<ColumnLink key='explore' icon='explore' iconComponent={ExploreIcon} text={intl.formatMessage(messages.explore)} to='/explore' />);
     }
 
     if (signedIn) {
@@ -219,4 +216,4 @@ class GettingStarted extends ImmutablePureComponent {
 
 }
 
-export default connect(makeMapStateToProps, mapDispatchToProps)(injectIntl(GettingStarted));
+export default withIdentity(connect(makeMapStateToProps, mapDispatchToProps)(injectIntl(GettingStarted)));

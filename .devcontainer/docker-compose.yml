@@ -2,6 +2,7 @@ version: '3'
 
 services:
   app:
+    working_dir: /workspaces/mastodon/
     build:
       context: .
       dockerfile: Dockerfile
@@ -70,7 +71,7 @@ services:
         hard: -1
 
   libretranslate:
-    image: libretranslate/libretranslate:v1.5.4
+    image: libretranslate/libretranslate:v1.5.7
     restart: unless-stopped
     volumes:
       - lt-data:/home/libretranslate/.local
