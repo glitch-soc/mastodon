@@ -1,6 +1,6 @@
 name: Update robots.txt
 
-on: 
+on:
   schedule:
     - cron: '0 0 * * 0'
   workflow_dispatch:
@@ -8,7 +8,7 @@ on:
 jobs:
   update-robots:
     runs-on: ubuntu-latest
-    steps: 
+    steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Update robot.txt
@@ -26,8 +26,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: robots.txt-update
-          title: "Update robots.txt"
-          commit-message: "Update robots.txt"
+          title: 'Update robots.txt'
+          commit-message: 'Update robots.txt'
           labels: 'robots.txt'
           add-paths: public/robots.txt
           reviewers: hobgoblina,mannazsci,sneakers-the-rat
