@@ -1,8 +1,117 @@
-# See http://www.robotstxt.org/robotstxt.html for documentation on how to use the robots.txt file
-
-User-agent: GPTBot
-Disallow: /
+#         .__---~~~(~~-_.
+#      _-'  ) -~~- ) _-" )_
+#     (  ( `-,_..`.,_--_ '_,)_
+#    (  -_)  ( -_-~  -_ `,    )
+#    (_ -_ _-~-__-~`, ,' )__-'))--___--~~~--__--~~--___--__..
+#    _ ~`_-'( (____;--==,,_))))--___--~~~--__--~~--__----~~~'`=__-~+_-_.
+#   (@) (@) `````      `-_(())_-~
+#
+#                            ,---.       .=-.-..-._          ,-,--.  
+#       _..---.   .-.,.---.  .--.'  \     /==/_ /==/ \  .-._ ,-.'-  _\ 
+#     .' .'.-. \ /==/  `   \ \==\-/\ \   |==|, ||==|, \/ /, /==/_ ,_.' 
+#    /==/- '=' /|==|-, .=., |/==/-|_\ |  |==|  ||==|-  \|  |\==\  \    
+#    |==|-,   ' |==|   '='  /\==\,   - \ |==|- ||==| ,  | -| \==\ -\   
+#    |==|  .=. \|==|- ,   .' /==/ -   ,| |==| ,||==| -   _ | _\==\ ,\  
+#    /==/- '=' ,|==|_  . ,'./==/-  /\ - \|==|- ||==|  /\ , |/==/\/ _ | 
+#   |==|   -   //==/  /\ ,  )==\ _.\=\.-'/==/. //==/, | |- |\==\ - , / 
+#   `-._`.___,' `--`-`--`--' `--`        `--`-` `--`./  `--` `--`---'
 
 User-agent: *
 Disallow: /media_proxy/
 Disallow: /interact/
+
+# AI Search Crawler
+# https://darkvisitors.com/agents/amazonbot
+
+User-agent: Amazonbot
+Disallow: /
+
+# Undocumented AI Agent
+# https://darkvisitors.com/agents/anthropic-ai
+
+User-agent: anthropic-ai
+Disallow: /
+
+# AI Search Crawler
+# https://darkvisitors.com/agents/applebot
+
+User-agent: Applebot
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/bytespider
+
+User-agent: Bytespider
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/ccbot
+
+User-agent: CCBot
+Disallow: /
+
+# AI Assistant
+# https://darkvisitors.com/agents/chatgpt-user
+
+User-agent: ChatGPT-User
+Disallow: /
+
+# Undocumented AI Agent
+# https://darkvisitors.com/agents/claude-web
+
+User-agent: Claude-Web
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/claudebot
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Undocumented AI Agent
+# https://darkvisitors.com/agents/cohere-ai
+
+User-agent: cohere-ai
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/diffbot
+
+User-agent: Diffbot
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/facebookbot
+
+User-agent: FacebookBot
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/google-extended
+
+User-agent: Google-Extended
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/gptbot
+
+User-agent: GPTBot
+Disallow: /
+
+# AI Data Scraper
+# https://darkvisitors.com/agents/omgili
+
+User-agent: omgili
+Disallow: /
+
+# AI Search Crawler
+# https://darkvisitors.com/agents/perplexitybot
+
+User-agent: PerplexityBot
+Disallow: /
+
+# AI Search Crawler
+# https://darkvisitors.com/agents/youbot
+
+User-agent: YouBot
+Disallow: /

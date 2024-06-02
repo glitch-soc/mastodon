@@ -1,11 +1,21 @@
 .status {
   &.collapsed {
     .status__content {
+      height: unset;
       max-height: 6em;
       padding-top: unset;
 
       &::after {
+        top: unset;
         height: 40%;
+      }
+    }
+  }
+
+  &--in-thread {
+    &.collapsed {
+      & > button {
+        margin-inline-start: 46px + 10px;
       }
     }
   }
