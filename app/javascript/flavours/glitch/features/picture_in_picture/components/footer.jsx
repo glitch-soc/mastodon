@@ -14,11 +14,11 @@ import RepeatIcon from '@/material-icons/400-24px/repeat.svg?react';
 import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import ReplyAllIcon from '@/material-icons/400-24px/reply_all.svg?react';
 import StarIcon from '@/material-icons/400-24px/star.svg?react';
-import { initBoostModal } from 'flavours/glitch/actions/boosts';
 import { replyCompose } from 'flavours/glitch/actions/compose';
 import { reblog, favourite, unreblog, unfavourite } from 'flavours/glitch/actions/interactions';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { IconButton } from 'flavours/glitch/components/icon_button';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { me, boostModal } from 'flavours/glitch/initial_state';
 import { makeGetStatus } from 'flavours/glitch/selectors';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
@@ -49,12 +49,8 @@ const makeMapStateToProps = () => {
 };
 
 class Footer extends ImmutablePureComponent {
-
-  static contextTypes = {
-    identity: PropTypes.object,
-  };
-
   static propTypes = {
+    identity: identityContextPropShape,
     statusId: PropTypes.string.isRequired,
     status: ImmutablePropTypes.map.isRequired,
     intl: PropTypes.object.isRequired,
@@ -78,7 +74,7 @@ class Footer extends ImmutablePureComponent {
 
   handleReplyClick = () => {
     const { dispatch, askReplyConfirmation, status, intl } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (signedIn) {
       if (askReplyConfirmation) {
@@ -107,7 +103,7 @@ class Footer extends ImmutablePureComponent {
 
   handleFavouriteClick = () => {
     const { dispatch, status } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (signedIn) {
       if (status.get('favourited')) {
@@ -129,20 +125,20 @@ class Footer extends ImmutablePureComponent {
 
   _performReblog = (status, privacy) => {
     const { dispatch } = this.props;
-    dispatch(reblog(status, privacy));
+    dispatch(reblog({ statusId: status.get('id'), visibility: privacy }));
   };
 
   handleReblogClick = e => {
     const { dispatch, status } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (signedIn) {
       if (status.get('reblogged')) {
-        dispatch(unreblog(status));
+        dispatch(unreblog({ statusId: status.get('id') }));
       } else if ((e && e.shiftKey) || !boostModal) {
         this._performReblog(status);
       } else {
-        dispatch(initBoostModal({ status, onReblog: this._performReblog }));
+        dispatch(openModal({ modalType: 'BOOST', modalProps: { status, onReblog: this._performReblog } }));
       }
     } else {
       dispatch(openModal({
@@ -237,4 +233,4 @@ class Footer extends ImmutablePureComponent {
 
 }
 
-export default  withRouter(connect(makeMapStateToProps)(injectIntl(Footer)));
+export default  connect(makeMapStateToProps)(withIdentity(withRouter(injectIntl(Footer))));

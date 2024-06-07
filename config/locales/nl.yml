@@ -285,6 +285,7 @@ nl:
         update_custom_emoji_html: Emoji %{target} is door %{name} bijgewerkt
         update_domain_block_html: "%{name} heeft de domeinblokkade bijgewerkt voor %{target}"
         update_ip_block_html: "%{name} wijzigde de IP-regel voor %{target}"
+        update_report_html: Rapportage %{target} is door %{name} bijgewerkt
         update_status_html: "%{name} heeft de berichten van %{target} bijgewerkt"
         update_user_role_html: "%{name} wijzigde de rol %{target}"
       deleted_account: verwijderd account
@@ -560,7 +561,7 @@ nl:
       no_ip_block_selected: Er zijn geen IP-regels veranderd, omdat er geen een was geselecteerd
       title: IP-regels
     relationships:
-      title: Relaties van %{acct}
+      title: Volgrelaties van %{acct}
     relays:
       add_new: Nieuwe relayserver toevoegen
       delete: Verwijderen
@@ -745,12 +746,13 @@ nl:
         preamble: Mastodons webomgeving aanpassen.
         title: Weergave
       branding:
-        preamble: De branding van jouw server laat zien hoe het met andere servers in het netwerk verschilt. Deze informatie wordt op verschillende plekken getoond, zoals in de webomgeving van Mastodon, in mobiele apps, in voorvertoningen op andere websites en berichten-apps, enz. Daarom is het belangrijk om de informatie helder, kort en beknopt te houden.
+        preamble: De branding van jouw server laat zien hoe het met andere servers in het netwerk verschilt. Deze informatie wordt op verschillende plekken getoond, zoals in de webomgeving van Mastodon, in mobiele apps, in linkvoorbeelden op andere websites en berichten-apps, enz. Daarom is het belangrijk om de informatie helder, kort en beknopt te houden.
         title: Branding
       captcha_enabled:
         desc_html: Dit is afhankelijk van externe scripts van hCaptcha, wat veiligheids- en privacyrisico's met zich mee kan brengen. Bovendien kan <strong>dit het registratieproces aanzienlijk minder toegankelijk maken voor sommige (vooral gehandicapte) mensen</strong>. Om deze redenen kun je het beste alternatieve maatregelen overwegen, zoals registratie op basis van goedkeuring of op uitnodiging.
         title: Nieuwe gebruikers dienen een CAPTCHA op te lossen om hun account te bevestigen
       content_retention:
+        danger_zone: Gevarenzone
         preamble: Toezicht houden op hoe berichten en media van gebruikers op Mastodon worden bewaard.
         title: Bewaartermijn berichten
       default_noindex:
@@ -949,7 +951,7 @@ nl:
       delete: Verwijderen
       edit_preset: Preset voor waarschuwing bewerken
       empty: Je hebt nog geen presets voor waarschuwingen toegevoegd.
-      title: Presets voor waarschuwingen beheren
+      title: Presets voor waarschuwingen
     webhooks:
       add_new: Eindpunt toevoegen
       delete: Verwijderen
@@ -1572,7 +1574,7 @@ nl:
     moved: Verhuisd
     mutual: Wederzijds
     primary: Primair
-    relationship: Relatie
+    relationship: Volgrelatie
     remove_selected_domains: Alle volgers van de geselecteerde domeinen verwijderen
     remove_selected_followers: Geselecteerde volgers verwijderen
     remove_selected_follows: Geselecteerde gebruikers ontvolgen
@@ -1659,10 +1661,22 @@ nl:
     preferences: Voorkeuren
     profile: Openbaar profiel
     relationships: Volgers en gevolgde accounts
+    severed_relationships: Verbroken volgrelaties
     statuses_cleanup: Automatisch berichten verwijderen
     strikes: Vastgestelde overtredingen
     two_factor_authentication: Tweestapsverificatie
     webauthn_authentication: Beveiligingssleutels
+  severed_relationships:
+    download: Downloaden (%{count})
+    event_type:
+      account_suspension: Accountschorsing (%{target_name})
+      domain_block: Serverschorsing (%{target_name})
+      user_domain_block: Je hebt %{target_name} geblokkeerd
+    lost_followers: Verloren volgers
+    lost_follows: Verloren gevolgde accounts
+    preamble: Je kan gevolgde accounts en volgers verliezen wanneer je een domein blokkeert of wanneer de moderators van jouw server beslissen om een externe server op te schorten. Wanneer dat gebeurt, kun je lijsten van verbroken volgrelaties downloaden, deze inspecteren en mogelijk importeren op een andere server.
+    purged: Informatie over deze server is verwijderd door de beheerders van jouw server.
+    type: Gebeurtenis
   statuses:
     attached:
       audio:
@@ -1756,6 +1770,7 @@ nl:
     contrast: Mastodon (hoog contrast)
     default: Mastodon (donker)
     mastodon-light: Mastodon (licht)
+    system: Automatisch (systeemthema gebruiken)
   time:
     formats:
       default: "%d %B %Y om %H:%M"

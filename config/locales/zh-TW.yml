@@ -282,6 +282,7 @@ zh-TW:
         update_custom_emoji_html: "%{name} 已更新自訂 emoji 表情符號 %{target}"
         update_domain_block_html: "%{name} 已更新 %{target} 之網域封鎖"
         update_ip_block_html: "%{name} 已變更 IP %{target} 之規則"
+        update_report_html: "%{name} 已更新 %{target} 的檢舉"
         update_status_html: "%{name} 已更新 %{target} 的嘟文"
         update_user_role_html: "%{name} 已變更 %{target} 角色"
       deleted_account: 已刪除帳號
@@ -739,6 +740,7 @@ zh-TW:
           此外，<strong>這將大幅降低註冊流程對某些族群之易用性，特別是無障礙需求人士</strong>。基於此因，請考慮其他替代性方案，例如審核制或是邀請制之註冊流程。
         title: 要求新使用者完成 CAPTCHA 挑戰以確認帳號
       content_retention:
+        danger_zone: 危險區域！
         preamble: 控制使用者產生內容如何儲存於 Mastodon 上。
         title: 內容保留期間
       default_noindex:
@@ -934,7 +936,7 @@ zh-TW:
       delete: 刪除
       edit_preset: 編輯預設警告
       empty: 您尚未定義任何預設警告。
-      title: 管理預設警告
+      title: 預設警告內容
     webhooks:
       add_new: 新增端點
       delete: 刪除
@@ -1331,7 +1333,7 @@ zh-TW:
       muting: 正在匯入已靜音帳號
     type: 匯入類型
     type_groups:
-      constructive: 跟隨者與書籤
+      constructive: 跟隨中與書籤
       destructive: 封鎖與靜音
     types:
       blocking: 您封鎖的使用者列表
@@ -1635,10 +1637,22 @@ zh-TW:
     preferences: 偏好設定
     profile: 個人檔案
     relationships: 跟隨中與跟隨者
+    severed_relationships: 已斷絕服務關係
     statuses_cleanup: 自動嘟文刪除
     strikes: 管理警告
     two_factor_authentication: 兩階段驗證
     webauthn_authentication: 安全金鑰
+  severed_relationships:
+    download: 下載 (%{count} 份)
+    event_type:
+      account_suspension: 停權帳號 (%{target_name})
+      domain_block: 停權伺服器 (%{target_name})
+      user_domain_block: 您已封鎖 %{target_name}
+    lost_followers: 失去之跟隨者
+    lost_follows: 失去之跟隨中
+    preamble: 當您封鎖網域或您的管理員決定停權遠端伺服器時，您可能失去跟隨中或跟隨者。當此發生時，您能下載斷絕服務關係之列表並於其他伺服器中檢視或匯入資料。
+    purged: 關於此伺服器已被您的伺服器管理員清除之資訊
+    type: 事件
   statuses:
     attached:
       audio:
@@ -1726,6 +1740,7 @@ zh-TW:
     contrast: Mastodon（高對比）
     default: Mastodon（深色）
     mastodon-light: Mastodon（亮色）
+    system: 自動（使用系統佈景主題）
   time:
     formats:
       default: "%Y 年 %b 月 %d 日 %H:%M"

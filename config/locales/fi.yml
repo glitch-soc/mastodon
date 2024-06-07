@@ -285,6 +285,7 @@ fi:
         update_custom_emoji_html: "%{name} päivitti emojin %{target}"
         update_domain_block_html: "%{name} päivitti verkkotunnuksen %{target} eston"
         update_ip_block_html: "%{name} muutti sääntöä IP-osoitteelle %{target}"
+        update_report_html: "%{name} päivitti raportin %{target}"
         update_status_html: "%{name} päivitti käyttäjän %{target} julkaisun"
         update_user_role_html: "%{name} muutti roolia %{target}"
       deleted_account: poisti tilin
@@ -751,6 +752,7 @@ fi:
         desc_html: Tämä perustuu ulkoisiin skripteihin hCaptchasta, mikä voi olla turvallisuus- ja yksityisyysongelma. Lisäksi <strong>tämä voi tehdä rekisteröinnin ihmisille huomattavasti (erityisesti vammaisten) helpommaksi</strong>. Harkitse vaihtoehtoisia toimenpiteitä, kuten hyväksymisperusteista tai kutsupohjaista rekisteröintiä.
         title: Vaadi uusia käyttäjiä vahvistaamaan tilinsä ratkaisemalla CAPTCHA-vahvistus
       content_retention:
+        danger_zone: Vaaravyöhyke
         preamble: Määritä, miten käyttäjän luoma sisältö tallennetaan Mastodoniin.
         title: Sisällön säilyttäminen
       default_noindex:
@@ -770,7 +772,7 @@ fi:
         disabled: Ei kenellekkään
         users: Kirjautuneille paikallisille käyttäjille
       registrations:
-        moderation_recommandation: Varmista, että sinulla on riittävä ja toimintavalmis joukko moderaattoreita ennen kuin avaat rekisteröitymiset kaikille!
+        moderation_recommandation: Varmista, että sinulla on riittävä ja toimintavalmis joukko moderaattoreita, ennen kuin vapautat rekisteröitymismenettelyn kaikille!
         preamble: Määritä, kuka voi luoda tilin palvelimellesi.
         title: Rekisteröityminen
       registrations_mode:
@@ -949,7 +951,7 @@ fi:
       delete: Poista
       edit_preset: Muokkaa varoituksen esiasetusta
       empty: Et ole vielä määrittänyt yhtäkään varoitusten esiasetusta.
-      title: Hallitse varoitusten esiasetuksia
+      title: Varoituksen esiasetukset
     webhooks:
       add_new: Lisää päätepiste
       delete: Poista
@@ -972,7 +974,7 @@ fi:
       webhook: Webhook
   admin_mailer:
     auto_close_registrations:
-      body: Viimeaikaisen moderaattoritoiminnan puutteen vuoksi palvelimen %{instance} rekisteröitymiset on vaihdettu automaattisesti manuaaliseen tarkasteluun, jotta palvelinta %{instance} ei käytetä mahdollisten huonojen toimijoiden alustana. Voit vaihtaa takaisin avoimiin rekisteröitymisiin milloin tahansa.
+      body: Palvelimen %{instance} moderaattorit eivät ole olleet viime aikoina aktiivisia. Tästä syystä rekisteröitymismenettely on automaattisesti vaihdettu erillishyväksyntöjä edellyttäväksi. Näin vähennetään riskiä palvelimen %{instance} käyttöön haitallisten toimijoiden alustana. Voit koska tahansa palauttaa käyttöön vapaat rekisteröitymiset.
       subject: Rekisteröitymiset palvelimelle %{instance} on automaattisesti vaihdettu vaatimaan hyväksyntää
     new_appeal:
       actions:
@@ -1659,10 +1661,22 @@ fi:
     preferences: Ominaisuudet
     profile: Julkinen profiili
     relationships: Seuratut ja seuraajat
+    severed_relationships: Katkenneet suhteet
     statuses_cleanup: Autom. julkaisujen poisto
     strikes: Valvontavaroitukset
     two_factor_authentication: Kaksivaiheinen todennus
     webauthn_authentication: Suojausavaimet
+  severed_relationships:
+    download: Lataa (%{count})
+    event_type:
+      account_suspension: Tilin jäädytys (%{target_name})
+      domain_block: Palvelimen jäädytys (%{target_name})
+      user_domain_block: Estit käyttäjän %{target_name}
+    lost_followers: Menetetyt seuraajat
+    lost_follows: Menetetyt seuratut
+    preamble: Voit menettää seurattusi ja seuraajasi, kun estät verkkotunnuksen tai kun valvojasi päättävät jäädyttää etäpalvelimen. Kun näin tapahtuu, voit ladata luetteloita katkenneista suhteista, jotta voit tarkastella niitä ja mahdollisesti viedä ne toiselle palvelimelle.
+    purged: Palvelimesi ylläpitäjät ovat tyhjentäneet tämän palvelimen tiedot.
+    type: Tapahtuma
   statuses:
     attached:
       audio:
@@ -1753,9 +1767,10 @@ fi:
   tags:
     does_not_match_previous_name: ei vastaa edellistä nimeä
   themes:
-    contrast: Mastodon (Korkea kontrasti)
-    default: Mastodon (Tumma)
-    mastodon-light: Mastodon (Vaalea)
+    contrast: Mastodon (suuri kontrasti)
+    default: Mastodon (tumma)
+    mastodon-light: Mastodon (vaalea)
+    system: Automaattinen (käytä järjestelmän teemaa)
   time:
     formats:
       default: "%d.%m.%Y klo %H.%M"
@@ -1869,8 +1884,8 @@ fi:
       follows_title: Ehdotuksia seurattavaksi
       follows_view_more: Näytä lisää seurattavia henkilöitä
       hashtags_recent_count:
-        one: "%{people} henkilö viimeisenä 2 päivänä"
-        other: "%{people} henkilöä viimeisenä 2 päivänä"
+        one: "%{people} henkilö viimeisen 2 päivän aikana"
+        other: "%{people} henkilöä viimeisen 2 päivän aikana"
       hashtags_subtitle: Tutki, mikä on ollut suosittua viimeisenä 2 päivänä
       hashtags_title: Suositut aihetunnisteet
       hashtags_view_more: Näytä lisää suosittuja aihetunnisteita

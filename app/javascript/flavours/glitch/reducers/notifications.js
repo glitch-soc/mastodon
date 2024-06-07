@@ -9,7 +9,7 @@ import {
   rejectFollowRequestSuccess,
 } from '../actions/accounts';
 import {
-  MARKERS_FETCH_SUCCESS,
+  fetchMarkers,
 } from '../actions/markers';
 import {
   NOTIFICATIONS_MOUNT,
@@ -61,6 +61,8 @@ export const notificationToMap = (notification, markForDelete = false) => Immuta
   markedForDelete: markForDelete,
   status: notification.status ? notification.status.id : null,
   report: notification.report ? fromJS(notification.report) : null,
+  event: notification.event ? fromJS(notification.event) : null,
+  moderation_warning: notification.moderation_warning ? fromJS(notification.moderation_warning) : null,
 });
 
 const normalizeNotification = (state, notification, usePendingItems) => {
@@ -296,8 +298,8 @@ export default function notifications(state = initialState, action) {
   let st;
 
   switch(action.type) {
-  case MARKERS_FETCH_SUCCESS:
-    return action.markers.notifications ? recountUnread(state, action.markers.notifications.last_read_id) : state;
+  case fetchMarkers.fulfilled.type:
+    return action.payload.markers.notifications ? recountUnread(state, action.payload.markers.notifications.last_read_id) : state;
   case NOTIFICATIONS_MOUNT:
     return updateMounted(state);
   case NOTIFICATIONS_UNMOUNT:

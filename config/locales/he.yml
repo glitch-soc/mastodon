@@ -291,6 +291,7 @@ he:
         update_custom_emoji_html: "%{name} עדכן/ה אמוג'י %{target}"
         update_domain_block_html: "%{name} עדכן/ה חסימת דומיין עבור %{target}"
         update_ip_block_html: "%{name} שינה כלל עבור IP %{target}"
+        update_report_html: '%{name} עדכן/ה דו"ח %{target}'
         update_status_html: "%{name} עדכן/ה הודעה של %{target}"
         update_user_role_html: "%{name} שינה את התפקיד של %{target}"
       deleted_account: חשבון מחוק
@@ -779,6 +780,7 @@ he:
         desc_html: אפשרות זו ניסמכת על קטעי קוד חיצוניים של hCaptcha שעלולים להיות סיכון אבטחה ופרטיות. בנוסף, <strong>זה עשוי להפוך את תהליך ההרשמה לבלתי נגיש לא.נשים, במיוחד בעלות ובעלי מוגבלויות</strong>. מסיבות אלו, כדאי לשקול חלופות כמו אשרור מנהלים ידני או הרשמה רק על בסיס הזמנה.
         title: לדרוש פתרון CAPTCHA כדי לאשרר למשתמשים את חשבונם
       content_retention:
+        danger_zone: אזור מסוכן
         preamble: שליטה על דרך אחסון תוכן המשתמשים במסטודון.
         title: תקופת השמירה של תכנים
       default_noindex:
@@ -983,7 +985,7 @@ he:
       delete: למחוק
       edit_preset: ערוך/י טקסט מוכן מראש לאזהרה
       empty: לא הגדרת עדיין שום טקסט מוכן מראש לאזהרה.
-      title: ניהול טקסטים מוכנים מראש לאזהרות
+      title: תצורת אזהרות
     webhooks:
       add_new: הוספת נקודת קצה
       delete: מחיקה
@@ -1707,13 +1709,26 @@ he:
     import: יבוא
     import_and_export: יבוא ויצוא
     migrate: הגירת חשבון
+    notifications: התראות בדואל
     preferences: העדפות
     profile: פרופיל
     relationships: נעקבים ועוקבים
+    severed_relationships: קשרים שנותקו
     statuses_cleanup: מחיקת הודעות אוטומטית
     strikes: עבירות מנהלתיות
     two_factor_authentication: אימות דו-שלבי
     webauthn_authentication: מפתחות אבטחה
+  severed_relationships:
+    download: הורדה (%{count})
+    event_type:
+      account_suspension: השעיית חשבון (%{target_name})
+      domain_block: השעיית שרת (%{target_name})
+      user_domain_block: חסמת את %{target_name}
+    lost_followers: אובדן עוקבים
+    lost_follows: אובדן נעקבים
+    preamble: הנכם עשויים לאבד עוקבים ונעקבים כשתחסמו שרת או כשמנהליכם יחליטו להשעות שרת אחר. במקרה כזה, תוכלו להוריד רשימה של קשרי המעקב שנותקו, כדי לעבור עליהם ואם תרצו לייבא אותם לשרת אחר.
+    purged: מידע על שרת מרוחק זה נמחק על ידי מנהלי השרת שלך.
+    type: אירוע
   statuses:
     attached:
       audio:
@@ -1819,6 +1834,7 @@ he:
     contrast: מסטודון (ניגודיות גבוהה)
     default: מסטודון (כהה)
     mastodon-light: מסטודון (בהיר)
+    system: אוטומטי (לפי המערכת)
   time:
     formats:
       default: "%d %b %Y, %H:%M"

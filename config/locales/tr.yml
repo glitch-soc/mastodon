@@ -285,6 +285,7 @@ tr:
         update_custom_emoji_html: "%{name}, %{target} emojisini güncelledi"
         update_domain_block_html: "%{name}, %{target} alan adının engelini güncelledi"
         update_ip_block_html: "%{name}, %{target} IP adresi için kuralı güncelledi"
+        update_report_html: "%{name}, %{target} raporunu güncelledi"
         update_status_html: "%{name}, %{target} kullanıcısının gönderisini güncelledi"
         update_user_role_html: "%{name}, %{target} rolünü değiştirdi"
       deleted_account: hesap silindi
@@ -751,6 +752,7 @@ tr:
         desc_html: Bu, güvenlik ve gizlilikle ilgili bir endişe kaynağı olabilecek hCaptcha'nın harici komut dosyalarına dayanır. Ayrıca <strong>bu, kayıt sürecini bazı (özellikle engelli) kişiler için önemli ölçüde daha az erişilebilir hale getirebilir</strong>. Bu nedenlerle, lütfen onaya dayalı veya davete dayalı kayıt gibi alternatif önlemleri göz önünde bulundurun.
         title: Yeni kullanıcıların hesaplarını doğrulamaları için bir CAPTCHA çözmelerini gerektir
       content_retention:
+        danger_zone: Tehlikeli bölge
         preamble: Kullanıcıların ürettiği içeriğin Mastodon'da nasıl saklanacağını denetleyin.
         title: İçerik saklama
       default_noindex:
@@ -949,7 +951,7 @@ tr:
       delete: Sil
       edit_preset: Uyarı ön-ayarını düzenle
       empty: Henüz önceden ayarlanmış bir uyarı tanımlanmadı.
-      title: Uyarı ön-ayarlarını yönet
+      title: Uyarı Önayarları
     webhooks:
       add_new: Uç nokta ekle
       delete: Sil
@@ -1659,10 +1661,22 @@ tr:
     preferences: Tercihler
     profile: Profil
     relationships: Takip edilenler ve takipçiler
+    severed_relationships: Kopmuş ilişkiler
     statuses_cleanup: Otomatik gönderi silme
     strikes: Moderasyon eylemleri
     two_factor_authentication: İki adımlı doğrulama
     webauthn_authentication: Güvenlik anahtarları
+  severed_relationships:
+    download: İndir (%{count})
+    event_type:
+      account_suspension: Hesap askıya alma (%{target_name})
+      domain_block: Sunucu askıya alma (%{target_name})
+      user_domain_block: 'Engellediniz: %{target_name}'
+    lost_followers: Kaybedilen takipçiler
+    lost_follows: Kaybedilen takipler
+    preamble: Bir alan adını engellediğinizde veya denetleyicileriniz uzak bir sunucuyu askıya almaya karar verdiğinde takipçilerinizi ve takiplerinizi kaybedebilirsiniz. Bu olduğunda, kopan ilişkilerin bir listesini, incelemek ve başka bir sunucuya aktarmak için indirebileceksiniz.
+    purged: Bu sunucu hakkındaki bilgiler, sunucunun yöneticileri tarafından temizlenmiş.
+    type: Olay
   statuses:
     attached:
       audio:
@@ -1756,6 +1770,7 @@ tr:
     contrast: Mastodon (Yüksek karşıtlık)
     default: Mastodon (Karanlık)
     mastodon-light: Mastodon (Açık)
+    system: Otomatik (sistem temasını kullan)
   time:
     formats:
       default: "%d %b %Y %H:%M"

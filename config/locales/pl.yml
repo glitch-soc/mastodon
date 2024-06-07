@@ -291,6 +291,7 @@ pl:
         update_custom_emoji_html: Zaktualizowane emoji %{target} przez %{name}
         update_domain_block_html: Zaktualizowano blokadę domeny dla %{target} przez %{name}
         update_ip_block_html: "%{name} stworzył(a) regułę dla IP %{target}"
+        update_report_html: "%{target} zaktualizowany przez %{name}"
         update_status_html: "%{name} zaktualizował(a) wpis użytkownika %{target}"
         update_user_role_html: "%{name} zmienił rolę %{target}"
       deleted_account: usunięte konto
@@ -779,6 +780,7 @@ pl:
         desc_html: Wymaga użycia zewnętrznych skryptów hCaptcha, co może negatywnie wpływać na bezpieczeństwo i prywatność. <strong>Może również przyczynić się do znaczącego utrudnienia procesu rejestracji niektórym, np. niepełnosprawnym, osobom.</strong> Dlatego sugeruje się używanie zaproszeń bądź ręcznie potwierdzanie kont.
         title: W celu potwierdzenia ich kont wymagaj rozwiązania zadania CAPTCHA przez nowych użytkowników
       content_retention:
+        danger_zone: Strefa niebezpieczeństwa
         preamble: Kontroluj, jak treści generowane przez użytkownika są przechowywane w Mastodon.
         title: Retencja treści
       default_noindex:
@@ -983,7 +985,7 @@ pl:
       delete: Usuń
       edit_preset: Edytuj szablon ostrzeżenia
       empty: Nie zdefiniowano jeszcze żadnych szablonów ostrzegawczych.
-      title: Zarządzaj szablonami ostrzeżeń
+      title: Zapisane ostrzeżenia
     webhooks:
       add_new: Dodaj punkt końcowy
       delete: Usuń
@@ -1711,10 +1713,22 @@ pl:
     preferences: Preferencje
     profile: Profil
     relationships: Obserwowani i obserwujący
+    severed_relationships: Zerwane związki
     statuses_cleanup: Automatyczne usuwanie wpisów
     strikes: Ostrzeżenia moderacyjne
     two_factor_authentication: Uwierzytelnianie dwuetapowe
     webauthn_authentication: Klucze bezpieczeństwa
+  severed_relationships:
+    download: Pobierz (%{count})
+    event_type:
+      account_suspension: Zawieszenie konta (%{target_name})
+      domain_block: Zawieszenie serwera (%{target_name})
+      user_domain_block: Zablokowano %{target_name}
+    lost_followers: Utraceni obserwujący
+    lost_follows: Utracone obserwowania
+    preamble: Możesz stracić obserwowania i obserwujących kiedy zablokujesz domenę albo kiedy twoi moderatorzy postanowią zawiesić obcy serwer. W tym wypadku będziesz móc pobrać listę zerwanych związków do przejrzenia i potencjalnego importu na innym serwerze.
+    purged: Informacje o tym serwerze zostały wyczyszczone przez administratora twojego serwera.
+    type: Zdarzenie
   statuses:
     attached:
       audio:
@@ -1820,6 +1834,7 @@ pl:
     contrast: Mastodon (Wysoki kontrast)
     default: Mastodon (Ciemny)
     mastodon-light: Mastodon (Jasny)
+    system: Automatyczny (odpowiadający motywowi systemu)
   time:
     formats:
       default: "%d. %b %Y, %H:%M"

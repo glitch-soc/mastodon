@@ -285,6 +285,7 @@ sq:
         update_custom_emoji_html: "%{name} përditësoi emoxhin %{target}"
         update_domain_block_html: "%{name} përditësoi bllokim përkatësish për %{target}"
         update_ip_block_html: "%{name} ndryshoi rregull për IP-në %{target}"
+        update_report_html: "%{name} përditësoi raportimin %{target}"
         update_status_html: "%{name} përditësoi gjendjen me %{target}"
         update_user_role_html: "%{name} ndryshoi rolin për %{target}"
       deleted_account: fshiu llogarinë
@@ -748,6 +749,7 @@ sq:
         desc_html: Kjo bazohet në programthe të jashtëm prej hCaptcha, çka mund të përbëjë një shqetësim për sigurinë dhe privatësinë. Veç kësaj, <strong>kjo mund ta bëjë procesin e regjistrimit në shkallë të madhe më pak të përdorshëm për disa persona (veçanërisht ata me paaftësi)</strong>. Për këto arsye, ju lutemi, shihni mundësinë e masave alternative, fjala vjen, bazuar në miratim, ose regjistrim vetëm me ftesa.
         title: Kërko prej përdoruesve të rinj të zgjidhin një CAPTCHA, si ripohim të llogarisë të tyre
       content_retention:
+        danger_zone: Zonë rreziku
         preamble: Kontrolloni se si depozitohen në Mastodon lënda e prodhuar nga përdoruesit.
         title: Mbajtje lënde
       default_noindex:
@@ -844,10 +846,10 @@ sq:
       elasticsearch_index_mismatch:
         message_html: Përshoqërimet e treguesit të Elasticsearch-it janë të vjetruara. Ju lutemi, xhironi <code>tootctl search deploy --only=%{value}</code>
       elasticsearch_preset:
-        action: Shihni documentimin
+        action: Shihni dokumentimin
         message_html: Grupi i instancave tuaja Elasticsearch ka më shumë se një nyjë, por Mastodon-i s’është formësuar t’i përdorë ato.
       elasticsearch_preset_single_node:
-        action: Shihni documentimin
+        action: Shihni dokumentimin
         message_html: Grupi i instancave tuaja Elasticsearch ka vetëm një nyjë, <code>ES_PRESET</code> i duhet dhënë vlera <code>single_node_cluster</code>.
       elasticsearch_reset_chewy:
         message_html: Treguesi juaj i sistemit Elasticsearch është i vjetruar, për shkak të një ndryshimi rregullimesh. Për ta përditësuar, ju lutemi, xhironi <code>tootctl search deploy --reset-chewy</code>.
@@ -945,7 +947,7 @@ sq:
       delete: Fshije
       edit_preset: Përpunoni sinjalizim të paracaktuar
       empty: S’keni përcaktuar ende sinjalizime të gatshme.
-      title: Administroni sinjalizime të paracaktuara
+      title: Paracaktime sinjalizimesh
     webhooks:
       add_new: Shtoni pikëmbarim
       delete: Fshije
@@ -1655,10 +1657,22 @@ sq:
     preferences: Parapëlqime
     profile: Profil
     relationships: Ndjekje dhe ndjekës
+    severed_relationships: Marrëdhënie të ndërprera
     statuses_cleanup: Fshirje e automatizuar postimesh
     strikes: Paralajmërime nga moderimi
     two_factor_authentication: Mirëfilltësim Dyfaktorësh
     webauthn_authentication: Kyçe sigurie
+  severed_relationships:
+    download: Shkarkim (%{count})
+    event_type:
+      account_suspension: Pezullim llogarie (%{target_name})
+      domain_block: Pezullim shërbyesi (%{target_name})
+      user_domain_block: Bllokuat %{target_name}
+    lost_followers: Ndjekës të humbur
+    lost_follows: Ndjekje të humbura
+    preamble: Mund të humbni ndjekje dhe ndjekës, kur bllokoni një përkatësi, ose kur moderatorët tuaj vendosin të pezullojnë një shërbyes të largët. Kur kjo ndodh, do të jeni në gjendje të shkarkoni lista marrëdhëniesh të dëmtuara, për t’i shqyrtuar dhe mundet për t’i importuar në një shërbyes tjetër.
+    purged: Hollësitë rreth këtij shërbyesi janë spastuar nga përgjegjësit e shërbyesit tuaj.
+    type: Akt
   statuses:
     attached:
       audio:
@@ -1752,6 +1766,7 @@ sq:
     contrast: Mastodon (Me shumë kontrast)
     default: Mastodon (I errët)
     mastodon-light: Mastodon (I çelët)
+    system: E automatizuar (përdor temë sistemi)
   time:
     formats:
       default: "%d %b, %Y, %H:%M"
