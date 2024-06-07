@@ -85,10 +85,10 @@ Mastodon acts as an OAuth2 provider, so 3rd party apps can use the REST and Stre
 
 - **PostgreSQL** 12+
 - **Redis** 4+
-- **Ruby** 3.0+
-- **Node.js** 16+
+- **Ruby** 3.1+
+- **Node.js** 18+
 
-The repository includes deployment configurations for **Docker and docker-compose** as well as specific platforms like **Heroku**, **Scalingo**, and **Nanobox**. For Helm charts, reference the [mastodon/chart repository](https://github.com/mastodon/chart). The [**standalone** installation guide](https://docs.joinmastodon.org/admin/install/) is available in the documentation.
+The repository includes deployment configurations for **Docker and docker-compose** as well as specific platforms like **Heroku**, and **Scalingo**. For Helm charts, reference the [mastodon/chart repository](https://github.com/mastodon/chart). The [**standalone** installation guide](https://docs.joinmastodon.org/admin/install/) is available in the documentation.
 
 ## Development
 
@@ -107,19 +107,23 @@ A **Vagrant** configuration is included for development purposes. To use it, com
 To set up **MacOS** for native development, complete the following steps:
 
 - Use a Ruby version manager to install the specified version from `.ruby-version`
+- Run `bundle` to install required gems
 - Run `brew install postgresql@14 redis imagemagick libidn` to install required dependencies
 - Navigate to Mastodon's root directory and run `brew install nvm` then `nvm use` to use the version from `.nvmrc`
+- Run `yarn` to install required packages
 - Run `corepack enable && corepack prepare`
-- Run `bundle exec rails db:setup` (optionally prepend `RAILS_ENV=development` to target the dev environment)
+- Run `RAILS_ENV=development bundle exec rails db:setup`
 - Finally, run `bin/dev` which will launch the local services via `overmind` (if installed) or `foreman`
 
 ### Docker
 
-For development with **Docker**, complete the following steps:
+For production hosting and deployment with **Docker**, use the `Dockerfile` and
+`docker-compose.yml` in the project root directory. To create a local
+development environment with **Docker**, complete the following steps:
 
 - Install Docker Desktop
 - Run `docker compose -f .devcontainer/docker-compose.yml up -d`
-- Run `docker compose -f .devcontainer/docker-compose.yml exec app .devcontainer/post-create.sh`
+- Run `docker compose -f .devcontainer/docker-compose.yml exec app bin/setup`
 - Finally, run `docker compose -f .devcontainer/docker-compose.yml exec app bin/dev`
 
 If you are using an IDE with [support for the Development Container specification](https://containers.dev/supporting), it will run the above `docker compose` commands automatically. For **Visual Studio Code** this requires the [Dev Container extension](https://containers.dev/supporting#dev-containers).

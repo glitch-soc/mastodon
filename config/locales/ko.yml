@@ -14,7 +14,7 @@ ko:
     instance_actor_flash: 이 계정은 서버 자신을 나타내기 위한 가상의 계정이며 개인 사용자가 아닙니다. 이 계정은 연합을 위해 사용되며 정지되지 않아야 합니다.
     last_active: 최근 활동
     link_verified_on: "%{date}에 이 링크의 소유가 확인되었습니다"
-    nothing_here: 텅 비어있네요!
+    nothing_here: 아무 것도 없습니다!
     pin_errors:
       following: 추천하려는 사람을 팔로우 하고 있어야 합니다
     posts:
@@ -282,6 +282,7 @@ ko:
         update_custom_emoji_html: "%{name} 님이 에모지 %{target}를 업데이트 했습니다"
         update_domain_block_html: "%{name} 님이 %{target}에 대한 도메인 차단을 갱신했습니다"
         update_ip_block_html: "%{name} 님이 IP 규칙 %{target}을 수정했습니다"
+        update_report_html: "%{name} 님이 신고 %{target}를 업데이트 했습니다"
         update_status_html: "%{name} 님이 %{target}의 게시물을 업데이트했습니다"
         update_user_role_html: "%{name} 님이 %{target} 역할을 수정했습니다"
       deleted_account: 계정을 삭제했습니다
@@ -739,6 +740,7 @@ ko:
         desc_html: 이것은 hCaptcha의 외부 스크립트에 의존합니다, 이것은 개인정보 보호에 위협을 가할 수도 있습니다. 추가적으로, <strong>이것은 몇몇 사람들(특히나 장애인들)에게 가입 절차의 접근성을 심각하게 떨어트릴 수 있습니다</strong>. 이러한 이유로, 대체제로 승인 전용이나 초대제를 통한 가입을 고려해보세요.
         title: 새로운 사용자가 계정 확인을 위해서는 CAPTCHA를 풀어야 하도록 합니다
       content_retention:
+        danger_zone: 위험한 영역
         preamble: 마스토돈에 저장된 사용자 콘텐츠를 어떻게 다룰지 제어합니다.
         title: 콘텐츠 보존기한
       default_noindex:
@@ -934,7 +936,7 @@ ko:
       delete: 삭제
       edit_preset: 경고 프리셋 편집
       empty: 아직 어떤 경고 틀도 정의되지 않았습니다.
-      title: 경고 틀 관리
+      title: 경고 프리셋
     webhooks:
       add_new: 엔드포인트 추가
       delete: 삭제
@@ -979,7 +981,7 @@ ko:
     new_report:
       body: "%{reporter} 님이 %{target}를 신고했습니다"
       body_remote: "%{domain}의 누군가가 %{target}을 신고했습니다"
-      subject: "%{instance} 에 새 신고 등록됨 (#%{id})"
+      subject: "%{instance}의 새로운 신고(#%{id})"
     new_software_updates:
       body: 새 마스토돈 버전이 릴리스되었습니다. 업데이트 할 수 있습니다!
       subject: "%{instance}에 대해 새 마스토돈 버전이 사용 가능합니다!"
@@ -1118,7 +1120,7 @@ ko:
   date:
     formats:
       default: "%Y-%m-%d"
-      with_month_name: "%Y년 %f월 %e일"
+      with_month_name: "%Y년 %B %d일"
   datetime:
     distance_in_words:
       about_x_hours: "%{count}시간"
@@ -1635,10 +1637,22 @@ ko:
     preferences: 환경설정
     profile: 공개 프로필
     relationships: 팔로잉과 팔로워
+    severed_relationships: 단절된 관계들
     statuses_cleanup: 게시물 자동 삭제
     strikes: 중재 기록
     two_factor_authentication: 2단계 인증
     webauthn_authentication: 보안 키
+  severed_relationships:
+    download: 다운로드 (%{count})
+    event_type:
+      account_suspension: 계정 정지 (%{target_name})
+      domain_block: 서버 정지 (%{target_name})
+      user_domain_block: 내가 %{target_name}을 차단했습니다
+    lost_followers: 잃은 팔로워
+    lost_follows: 잃은 팔로우
+    preamble: 내가 도메인을 차단하거나 중재진이 다른 서버를 정지하기로 결정했다면 내 팔로우와 팔로워를 잃게 됩니다. 그런 일이 일어났다면 그로 인해 단절된 관계들의 목록을 다운로드 받아 확인하고 다른 서버에서 불러올 수 있습니다.
+    purged: 이 서버에 대한 정보는 관리자에 의해 삭제되었습니다.
+    type: 이벤트
   statuses:
     attached:
       audio:
@@ -1726,10 +1740,11 @@ ko:
     contrast: 마스토돈 (고대비)
     default: 마스토돈 (어두움)
     mastodon-light: 마스토돈 (밝음)
+    system: 자동 선택 (시스템 테마 이용)
   time:
     formats:
       default: "%Y-%m-%d %H:%M"
-      month: "%Y년 %f월"
+      month: "%Y년 %b"
       time: "%H:%M"
       with_time_zone: "%Y-%m-%d %H:%M %Z"
   translation:
@@ -1883,4 +1898,4 @@ ko:
     not_enabled: 아직 WebAuthn을 활성화 하지 않았습니다.
     not_supported: 이 브라우저는 보안 키를 지원하지 않습니다
     otp_required: 보안 키를 사용하기 위해서는 2단계 인증을 먼저 활성화 해 주세요
-    registered_on: "%{date} 에 등록됨"
+    registered_on: "%{date}에 등록됨"

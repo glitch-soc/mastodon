@@ -21,11 +21,11 @@ import { Icon }  from 'flavours/glitch/components/icon';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import { initBlockModal } from '../../actions/blocks';
-import { initBoostModal } from '../../actions/boosts';
 import {
   replyCompose,
   mentionCompose,
@@ -186,12 +186,8 @@ const titleFromStatus = (intl, status) => {
 };
 
 class Status extends ImmutablePureComponent {
-
-  static contextTypes = {
-    identity: PropTypes.object,
-  };
-
   static propTypes = {
+    identity: identityContextPropShape,
     params: PropTypes.object.isRequired,
     dispatch: PropTypes.func.isRequired,
     status: ImmutablePropTypes.map,
@@ -278,7 +274,7 @@ class Status extends ImmutablePureComponent {
 
   handleFavouriteClick = (status, e) => {
     const { dispatch } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (signedIn) {
       if (status.get('favourited')) {
@@ -318,7 +314,7 @@ class Status extends ImmutablePureComponent {
 
   handleReplyClick = (status) => {
     const { askReplyConfirmation, dispatch, intl } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (signedIn) {
       if (askReplyConfirmation) {
@@ -350,23 +346,23 @@ class Status extends ImmutablePureComponent {
     const { dispatch } = this.props;
 
     if (status.get('reblogged')) {
-      dispatch(unreblog(status));
+      dispatch(unreblog({ statusId: status.get('id') }));
     } else {
-      dispatch(reblog(status, privacy));
+      dispatch(reblog({ statusId: status.get('id'), visibility: privacy }));
     }
   };
 
   handleReblogClick = (status, e) => {
     const { settings, dispatch } = this.props;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     if (signedIn) {
       if (settings.get('confirm_boost_missing_media_description') && status.get('media_attachments').some(item => !item.get('description')) && !status.get('reblogged')) {
-        dispatch(initBoostModal({ status, onReblog: this.handleModalReblog, missingMediaDescription: true }));
+        dispatch(openModal({ modalType: 'BOOST', modalProps: { status, onReblog: this.handleModalReblog, missingMediaDescription: true } }));
       } else if ((e && e.shiftKey) || !boostModal) {
         this.handleModalReblog(status);
       } else {
-        dispatch(initBoostModal({ status, onReblog: this.handleModalReblog }));
+        dispatch(openModal({ modalType: 'BOOST', modalProps: { status, onReblog: this.handleModalReblog } }));
       }
     } else {
       dispatch(openModal({
@@ -793,4 +789,4 @@ class Status extends ImmutablePureComponent {
 
 }
 
-export default withRouter(injectIntl(connect(makeMapStateToProps)(Status)));
+export default withRouter(injectIntl(connect(makeMapStateToProps)(withIdentity(Status))));

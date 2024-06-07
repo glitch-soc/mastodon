@@ -64,12 +64,16 @@ class Account < ApplicationRecord
   )
 
   BACKGROUND_REFRESH_INTERVAL = 1.week.freeze
+  DEFAULT_FIELDS_SIZE = (ENV['MAX_PROFILE_FIELDS'] || 4).to_i
   INSTANCE_ACTOR_ID = -99
 
   USERNAME_RE   = /[a-z0-9_]+([a-z0-9_.-]+[a-z0-9_]+)?/i
   MENTION_RE    = %r{(?<![=/[:word:]])@((#{USERNAME_RE})(?:@[[:word:].-]+[[:word:]]+)?)}i
   URL_PREFIX_RE = %r{\Ahttp(s?)://[^/]+}
   USERNAME_ONLY_RE = /\A#{USERNAME_RE}\z/i
+  USERNAME_LENGTH_LIMIT = 30
+  DISPLAY_NAME_LENGTH_LIMIT = (ENV['MAX_DISPLAY_NAME_CHARS'] || 30).to_i
+  NOTE_LENGTH_LIMIT = (ENV['MAX_BIO_CHARS'] || 500).to_i
 
   include Attachmentable # Load prior to Avatar & Header concerns
 
@@ -86,10 +90,6 @@ class Account < ApplicationRecord
   include DomainNormalizable
   include Paginable
 
-  MAX_DISPLAY_NAME_LENGTH = (ENV['MAX_DISPLAY_NAME_CHARS'] || 30).to_i
-  MAX_NOTE_LENGTH = (ENV['MAX_BIO_CHARS'] || 500).to_i
-  DEFAULT_FIELDS_SIZE = (ENV['MAX_PROFILE_FIELDS'] || 4).to_i
-
   enum :protocol, { ostatus: 0, activitypub: 1 }
   enum :suspension_origin, { local: 0, remote: 1 }, prefix: true
 
@@ -103,10 +103,10 @@ class Account < ApplicationRecord
   validates :uri, presence: true, unless: :local?, on: :create
 
   # Local user validations
-  validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: 30 }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
+  validates :username, format: { with: /\A[a-z0-9_]+\z/i }, length: { maximum: USERNAME_LENGTH_LIMIT }, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
   validates_with UnreservedUsernameValidator, if: -> { local? && will_save_change_to_username? && actor_type != 'Application' }
-  validates :display_name, length: { maximum: MAX_DISPLAY_NAME_LENGTH }, if: -> { local? && will_save_change_to_display_name? }
-  validates :note, note_length: { maximum: MAX_NOTE_LENGTH }, if: -> { local? && will_save_change_to_note? }
+  validates :display_name, length: { maximum: DISPLAY_NAME_LENGTH_LIMIT }, if: -> { local? && will_save_change_to_display_name? }
+  validates :note, note_length: { maximum: NOTE_LENGTH_LIMIT }, if: -> { local? && will_save_change_to_note? }
   validates :fields, length: { maximum: DEFAULT_FIELDS_SIZE }, if: -> { local? && will_save_change_to_fields? }
   validates :uri, absence: true, if: :local?, on: :create
   validates :inbox_url, absence: true, if: :local?, on: :create
@@ -136,12 +136,14 @@ class Account < ApplicationRecord
   scope :auditable, -> { where(id: Admin::ActionLog.select(:account_id).distinct) }
   scope :searchable, -> { without_unapproved.without_suspended.where(moved_to_account_id: nil) }
   scope :discoverable, -> { searchable.without_silenced.where(discoverable: true).joins(:account_stat) }
-  scope :by_recent_status, -> { includes(:account_stat).merge(AccountStat.order('last_status_at DESC NULLS LAST')).references(:account_stat) }
+  scope :by_recent_status, -> { includes(:account_stat).merge(AccountStat.by_recent_status).references(:account_stat) }
   scope :by_recent_activity, -> { left_joins(:user, :account_stat).order(coalesced_activity_timestamps.desc).order(id: :desc) }
-  scope :popular, -> { order('account_stats.followers_count desc') }
   scope :by_domain_and_subdomains, ->(domain) { where(domain: Instance.by_domain_and_subdomains(domain).select(:domain)) }
   scope :not_excluded_by_account, ->(account) { where.not(id: account.excluded_from_timeline_account_ids) }
   scope :not_domain_blocked_by_account, ->(account) { where(arel_table[:domain].eq(nil).or(arel_table[:domain].not_in(account.excluded_from_timeline_domains))) }
+  scope :dormant, -> { joins(:account_stat).merge(AccountStat.without_recent_activity) }
+  scope :with_username, ->(value) { where arel_table[:username].lower.eq(value.to_s.downcase) }
+  scope :with_domain, ->(value) { where arel_table[:domain].lower.eq(value&.to_s&.downcase) }
 
   after_update_commit :trigger_update_webhooks
 

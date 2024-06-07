@@ -51,11 +51,21 @@
  */
 
 /**
+ * @typedef Role
+ * @property {string} id
+ * @property {string} name
+ * @property {string} permissions
+ * @property {string} color
+ * @property {boolean} highlighted
+ */
+
+/**
  * @typedef InitialState
  * @property {Record<string, import("./api_types/accounts").ApiAccountJSON>} accounts
  * @property {InitialStateLanguage[]} languages
  * @property {boolean=} critical_updates_pending
  * @property {InitialStateMeta} meta
+ * @property {Role?} role
  * @property {object} local_settings
  * @property {number} max_feed_hashtags
  * @property {number} poll_limits
@@ -118,7 +128,6 @@ export const source_url = getMeta('source_url');
 export const timelinePreview = getMeta('timeline_preview');
 export const title = getMeta('title');
 export const trendsAsLanding = getMeta('trends_as_landing_page');
-export const unfollowModal = getMeta('unfollow_modal');
 export const useBlurhash = getMeta('use_blurhash');
 export const usePendingItems = getMeta('use_pending_items');
 export const version = getMeta('version');
@@ -133,5 +142,12 @@ export const favouriteModal = getMeta('favourite_modal');
 export const pollLimits = (initialState && initialState.poll_limits);
 export const defaultContentType = getMeta('default_content_type');
 export const useSystemEmojiFont = getMeta('system_emoji_font');
+
+/**
+ * @returns {string | undefined}
+ */
+export function getAccessToken() {
+  return getMeta('access_token');
+}
 
 export default initialState;

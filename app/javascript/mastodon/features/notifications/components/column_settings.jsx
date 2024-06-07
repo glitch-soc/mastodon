@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
+import { identityContextPropShape, withIdentity } from 'mastodon/identity_context';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_REPORTS } from 'mastodon/permissions';
 
 import { CheckboxWithLabel } from './checkbox_with_label';
@@ -12,13 +13,9 @@ import ClearColumnButton from './clear_column_button';
 import GrantPermissionButton from './grant_permission_button';
 import SettingToggle from './setting_toggle';
 
-export default class ColumnSettings extends PureComponent {
-
-  static contextTypes = {
-    identity: PropTypes.object,
-  };
-
+class ColumnSettings extends PureComponent {
   static propTypes = {
+    identity: identityContextPropShape,
     settings: ImmutablePropTypes.map.isRequired,
     pushSettings: ImmutablePropTypes.map.isRequired,
     onChange: PropTypes.func.isRequired,
@@ -54,6 +51,7 @@ export default class ColumnSettings extends PureComponent {
   render () {
     const { settings, pushSettings, onChange, onClear, alertsEnabled, browserSupport, browserPermission, onRequestNotificationPermission, notificationPolicy } = this.props;
 
+    const filterAdvancedStr = <FormattedMessage id='notifications.column_settings.filter_bar.advanced' defaultMessage='Display all categories' />;
     const unreadMarkersShowStr = <FormattedMessage id='notifications.column_settings.unread_notifications.highlight' defaultMessage='Highlight unread notifications' />;
     const alertStr = <FormattedMessage id='notifications.column_settings.alert' defaultMessage='Desktop notifications' />;
     const showStr = <FormattedMessage id='notifications.column_settings.show' defaultMessage='Show in column' />;
@@ -113,6 +111,16 @@ export default class ColumnSettings extends PureComponent {
 
           <div className='column-settings__row'>
             <SettingToggle id='unread-notification-markers' prefix='notifications' settings={settings} settingPath={['showUnread']} onChange={onChange} label={unreadMarkersShowStr} />
+          </div>
+        </section>
+
+        <section role='group' aria-labelledby='notifications-filter-bar'>
+          <h3 id='notifications-filter-bar'>
+            <FormattedMessage id='notifications.column_settings.filter_bar.category' defaultMessage='Quick filter bar' />
+          </h3>
+
+          <div className='column-settings__row'>
+            <SettingToggle id='advanced-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'advanced']} onChange={onChange} label={filterAdvancedStr} />
           </div>
         </section>
 
@@ -204,7 +212,7 @@ export default class ColumnSettings extends PureComponent {
           </div>
         </section>
 
-        {((this.context.identity.permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS) && (
+        {((this.props.identity.permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS) && (
           <section role='group' aria-labelledby='notifications-admin-sign-up'>
             <h3 id='notifications-status'><FormattedMessage id='notifications.column_settings.admin.sign_up' defaultMessage='New sign-ups:' /></h3>
 
@@ -217,7 +225,7 @@ export default class ColumnSettings extends PureComponent {
           </section>
         )}
 
-        {((this.context.identity.permissions & PERMISSION_MANAGE_REPORTS) === PERMISSION_MANAGE_REPORTS) && (
+        {((this.props.identity.permissions & PERMISSION_MANAGE_REPORTS) === PERMISSION_MANAGE_REPORTS) && (
           <section role='group' aria-labelledby='notifications-admin-report'>
             <h3 id='notifications-status'><FormattedMessage id='notifications.column_settings.admin.report' defaultMessage='New reports:' /></h3>
 
@@ -234,3 +242,5 @@ export default class ColumnSettings extends PureComponent {
   }
 
 }
+
+export default withIdentity(ColumnSettings);

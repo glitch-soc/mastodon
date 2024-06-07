@@ -282,6 +282,7 @@ zh-CN:
         update_custom_emoji_html: "%{name} 更新了自定义表情 %{target}"
         update_domain_block_html: "%{name} 更新了对 %{target} 的域名屏蔽"
         update_ip_block_html: "%{name} 修改了对 IP %{target} 的规则"
+        update_report_html: "%{name} 更新了举报 %{target}"
         update_status_html: "%{name} 刷新了 %{target} 的嘟文"
         update_user_role_html: "%{name} 更改了 %{target} 角色"
       deleted_account: 账号已注销
@@ -737,6 +738,7 @@ zh-CN:
         desc_html: 这依赖于来自hCaptcha的外部脚本，可能会带来安全和隐私问题。此外，<strong>这可能使注册过程对某些人（尤其是残疾人）的注册简易程度大幅下降</strong>。出于这些原因，请考虑采取其他措施，如基于批准或邀请的注册方式。
         title: 要求新用户输入验证码以确认他们的账户
       content_retention:
+        danger_zone: 危险操作区
         preamble: 控制用户生成的内容在 Mastodon 中如何存储。
         title: 内容保留
       default_noindex:
@@ -932,7 +934,7 @@ zh-CN:
       delete: 删除
       edit_preset: 编辑预置警告
       empty: 你尚未定义任何警告预设。
-      title: 管理预设警告
+      title: 预设警告
     webhooks:
       add_new: 新增对端
       delete: 删除
@@ -1633,10 +1635,22 @@ zh-CN:
     preferences: 首选项
     profile: 个人资料
     relationships: 关注管理
+    severed_relationships: 已断开的关系
     statuses_cleanup: 自动删除嘟文
     strikes: 操作记录
     two_factor_authentication: 双因素认证
     webauthn_authentication: 安全密钥
+  severed_relationships:
+    download: 下载 (%{count})
+    event_type:
+      account_suspension: 账户被封禁 (%{target_name})
+      domain_block: 服务器被封禁 (%{target_name})
+      user_domain_block: 你屏蔽了 %{target_name}
+    lost_followers: 失去的关注者
+    lost_follows: 失去的关注
+    preamble: 当你屏蔽一个域名或你的管理员决定封禁一个外站服务器时，你可能会失去关注和粉丝。在这种情况下，你可以下载被切断的关系的列表，进行检查以便导入另一个服务器。
+    purged: 关于此服务器的信息已被你所在服务器的管理员清除。
+    type: 事件
   statuses:
     attached:
       audio:
@@ -1724,6 +1738,7 @@ zh-CN:
     contrast: Mastodon（高对比度）
     default: Mastodon（暗色主题）
     mastodon-light: Mastodon（亮色主题）
+    system: 自动切换（使用系统主题）
   time:
     formats:
       default: "%Y年%m月%d日 %H:%M"

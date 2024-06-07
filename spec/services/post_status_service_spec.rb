@@ -54,6 +54,13 @@ RSpec.describe PostStatusService do
         .to not_change { account.statuses_count }
         .and(not_change { previous_status.replies_count })
     end
+
+    it 'returns existing status when used twice with idempotency key' do
+      account = Fabricate(:account)
+      status1 = subject.call(account, text: 'test', idempotency: 'meepmeep', scheduled_at: future)
+      status2 = subject.call(account, text: 'test', idempotency: 'meepmeep', scheduled_at: future)
+      expect(status2.id).to eq status1.id
+    end
   end
 
   it 'creates response to the original status of boost' do
@@ -221,14 +228,15 @@ RSpec.describe PostStatusService do
     expect(media.reload.status).to be_nil
   end
 
-  it 'does not allow attaching more than 4 files' do
+  it 'does not allow attaching more files than configured limit' do
+    stub_const('Status::MEDIA_ATTACHMENTS_LIMIT', 1)
     account = Fabricate(:account)
 
     expect do
       subject.call(
         account,
         text: 'test status update',
-        media_ids: Array.new(5) { Fabricate(:media_attachment, account: account) }.map(&:id)
+        media_ids: Array.new(2) { Fabricate(:media_attachment, account: account) }.map(&:id)
       )
     end.to raise_error(
       Mastodon::ValidationError,

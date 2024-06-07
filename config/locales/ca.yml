@@ -285,6 +285,7 @@ ca:
         update_custom_emoji_html: "%{name} ha actualitzat l'emoji %{target}"
         update_domain_block_html: "%{name} ha actualitzat el bloqueig de domini per a %{target}"
         update_ip_block_html: "%{name} ha canviat la norma per la IP %{target}"
+        update_report_html: "%{name} ha actualitzat l'informe %{target}"
         update_status_html: "%{name} ha actualitzat l'estat de %{target}"
         update_user_role_html: "%{name} ha canviat el rol %{target}"
       deleted_account: compte eliminat
@@ -465,7 +466,7 @@ ca:
       status: Estat
       suppress: Suprimeix les recomanacions de seguiment
       suppressed: Suprimit
-      title: Seguir les recomanacions
+      title: Recomanacions de comptes a seguir
       unsuppress: Restaurar les recomanacions de seguiment
     instances:
       availability:
@@ -751,6 +752,7 @@ ca:
         desc_html: Això es basa en scripts externs de hCaptcha, que poden ser un problema de privacitat i seguretat. A més, <strong>això pot fer que el procés de registre sigui significativament menys accesible per algunes (especialment discapacitades) persones</strong>. Per aquestes raons, si us plau considera alternatives com ara registre amb aprovació necessària o basada en invitacions.
         title: Demana als nous usuaris que resolguin un CAPTCHA per a confirmar el seu compte
       content_retention:
+        danger_zone: Zona de perill
         preamble: Controla com es desa a Mastodon el contingut generat per l'usuari.
         title: Retenció de contingut
       default_noindex:
@@ -949,7 +951,7 @@ ca:
       delete: Elimina
       edit_preset: Edita l'avís predeterminat
       empty: Encara no has definit cap preavís.
-      title: Gestiona les configuracions predefinides dels avisos
+      title: Predefinicions d'avís
     webhooks:
       add_new: Afegir extrem
       delete: Elimina
@@ -1659,10 +1661,22 @@ ca:
     preferences: Preferències
     profile: Perfil
     relationships: Seguits i seguidors
+    severed_relationships: Relacions eliminades
     statuses_cleanup: Esborrat automàtic de tuts
     strikes: Accions de mediació
     two_factor_authentication: Autenticació de dos factors
     webauthn_authentication: Claus de seguretat
+  severed_relationships:
+    download: Baixa (%{count})
+    event_type:
+      account_suspension: Suspensió del compte (%{target_name})
+      domain_block: Suspensió del servidor (%{target_name})
+      user_domain_block: Heu blocat %{target_name}
+    lost_followers: Seguidors perduts
+    lost_follows: Seguiments perduts
+    preamble: Quan bloqueu un domini o els vostres moderadors decideixen suspendre un servidor remot, podeu perdre seguidors i seguiments. Si passa, podeu baixar la llista de relacions trencades per a revisar-la i, de cas, importar-la a un altre servidor.
+    purged: Els administradors del vostre servidor han purgat la informació relativa a aquest servidor.
+    type: Esdeveniment
   statuses:
     attached:
       audio:
@@ -1756,6 +1770,7 @@ ca:
     contrast: Mastodon (alt contrast)
     default: Mastodon (fosc)
     mastodon-light: Mastodon (clar)
+    system: Automàtic (utilitza el tema del sistema)
   time:
     formats:
       default: "%b %d, %Y, %H:%M"
