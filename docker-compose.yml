@@ -62,6 +62,8 @@ services:
       test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:3000/health || exit 1']
     expose:
       - '3000/tcp'
+    depends_on:
+      - redis
     volumes:
       - /mnt/dftba-data/mastodon/system:/mastodon/public/system
     hostname: "mastoweb"
@@ -84,6 +86,8 @@ services:
       test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1']
     expose:
       - '4000/tcp'
+    depends_on:
+      - redis
     hostname: "mastostreaming"
     labels:
       - "com.centurylinklabs.watchtower.enable=false"
@@ -102,6 +106,8 @@ services:
     healthcheck:
       test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 6' || false"]
     hostname: "sidekiq"
+    depends_on:
+      - redis
   redis:
     restart: unless-stopped
     image: redis:7-alpine
