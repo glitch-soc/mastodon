@@ -111,7 +111,7 @@ services:
   redis:
     restart: unless-stopped
     image: redis:7-alpine
-    hostname: "mastoredis"
+    hostname: "redis"
     networks:
       - backend
     healthcheck:
