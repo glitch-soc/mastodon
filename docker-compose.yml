@@ -115,7 +115,6 @@ services:
   redis:
     restart: unless-stopped
     image: redis:7-alpine
-    container_name: redis
     hostname: "redis"
     networks:
       - backend
