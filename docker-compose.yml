@@ -14,6 +14,7 @@ services:
   es:
     restart: unless-stopped
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
+    container_name: es
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m -Des.enforce.bootstrap.checks=true"
       - "xpack.license.self_generated.type=basic"
@@ -52,6 +53,7 @@ services:
     #build: .
     #image: ghcr.io/mastodon/mastodon:v4.2.7
     image: mglennon/mastodon:${MY_BRANCH}
+    container_name: mastoweb
     restart: unless-stopped
     env_file: .env.production
     command: bundle exec puma -C config/puma.rb
@@ -76,6 +78,7 @@ services:
       #context: .
     #image: ghcr.io/mastodon/mastodon:v4.2.7
     image: mglennon/mastodon-streaming:${MY_BRANCH}
+    container_name: mastostreaming
     restart: unless-stopped
     env_file: .env.production
     command: node ./streaming
@@ -96,6 +99,7 @@ services:
     #build: .
     #image: ghcr.io/mastodon/mastodon:v4.2.7
     image: mglennon/mastodon:${MY_BRANCH}
+    container_name: sidekiq
     restart: unless-stopped
     env_file: .env.production
     command: bundle exec sidekiq
@@ -111,6 +115,7 @@ services:
   redis:
     restart: unless-stopped
     image: redis:7-alpine
+    container_name: redis
     hostname: "redis"
     networks:
       - backend
@@ -128,6 +133,8 @@ services:
     expose:
       - 9125/udp
       - 9102/tcp
+    depends_on:
+      - web
     restart: unless-stopped
     hostname: mastostats
     networks:
@@ -144,6 +151,8 @@ services:
     hostname: sidekiq-export
     networks:
       - backend
+    depends_on:
+      - sidekiq
     env_file: .env.production
 
   es_exporter:
@@ -154,6 +163,8 @@ services:
     restart: unless-stopped
     expose:
       - "9114/tcp"
+    depends_on:
+      - es
     networks:
       - backend
     hostname: es-export
