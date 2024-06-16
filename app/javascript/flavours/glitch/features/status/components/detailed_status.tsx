@@ -35,6 +35,7 @@ import { CollectionPreviewCard } from 'flavours/glitch/features/collections/comp
 import scheduleIdleTask from 'flavours/glitch/features/ui/util/schedule_idle_task';
 import { Video } from 'flavours/glitch/features/video';
 import { useIdentity } from 'flavours/glitch/identity_context';
+import { visibleReactions } from 'flavours/glitch/initial_state';
 import type { CollectionAttachment } from 'flavours/glitch/models/status';
 import { useAppSelector } from 'flavours/glitch/store';
 import { compareUrls } from 'flavours/glitch/utils/compare_urls';
@@ -526,13 +527,15 @@ export const DetailedStatus: React.FC<{
         {/* This is a glitch-soc addition to have a placeholder */}
         {!expanded && <MentionsPlaceholder status={status} />}
 
-        <StatusReactions
-          statusId={status.get('id')}
-          reactions={status.get('reactions')}
-          addReaction={onReactionAdd}
-          removeReaction={onReactionRemove}
-          canReact={signedIn}
-        />
+        {visibleReactions && visibleReactions > 0 && (
+          <StatusReactions
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            addReaction={onReactionAdd}
+            removeReaction={onReactionRemove}
+            canReact={signedIn}
+          />
+        )}
 
         <div className='detailed-status__meta'>
           <div className='detailed-status__meta__line'>
