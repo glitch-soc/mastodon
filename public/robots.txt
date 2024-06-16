@@ -39,6 +39,12 @@ User-agent: Applebot
 Disallow: /
 
 # AI Data Scraper
+# https://darkvisitors.com/agents/applebot-extended
+
+User-agent: Applebot-Extended
+Disallow: /
+
+# AI Data Scraper
 # https://darkvisitors.com/agents/bytespider
 
 User-agent: Bytespider
