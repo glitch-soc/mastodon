@@ -1522,74 +1522,49 @@ body > [data-popper-placement] {
       }
     }
   }
+}
 
-  &.collapsed {
+.status__wrapper.collapsed {
+  .status {
     background-position: center;
     background-size: cover;
     user-select: none;
     min-height: 0;
+  }
 
-    &.has-background::before {
-      display: block;
-      position: absolute;
-      inset-inline-start: 0;
-      inset-inline-end: 0;
-      top: 0;
-      bottom: 0;
-      background-image: linear-gradient(
-        to bottom,
-        rgba($base-shadow-color, 0.75),
-        rgba($base-shadow-color, 0.65) 24px,
-        rgba($base-shadow-color, 0.8)
-      );
-      pointer-events: none;
-      content: '';
-    }
+  &.has-background::before {
+    display: block;
+    position: absolute;
+    inset-inline-start: 0;
+    inset-inline-end: 0;
+    top: 0;
+    bottom: 0;
+    background-image: linear-gradient(
+      to bottom,
+      rgba($base-shadow-color, 0.75),
+      rgba($base-shadow-color, 0.65) 24px,
+      rgba($base-shadow-color, 0.8)
+    );
+    pointer-events: none;
+    content: '';
+  }
 
-    .display-name:hover .display-name__html {
+  .display-name:hover .display-name__html {
+    text-decoration: none;
+  }
+
+  .status__content {
+    height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-top: 0;
+    mask-image: linear-gradient(rgb(0 0 0 / 100%), transparent);
+
+    a:hover {
       text-decoration: none;
     }
-
-    .status__content {
-      height: 20px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      padding-top: 0;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        inset-inline-start: 0;
-        inset-inline-end: 0;
-        background: linear-gradient(transparent, var(--background-color));
-        pointer-events: none;
-      }
-
-      a:hover {
-        text-decoration: none;
-      }
-    }
-
-    &:focus > .status__content::after {
-      background: linear-gradient(
-        rgba(lighten($ui-base-color, 4%), 0),
-        rgba(lighten($ui-base-color, 4%), 1)
-      );
-    }
-
-    // TODO: review
-    &.status-direct > .status__content::after {
-      background: linear-gradient(
-        rgba(mix($ui-base-color, $ui-highlight-color, 95%), 0),
-        rgba(mix($ui-base-color, $ui-highlight-color, 95%), 1)
-      );
-    }
   }
-}
 
-.status__wrapper.collapsed {
   .notification__message {
     margin-bottom: 0;
     white-space: nowrap;
@@ -1799,10 +1774,6 @@ body > [data-popper-placement] {
 
 .status__wrapper-direct {
   background: rgba($ui-highlight-color, 0.05);
-
-  &:focus {
-    background: rgba($ui-highlight-color, 0.05);
-  }
 
   .status__prepend {
     color: $highlight-text-color;
