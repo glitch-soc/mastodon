@@ -1551,7 +1551,7 @@ body > [data-popper-placement] {
     }
 
     .status__content {
-      height: 20px;
+      height: 12rem;
       overflow: hidden;
       text-overflow: ellipsis;
       padding-top: 0;
@@ -1563,7 +1563,7 @@ body > [data-popper-placement] {
         bottom: 0;
         inset-inline-start: 0;
         inset-inline-end: 0;
-        background: linear-gradient(transparent, var(--background-color));
+        background: linear-gradient(transparent, transparent 50%, var(--background-color));
         pointer-events: none;
       }
 
