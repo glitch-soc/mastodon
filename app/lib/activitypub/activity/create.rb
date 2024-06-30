@@ -433,8 +433,12 @@ class ActivityPub::Activity::Create < ActivityPub::Activity
   end
 
   def guess_quote_url
-    if @object['quoteUrl'].present?
+    if @object['quoteUri'].present?
+      @object['quoteUri']
+    elsif @object['quoteUrl'].present?
       @object['quoteUrl']
+    elsif @object['quoteURL'].present?
+      @object['quoteURL']
     elsif @object['_misskey_quote'].present?
       @object['_misskey_quote']
     end

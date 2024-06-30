@@ -62,6 +62,8 @@ class StatusEdit < ApplicationRecord
                                  end
   end
 
+  delegate :quote?, to: :status
+
   def proper
     self
   end
