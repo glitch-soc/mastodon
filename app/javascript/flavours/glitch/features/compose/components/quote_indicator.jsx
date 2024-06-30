@@ -1,14 +1,17 @@
 //  Package imports.
 import PropTypes from 'prop-types';
 import React from 'react';
-import ImmutablePropTypes from 'react-immutable-proptypes';
+
 import { defineMessages, injectIntl } from 'react-intl';
+
+import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
 //  Components.
-import AccountContainer from 'flavours/glitch/containers/account_container';
-import IconButton from 'flavours/glitch/components/icon_button';
 import AttachmentList from 'flavours/glitch/components/attachment_list';
+import Icon from 'flavours/glitch/components/icon';
+import IconButton from 'flavours/glitch/components/icon_button';
+import AccountContainer from 'flavours/glitch/containers/account_container';
 
 //  Messages.
 const messages = defineMessages({
@@ -33,7 +36,7 @@ class QuoteIndicator extends ImmutablePureComponent {
     if (onCancel) {
       onCancel();
     }
-  }
+  };
 
   //  Rendering.
   render () {
@@ -58,6 +61,9 @@ class QuoteIndicator extends ImmutablePureComponent {
             title={intl.formatMessage(messages.cancel)}
             inverted
           />
+          <Icon
+            className='quote-indicator__cancel inverted'
+            id='quote-right' />
           {account && (
             <AccountContainer
               id={account}
@@ -66,7 +72,7 @@ class QuoteIndicator extends ImmutablePureComponent {
           )}
         </header>
         <div
-          className='reply-indicator__content translate'
+          className='quote-indicator__content icon-button translate'
           dangerouslySetInnerHTML={{ __html: content || '' }}
         />
         {attachments.size > 0 && (

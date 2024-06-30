@@ -86,6 +86,7 @@ class Status extends ImmutablePureComponent {
     rootId: PropTypes.string,
     onClick: PropTypes.func,
     onReply: PropTypes.func,
+    onQuote: PropTypes.func,
     onFavourite: PropTypes.func,
     onReblog: PropTypes.func,
     onBookmark: PropTypes.func,
