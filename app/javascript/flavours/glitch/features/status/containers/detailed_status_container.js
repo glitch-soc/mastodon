@@ -6,6 +6,7 @@ import { showAlertForError } from '../../../actions/alerts';
 import { initBlockModal } from '../../../actions/blocks';
 import {
   replyCompose,
+  quoteCompose,
   mentionCompose,
   directCompose,
 } from '../../../actions/compose';
@@ -32,6 +33,8 @@ import DetailedStatus from '../components/detailed_status';
 const messages = defineMessages({
   deleteConfirm: { id: 'confirmations.delete.confirm', defaultMessage: 'Delete' },
   deleteMessage: { id: 'confirmations.delete.message', defaultMessage: 'Are you sure you want to delete this status?' },
+  quoteConfirm: { id: 'confirmations.quote.confirm', defaultMessage: 'Quote' },
+  quoteMessage: { id: 'confirmations.quote.message', defaultMessage: 'Quoting now will overwrite the message you are currently composing. Are you sure you want to proceed?' },
   redraftConfirm: { id: 'confirmations.redraft.confirm', defaultMessage: 'Delete & redraft' },
   redraftMessage: { id: 'confirmations.redraft.message', defaultMessage: 'Are you sure you want to delete this status and re-draft it? Favorites and boosts will be lost, and replies to the original post will be orphaned.' },
   replyConfirm: { id: 'confirmations.reply.confirm', defaultMessage: 'Reply' },
@@ -66,6 +69,21 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
         }));
       } else {
         dispatch(replyCompose(status, router));
+      }
+    });
+  },
+
+  onQuote (status, router) {
+    dispatch((_, getState) => {
+      let state = getState();
+      if (state.getIn(['compose', 'text']).trim().length !== 0) {
+        dispatch(openModal('CONFIRM', {
+          message: intl.formatMessage(messages.quoteMessage),
+          confirm: intl.formatMessage(messages.quoteConfirm),
+          onConfirm: () => dispatch(quoteCompose(status, router)),
+        }));
+      } else {
+        dispatch(quoteCompose(status, router));
       }
     });
   },
