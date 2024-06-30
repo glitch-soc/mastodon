@@ -65,6 +65,11 @@
     font-style: italic;
   }
 
+  i[role='img'] {
+    font-style: normal;
+    padding-right: 0.25em;
+  }
+
   sub {
     font-size: smaller;
     vertical-align: sub;
@@ -91,4 +96,8 @@
   ol {
     list-style-type: decimal;
   }
+}
+
+.status__quote {
+  padding-bottom: 0.5em;
 }

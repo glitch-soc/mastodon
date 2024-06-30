@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
+import Icon from 'flavours/glitch/components/icon';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
@@ -378,10 +379,23 @@ class StatusContent extends PureComponent {
     if (status.get('quote', null) !== null) {
       let quoteStatus = status.get('quote');
       let quoteStatusContent = { __html: quoteStatus.get('contentHtml') };
+      let quoteStatusAccount = quoteStatus.get('account');
+      let quoteStatusDisplayName = { __html: quoteStatusAccount.get('display_name_html') };
 
       quote = (
         <div className={"status__quote"}>
           <blockquote>
+            <bdi>
+              <span className='quote-display-name'>
+                <Icon
+                  fixedWidth
+                  id='quote-right'
+                  aria-hidden='true'
+                  key='icon-quote-right' />
+                <strong className='display-name__html'
+                  dangerouslySetInnerHTML={quoteStatusDisplayName} />
+              </span>
+            </bdi>
             <div dangerouslySetInnerHTML={quoteStatusContent} />
           </blockquote>
         </div>
