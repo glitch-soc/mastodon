@@ -151,6 +151,5 @@
   "status.in_reply_to": "貼文有回覆",
   "status.is_poll": "貼文有投票",
   "status.local_only": "只在此實例可見",
-  "status.uncollapse": "展開",
-  "suggestions.dismiss": "關閉建議"
+  "status.uncollapse": "展開"
 }

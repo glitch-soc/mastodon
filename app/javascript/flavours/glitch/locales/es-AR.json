@@ -155,6 +155,5 @@
   "status.in_reply_to": "Esta publicación es una respuesta",
   "status.is_poll": "Esta publicación es una encuesta",
   "status.local_only": "Sólo visible para tu instancia",
-  "status.uncollapse": "Descolapsar",
-  "suggestions.dismiss": "Descartar sugerencia"
+  "status.uncollapse": "Descolapsar"
 }

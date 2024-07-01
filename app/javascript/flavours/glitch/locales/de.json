@@ -154,6 +154,5 @@
   "status.in_reply_to": "Dieser Toot ist eine Antwort",
   "status.is_poll": "Dieser Toot ist eine Umfrage",
   "status.local_only": "Nur auf deiner Instanz sichtbar",
-  "status.uncollapse": "Ausklappen",
-  "suggestions.dismiss": "Vorschlag ablehnen"
+  "status.uncollapse": "Ausklappen"
 }
