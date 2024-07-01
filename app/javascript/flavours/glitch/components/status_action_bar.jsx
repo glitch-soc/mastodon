@@ -8,6 +8,7 @@ import { withRouter } from 'react-router-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
+import AddReactionIcon from '@/material-icons/400-24px/add_reaction.svg?react';
 import BookmarkIcon from '@/material-icons/400-24px/bookmark-fill.svg?react';
 import BookmarkBorderIcon from '@/material-icons/400-24px/bookmark.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
@@ -27,7 +28,8 @@ import { accountAdminLink, statusAdminLink } from 'flavours/glitch/utils/backend
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import DropdownMenuContainer from '../containers/dropdown_menu_container';
-import { me } from '../initial_state';
+import EmojiPickerDropdown from '../features/compose/containers/emoji_picker_dropdown_container';
+import { me, maxReactions } from '../initial_state';
 
 import { IconButton } from './icon_button';
 import { RelativeTimestamp } from './relative_timestamp';
@@ -49,6 +51,7 @@ const messages = defineMessages({
   cancel_reblog_private: { id: 'status.cancel_reblog_private', defaultMessage: 'Unboost' },
   cannot_reblog: { id: 'status.cannot_reblog', defaultMessage: 'This post cannot be boosted' },
   favourite: { id: 'status.favourite', defaultMessage: 'Favorite' },
+  react: { id: 'status.react', defaultMessage: 'React' },
   bookmark: { id: 'status.bookmark', defaultMessage: 'Bookmark' },
   open: { id: 'status.open', defaultMessage: 'Expand this status' },
   report: { id: 'status.report', defaultMessage: 'Report @{name}' },
@@ -73,6 +76,7 @@ class StatusActionBar extends ImmutablePureComponent {
     status: ImmutablePropTypes.map.isRequired,
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
+    onReactionAdd: PropTypes.func,
     onReblog: PropTypes.func,
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
@@ -128,6 +132,10 @@ class StatusActionBar extends ImmutablePureComponent {
     } else {
       this.props.onInteractionModal('favourite', this.props.status);
     }
+  };
+
+  handleEmojiPick = data => {
+    this.props.onReactionAdd(this.props.status.get('id'), data.native.replace(/:/g, ''), data.imageUrl);
   };
 
   handleReblogClick = e => {
@@ -318,6 +326,8 @@ class StatusActionBar extends ImmutablePureComponent {
       <IconButton className='status__action-bar-button' title={intl.formatMessage(messages.hide)} icon='eye' iconComponent={VisibilityIcon} onClick={this.handleHideClick} />
     );
 
+    const canReact = permissions && status.get('reactions').filter(r => r.get('count') > 0 && r.get('me')).size < maxReactions;
+
     return (
       <div className='status__action-bar'>
         <IconButton
@@ -331,6 +341,7 @@ class StatusActionBar extends ImmutablePureComponent {
         />
         <IconButton className={classNames('status__action-bar-button', { reblogPrivate })} disabled={!publicStatus && !reblogPrivate} active={status.get('reblogged')} title={reblogTitle} icon={reblogIcon} iconComponent={reblogIconComponent} onClick={this.handleReblogClick} counter={withCounters ? status.get('reblogs_count') : undefined} />
         <IconButton className='status__action-bar-button star-icon' animate active={status.get('favourited')} title={intl.formatMessage(messages.favourite)} icon='star' iconComponent={status.get('favourited') ? StarIcon : StarBorderIcon} onClick={this.handleFavouriteClick} counter={withCounters ? status.get('favourites_count') : undefined} />
+        <EmojiPickerDropdown className='status__action-bar-button' onPickEmoji={this.handleEmojiPick} title={intl.formatMessage(messages.react)} icon={AddReactionIcon} disabled={!canReact} />
         <IconButton className='status__action-bar-button bookmark-icon' disabled={!signedIn} active={status.get('bookmarked')} title={intl.formatMessage(messages.bookmark)} icon='bookmark' iconComponent={status.get('bookmarked') ? BookmarkIcon : BookmarkBorderIcon} onClick={this.handleBookmarkClick} />
 
         {filterButton}

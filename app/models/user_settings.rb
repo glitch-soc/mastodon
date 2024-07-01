@@ -18,6 +18,7 @@ class UserSettings
   setting :default_privacy, default: nil, in: %w(public unlisted private)
   setting :default_content_type, default: 'text/plain'
   setting :hide_followers_count, default: false
+  setting :visible_reactions, default: 6
 
   setting_inverse_alias :indexable, :noindex
   setting_inverse_alias :show_followers_count, :hide_followers_count
@@ -43,6 +44,7 @@ class UserSettings
     setting :follow, default: true
     setting :reblog, default: false
     setting :favourite, default: false
+    setting :reaction, default: false
     setting :mention, default: true
     setting :follow_request, default: true
     setting :report, default: true
