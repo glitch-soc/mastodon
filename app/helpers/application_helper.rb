@@ -257,6 +257,10 @@ module ApplicationHelper
     instance_presenter.app_icon&.file&.url(size)
   end
 
+  def use_mask_icon?
+    instance_presenter.app_icon.blank?
+  end
+
   # glitch-soc addition to handle the multiple flavors
   def preload_locale_pack
     supported_locales = Themes.instance.flavour(current_flavour)['locales']

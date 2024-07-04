@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     /public/remote
     /conversations
     /lists/(*any)
+    /links/(*any)
     /notifications/(*any)
     /favourites
     /bookmarks

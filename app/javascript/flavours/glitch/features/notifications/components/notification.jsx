@@ -389,6 +389,7 @@ class Notification extends ImmutablePureComponent {
           title={targetAccount.get('acct')}
           to={`/@${targetAccount.get('acct')}`}
           dangerouslySetInnerHTML={targetDisplayNameHtml}
+          data-hover-card-account={targetAccount.get('id')}
         />
       </bdi>
     );
@@ -423,6 +424,7 @@ class Notification extends ImmutablePureComponent {
           title={account.get('acct')}
           to={`/@${account.get('acct')}`}
           dangerouslySetInnerHTML={displayNameHtml}
+          data-hover-card-account={account.get('id')}
         />
       </bdi>
     );

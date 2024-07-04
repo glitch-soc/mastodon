@@ -33,6 +33,7 @@ export default class StatusList extends ImmutablePureComponent {
     withCounters: PropTypes.bool,
     timelineId: PropTypes.string.isRequired,
     lastId: PropTypes.string,
+    bindToDocument: PropTypes.bool,
     regex: PropTypes.string,
   };
 
