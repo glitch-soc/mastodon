@@ -38,6 +38,7 @@ export default class StatusPrepend extends PureComponent {
         onClick={this.handleClick}
         href={account.get('url')}
         className='status__display-name'
+        data-hover-card-account={account.get('id')}
       >
         <bdi>
           <strong

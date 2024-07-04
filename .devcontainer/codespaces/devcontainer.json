@@ -1,6 +1,6 @@
 {
   "name": "Mastodon on GitHub Codespaces",
-  "dockerComposeFile": "../docker-compose.yml",
+  "dockerComposeFile": "../compose.yaml",
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
@@ -22,6 +22,8 @@
       "onAutoForward": "silent"
     }
   },
+
+  "remoteUser": "root",
 
   "otherPortsAttributes": {
     "onAutoForward": "silent"

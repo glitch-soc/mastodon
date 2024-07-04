@@ -12,12 +12,11 @@ import ChevronLeftIcon from '@/material-icons/400-24px/chevron_left.svg?react';
 import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
-import { followAccount, unfollowAccount } from 'flavours/glitch/actions/accounts';
 import { changeSetting } from 'flavours/glitch/actions/settings';
 import { fetchSuggestions, dismissSuggestion } from 'flavours/glitch/actions/suggestions';
 import { Avatar } from 'flavours/glitch/components/avatar';
-import { Button } from 'flavours/glitch/components/button';
 import { DisplayName } from 'flavours/glitch/components/display_name';
+import { FollowButton } from 'flavours/glitch/components/follow_button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { IconButton } from 'flavours/glitch/components/icon_button';
 import { VerifiedBadge } from 'flavours/glitch/components/verified_badge';
@@ -79,18 +78,8 @@ Source.propTypes = {
 const Card = ({ id, sources }) => {
   const intl = useIntl();
   const account = useSelector(state => state.getIn(['accounts', id]));
-  const relationship = useSelector(state => state.getIn(['relationships', id]));
   const firstVerifiedField = account.get('fields').find(item => !!item.get('verified_at'));
   const dispatch = useDispatch();
-  const following = relationship?.get('following') ?? relationship?.get('requested');
-
-  const handleFollow = useCallback(() => {
-    if (following) {
-      dispatch(unfollowAccount(id));
-    } else {
-      dispatch(followAccount(id));
-    }
-  }, [id, following, dispatch]);
 
   const handleDismiss = useCallback(() => {
     dispatch(dismissSuggestion(id));
@@ -109,7 +98,7 @@ const Card = ({ id, sources }) => {
         {firstVerifiedField ? <VerifiedBadge link={firstVerifiedField.get('value')} /> : <Source id={sources.get(0)} />}
       </div>
 
-      <Button text={intl.formatMessage(following ? messages.unfollow : messages.follow)} secondary={following} onClick={handleFollow} />
+      <FollowButton accountId={id} />
     </div>
   );
 };

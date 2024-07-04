@@ -181,7 +181,8 @@ class StatusContent extends PureComponent {
 
       if (mention) {
         link.addEventListener('click', this.onMentionClick.bind(this, mention), false);
-        link.setAttribute('title', `@${mention.get('acct')}`);
+        link.removeAttribute('title');
+        link.setAttribute('data-hover-card-account', mention.get('id'));
         if (rewriteMentions !== 'no') {
           while (link.firstChild) link.removeChild(link.firstChild);
           link.appendChild(document.createTextNode('@'));
