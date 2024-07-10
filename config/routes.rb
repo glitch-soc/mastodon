@@ -64,12 +64,16 @@ Rails.application.routes.draw do
                 tokens: 'oauth/tokens'
   end
 
-  get '.well-known/oauth-authorization-server', to: 'well_known/oauth_metadata#show', as: :oauth_metadata, defaults: { format: 'json' }
-  get '.well-known/host-meta', to: 'well_known/host_meta#show', as: :host_meta, defaults: { format: 'xml' }
-  get '.well-known/nodeinfo', to: 'well_known/node_info#index', as: :nodeinfo, defaults: { format: 'json' }
-  get '.well-known/webfinger', to: 'well_known/webfinger#show', as: :webfinger
-  get '.well-known/change-password', to: redirect('/auth/edit')
-  get '.well-known/proxy', to: redirect { |_, request| "/authorize_interaction?#{request.params.to_query}" }
+  scope path: '.well-known' do
+    scope module: :well_known do
+      get 'oauth-authorization-server', to: 'oauth_metadata#show', as: :oauth_metadata, defaults: { format: 'json' }
+      get 'host-meta', to: 'host_meta#show', as: :host_meta, defaults: { format: 'xml' }
+      get 'nodeinfo', to: 'node_info#index', as: :nodeinfo, defaults: { format: 'json' }
+      get 'webfinger', to: 'webfinger#show', as: :webfinger
+    end
+    get 'change-password', to: redirect('/auth/edit'), as: nil
+    get 'proxy', to: redirect { |_, request| "/authorize_interaction?#{request.params.to_query}" }, as: nil
+  end
 
   get '/nodeinfo/2.0', to: 'well_known/node_info#show', as: :nodeinfo_schema
 
@@ -95,7 +99,7 @@ Rails.application.routes.draw do
 
     namespace :auth do
       resource :setup, only: [:show, :update], controller: :setup
-      resource :challenge, only: [:create], controller: :challenges
+      resource :challenge, only: [:create]
       get 'sessions/security_key_options', to: 'sessions#webauthn_options'
       post 'captcha_confirmation', to: 'confirmations#confirm_captcha', as: :captcha_confirmation
     end
