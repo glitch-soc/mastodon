@@ -39,6 +39,7 @@ interface BaseNotification<
 
 export type NotificationGroupFavourite =
   BaseNotificationWithStatus<'favourite'>;
+export type NotificationGroupReaction = BaseNotificationWithStatus<'reaction'>;
 export type NotificationGroupReblog = BaseNotificationWithStatus<'reblog'>;
 export type NotificationGroupStatus = BaseNotificationWithStatus<'status'>;
 export type NotificationGroupMention = BaseNotificationWithStatus<'mention'>;
@@ -100,6 +101,7 @@ export interface NotificationGroupCollectionUpdate extends BaseNotification<'col
 
 export type NotificationGroup =
   | NotificationGroupFavourite
+  | NotificationGroupReaction
   | NotificationGroupReblog
   | NotificationGroupStatus
   | NotificationGroupMention
@@ -154,6 +156,7 @@ export function createNotificationGroupFromJSON(
 
   switch (group.type) {
     case 'favourite':
+    case 'reaction':
     case 'reblog':
     case 'status':
     case 'mention':
@@ -228,6 +231,7 @@ export function createNotificationGroupFromNotificationJSON(
 
   switch (notification.type) {
     case 'favourite':
+    case 'reaction':
     case 'reblog':
     case 'status':
     case 'mention':
