@@ -11046,7 +11046,7 @@ noscript {
 }
 
 .notification-ungrouped {
-  padding: 16px 24px;
+  padding: 10px 14px; // glitch: reduced padding
   border-bottom: 1px solid var(--background-border-color);
 
   &__header {
