@@ -11100,15 +11100,7 @@ noscript {
   $icon-margin: 48px; // 40px avatar + 8px gap
 
   .status__content,
-  .status__action-bar,
-  .media-gallery,
-  .video-player,
-  .audio-player,
-  .attachment-list,
-  .picture-in-picture-placeholder,
-  .more-from-author,
-  .status-card,
-  .hashtag-bar {
+  .status__action-bar {
     margin-inline-start: $icon-margin;
     width: calc(100% - $icon-margin);
   }
