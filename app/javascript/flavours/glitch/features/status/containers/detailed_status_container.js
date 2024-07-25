@@ -4,17 +4,14 @@ import { connect } from 'react-redux';
 
 import { showAlertForError } from '../../../actions/alerts';
 import { initBlockModal } from '../../../actions/blocks';
-import { initBoostModal } from '../../../actions/boosts';
 import {
   replyCompose,
   mentionCompose,
   directCompose,
 } from '../../../actions/compose';
 import {
-  reblog,
-  favourite,
-  unreblog,
-  unfavourite,
+  toggleReblog,
+  toggleFavourite,
   pin,
   unpin,
 } from '../../../actions/interactions';
@@ -26,7 +23,7 @@ import {
   unmuteStatus,
   deleteStatus,
 } from '../../../actions/statuses';
-import { boostModal, deleteModal } from '../../../initial_state';
+import { deleteModal } from '../../../initial_state';
 import { makeGetStatus } from '../../../selectors';
 import DetailedStatus from '../components/detailed_status';
 
@@ -53,7 +50,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch, { intl }) => ({
 
-  onReply (status, router) {
+  onReply (status) {
     dispatch((_, getState) => {
       let state = getState();
       if (state.getIn(['compose', 'text']).trim().length !== 0) {
@@ -62,37 +59,21 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
           modalProps: {
             message: intl.formatMessage(messages.replyMessage),
             confirm: intl.formatMessage(messages.replyConfirm),
-            onConfirm: () => dispatch(replyCompose(status, router)),
+            onConfirm: () => dispatch(replyCompose(status)),
           },
         }));
       } else {
-        dispatch(replyCompose(status, router));
+        dispatch(replyCompose(status));
       }
     });
   },
 
-  onModalReblog (status, privacy) {
-    dispatch(reblog(status, privacy));
-  },
-
   onReblog (status, e) {
-    if (status.get('reblogged')) {
-      dispatch(unreblog(status));
-    } else {
-      if (e.shiftKey || !boostModal) {
-        this.onModalReblog(status);
-      } else {
-        dispatch(initBoostModal({ status, onReblog: this.onModalReblog }));
-      }
-    }
+    dispatch(toggleReblog(status.get('id'), e.shiftKey));
   },
 
-  onFavourite (status) {
-    if (status.get('favourited')) {
-      dispatch(unfavourite(status));
-    } else {
-      dispatch(favourite(status));
-    }
+  onFavourite (status, e) {
+    dispatch(toggleFavourite(status.get('id'), e.shiftKey));
   },
 
   onPin (status) {
@@ -113,27 +94,27 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     }));
   },
 
-  onDelete (status, history, withRedraft = false) {
+  onDelete (status, withRedraft = false) {
     if (!deleteModal) {
-      dispatch(deleteStatus(status.get('id'), history, withRedraft));
+      dispatch(deleteStatus(status.get('id'), withRedraft));
     } else {
       dispatch(openModal({
         modalType: 'CONFIRM',
         modalProps: {
           message: intl.formatMessage(withRedraft ? messages.redraftMessage : messages.deleteMessage),
           confirm: intl.formatMessage(withRedraft ? messages.redraftConfirm : messages.deleteConfirm),
-          onConfirm: () => dispatch(deleteStatus(status.get('id'), history, withRedraft)),
+          onConfirm: () => dispatch(deleteStatus(status.get('id'), withRedraft)),
         },
       }));
     }
   },
 
-  onDirect (account, router) {
-    dispatch(directCompose(account, router));
+  onDirect (account) {
+    dispatch(directCompose(account));
   },
 
-  onMention (account, router) {
-    dispatch(mentionCompose(account, router));
+  onMention (account) {
+    dispatch(mentionCompose(account));
   },
 
   onOpenMedia (media, index, lang) {

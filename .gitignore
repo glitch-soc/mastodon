@@ -24,7 +24,6 @@
 /public/packs-test
 .env
 .env.production
-.env.development
 /node_modules/
 /build/
 
@@ -76,3 +75,5 @@ docker-compose.override.yml
 **/node_modules
 
 **/yarn.lock
+# Ignore dotenv .local files
+.env*.local

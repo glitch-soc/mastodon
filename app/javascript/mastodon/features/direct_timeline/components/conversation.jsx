@@ -18,7 +18,7 @@ import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import { replyCompose } from 'mastodon/actions/compose';
 import { markConversationRead, deleteConversation } from 'mastodon/actions/conversations';
 import { openModal } from 'mastodon/actions/modal';
-import { muteStatus, unmuteStatus, revealStatus, hideStatus } from 'mastodon/actions/statuses';
+import { muteStatus, unmuteStatus, toggleStatusSpoilers } from 'mastodon/actions/statuses';
 import AttachmentList from 'mastodon/components/attachment_list';
 import AvatarComposite from 'mastodon/components/avatar_composite';
 import { IconButton } from 'mastodon/components/icon_button';
@@ -108,14 +108,14 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
           modalProps: {
             message: intl.formatMessage(messages.replyMessage),
             confirm: intl.formatMessage(messages.replyConfirm),
-            onConfirm: () => dispatch(replyCompose(lastStatus, history)),
+            onConfirm: () => dispatch(replyCompose(lastStatus)),
           },
         }));
       } else {
-        dispatch(replyCompose(lastStatus, history));
+        dispatch(replyCompose(lastStatus));
       }
     });
-  }, [dispatch, lastStatus, history, intl]);
+  }, [dispatch, lastStatus, intl]);
 
   const handleDelete = useCallback(() => {
     dispatch(deleteConversation(id));
@@ -138,11 +138,7 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
   }, [dispatch, lastStatus]);
 
   const handleShowMore = useCallback(() => {
-    if (lastStatus.get('hidden')) {
-      dispatch(revealStatus(lastStatus.get('id')));
-    } else {
-      dispatch(hideStatus(lastStatus.get('id')));
-    }
+    dispatch(toggleStatusSpoilers(lastStatus.get('id')));
   }, [dispatch, lastStatus]);
 
   if (!lastStatus) {
@@ -163,7 +159,7 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
   menu.push({ text: intl.formatMessage(messages.delete), action: handleDelete });
 
   const names = accounts.map(a => (
-    <Link to={`/@${a.get('acct')}`} key={a.get('id')} title={a.get('acct')}>
+    <Link to={`/@${a.get('acct')}`} key={a.get('id')} data-hover-card-account={a.get('id')}>
       <bdi>
         <strong
           className='display-name__html'

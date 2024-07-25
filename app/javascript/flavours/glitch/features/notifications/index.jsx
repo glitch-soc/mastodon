@@ -19,6 +19,7 @@ import NotificationsIcon from '@/material-icons/400-24px/notifications-fill.svg?
 import { compareId } from 'flavours/glitch/compare_id';
 import { Icon }  from 'flavours/glitch/components/icon';
 import { NotSignedInIndicator } from 'flavours/glitch/components/not_signed_in_indicator';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 
 import { addColumn, removeColumn, moveColumn } from '../../actions/columns';
 import { submitMarkers } from '../../actions/markers';
@@ -93,12 +94,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Notifications extends PureComponent {
-
-  static contextTypes = {
-    identity: PropTypes.object,
-  };
-
   static propTypes = {
+    identity: identityContextPropShape,
     columnId: PropTypes.string,
     notifications: ImmutablePropTypes.list.isRequired,
     showFilterBar: PropTypes.bool.isRequired,
@@ -225,7 +222,7 @@ class Notifications extends PureComponent {
     const { animatingNCD } = this.state;
     const pinned = !!columnId;
     const emptyMessage = <FormattedMessage id='empty_column.notifications' defaultMessage="You don't have any notifications yet. When other people interact with you, you will see it here." />;
-    const { signedIn } = this.context.identity;
+    const { signedIn } = this.props.identity;
 
     let scrollableContent = null;
 
@@ -240,7 +237,7 @@ class Notifications extends PureComponent {
         <LoadGap
           key={'gap:' + notifications.getIn([index + 1, 'id'])}
           disabled={isLoading}
-          maxId={index > 0 ? notifications.getIn([index - 1, 'id']) : null}
+          param={index > 0 ? notifications.getIn([index - 1, 'id']) : null}
           onClick={this.handleLoadGap}
         />
       ) : (
@@ -261,6 +258,13 @@ class Notifications extends PureComponent {
 
     let scrollContainer;
 
+    const prepend = (
+      <>
+        {needsNotificationPermission && <NotificationsPermissionBanner />}
+        <FilteredNotificationsBanner />
+      </>
+    );
+
     if (signedIn) {
       scrollContainer = (
         <ScrollableList
@@ -270,7 +274,7 @@ class Notifications extends PureComponent {
           showLoading={isLoading && notifications.size === 0}
           hasMore={hasMore}
           numPending={numPending}
-          prepend={needsNotificationPermission && <NotificationsPermissionBanner />}
+          prepend={prepend}
           alwaysPrepend
           emptyMessage={emptyMessage}
           onLoadMore={this.handleLoadOlder}
@@ -359,8 +363,6 @@ class Notifications extends PureComponent {
 
         {filterBarContainer}
 
-        <FilteredNotificationsBanner />
-
         {scrollContainer}
 
         <Helmet>
@@ -373,4 +375,4 @@ class Notifications extends PureComponent {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(Notifications));
+export default connect(mapStateToProps, mapDispatchToProps)(withIdentity(injectIntl(Notifications)));

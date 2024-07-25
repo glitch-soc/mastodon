@@ -31,7 +31,6 @@ class InitialStateSerializer < ActiveModel::Serializer
 
     if object.current_account
       store[:me]                = object.current_account.id.to_s
-      store[:unfollow_modal]    = object_account_user.setting_unfollow_modal
       store[:boost_modal]       = object_account_user.setting_boost_modal
       store[:favourite_modal]   = object_account_user.setting_favourite_modal
       store[:delete_modal]      = object_account_user.setting_delete_modal
@@ -40,6 +39,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:expand_spoilers]   = object_account_user.setting_expand_spoilers
       store[:reduce_motion]     = object_account_user.setting_reduce_motion
       store[:disable_swiping]   = object_account_user.setting_disable_swiping
+      store[:disable_hover_cards] = object_account_user.setting_disable_hover_cards
       store[:advanced_layout]   = object_account_user.setting_advanced_layout
       store[:use_blurhash]      = object_account_user.setting_use_blurhash
       store[:use_pending_items] = object_account_user.setting_use_pending_items

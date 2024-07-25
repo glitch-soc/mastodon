@@ -1,6 +1,9 @@
 - content_for :page_title do
   = t('settings.relationships')
 
+- content_for :header_tags do
+  = flavoured_javascript_pack_tag 'admin', async: true, crossorigin: 'anonymous'
+
 .filters
   .filter-subset
     %strong= t 'relationships.relationship'
@@ -28,7 +31,7 @@
       %li= filter_link_to t('relationships.most_recent'), order: nil
       %li= filter_link_to t('relationships.last_active'), order: 'active'
 
-= form_for(@form, url: relationships_path, method: :patch) do |f|
+= form_with model: @form, url: relationships_path, method: :patch do |f|
   = hidden_field_tag :page, params[:page] || 1
 
   - RelationshipFilter::KEYS.each do |key|

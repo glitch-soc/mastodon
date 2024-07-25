@@ -28,6 +28,20 @@ RSpec.describe 'credentials API' do
         locked: true,
       })
     end
+
+    describe 'allows the profile scope' do
+      let(:scopes) { 'profile' }
+
+      it 'returns the response successfully' do
+        subject
+
+        expect(response).to have_http_status(200)
+
+        expect(body_as_json).to include({
+          locked: true,
+        })
+      end
+    end
   end
 
   describe 'PATCH /api/v1/accounts/update_credentials' do
@@ -65,7 +79,7 @@ RSpec.describe 'credentials API' do
     end
 
     describe 'with invalid data' do
-      let(:params) { { note: "This is too long. #{'a' * Account::MAX_NOTE_LENGTH}" } }
+      let(:params) { { note: "This is too long. #{'a' * Account::NOTE_LENGTH_LIMIT}" } }
 
       it 'returns http unprocessable entity' do
         subject

@@ -232,6 +232,7 @@ pl:
         update_custom_emoji: Aktualizuj niestandardowe emoji
         update_domain_block: Zaktualizuj blokadę domeny
         update_ip_block: Aktualizuj regułę IP
+        update_report: Wiadomości or raporcie
         update_status: Aktualizuj wpis
         update_user_role: Aktualizuj rolę
       actions:
@@ -291,6 +292,7 @@ pl:
         update_custom_emoji_html: Zaktualizowane emoji %{target} przez %{name}
         update_domain_block_html: Zaktualizowano blokadę domeny dla %{target} przez %{name}
         update_ip_block_html: "%{name} stworzył(a) regułę dla IP %{target}"
+        update_report_html: "%{target} zaktualizowany przez %{name}"
         update_status_html: "%{name} zaktualizował(a) wpis użytkownika %{target}"
         update_user_role_html: "%{name} zmienił rolę %{target}"
       deleted_account: usunięte konto
@@ -298,6 +300,7 @@ pl:
       filter_by_action: Filtruj według działania
       filter_by_user: Filtruj według użytkownika
       title: Dziennik działań administracyjnych
+      unavailable_instance: "(domena niedostępna)"
     announcements:
       destroyed_msg: Pomyślnie usunięto ogłoszenie!
       edit:
@@ -660,6 +663,7 @@ pl:
       report: 'Zgłoszenie #%{id}'
       reported_account: Zgłoszone konto
       reported_by: Zgłaszający
+      reported_with_application: Zareportowano przez aplikację
       resolved: Rozwiązane
       resolved_msg: Pomyślnie rozwiązano zgłoszenie.
       skip_to_actions: Przejdź do akcji
@@ -779,6 +783,7 @@ pl:
         desc_html: Wymaga użycia zewnętrznych skryptów hCaptcha, co może negatywnie wpływać na bezpieczeństwo i prywatność. <strong>Może również przyczynić się do znaczącego utrudnienia procesu rejestracji niektórym, np. niepełnosprawnym, osobom.</strong> Dlatego sugeruje się używanie zaproszeń bądź ręcznie potwierdzanie kont.
         title: W celu potwierdzenia ich kont wymagaj rozwiązania zadania CAPTCHA przez nowych użytkowników
       content_retention:
+        danger_zone: Strefa niebezpieczeństwa
         preamble: Kontroluj, jak treści generowane przez użytkownika są przechowywane w Mastodon.
         title: Retencja treści
       default_noindex:
@@ -983,7 +988,7 @@ pl:
       delete: Usuń
       edit_preset: Edytuj szablon ostrzeżenia
       empty: Nie zdefiniowano jeszcze żadnych szablonów ostrzegawczych.
-      title: Zarządzaj szablonami ostrzeżeń
+      title: Zapisane ostrzeżenia
     webhooks:
       add_new: Dodaj punkt końcowy
       delete: Usuń
@@ -1711,10 +1716,22 @@ pl:
     preferences: Preferencje
     profile: Profil
     relationships: Obserwowani i obserwujący
+    severed_relationships: Zerwane związki
     statuses_cleanup: Automatyczne usuwanie wpisów
     strikes: Ostrzeżenia moderacyjne
     two_factor_authentication: Uwierzytelnianie dwuetapowe
     webauthn_authentication: Klucze bezpieczeństwa
+  severed_relationships:
+    download: Pobierz (%{count})
+    event_type:
+      account_suspension: Zawieszenie konta (%{target_name})
+      domain_block: Zawieszenie serwera (%{target_name})
+      user_domain_block: Zablokowano %{target_name}
+    lost_followers: Utraceni obserwujący
+    lost_follows: Utracone obserwowania
+    preamble: Możesz stracić obserwowania i obserwujących kiedy zablokujesz domenę albo kiedy twoi moderatorzy postanowią zawiesić obcy serwer. W tym wypadku będziesz móc pobrać listę zerwanych związków do przejrzenia i potencjalnego importu na innym serwerze.
+    purged: Informacje o tym serwerze zostały wyczyszczone przez administratora twojego serwera.
+    type: Zdarzenie
   statuses:
     attached:
       audio:
@@ -1820,6 +1837,7 @@ pl:
     contrast: Mastodon (Wysoki kontrast)
     default: Mastodon (Ciemny)
     mastodon-light: Mastodon (Jasny)
+    system: Automatyczny (odpowiadający motywowi systemu)
   time:
     formats:
       default: "%d. %b %Y, %H:%M"

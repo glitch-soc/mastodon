@@ -6,7 +6,7 @@ namespace :api, format: false do
 
   # JSON / REST API
   namespace :v1 do
-    resources :statuses, only: [:create, :show, :update, :destroy] do
+    resources :statuses, only: [:index, :create, :show, :update, :destroy] do
       scope module: :statuses do
         resources :reblogged_by, controller: :reblogged_by_accounts, only: :index
         resources :favourited_by, controller: :favourited_by_accounts, only: :index
@@ -40,6 +40,7 @@ namespace :api, format: false do
       resource :direct, only: :show, controller: :direct
       resource :home, only: :show, controller: :home
       resource :public, only: :show, controller: :public
+      resource :link, only: :show, controller: :link
       resources :tag, only: :show
       resources :list, only: :show
     end
@@ -184,7 +185,7 @@ namespace :api, format: false do
       resources :familiar_followers, only: :index
     end
 
-    resources :accounts, only: [:create, :show] do
+    resources :accounts, only: [:index, :create, :show] do
       scope module: :accounts do
         resources :statuses, only: :index
         resources :followers, only: :index, controller: :follower_accounts
@@ -204,9 +205,11 @@ namespace :api, format: false do
         post :unmute
       end
 
-      resource :pin, only: :create, controller: 'accounts/pins'
-      post :unpin, to: 'accounts/pins#destroy'
-      resource :note, only: :create, controller: 'accounts/notes'
+      scope module: :accounts do
+        resource :pin, only: :create
+        post :unpin, to: 'pins#destroy'
+        resource :note, only: :create
+      end
     end
 
     resources :tags, only: [:show] do
@@ -219,7 +222,7 @@ namespace :api, format: false do
     resources :followed_tags, only: [:index]
 
     resources :lists, only: [:index, :create, :show, :update, :destroy] do
-      resource :accounts, only: [:show, :create, :destroy], controller: 'lists/accounts'
+      resource :accounts, only: [:show, :create, :destroy], module: :lists
     end
 
     namespace :featured_tags do
@@ -229,7 +232,7 @@ namespace :api, format: false do
     resources :featured_tags, only: [:index, :create, :destroy]
 
     resources :polls, only: [:create, :show] do
-      resources :votes, only: :create, controller: 'polls/votes'
+      resources :votes, only: :create, module: :polls
     end
 
     namespace :push do
@@ -315,8 +318,10 @@ namespace :api, format: false do
     resources :suggestions, only: [:index]
     resource :instance, only: [:show]
     resources :filters, only: [:index, :create, :show, :update, :destroy] do
-      resources :keywords, only: [:index, :create], controller: 'filters/keywords'
-      resources :statuses, only: [:index, :create], controller: 'filters/statuses'
+      scope module: :filters do
+        resources :keywords, only: [:index, :create]
+        resources :statuses, only: [:index, :create]
+      end
     end
 
     namespace :filters do
@@ -326,6 +331,18 @@ namespace :api, format: false do
 
     namespace :admin do
       resources :accounts, only: [:index]
+    end
+  end
+
+  namespace :v2_alpha do
+    resources :notifications, only: [:index, :show] do
+      collection do
+        post :clear
+      end
+
+      member do
+        post :dismiss
+      end
     end
   end
 

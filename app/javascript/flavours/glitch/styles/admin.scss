@@ -1,7 +1,7 @@
 @use 'sass:math';
 
 $no-columns-breakpoint: 600px;
-$sidebar-width: 240px;
+$sidebar-width: 300px;
 $content-width: 840px;
 
 .admin-wrapper {
@@ -19,7 +19,7 @@ $content-width: 840px;
     &__inner {
       display: flex;
       justify-content: flex-end;
-      background: $ui-base-color;
+      background: var(--background-color);
       height: 100%;
     }
   }
@@ -31,7 +31,7 @@ $content-width: 840px;
 
     &__toggle {
       display: none;
-      background: darken($ui-base-color, 4%);
+      background: var(--background-color);
       border-bottom: 1px solid lighten($ui-base-color, 4%);
       align-items: center;
 
@@ -96,7 +96,6 @@ $content-width: 840px;
 
     ul {
       list-style: none;
-      border-radius: 4px 0 0 4px;
       overflow: hidden;
       margin-bottom: 20px;
 
@@ -105,13 +104,13 @@ $content-width: 840px;
       }
 
       a {
+        font-size: 14px;
         display: block;
         padding: 15px;
         color: $darker-text-color;
         text-decoration: none;
         transition: all 200ms linear;
         transition-property: color, background-color;
-        border-radius: 4px 0 0 4px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -122,19 +121,13 @@ $content-width: 840px;
 
         &:hover {
           color: $primary-text-color;
-          background-color: darken($ui-base-color, 5%);
           transition: all 100ms linear;
           transition-property: color, background-color;
-        }
-
-        &.selected {
-          border-radius: 4px 0 0;
         }
       }
 
       ul {
-        background: darken($ui-base-color, 4%);
-        border-radius: 0 0 0 4px;
+        background: var(--background-color);
         margin: 0;
 
         a {
@@ -149,15 +142,9 @@ $content-width: 840px;
       }
 
       .simple-navigation-active-leaf a {
-        color: $primary-text-color;
-        background-color: $ui-highlight-color;
+        color: $highlight-text-color;
         border-bottom: 0;
-        border-radius: 0;
       }
-    }
-
-    & > ul > .simple-navigation-active-leaf a {
-      border-radius: 4px 0 0 4px;
     }
   }
 
@@ -292,7 +279,7 @@ $content-width: 840px;
       color: $darker-text-color;
       padding-bottom: 8px;
       margin-bottom: 8px;
-      border-bottom: 1px solid lighten($ui-base-color, 8%);
+      border-bottom: 1px solid var(--background-border-color);
     }
 
     h6 {
@@ -365,7 +352,7 @@ $content-width: 840px;
       width: 100%;
       height: 0;
       border: 0;
-      border-bottom: 1px solid rgba($ui-base-lighter-color, 0.6);
+      border-bottom: 1px solid var(--background-border-color);
       margin: 20px 0;
 
       &.spacer {
@@ -403,14 +390,14 @@ $content-width: 840px;
           inset-inline-start: 0;
           bottom: 0;
           overflow-y: auto;
-          background: $ui-base-color;
+          background: var(--background-color);
         }
       }
 
       ul a,
       ul ul a {
+        font-size: 16px;
         border-radius: 0;
-        border-bottom: 1px solid lighten($ui-base-color, 4%);
         transition: none;
 
         &:hover {
@@ -697,8 +684,10 @@ body,
   line-height: 20px;
   padding: 15px;
   padding-inline-start: 15px * 2 + 40px;
-  background: $ui-base-color;
-  border-bottom: 1px solid darken($ui-base-color, 8%);
+  background: var(--background-color);
+  border-right: 1px solid var(--background-border-color);
+  border-left: 1px solid var(--background-border-color);
+  border-bottom: 1px solid var(--background-border-color);
   position: relative;
   text-decoration: none;
   color: $darker-text-color;
@@ -707,18 +696,13 @@ body,
   &:first-child {
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+    border-top: 1px solid var(--background-border-color);
   }
 
   &:last-child {
     border-bottom-left-radius: 4px;
     border-bottom-right-radius: 4px;
-    border-bottom: 0;
-  }
-
-  &:hover,
-  &:focus,
-  &:active {
-    background: lighten($ui-base-color, 4%);
+    border-bottom: 1px solid var(--background-border-color);
   }
 
   &__avatar {
@@ -758,12 +742,57 @@ body,
   }
 }
 
+.strike-entry {
+  display: block;
+  line-height: 20px;
+  padding: 15px;
+  padding-inline-start: 15px * 2 + 40px;
+  background: var(--background-color);
+  border: 1px solid var(--background-border-color);
+  border-radius: 4px;
+  position: relative;
+  text-decoration: none;
+  color: $darker-text-color;
+  font-size: 14px;
+  margin-bottom: 15px;
+
+  &__avatar {
+    position: absolute;
+    inset-inline-start: 15px;
+    top: 15px;
+
+    .avatar {
+      border-radius: 4px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  &__title {
+    word-wrap: break-word;
+  }
+
+  &__timestamp {
+    color: $dark-text-color;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: $ui-base-color;
+  }
+}
+
 a.name-tag,
 .name-tag,
 a.inline-name-tag,
 .inline-name-tag {
   text-decoration: none;
   color: $secondary-text-color;
+
+  &:hover {
+    color: $highlight-text-color;
+  }
 
   .username {
     font-weight: 500;
@@ -844,7 +873,8 @@ a.name-tag,
 }
 
 .report-card {
-  background: $ui-base-color;
+  background: var(--background-color);
+  border: 1px solid var(--background-border-color);
   border-radius: 4px;
   margin-bottom: 20px;
 
@@ -856,7 +886,6 @@ a.name-tag,
 
     .account {
       padding: 0;
-      border: 0;
 
       &__avatar-wrapper {
         margin-inline-start: 0;
@@ -877,7 +906,7 @@ a.name-tag,
         &:focus,
         &:hover,
         &:active {
-          color: lighten($darker-text-color, 8%);
+          color: $highlight-text-color;
         }
       }
 
@@ -891,11 +920,7 @@ a.name-tag,
     &__item {
       display: flex;
       justify-content: flex-start;
-      border-top: 1px solid darken($ui-base-color, 4%);
-
-      &:hover {
-        background: lighten($ui-base-color, 2%);
-      }
+      border-top: 1px solid var(--background-border-color);
 
       &__reported-by,
       &__assigned {
@@ -918,7 +943,6 @@ a.name-tag,
         max-width: calc(100% - 300px);
 
         &__icon {
-          color: $dark-text-color;
           margin-inline-end: 4px;
           font-weight: 500;
         }
@@ -931,6 +955,10 @@ a.name-tag,
         padding: 15px;
         text-decoration: none;
         color: $darker-text-color;
+
+        &:hover {
+          color: $highlight-text-color;
+        }
       }
     }
   }
@@ -966,14 +994,15 @@ a.name-tag,
 
   .account__header__fields,
   .account__header__content {
-    background: lighten($ui-base-color, 8%);
+    background: var(--background-color);
+    border: 1px solid var(--background-border-color);
     border-radius: 4px;
     height: 100%;
   }
 
   .account__header__fields {
     margin: 0;
-    border: 0;
+    border: 1px solid var(--background-border-color);
 
     a {
       color: $highlight-text-color;
@@ -1002,8 +1031,8 @@ a.name-tag,
 .applications-list__item,
 .filters-list__item {
   padding: 15px 0;
-  background: $ui-base-color;
-  border: 1px solid lighten($ui-base-color, 4%);
+  background: var(--background-color);
+  border: 1px solid var(--background-border-color);
   border-radius: 4px;
   margin-top: 15px;
 }
@@ -1014,13 +1043,13 @@ a.name-tag,
 
 .announcements-list,
 .filters-list {
-  border: 1px solid lighten($ui-base-color, 4%);
+  border: 1px solid var(--background-border-color);
   border-radius: 4px;
+  border-bottom: none;
 
   &__item {
     padding: 15px 0;
-    background: $ui-base-color;
-    border-bottom: 1px solid lighten($ui-base-color, 4%);
+    border-bottom: 1px solid var(--background-border-color);
 
     &__title {
       padding: 0 15px;
@@ -1031,6 +1060,10 @@ a.name-tag,
       color: $secondary-text-color;
       text-decoration: none;
       margin-bottom: 10px;
+
+      &:hover {
+        color: $highlight-text-color;
+      }
 
       .account-role {
         vertical-align: middle;
@@ -1069,10 +1102,6 @@ a.name-tag,
 
     &__permissions {
       margin-top: 10px;
-    }
-
-    &:last-child {
-      border-bottom: 0;
     }
   }
 }
@@ -1123,7 +1152,7 @@ a.name-tag,
 
   &__table {
     &__number {
-      color: $secondary-text-color;
+      color: var(--background-color);
       padding: 10px;
     }
 
@@ -1150,7 +1179,7 @@ a.name-tag,
 
     &__box {
       box-sizing: border-box;
-      background: $ui-highlight-color;
+      background: var(--background-color);
       padding: 10px;
       font-weight: 500;
       color: $primary-text-color;
@@ -1172,8 +1201,9 @@ a.name-tag,
 .sparkline {
   display: block;
   text-decoration: none;
-  background: lighten($ui-base-color, 4%);
+  background: var(--background-color);
   border-radius: 4px;
+  border: 1px solid var(--background-border-color);
   padding: 0;
   position: relative;
   padding-bottom: 55px + 20px;
@@ -1245,12 +1275,12 @@ a.sparkline {
   &:hover,
   &:focus,
   &:active {
-    background: lighten($ui-base-color, 6%);
+    background: $ui-base-color;
   }
 }
 
 .skeleton {
-  background-color: lighten($ui-base-color, 8%);
+  background-color: var(--background-color);
   background-image: linear-gradient(
     90deg,
     lighten($ui-base-color, 8%),
@@ -1330,16 +1360,12 @@ a.sparkline {
 
 .report-reason-selector {
   border-radius: 4px;
-  background: $ui-base-color;
+  background: var(--background-color);
   margin-bottom: 20px;
 
   &__category {
     cursor: pointer;
     border-bottom: 1px solid darken($ui-base-color, 8%);
-
-    &:last-child {
-      border-bottom: 0;
-    }
 
     &__label {
       padding: 15px;
@@ -1369,7 +1395,7 @@ a.sparkline {
 
   &__details {
     &__item {
-      border-bottom: 1px solid lighten($ui-base-color, 8%);
+      border-bottom: 1px solid var(--background-border-color);
       padding: 15px 0;
 
       &:last-child {
@@ -1400,7 +1426,7 @@ a.sparkline {
 
 .account-card {
   border-radius: 4px;
-  border: 1px solid lighten($ui-base-color, 8%);
+  border: 1px solid var(--background-border-color);
   position: relative;
 
   &__warning-badge {
@@ -1488,7 +1514,6 @@ a.sparkline {
       position: absolute;
       bottom: 0;
       inset-inline-end: 15px;
-      background: linear-gradient(to left, $ui-base-color, transparent);
       pointer-events: none;
     }
 
@@ -1564,11 +1589,11 @@ a.sparkline {
   margin-bottom: 20px;
 
   &__item {
-    background: $ui-base-color;
+    background: var(--background-color);
     position: relative;
     padding: 15px;
     padding-inline-start: 15px * 2 + 40px;
-    border-bottom: 1px solid darken($ui-base-color, 8%);
+    border: 1px solid var(--background-border-color);
 
     &:first-child {
       border-top-left-radius: 4px;
@@ -1578,11 +1603,6 @@ a.sparkline {
     &:last-child {
       border-bottom-left-radius: 4px;
       border-bottom-right-radius: 4px;
-      border-bottom: 0;
-    }
-
-    &:hover {
-      background-color: lighten($ui-base-color, 4%);
     }
 
     &__avatar {
@@ -1660,13 +1680,10 @@ a.sparkline {
 }
 
 .report-actions {
-  border: 1px solid darken($ui-base-color, 8%);
-
   &__item {
     display: flex;
     align-items: center;
     line-height: 18px;
-    border-bottom: 1px solid darken($ui-base-color, 8%);
 
     &:last-child {
       border-bottom: 0;
@@ -1729,8 +1746,6 @@ a.sparkline {
 
 .strike-card {
   padding: 15px;
-  border-radius: 4px;
-  background: $ui-base-color;
   font-size: 15px;
   line-height: 20px;
   word-wrap: break-word;
@@ -1738,6 +1753,8 @@ a.sparkline {
   color: $primary-text-color;
   box-sizing: border-box;
   min-height: 100%;
+  border: 1px solid var(--background-border-color);
+  border-radius: 4px;
 
   a {
     color: $highlight-text-color;
@@ -1778,15 +1795,14 @@ a.sparkline {
 
   &__statuses-list {
     border-radius: 4px;
-    border: 1px solid darken($ui-base-color, 8%);
+    border: 1px solid var(--background-border-color);
     font-size: 13px;
     line-height: 18px;
     overflow: hidden;
 
     &__item {
       padding: 16px;
-      background: lighten($ui-base-color, 2%);
-      border-bottom: 1px solid darken($ui-base-color, 8%);
+      border-bottom: 1px solid var(--background-border-color);
 
       &:last-child {
         border-bottom: 0;

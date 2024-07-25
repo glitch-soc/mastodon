@@ -30,8 +30,10 @@ import StarIcon from '@/material-icons/400-24px/star.svg?react';
 import { fetchFollowRequests } from 'flavours/glitch/actions/accounts';
 import { IconWithBadge } from 'flavours/glitch/components/icon_with_badge';
 import { NavigationPortal } from 'flavours/glitch/components/navigation_portal';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { timelinePreview, trendsEnabled } from 'flavours/glitch/initial_state';
 import { transientSingleColumn } from 'flavours/glitch/is_mobile';
+import { selectUnreadNotificationGroupsCount } from 'flavours/glitch/selectors/notifications';
 import { preferencesLink } from 'flavours/glitch/utils/backend_links';
 
 import ColumnLink from './column_link';
@@ -59,15 +61,19 @@ const messages = defineMessages({
 });
 
 const NotificationsLink = () => {
+  const optedInGroupedNotifications = useSelector((state) => state.getIn(['settings', 'notifications', 'groupingBeta'], false));
   const count = useSelector(state => state.getIn(['local_settings', 'notifications', 'tab_badge']) ? state.getIn(['notifications', 'unread']) : 0);
   const intl = useIntl();
 
+  const newCount = useSelector(selectUnreadNotificationGroupsCount);
+
   return (
     <ColumnLink
+      key='notifications'
       transparent
       to='/notifications'
-      icon={<IconWithBadge id='bell' icon={NotificationsIcon} count={count} className='column-link__icon' />}
-      activeIcon={<IconWithBadge id='bell' icon={NotificationsActiveIcon} count={count} className='column-link__icon' />}
+      icon={<IconWithBadge id='bell' icon={NotificationsIcon} count={optedInGroupedNotifications ? newCount : count} className='column-link__icon' />}
+      activeIcon={<IconWithBadge id='bell' icon={NotificationsActiveIcon} count={optedInGroupedNotifications ? newCount : count} className='column-link__icon' />}
       text={intl.formatMessage(messages.notifications)}
     />
   );
@@ -98,12 +104,8 @@ const FollowRequestsLink = () => {
 };
 
 class NavigationPanel extends Component {
-
-  static contextTypes = {
-    identity: PropTypes.object.isRequired,
-  };
-
   static propTypes = {
+    identity: identityContextPropShape,
     intl: PropTypes.object.isRequired,
     onOpenSettings: PropTypes.func,
   };
@@ -114,7 +116,7 @@ class NavigationPanel extends Component {
 
   render () {
     const { intl, onOpenSettings } = this.props;
-    const { signedIn, disabledAccountId } = this.context.identity;
+    const { signedIn, disabledAccountId } = this.props.identity;
 
     let banner = undefined;
 
@@ -188,4 +190,4 @@ class NavigationPanel extends Component {
 
 }
 
-export default injectIntl(NavigationPanel);
+export default injectIntl(withIdentity(NavigationPanel));

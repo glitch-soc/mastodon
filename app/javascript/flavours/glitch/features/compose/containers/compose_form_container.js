@@ -82,8 +82,8 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     dispatch(changeCompose(text));
   },
 
-  onSubmit (router, overridePrivacy = null) {
-    dispatch(submitCompose(router, overridePrivacy));
+  onSubmit (overridePrivacy = null) {
+    dispatch(submitCompose(overridePrivacy));
   },
 
   onClearSuggestions () {
@@ -110,14 +110,14 @@ const mapDispatchToProps = (dispatch, { intl }) => ({
     dispatch(insertEmojiCompose(position, data, needsSpace));
   },
 
-  onMediaDescriptionConfirm (routerHistory, mediaId, overridePrivacy = null) {
+  onMediaDescriptionConfirm (mediaId, overridePrivacy = null) {
     dispatch(openModal({
       modalType: 'CONFIRM',
       modalProps: {
         message: intl.formatMessage(messages.missingDescriptionMessage),
         confirm: intl.formatMessage(messages.missingDescriptionConfirm),
         onConfirm: () => {
-          dispatch(submitCompose(routerHistory, overridePrivacy));
+          dispatch(submitCompose(overridePrivacy));
         },
         secondary: intl.formatMessage(messages.missingDescriptionEdit),
         onSecondary: () => dispatch(openModal({

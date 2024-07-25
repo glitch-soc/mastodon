@@ -1,5 +1,7 @@
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
 
+import { timelineDelete } from 'flavours/glitch/actions/timelines_typed';
+
 import {
   COMPOSE_MOUNT,
   COMPOSE_UNMOUNT,
@@ -48,12 +50,12 @@ import {
   INIT_MEDIA_EDIT_MODAL,
   COMPOSE_CHANGE_MEDIA_DESCRIPTION,
   COMPOSE_CHANGE_MEDIA_FOCUS,
+  COMPOSE_CHANGE_MEDIA_ORDER,
   COMPOSE_SET_STATUS,
   COMPOSE_FOCUS,
 } from '../actions/compose';
 import { REDRAFT } from '../actions/statuses';
 import { STORE_HYDRATE } from '../actions/store';
-import { TIMELINE_DELETE } from '../actions/timelines';
 import { me, defaultContentType } from '../initial_state';
 import { recoverHashtags } from '../utils/hashtag';
 import { unescapeHTML } from '../utils/html';
@@ -550,10 +552,10 @@ export default function compose(state = initialState, action) {
     return updateSuggestionTags(state, action.token);
   case COMPOSE_TAG_HISTORY_UPDATE:
     return state.set('tagHistory', fromJS(action.tags));
-  case TIMELINE_DELETE:
-    if (action.id === state.get('in_reply_to')) {
+  case timelineDelete.type:
+    if (action.payload.statusId === state.get('in_reply_to')) {
       return state.set('in_reply_to', null);
-    } else if (action.id === state.get('id')) {
+    } else if (action.payload.statusId === state.get('id')) {
       return state.set('id', null);
     } else {
       return state;
@@ -656,6 +658,14 @@ export default function compose(state = initialState, action) {
     return state.set('language', action.language);
   case COMPOSE_FOCUS:
     return state.set('focusDate', new Date()).update('text', text => text.length > 0 ? text : action.defaultText);
+  case COMPOSE_CHANGE_MEDIA_ORDER:
+    return state.update('media_attachments', list => {
+      const indexA = list.findIndex(x => x.get('id') === action.a);
+      const moveItem = list.get(indexA);
+      const indexB = list.findIndex(x => x.get('id') === action.b);
+
+      return list.splice(indexA, 1).splice(indexB, 0, moveItem);
+    });
   default:
     return state;
   }
