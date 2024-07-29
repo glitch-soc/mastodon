@@ -7,6 +7,10 @@ class REST::NotificationPolicySerializer < ActiveModel::Serializer
              :filter_not_followers,
              :filter_new_accounts,
              :filter_private_mentions,
+             :mute_not_following,
+             :mute_not_followers,
+             :mute_new_accounts,
+             :mute_private_mentions,
              :summary
 
   def summary

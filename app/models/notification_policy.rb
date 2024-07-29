@@ -25,6 +25,8 @@ class NotificationPolicy < ApplicationRecord
 
   attr_reader :pending_requests_count, :pending_notifications_count
 
+  before_update :ensure_filter_mute_exclusivity
+
   MAX_MEANINGFUL_COUNT = 100
 
   def summarize!
@@ -36,5 +38,31 @@ class NotificationPolicy < ApplicationRecord
 
   def pending_notification_requests
     @pending_notification_requests ||= notification_requests.limit(MAX_MEANINGFUL_COUNT).pick(Arel.sql('count(*), coalesce(sum(notifications_count), 0)::bigint'))
+  end
+
+  def ensure_filter_mute_exclusivity
+    if filter_not_following_changed? && filter_not_following?
+      self.mute_not_following = false
+    elsif mute_not_following_changed? && mute_not_following?
+      self.filter_not_following = false
+    end
+
+    if filter_not_followers_changed? && filter_not_followers?
+      self.mute_not_followers = false
+    elsif mute_not_followers_changed? && mute_not_followers?
+      self.filter_not_followers = false
+    end
+
+    if filter_new_accounts_changed? && filter_new_accounts?
+      self.mute_new_accounts = false
+    elsif mute_new_accounts_changed? && mute_new_accounts?
+      self.filter_new_accounts = false
+    end
+
+    if filter_private_mentions_changed? && filter_private_mentions?
+      self.mute_private_mentions = false
+    elsif mute_private_mentions_changed? && mute_private_mentions?
+      self.filter_private_mentions = false
+    end
   end
 end

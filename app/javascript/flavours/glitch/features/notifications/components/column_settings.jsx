@@ -8,10 +8,10 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_REPORTS } from 'flavours/glitch/permissions';
 
-import { CheckboxWithLabel } from './checkbox_with_label';
 import ClearColumnButton from './clear_column_button';
 import GrantPermissionButton from './grant_permission_button';
 import PillBarButton from './pill_bar_button';
+import PillBarToggle from './pill_bar_toggle';
 import SettingToggle from './setting_toggle';
 
 class ColumnSettings extends PureComponent {
@@ -49,6 +49,22 @@ class ColumnSettings extends PureComponent {
     this.props.onChangePolicy('filter_private_mentions', checked);
   };
 
+  handleMuteNotFollowing = checked => {
+    this.props.onChangePolicy('mute_not_following', checked);
+  };
+
+  handleMuteNotFollowers = checked => {
+    this.props.onChangePolicy('mute_not_followers', checked);
+  };
+
+  handleMuteNewAccounts = checked => {
+    this.props.onChangePolicy('mute_new_accounts', checked);
+  };
+
+  handleMutePrivateMentions = checked => {
+    this.props.onChangePolicy('mute_private_mentions', checked);
+  };
+
   render () {
     const { settings, pushSettings, onChange, onClear, alertsEnabled, browserSupport, browserPermission, onRequestNotificationPermission, notificationPolicy } = this.props;
 
@@ -59,6 +75,8 @@ class ColumnSettings extends PureComponent {
     const alertStr = <FormattedMessage id='notifications.column_settings.alert' defaultMessage='Desktop notifications' />;
     const showStr = <FormattedMessage id='notifications.column_settings.show' defaultMessage='Show in column' />;
     const soundStr = <FormattedMessage id='notifications.column_settings.sound' defaultMessage='Play sound' />;
+    const filterStr = <FormattedMessage id='simple_form.labels.filters.actions.warn' defaultMessage='Hide with a warning' />;
+    const muteStr = <FormattedMessage id='simple_form.labels.filters.actions.hide' defaultMessage='Hide completely' />;
 
     const showPushSettings = pushSettings.get('browserSupport') && pushSettings.get('isSubscribed');
     const pushStr = showPushSettings && <FormattedMessage id='notifications.column_settings.push' defaultMessage='Push notifications' />;
@@ -85,31 +103,55 @@ class ColumnSettings extends PureComponent {
           <h3><FormattedMessage id='notifications.policy.title' defaultMessage='Filter out notifications from…' /></h3>
 
           <div className='column-settings__row'>
-            <CheckboxWithLabel checked={notificationPolicy.filter_not_following} onChange={this.handleFilterNotFollowing}>
-              <strong><FormattedMessage id='notifications.policy.filter_not_following_title' defaultMessage="People you don't follow" /></strong>
-              <span className='hint'><FormattedMessage id='notifications.policy.filter_not_following_hint' defaultMessage='Until you manually approve them' /></span>
-            </CheckboxWithLabel>
+            <div aria-labelledby='notifications.policy.filter_not_following_title'>
+              <div className='app-form__toggle__label pillbar'>
+                <strong><FormattedMessage id='notifications.policy.filter_not_following_title' defaultMessage="People you don't follow" /></strong>
+                <span className='hint'><FormattedMessage id='notifications.policy.filter_not_following_hint' defaultMessage='Until you manually approve them' /></span>
+              </div>
+              <div className='column-settings__pillbar'>
+                <PillBarToggle id={'filter-not-following'} active={notificationPolicy.filter_not_following} label={filterStr} onChange={this.handleFilterNotFollowing} />
+                <PillBarToggle id={'mute-not-following'} active={notificationPolicy.mute_not_following} label={muteStr} onChange={this.handleMuteNotFollowing} />
+              </div>
+            </div>
 
-            <CheckboxWithLabel checked={notificationPolicy.filter_not_followers} onChange={this.handleFilterNotFollowers}>
-              <strong><FormattedMessage id='notifications.policy.filter_not_followers_title' defaultMessage='People not following you' /></strong>
-              <span className='hint'><FormattedMessage id='notifications.policy.filter_not_followers_hint' defaultMessage='Including people who have been following you fewer than {days, plural, one {one day} other {# days}}' values={{ days: 3 }} /></span>
-            </CheckboxWithLabel>
+            <div aria-labelledby='notifications.policy.filter_not_followers_title'>
+              <div className='app-form__toggle__label pillbar'>
+                <strong><FormattedMessage id='notifications.policy.filter_not_followers_title' defaultMessage='People not following you' /></strong>
+                <span className='hint'><FormattedMessage id='notifications.policy.filter_not_followers_hint' defaultMessage='Including people who have been following you fewer than {days, plural, one {one day} other {# days}}' values={{ days: 3 }} /></span>
+              </div>
+              <div className='column-settings__pillbar'>
+                <PillBarToggle id={'filter-not-followers'} active={notificationPolicy.filter_not_followers} label={filterStr} onChange={this.handleFilterNotFollowers} />
+                <PillBarToggle id={'mute-not-followers'} active={notificationPolicy.mute_not_followers} label={muteStr} onChange={this.handleMuteNotFollowers} />
+              </div>
+            </div>
 
-            <CheckboxWithLabel checked={notificationPolicy.filter_new_accounts} onChange={this.handleFilterNewAccounts}>
-              <strong><FormattedMessage id='notifications.policy.filter_new_accounts_title' defaultMessage='New accounts' /></strong>
-              <span className='hint'><FormattedMessage id='notifications.policy.filter_new_accounts.hint' defaultMessage='Created within the past {days, plural, one {one day} other {# days}}' values={{ days: 30 }} /></span>
-            </CheckboxWithLabel>
+            <div aria-labelledby='notifications.policy.filter_new_accounts_title'>
+              <div className='app-form__toggle__label pillbar'>
+                <strong><FormattedMessage id='notifications.policy.filter_new_accounts_title' defaultMessage='New accounts' /></strong>
+                <span className='hint'><FormattedMessage id='notifications.policy.filter_new_accounts.hint' defaultMessage='Created within the past {days, plural, one {one day} other {# days}}' values={{ days: 30 }} /></span>
+              </div>
+              <div className='column-settings__pillbar'>
+                <PillBarToggle id={'filter-new-accounts'} active={notificationPolicy.filter_new_accounts} label={filterStr} onChange={this.handleFilterNewAccounts} />
+                <PillBarToggle id={'mute-new-accounts'} active={notificationPolicy.mute_new_accounts} label={muteStr} onChange={this.handleMuteNewAccounts} />
+              </div>
+            </div>
 
-            <CheckboxWithLabel checked={notificationPolicy.filter_private_mentions} onChange={this.handleFilterPrivateMentions}>
-              <strong><FormattedMessage id='notifications.policy.filter_private_mentions_title' defaultMessage='Unsolicited private mentions' /></strong>
-              <span className='hint'><FormattedMessage id='notifications.policy.filter_private_mentions_hint' defaultMessage="Filtered unless it's in reply to your own mention or if you follow the sender" /></span>
-            </CheckboxWithLabel>
+            <div aria-labelledby='notifications.policy.filter_private_mentions_title'>
+              <div className='app-form__toggle__label pillbar'>
+                <strong><FormattedMessage id='notifications.policy.filter_private_mentions_title' defaultMessage='Unsolicited private mentions' /></strong>
+                <span className='hint'><FormattedMessage id='notifications.policy.filter_private_mentions_hint' defaultMessage="Filtered unless it's in reply to your own mention or if you follow the sender" /></span>
+              </div>
+              <div className='column-settings__pillbar'>
+                <PillBarToggle id={'filter-private-mentions'} active={notificationPolicy.filter_private_mentions} label={filterStr} onChange={this.handleFilterPrivateMentions} />
+                <PillBarToggle id={'mute-private-mentions'} active={notificationPolicy.mute_private_mentions} label={muteStr} onChange={this.handleMutePrivateMentions} />
+              </div>
+            </div>
           </div>
         </section>
 
         <section role='group' aria-labelledby='notifications-filter-bar'>
           <h3 id='notifications-filter-bar'><FormattedMessage id='notifications.column_settings.filter_bar.category' defaultMessage='Quick filter bar' /></h3>
- 
+
           <div className='column-settings__row'>
             <SettingToggle id='show-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'show']} onChange={onChange} label={filterBarShowStr} />
             <SettingToggle id='show-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'advanced']} onChange={onChange} label={filterAdvancedStr} />

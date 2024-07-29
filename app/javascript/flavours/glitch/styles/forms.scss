@@ -1327,6 +1327,11 @@ code {
         margin: 0 4px;
         margin-top: -2px;
       }
+
+      // Extra bottom margin when used as a label over a pillbar button group
+      &.pillbar {
+        margin-bottom: 0.5em;
+      }
     }
 
     &__toggle {
