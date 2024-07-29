@@ -34,7 +34,7 @@ class NotifyService < BaseService
       blocked ||= @recipient.muting_notifications?(@sender)
       blocked ||= conversation_muted?
       blocked ||= blocked_mention? if message?
-      blocked
+      blocked || FilterCondition.new(@notification).dismiss?
     end
 
     private
@@ -99,6 +99,16 @@ class NotifyService < BaseService
         filtered_by_private_mentions_policy?
     end
 
+    def dismiss?
+      return false unless Notification::PROPERTIES[@notification.type][:filterable]
+      return false if override_for_sender?
+
+      muted_by_not_following_policy? ||
+        muted_by_not_followers_policy? ||
+        muted_by_new_accounts_policy? ||
+        muted_by_private_mentions_policy?
+    end
+
     private
 
     def filtered_by_not_following_policy?
@@ -115,6 +125,22 @@ class NotifyService < BaseService
 
     def filtered_by_private_mentions_policy?
       @policy.filter_private_mentions? && not_following? && private_mention_not_in_response?
+    end
+
+    def muted_by_not_following_policy?
+      @policy.mute_not_following? && not_following?
+    end
+
+    def muted_by_not_followers_policy?
+      @policy.mute_not_followers? && not_follower?
+    end
+
+    def muted_by_new_accounts_policy?
+      @policy.mute_new_accounts? && new_account?
+    end
+
+    def muted_by_private_mentions_policy?
+      @policy.mute_private_mentions? && not_following? && private_mention_not_in_response?
     end
 
     def not_following?
