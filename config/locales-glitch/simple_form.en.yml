@@ -20,7 +20,9 @@ en:
         setting_show_followers_count: Show your followers count
         setting_skin: Skin
         setting_system_emoji_font: Use system's default font for emojis (applies to Glitch flavour only)
+        setting_visible_reactions: Number of visible emoji reactions
       notification_emails:
+        reaction: Someone reacted to your post
         trending_link: New trending link requires review
         trending_status: New trending post requires review
         trending_tag: New trending tag requires review

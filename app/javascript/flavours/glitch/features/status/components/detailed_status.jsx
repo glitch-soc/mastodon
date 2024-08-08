@@ -15,12 +15,15 @@ import { getHashtagBarForStatus } from 'flavours/glitch/components/hashtag_bar';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
 import PollContainer from 'flavours/glitch/containers/poll_container';
+import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import { Avatar } from '../../../components/avatar';
 import { DisplayName } from '../../../components/display_name';
 import MediaGallery from '../../../components/media_gallery';
 import StatusContent from '../../../components/status_content';
+import StatusReactions from '../../../components/status_reactions';
+import { visibleReactions } from '../../../initial_state';
 import Audio from '../../audio';
 import scheduleIdleTask from '../../ui/util/schedule_idle_task';
 import Video from '../../video';
@@ -28,8 +31,8 @@ import Video from '../../video';
 import Card from './card';
 
 class DetailedStatus extends ImmutablePureComponent {
-
   static propTypes = {
+    identity: identityContextPropShape,
     status: ImmutablePropTypes.map,
     settings: ImmutablePropTypes.map.isRequired,
     onOpenMedia: PropTypes.func.isRequired,
@@ -47,6 +50,8 @@ class DetailedStatus extends ImmutablePureComponent {
       available: PropTypes.bool,
     }),
     onToggleMediaVisibility: PropTypes.func,
+    onReactionAdd: PropTypes.func.isRequired,
+    onReactionRemove: PropTypes.func.isRequired,
     ...WithRouterPropTypes,
   };
 
@@ -307,6 +312,14 @@ class DetailedStatus extends ImmutablePureComponent {
             {...statusContentProps}
           />
 
+          {visibleReactions > 0 && (<StatusReactions
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            addReaction={this.props.onReactionAdd}
+            removeReaction={this.props.onReactionRemove}
+            canReact={this.props.identity.signedIn}
+          />)}
+
           <div className='detailed-status__meta'>
             <div className='detailed-status__meta__line'>
               <a className='detailed-status__datetime' href={status.get('url')} target='_blank' rel='noopener noreferrer'>
@@ -333,4 +346,4 @@ class DetailedStatus extends ImmutablePureComponent {
 
 }
 
-export default withRouter(DetailedStatus);
+export default withRouter(withIdentity(DetailedStatus));

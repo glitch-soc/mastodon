@@ -97,6 +97,10 @@ class REST::V1::InstanceSerializer < ActiveModel::Serializer
         min_expiration: PollValidator::MIN_EXPIRATION,
         max_expiration: PollValidator::MAX_EXPIRATION,
       },
+
+      reactions: {
+        max_reactions: StatusReactionValidator::LIMIT,
+      },
     }
   end
 

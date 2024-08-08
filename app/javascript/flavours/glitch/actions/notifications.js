@@ -176,6 +176,7 @@ const excludeTypesFromFilter = filter => {
     'follow',
     'follow_request',
     'favourite',
+    'reaction',
     'reblog',
     'mention',
     'poll',
