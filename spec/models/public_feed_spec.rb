@@ -41,6 +41,20 @@ RSpec.describe PublicFeed do
       expect(subject).to_not include(silenced_status.id)
     end
 
+    context 'with with_reblogs option' do
+      subject { described_class.new(nil, with_reblogs: true).get(20).map(&:id) }
+
+      it 'lists public reblogs of public posts, but not public reblogs of unlisted posts' do
+        status = Fabricate(:status, visibility: :public)
+        boost = Fabricate(:status, reblog_of_id: status.id, visibility: :public)
+        unlisted_status = Fabricate(:status, visibility: :unlisted)
+        excluded_boost = Fabricate(:status, reblog_of_id: unlisted_status.id, visibility: :public)
+
+        expect(subject).to include(boost.id)
+          .and not_include(excluded_boost.id)
+      end
+    end
+
     context 'without local_only option' do
       subject { described_class.new(viewer).get(20).map(&:id) }
 
