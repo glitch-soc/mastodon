@@ -200,7 +200,7 @@ class AccountGallery extends ImmutablePureComponent {
     }
 
     return (
-      <Column ref={this.setColumnRef}>
+      <Column bindToDocument={!multiColumn} ref={this.setColumnRef}>
         <ProfileColumnHeader onClick={this.handleHeaderClick} multiColumn={multiColumn} />
 
         <ScrollContainer scrollKey='account_gallery'>
