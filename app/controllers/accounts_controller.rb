@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class AccountsController < ApplicationController
+  OFFSET        = 0
   PAGE_SIZE     = 20
   PAGE_SIZE_MAX = 200
 
@@ -20,17 +21,21 @@ class AccountsController < ApplicationController
         expires_in(15.seconds, public: true, stale_while_revalidate: 30.seconds, stale_if_error: 1.hour) unless user_signed_in?
       end
 
-      format.rss do
+      format.any(:rss, :txt) do
         expires_in 1.minute, public: true
 
         limit     = params[:limit].present? ? [params[:limit].to_i, PAGE_SIZE_MAX].min : PAGE_SIZE
-        @statuses = filtered_statuses.without_reblogs.limit(limit)
-        @statuses = preload_collection(@statuses, Status)
+        offset    = params[:offset].present? ? params[:offset].to_i : OFFSET
+        @statuses = filtered_statuses.without_reblogs.limit(limit).offset(offset)
+        @statuses = cache_collection(@statuses, Status)
       end
 
       format.json do
         expires_in 3.minutes, public: !(authorized_fetch_mode? && signed_request_account.present?)
-        render_with_cache json: @account, content_type: 'application/activity+json', serializer: ActivityPub::ActorSerializer, adapter: ActivityPub::Adapter
+        render_with_cache json: @account,
+                          content_type: 'application/activity+json',
+                          serializer: ActivityPub::ActorSerializer,
+                          adapter: ActivityPub::Adapter
       end
     end
   end
@@ -46,7 +51,7 @@ class AccountsController < ApplicationController
   end
 
   def default_statuses
-    @account.statuses.not_local_only.distributable_visibility
+    @account.statuses.not_local_only.where(visibility: [:public, :unlisted])
   end
 
   def only_media_scope
