@@ -18,9 +18,6 @@
   "compose.content-type.plain": "Testun plaen",
   "confirmations.missing_media_description.confirm": "Anfon beth bynnag",
   "confirmations.missing_media_description.edit": "Golygu cyfryngau",
-  "confirmations.unfilter.author": "Awdur",
-  "confirmations.unfilter.confirm": "Dangos",
-  "confirmations.unfilter.edit_filter": "Golygi hidlydd",
   "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }
