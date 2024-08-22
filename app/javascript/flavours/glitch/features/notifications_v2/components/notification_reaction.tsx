@@ -6,13 +6,27 @@ import type { NotificationGroupReaction } from 'flavours/glitch/models/notificat
 import type { LabelRenderer } from './notification_group_with_status';
 import { NotificationGroupWithStatus } from './notification_group_with_status';
 
-const labelRenderer: LabelRenderer = (values) => (
-  <FormattedMessage
-    id='notification.reaction'
-    defaultMessage='{name} reacted to your status'
-    values={values}
-  />
-);
+const labelRenderer: LabelRenderer = (displayedName, total) => {
+  if (total === 1)
+    return (
+      <FormattedMessage
+        id='notification.reaction'
+        defaultMessage='{name} reacted to your status'
+        values={{ name: displayedName }}
+      />
+    );
+
+  return (
+    <FormattedMessage
+      id='notification.reaction.name_and_others'
+      defaultMessage='{name} and {count, plural, one {# other} other {# others}} reacted to your post'
+      values={{
+        name: displayedName,
+        count: total - 1,
+      }}
+    />
+  );
+};
 
 export const NotificationReaction: React.FC<{
   notification: NotificationGroupReaction;
