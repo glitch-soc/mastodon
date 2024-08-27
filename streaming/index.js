@@ -12,7 +12,7 @@ import { Redis } from 'ioredis';
 import { JSDOM } from 'jsdom';
 import pg from 'pg';
 import pgConnectionString from 'pg-connection-string';
-import WebSocket from 'ws';
+import { WebSocketServer } from 'ws';
 
 import { AuthenticationError, RequestError, extractStatusAndMessage as extractErrorStatusAndMessage } from './errors.js';
 import { logger, httpLogger, initializeLogLevel, attachWebsocketHttpLogger, createWebsocketLogger } from './logging.js';
@@ -248,6 +248,10 @@ const redisConfigFromEnv = (env) => {
   const redisParams = {
     host: env.REDIS_HOST || '127.0.0.1',
     port: redisPort,
+    // Force support for both IPv6 and IPv4, by default ioredis sets this to 4,
+    // only allowing IPv4 connections:
+    // https://github.com/redis/ioredis/issues/1576
+    family: 0,
     db: redisDatabase,
     password: env.REDIS_PASSWORD || undefined,
   };
@@ -288,8 +292,11 @@ const CHANNEL_NAMES = [
 
 const startServer = async () => {
   const pgPool = new pg.Pool(pgConfigFromEnv(process.env));
+
+  const metrics = setupMetrics(CHANNEL_NAMES, pgPool);
+
   const server = http.createServer();
-  const wss = new WebSocket.Server({ noServer: true });
+  const wss = new WebSocketServer({ noServer: true });
 
   // Set the X-Request-Id header on WebSockets:
   wss.on("headers", function onHeaders(headers, req) {
@@ -384,16 +391,6 @@ const startServer = async () => {
   const redisClient = await createRedisClient(redisConfig);
   const { redisPrefix } = redisConfig;
 
-  const metrics = setupMetrics(CHANNEL_NAMES, pgPool);
-  // TODO: migrate all metrics to metrics.X.method() instead of just X.method()
-  const {
-    connectedClients,
-    connectedChannels,
-    redisSubscriptions,
-    redisMessagesReceived,
-    messagesSent,
-  } = metrics;
-
   // When checking metrics in the browser, the favicon is requested this
   // prevents the request from falling through to the API Router, which would
   // error for this endpoint:
@@ -404,15 +401,7 @@ const startServer = async () => {
     res.end('OK');
   });
 
-  app.get('/metrics', async (req, res) => {
-    try {
-      res.set('Content-Type', metrics.register.contentType);
-      res.end(await metrics.register.metrics());
-    } catch (ex) {
-      req.log.error(ex);
-      res.status(500).end();
-    }
-  });
+  app.get('/metrics', metrics.requestHandler);
 
   /**
    * @param {string[]} channels
@@ -439,7 +428,7 @@ const startServer = async () => {
    * @param {string} message
    */
   const onRedisMessage = (channel, message) => {
-    redisMessagesReceived.inc();
+    metrics.redisMessagesReceived.inc();
 
     const callbacks = subs[channel];
 
@@ -477,7 +466,7 @@ const startServer = async () => {
         if (err) {
           logger.error(`Error subscribing to ${channel}`);
         } else if (typeof count === 'number') {
-          redisSubscriptions.set(count);
+          metrics.redisSubscriptions.set(count);
         }
       });
     }
@@ -504,7 +493,7 @@ const startServer = async () => {
         if (err) {
           logger.error(`Error unsubscribing to ${channel}`);
         } else if (typeof count === 'number') {
-          redisSubscriptions.set(count);
+          metrics.redisSubscriptions.set(count);
         }
       });
       delete subs[channel];
@@ -524,43 +513,27 @@ const startServer = async () => {
    * @param {any} req
    * @returns {Promise<ResolvedAccount>}
    */
-  const accountFromToken = (token, req) => new Promise((resolve, reject) => {
-    pgPool.connect((err, client, done) => {
-      if (err) {
-        reject(err);
-        return;
-      }
+  const accountFromToken = async (token, req) => {
+    const result = await pgPool.query('SELECT oauth_access_tokens.id, oauth_access_tokens.resource_owner_id, users.account_id, users.chosen_languages, oauth_access_tokens.scopes, devices.device_id FROM oauth_access_tokens INNER JOIN users ON oauth_access_tokens.resource_owner_id = users.id LEFT OUTER JOIN devices ON oauth_access_tokens.id = devices.access_token_id WHERE oauth_access_tokens.token = $1 AND oauth_access_tokens.revoked_at IS NULL LIMIT 1', [token]);
 
-      // @ts-ignore
-      client.query('SELECT oauth_access_tokens.id, oauth_access_tokens.resource_owner_id, users.account_id, users.chosen_languages, oauth_access_tokens.scopes, devices.device_id FROM oauth_access_tokens INNER JOIN users ON oauth_access_tokens.resource_owner_id = users.id LEFT OUTER JOIN devices ON oauth_access_tokens.id = devices.access_token_id WHERE oauth_access_tokens.token = $1 AND oauth_access_tokens.revoked_at IS NULL LIMIT 1', [token], (err, result) => {
-        done();
+    if (result.rows.length === 0) {
+      throw new AuthenticationError('Invalid access token');
+    }
 
-        if (err) {
-          reject(err);
-          return;
-        }
+    req.accessTokenId = result.rows[0].id;
+    req.scopes = result.rows[0].scopes.split(' ');
+    req.accountId = result.rows[0].account_id;
+    req.chosenLanguages = result.rows[0].chosen_languages;
+    req.deviceId = result.rows[0].device_id;
 
-        if (result.rows.length === 0) {
-          reject(new AuthenticationError('Invalid access token'));
-          return;
-        }
-
-        req.accessTokenId = result.rows[0].id;
-        req.scopes = result.rows[0].scopes.split(' ');
-        req.accountId = result.rows[0].account_id;
-        req.chosenLanguages = result.rows[0].chosen_languages;
-        req.deviceId = result.rows[0].device_id;
-
-        resolve({
-          accessTokenId: result.rows[0].id,
-          scopes: result.rows[0].scopes.split(' '),
-          accountId: result.rows[0].account_id,
-          chosenLanguages: result.rows[0].chosen_languages,
-          deviceId: result.rows[0].device_id
-        });
-      });
-    });
-  });
+    return {
+      accessTokenId: result.rows[0].id,
+      scopes: result.rows[0].scopes.split(' '),
+      accountId: result.rows[0].account_id,
+      chosenLanguages: result.rows[0].chosen_languages,
+      deviceId: result.rows[0].device_id
+    };
+  };
 
   /**
    * @param {any} req
@@ -700,13 +673,13 @@ const startServer = async () => {
       unsubscribe(`${redisPrefix}${accessTokenChannelId}`, listener);
       unsubscribe(`${redisPrefix}${systemChannelId}`, listener);
 
-      connectedChannels.labels({ type: 'eventsource', channel: 'system' }).dec(2);
+      metrics.connectedChannels.labels({ type: 'eventsource', channel: 'system' }).dec(2);
     });
 
     subscribe(`${redisPrefix}${accessTokenChannelId}`, listener);
     subscribe(`${redisPrefix}${systemChannelId}`, listener);
 
-    connectedChannels.labels({ type: 'eventsource', channel: 'system' }).inc(2);
+    metrics.connectedChannels.labels({ type: 'eventsource', channel: 'system' }).inc(2);
   };
 
   /**
@@ -771,28 +744,15 @@ const startServer = async () => {
    * @param {any} req
    * @returns {Promise.<void>}
    */
-  const authorizeListAccess = (listId, req) => new Promise((resolve, reject) => {
+  const authorizeListAccess = async (listId, req) => {
     const { accountId } = req;
 
-    pgPool.connect((err, client, done) => {
-      if (err) {
-        reject();
-        return;
-      }
+    const result = await pgPool.query('SELECT id, account_id FROM lists WHERE id = $1 AND account_id = $2 LIMIT 1', [listId, accountId]);
 
-      // @ts-ignore
-      client.query('SELECT id, account_id FROM lists WHERE id = $1 LIMIT 1', [listId], (err, result) => {
-        done();
-
-        if (err || result.rows.length === 0 || result.rows[0].account_id !== accountId) {
-          reject();
-          return;
-        }
-
-        resolve();
-      });
-    });
-  });
+    if (result.rows.length === 0) {
+      throw new AuthenticationError('List not found');
+    }
+  };
 
   /**
    * @param {string[]} channelIds
@@ -816,7 +776,7 @@ const startServer = async () => {
       // TODO: Replace "string"-based delete payloads with object payloads:
       const encodedPayload = typeof payload === 'object' ? JSON.stringify(payload) : payload;
 
-      messagesSent.labels({ type: destinationType }).inc(1);
+      metrics.messagesSent.labels({ type: destinationType }).inc(1);
 
       log.debug({ event, payload }, `Transmitting ${event} to ${req.accountId}`);
 
@@ -1059,11 +1019,11 @@ const startServer = async () => {
   const streamToHttp = (req, res) => {
     const channelName = channelNameFromPath(req);
 
-    connectedClients.labels({ type: 'eventsource' }).inc();
+    metrics.connectedClients.labels({ type: 'eventsource' }).inc();
 
     // In theory we'll always have a channel name, but channelNameFromPath can return undefined:
     if (typeof channelName === 'string') {
-      connectedChannels.labels({ type: 'eventsource', channel: channelName }).inc();
+      metrics.connectedChannels.labels({ type: 'eventsource', channel: channelName }).inc();
     }
 
     res.setHeader('Content-Type', 'text/event-stream');
@@ -1079,10 +1039,10 @@ const startServer = async () => {
 
       // We decrement these counters here instead of in streamHttpEnd as in that
       // method we don't have knowledge of the channel names
-      connectedClients.labels({ type: 'eventsource' }).dec();
+      metrics.connectedClients.labels({ type: 'eventsource' }).dec();
       // In theory we'll always have a channel name, but channelNameFromPath can return undefined:
       if (typeof channelName === 'string') {
-        connectedChannels.labels({ type: 'eventsource', channel: channelName }).dec();
+        metrics.connectedChannels.labels({ type: 'eventsource', channel: channelName }).dec();
       }
 
       clearInterval(heartbeat);
@@ -1114,7 +1074,7 @@ const startServer = async () => {
 
   /**
    * @param {http.IncomingMessage} req
-   * @param {WebSocket} ws
+   * @param {import('ws').WebSocket} ws
    * @param {string[]} streamName
    * @returns {function(string, string): void}
    */
@@ -1345,7 +1305,7 @@ const startServer = async () => {
 
   /**
    * @typedef WebSocketSession
-   * @property {WebSocket & { isAlive: boolean}} websocket
+   * @property {import('ws').WebSocket & { isAlive: boolean}} websocket
    * @property {http.IncomingMessage & ResolvedAccount} request
    * @property {import('pino').Logger} logger
    * @property {Object.<string, { channelName: string, listener: SubscriptionListener, stopHeartbeat: function(): void }>} subscriptions
@@ -1370,7 +1330,7 @@ const startServer = async () => {
       const stopHeartbeat = subscriptionHeartbeat(channelIds);
       const listener = streamFrom(channelIds, request, logger, onSend, undefined, 'websocket', options.needsFiltering, options.allowLocalOnly);
 
-      connectedChannels.labels({ type: 'websocket', channel: channelName }).inc();
+      metrics.connectedChannels.labels({ type: 'websocket', channel: channelName }).inc();
 
       subscriptions[channelIds.join(';')] = {
         channelName,
@@ -1409,7 +1369,7 @@ const startServer = async () => {
       unsubscribe(`${redisPrefix}${channelId}`, subscription.listener);
     });
 
-    connectedChannels.labels({ type: 'websocket', channel: subscription.channelName }).dec();
+    metrics.connectedChannels.labels({ type: 'websocket', channel: subscription.channelName }).dec();
     subscription.stopHeartbeat();
 
     delete subscriptions[channelIds.join(';')];
@@ -1467,11 +1427,11 @@ const startServer = async () => {
       },
     };
 
-    connectedChannels.labels({ type: 'websocket', channel: 'system' }).inc(2);
+    metrics.connectedChannels.labels({ type: 'websocket', channel: 'system' }).inc(2);
   };
 
   /**
-   * @param {WebSocket & { isAlive: boolean }} ws
+   * @param {import('ws').WebSocket & { isAlive: boolean }} ws
    * @param {http.IncomingMessage & ResolvedAccount} req
    * @param {import('pino').Logger} log
    */
@@ -1479,7 +1439,7 @@ const startServer = async () => {
     // Note: url.parse could throw, which would terminate the connection, so we
     // increment the connected clients metric straight away when we establish
     // the connection, without waiting:
-    connectedClients.labels({ type: 'websocket' }).inc();
+    metrics.connectedClients.labels({ type: 'websocket' }).inc();
 
     // Setup connection keep-alive state:
     ws.isAlive = true;
@@ -1505,7 +1465,7 @@ const startServer = async () => {
       });
 
       // Decrement the metrics for connected clients:
-      connectedClients.labels({ type: 'websocket' }).dec();
+      metrics.connectedClients.labels({ type: 'websocket' }).dec();
 
       // We need to unassign the session object as to ensure it correctly gets
       // garbage collected, without doing this we could accidentally hold on to

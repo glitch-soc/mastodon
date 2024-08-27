@@ -311,7 +311,7 @@ class MediaGallery extends PureComponent {
   render () {
     const { media, lang, intl, sensitive, letterbox, fullwidth, defaultWidth, autoplay } = this.props;
     const { visible } = this.state;
-    const size     = media.take(4).size;
+    const size     = media.size;
     const uncached = media.every(attachment => attachment.get('type') === 'unknown');
 
     const width = this.state.width || defaultWidth;
@@ -331,7 +331,7 @@ class MediaGallery extends PureComponent {
     if (this.isStandaloneEligible()) {
       children = <Item standalone autoplay={autoplay} onClick={this.handleClick} attachment={media.get(0)} lang={lang} displayWidth={width} visible={visible} />;
     } else {
-      children = media.take(4).map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} lang={lang} size={size} letterbox={letterbox} displayWidth={width} visible={visible || uncached} />);
+      children = media.map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} lang={lang} size={size} letterbox={letterbox} displayWidth={width} visible={visible || uncached} />);
     }
 
     if (uncached) {

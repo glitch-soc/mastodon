@@ -26,7 +26,7 @@ jobs:
 
       # Download the translation files from Crowdin
       - name: crowdin action
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           config: crowdin-glitch.yml
           upload_sources: false
