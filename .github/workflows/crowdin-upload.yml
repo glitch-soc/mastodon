@@ -19,7 +19,7 @@ on:
 jobs:
   upload-translations:
     runs-on: ubuntu-latest
-    if: github.repository == 'mastodon/mastodon'
+    if: github.repository == 'glitch-soc/mastodon'
 
     steps:
       - name: Checkout
