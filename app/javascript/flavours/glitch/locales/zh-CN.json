@@ -155,6 +155,5 @@
   "status.in_reply_to": "此嘟文是回复",
   "status.is_poll": "此嘟文是投票",
   "status.local_only": "此嘟文仅本站可见",
-  "status.uncollapse": "展开",
-  "suggestions.dismiss": "关闭建议"
+  "status.uncollapse": "展开"
 }

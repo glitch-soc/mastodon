@@ -10,6 +10,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import AlternateEmailIcon from '@/material-icons/400-24px/alternate_email.svg?react';
 import { AnimatedNumber } from 'mastodon/components/animated_number';
+import { ContentWarning } from 'mastodon/components/content_warning';
 import EditedTimestamp from 'mastodon/components/edited_timestamp';
 import { getHashtagBarForStatus } from 'mastodon/components/hashtag_bar';
 import { Icon }  from 'mastodon/components/icon';
@@ -272,22 +273,25 @@ class DetailedStatus extends ImmutablePureComponent {
               <FormattedMessage id='status.direct_indicator' defaultMessage='Private mention' />
             </div>
           )}
-          <a href={`/@${status.getIn(['account', 'acct'])}`} onClick={this.handleAccountClick} className='detailed-status__display-name'>
+          <a href={`/@${status.getIn(['account', 'acct'])}`} data-hover-card-account={status.getIn(['account', 'id'])} onClick={this.handleAccountClick} className='detailed-status__display-name'>
             <div className='detailed-status__display-avatar'><Avatar account={status.get('account')} size={46} /></div>
             <DisplayName account={status.get('account')} localDomain={this.props.domain} />
           </a>
 
-          <StatusContent
-            status={status}
-            expanded={!status.get('hidden')}
-            onExpandedToggle={this.handleExpandedToggle}
-            onTranslate={this.handleTranslate}
-            {...statusContentProps}
-          />
+          {status.get('spoiler_text').length > 0 && <ContentWarning text={status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml')} expanded={expanded} onClick={this.handleExpandedToggle} />}
 
-          {media}
+          {expanded && (
+            <>
+              <StatusContent
+                status={status}
+                onTranslate={this.handleTranslate}
+                {...statusContentProps}
+              />
 
-          {expanded && hashtagBar}
+              {media}
+              {hashtagBar}
+            </>
+          )}
 
           <div className='detailed-status__meta'>
             <div className='detailed-status__meta__line'>

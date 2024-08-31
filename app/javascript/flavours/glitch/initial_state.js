@@ -17,6 +17,7 @@
  * @property {boolean} crop_images
  * @property {boolean=} delete_modal
  * @property {boolean=} disable_swiping
+ * @property {boolean=} disable_hover_cards
  * @property {string=} disabled_account_id
  * @property {string} display_media
  * @property {string} domain
@@ -45,6 +46,7 @@
  * @property {boolean=} use_pending_items
  * @property {string} version
  * @property {string} sso_redirect
+ * @property {boolean} force_grouped_notifications
  * @property {string} status_page_url
  * @property {boolean} system_emoji_font
  * @property {string} default_content_type
@@ -106,6 +108,7 @@ export const boostModal = getMeta('boost_modal');
 export const cropImages = getMeta('crop_images');
 export const deleteModal = getMeta('delete_modal');
 export const disableSwiping = getMeta('disable_swiping');
+export const disableHoverCards = getMeta('disable_hover_cards');
 export const disabledAccountId = getMeta('disabled_account_id');
 export const displayMedia = getMeta('display_media');
 export const domain = getMeta('domain');
@@ -135,6 +138,7 @@ export const languages = initialState?.languages;
 export const criticalUpdatesPending = initialState?.critical_updates_pending;
 export const statusPageUrl = getMeta('status_page_url');
 export const sso_redirect = getMeta('sso_redirect');
+export const forceGroupedNotifications = getMeta('force_grouped_notifications');
 
 // Glitch-soc-specific settings
 export const maxFeedHashtags = (initialState && initialState.max_feed_hashtags) || 4;

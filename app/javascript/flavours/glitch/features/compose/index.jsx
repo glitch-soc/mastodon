@@ -24,7 +24,6 @@ import { Icon }  from 'flavours/glitch/components/icon';
 import glitchedElephant1 from 'flavours/glitch/images/mbstobon-ui-0.png';
 import glitchedElephant2 from 'flavours/glitch/images/mbstobon-ui-1.png';
 import glitchedElephant3 from 'flavours/glitch/images/mbstobon-ui-2.png';
-import { logOut } from 'flavours/glitch/utils/log_out';
 
 import elephantUIPlane from '../../../../images/elephant_ui_plane.svg';
 import { changeComposing, mountCompose, unmountCompose } from '../../actions/compose';
@@ -45,8 +44,6 @@ const messages = defineMessages({
   settings: { id: 'navigation_bar.app_settings', defaultMessage: 'App settings' },
   logout: { id: 'navigation_bar.logout', defaultMessage: 'Logout' },
   compose: { id: 'navigation_bar.compose', defaultMessage: 'Compose new post' },
-  logoutMessage: { id: 'confirmations.logout.message', defaultMessage: 'Are you sure you want to log out?' },
-  logoutConfirm: { id: 'confirmations.logout.confirm', defaultMessage: 'Log out' },
 });
 
 const mapStateToProps = (state, ownProps) => ({
@@ -88,20 +85,12 @@ class Compose extends PureComponent {
   }
 
   handleLogoutClick = e => {
-    const { dispatch, intl } = this.props;
+    const { dispatch } = this.props;
 
     e.preventDefault();
     e.stopPropagation();
 
-    dispatch(openModal({
-      modalType: 'CONFIRM',
-      modalProps: {
-        message: intl.formatMessage(messages.logoutMessage),
-        confirm: intl.formatMessage(messages.logoutConfirm),
-        closeWhenConfirm: false,
-        onConfirm: () => logOut(),
-      },
-    }));
+    dispatch(openModal({ modalType: 'CONFIRM_LOG_OUT' }));
 
     return false;
   };

@@ -1,5 +1,7 @@
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
 
+import { timelineDelete } from 'flavours/glitch/actions/timelines_typed';
+
 import {
   COMPOSE_MOUNT,
   COMPOSE_UNMOUNT,
@@ -54,7 +56,6 @@ import {
 } from '../actions/compose';
 import { REDRAFT } from '../actions/statuses';
 import { STORE_HYDRATE } from '../actions/store';
-import { TIMELINE_DELETE } from '../actions/timelines';
 import { me, defaultContentType } from '../initial_state';
 import { recoverHashtags } from '../utils/hashtag';
 import { unescapeHTML } from '../utils/html';
@@ -551,10 +552,10 @@ export default function compose(state = initialState, action) {
     return updateSuggestionTags(state, action.token);
   case COMPOSE_TAG_HISTORY_UPDATE:
     return state.set('tagHistory', fromJS(action.tags));
-  case TIMELINE_DELETE:
-    if (action.id === state.get('in_reply_to')) {
+  case timelineDelete.type:
+    if (action.payload.statusId === state.get('in_reply_to')) {
       return state.set('in_reply_to', null);
-    } else if (action.id === state.get('id')) {
+    } else if (action.payload.statusId === state.get('id')) {
       return state.set('id', null);
     } else {
       return state;

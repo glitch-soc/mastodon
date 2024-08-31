@@ -2503,14 +2503,13 @@ body {
     background: $win95-tooltip-yellow;
     border: 1px solid black;
     padding: 4px;
+    margin-bottom: 24px;
 
     h1, h1 small {
       color:black;
       text-shadow: unset;
       text-overflow: unset;
     }
-
-    margin-bottom: 24px;
 
     &:after {
       content: "";

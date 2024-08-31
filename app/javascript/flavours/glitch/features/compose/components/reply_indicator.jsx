@@ -8,6 +8,7 @@ import { Avatar } from 'flavours/glitch/components/avatar';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { Icon } from 'flavours/glitch/components/icon';
 import { Permalink } from 'flavours/glitch/components/permalink';
+import { EmbeddedStatusContent } from 'flavours/glitch/features/notifications_v2/components/embedded_status_content';
 
 export const ReplyIndicator = () => {
   const inReplyToId = useSelector(state => state.getIn(['compose', 'in_reply_to']));
@@ -17,8 +18,6 @@ export const ReplyIndicator = () => {
   if (!status) {
     return null;
   }
-
-  const content = { __html: status.get('contentHtml') };
 
   return (
     <div className='reply-indicator'>
@@ -33,7 +32,12 @@ export const ReplyIndicator = () => {
           <DisplayName account={account} />
         </Permalink>
 
-        <div className='reply-indicator__content translate' dangerouslySetInnerHTML={content} />
+        <EmbeddedStatusContent
+          className='reply-indicator__content translate'
+          content={status.get('contentHtml')}
+          language={status.get('language')}
+          mentions={status.get('mentions')}
+        />
 
         {(status.get('poll') || status.get('media_attachments').size > 0) && (
           <div className='reply-indicator__attachments'>

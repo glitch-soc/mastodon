@@ -10,13 +10,14 @@ import BookmarksActiveIcon from '@/material-icons/400-24px/bookmarks-fill.svg?re
 import BookmarksIcon from '@/material-icons/400-24px/bookmarks.svg?react';
 import ExploreActiveIcon from '@/material-icons/400-24px/explore-fill.svg?react';
 import ExploreIcon from '@/material-icons/400-24px/explore.svg?react';
+import ModerationIcon from '@/material-icons/400-24px/gavel.svg?react';
 import HomeActiveIcon from '@/material-icons/400-24px/home-fill.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home.svg?react';
 import ListAltActiveIcon from '@/material-icons/400-24px/list_alt-fill.svg?react';
 import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
 import MailActiveIcon from '@/material-icons/400-24px/mail-fill.svg?react';
 import MailIcon from '@/material-icons/400-24px/mail.svg?react';
-import ManufacturingIcon from '@/material-icons/400-24px/manufacturing.svg?react';
+import AdministrationIcon from '@/material-icons/400-24px/manufacturing.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import NotificationsActiveIcon from '@/material-icons/400-24px/notifications-fill.svg?react';
 import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
@@ -33,6 +34,9 @@ import { NavigationPortal } from 'flavours/glitch/components/navigation_portal';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { timelinePreview, trendsEnabled } from 'flavours/glitch/initial_state';
 import { transientSingleColumn } from 'flavours/glitch/is_mobile';
+import { canManageReports, canViewAdminDashboard } from 'flavours/glitch/permissions';
+import { selectUnreadNotificationGroupsCount } from 'flavours/glitch/selectors/notifications';
+import { selectUseGroupedNotifications } from 'flavours/glitch/selectors/settings';
 import { preferencesLink } from 'flavours/glitch/utils/backend_links';
 
 import ColumnLink from './column_link';
@@ -50,6 +54,8 @@ const messages = defineMessages({
   bookmarks: { id: 'navigation_bar.bookmarks', defaultMessage: 'Bookmarks' },
   lists: { id: 'navigation_bar.lists', defaultMessage: 'Lists' },
   preferences: { id: 'navigation_bar.preferences', defaultMessage: 'Preferences' },
+  administration: { id: 'navigation_bar.administration', defaultMessage: 'Administration' },
+  moderation: { id: 'navigation_bar.moderation', defaultMessage: 'Moderation' },
   followsAndFollowers: { id: 'navigation_bar.follows_and_followers', defaultMessage: 'Follows and followers' },
   about: { id: 'navigation_bar.about', defaultMessage: 'About' },
   search: { id: 'navigation_bar.search', defaultMessage: 'Search' },
@@ -60,15 +66,19 @@ const messages = defineMessages({
 });
 
 const NotificationsLink = () => {
+  const optedInGroupedNotifications = useSelector(selectUseGroupedNotifications);
   const count = useSelector(state => state.getIn(['local_settings', 'notifications', 'tab_badge']) ? state.getIn(['notifications', 'unread']) : 0);
   const intl = useIntl();
 
+  const newCount = useSelector(selectUnreadNotificationGroupsCount);
+
   return (
     <ColumnLink
+      key='notifications'
       transparent
       to='/notifications'
-      icon={<IconWithBadge id='bell' icon={NotificationsIcon} count={count} className='column-link__icon' />}
-      activeIcon={<IconWithBadge id='bell' icon={NotificationsActiveIcon} count={count} className='column-link__icon' />}
+      icon={<IconWithBadge id='bell' icon={NotificationsIcon} count={optedInGroupedNotifications ? newCount : count} className='column-link__icon' />}
+      activeIcon={<IconWithBadge id='bell' icon={NotificationsActiveIcon} count={optedInGroupedNotifications ? newCount : count} className='column-link__icon' />}
       text={intl.formatMessage(messages.notifications)}
     />
   );
@@ -111,7 +121,7 @@ class NavigationPanel extends Component {
 
   render () {
     const { intl, onOpenSettings } = this.props;
-    const { signedIn, disabledAccountId } = this.props.identity;
+    const { signedIn, disabledAccountId, permissions } = this.props.identity;
 
     let banner = undefined;
 
@@ -169,7 +179,10 @@ class NavigationPanel extends Component {
             <hr />
 
             {!!preferencesLink && <ColumnLink transparent href={preferencesLink} icon='cog' iconComponent={SettingsIcon} text={intl.formatMessage(messages.preferences)} />}
-            <ColumnLink transparent onClick={onOpenSettings} icon='cogs' iconComponent={ManufacturingIcon} text={intl.formatMessage(messages.app_settings)} />
+            <ColumnLink transparent onClick={onOpenSettings} icon='cogs' iconComponent={AdministrationIcon} text={intl.formatMessage(messages.app_settings)} />
+
+            {canManageReports(permissions) && <ColumnLink transparent href='/admin/reports' icon='flag' iconComponent={ModerationIcon} text={intl.formatMessage(messages.moderation)} />}
+            {canViewAdminDashboard(permissions) && <ColumnLink transparent href='/admin/dashboard' icon='tachometer' iconComponent={AdministrationIcon} text={intl.formatMessage(messages.administration)} />}
           </>
         )}
 

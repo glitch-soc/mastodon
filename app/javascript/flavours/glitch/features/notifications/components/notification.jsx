@@ -92,7 +92,7 @@ class Notification extends ImmutablePureComponent {
     e.preventDefault();
 
     const { notification, onMention } = this.props;
-    onMention(notification.get('account'), this.props.history);
+    onMention(notification.get('account'));
   };
 
   handleHotkeyFavourite = () => {
@@ -385,10 +385,11 @@ class Notification extends ImmutablePureComponent {
       <bdi>
         <Permalink
           className='notification__display-name'
-          href={account.get('url')}
+          href={targetAccount.get('url')}
           title={targetAccount.get('acct')}
           to={`/@${targetAccount.get('acct')}`}
           dangerouslySetInnerHTML={targetDisplayNameHtml}
+          data-hover-card-account={targetAccount.get('id')}
         />
       </bdi>
     );
@@ -423,6 +424,7 @@ class Notification extends ImmutablePureComponent {
           title={account.get('acct')}
           to={`/@${account.get('acct')}`}
           dangerouslySetInnerHTML={displayNameHtml}
+          data-hover-card-account={account.get('id')}
         />
       </bdi>
     );

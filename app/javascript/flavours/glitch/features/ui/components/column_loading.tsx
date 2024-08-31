@@ -1,11 +1,8 @@
-import Column from '../../../components/column';
-import ColumnHeader from '../../../components/column_header';
+import Column from 'flavours/glitch/components/column';
+import { ColumnHeader } from 'flavours/glitch/components/column_header';
+import type { Props as ColumnHeaderProps } from 'flavours/glitch/components/column_header';
 
-interface Props {
-  multiColumn?: boolean;
-}
-
-export const ColumnLoading: React.FC<Props> = (otherProps) => (
+export const ColumnLoading: React.FC<ColumnHeaderProps> = (otherProps) => (
   <Column>
     <ColumnHeader {...otherProps} />
     <div className='scrollable' />
