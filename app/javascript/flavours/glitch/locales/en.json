@@ -36,7 +36,7 @@
   "confirmations.missing_media_description.message": "At least one media attachment is lacking a description. Consider describing all media attachments for the visually impaired before sending your toot.",
   "direct.group_by_conversations": "Group by conversation",
   "endorsed_accounts_editor.endorsed_accounts": "Featured accounts",
-  "favourite_modal.combo": "You can press {combo} to skip this next time",
+  "favourite_modal.favourite": "Favourite post?",
   "federation.federated.long": "Allow this post to reach other servers",
   "federation.federated.short": "Federated",
   "federation.local_only.long": "Prevent this post from reaching other servers",

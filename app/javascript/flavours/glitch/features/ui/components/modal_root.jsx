@@ -41,7 +41,7 @@ import {
 } from './confirmation_modals';
 import DeprecatedSettingsModal from './deprecated_settings_modal';
 import DoodleModal from './doodle_modal';
-import FavouriteModal from './favourite_modal';
+import { FavouriteModal } from './favourite_modal';
 import FocalPointModal from './focal_point_modal';
 import ImageModal from './image_modal';
 import MediaModal from './media_modal';
