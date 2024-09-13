@@ -21,9 +21,9 @@ export default class StatusReactions extends ImmutablePureComponent {
     statusId: PropTypes.string.isRequired,
     reactions: ImmutablePropTypes.list.isRequired,
     numVisible: PropTypes.number,
-    addReaction: PropTypes.func.isRequired,
+    addReaction: PropTypes.func,
     canReact: PropTypes.bool.isRequired,
-    removeReaction: PropTypes.func.isRequired,
+    removeReaction: PropTypes.func,
   };
 
   willEnter() {
@@ -78,8 +78,8 @@ class Reaction extends ImmutablePureComponent {
   static propTypes = {
     statusId: PropTypes.string,
     reaction: ImmutablePropTypes.map.isRequired,
-    addReaction: PropTypes.func.isRequired,
-    removeReaction: PropTypes.func.isRequired,
+    addReaction: PropTypes.func,
+    removeReaction: PropTypes.func,
     canReact: PropTypes.bool.isRequired,
     style: PropTypes.object,
   };
@@ -91,9 +91,9 @@ class Reaction extends ImmutablePureComponent {
   handleClick = () => {
     const { reaction, statusId, addReaction, removeReaction } = this.props;
 
-    if (reaction.get('me')) {
+    if (reaction.get('me') && removeReaction) {
       removeReaction(statusId, reaction.get('name'));
-    } else {
+    } else if (addReaction) {
       addReaction(statusId, reaction.get('name'));
     }
   };
