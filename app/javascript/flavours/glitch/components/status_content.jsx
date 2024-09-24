@@ -403,7 +403,7 @@ class StatusContent extends PureComponent {
       }
 
       return (
-        <div className={classNames} tabIndex={0} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}>
+        <div className={classNames} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}>
           <ContentWarning text={spoilerHtml} expanded={!hidden} onClick={this.handleSpoilerClick} icons={spoilerIcons} />
 
           {mentionsPlaceholder}
