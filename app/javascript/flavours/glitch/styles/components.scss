@@ -1522,7 +1522,8 @@ body > [data-popper-placement] {
 
   &__action-bar__button-wrapper {
     flex-basis: 0;
-    flex-grow: 1;
+
+    // glitch-soc: disable this for now; flex-grow: 1;
 
     &:last-child {
       flex-grow: 0;
