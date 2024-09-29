@@ -10,7 +10,9 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import { debounce } from 'lodash';
 
+import { AltTextBadge } from 'flavours/glitch/components/alt_text_badge';
 import { Blurhash } from 'flavours/glitch/components/blurhash';
+import { formatTime } from 'flavours/glitch/features/video';
 
 import { autoPlayGif, displayMedia, useBlurhash } from '../initial_state';
 
@@ -58,7 +60,7 @@ class Item extends PureComponent {
 
   hoverToPlay () {
     const { attachment } = this.props;
-    return !this.getAutoPlay() && attachment.get('type') === 'gifv';
+    return !this.getAutoPlay() && ['gifv', 'video'].includes(attachment.get('type'));
   }
 
   handleClick = (e) => {
@@ -97,7 +99,7 @@ class Item extends PureComponent {
     }
 
     if (attachment.get('description')?.length > 0) {
-      badges.push(<span key='alt' className='media-gallery__alt__label'>ALT</span>);
+      badges.push(<AltTextBadge key='alt' description={attachment.get('description')} />);
     }
 
     const description = attachment.getIn(['translation', 'description']) || attachment.get('description');
@@ -152,10 +154,15 @@ class Item extends PureComponent {
           />
         </a>
       );
-    } else if (attachment.get('type') === 'gifv') {
+    } else if (['gifv', 'video'].includes(attachment.get('type'))) {
       const autoPlay = this.getAutoPlay();
+      const duration = attachment.getIn(['meta', 'original', 'duration']);
 
-      badges.push(<span key='gif' className='media-gallery__gifv__label'>GIF</span>);
+      if (attachment.get('type') === 'gifv') {
+        badges.push(<span key='gif' className='media-gallery__alt__label media-gallery__alt__label--non-interactive'>GIF</span>);
+      } else {
+        badges.push(<span key='video' className='media-gallery__alt__label media-gallery__alt__label--non-interactive'>{formatTime(Math.floor(duration))}</span>);
+      }
 
       thumbnail = (
         <div className={classNames('media-gallery__gifv', { autoplay: autoPlay })}>
@@ -169,6 +176,7 @@ class Item extends PureComponent {
             onClick={this.handleClick}
             onMouseEnter={this.handleMouseEnter}
             onMouseLeave={this.handleMouseLeave}
+            onLoadedData={this.handleImageLoad}
             autoPlay={autoPlay}
             playsInline
             loop

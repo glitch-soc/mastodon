@@ -195,6 +195,28 @@ export const DetailedStatus: React.FC<{
         )
     ) {
       media.push(<AttachmentList media={status.get('media_attachments')} />);
+    } else if (
+      ['image', 'gifv'].includes(
+        status.getIn(['media_attachments', 0, 'type']) as string,
+      ) ||
+      status.get('media_attachments').size > 1
+    ) {
+      media.push(
+        <MediaGallery
+          standalone
+          sensitive={status.get('sensitive')}
+          media={status.get('media_attachments')}
+          lang={language}
+          height={300}
+          letterbox={letterboxMedia}
+          fullwidth={fullwidthMedia}
+          hidden={!expanded}
+          onOpenMedia={onOpenMedia}
+          visible={showMedia}
+          onToggleVisibility={onToggleMediaVisibility}
+        />,
+      );
+      mediaIcons.push('picture-o');
     } else if (status.getIn(['media_attachments', 0, 'type']) === 'audio') {
       const attachment = status.getIn(['media_attachments', 0]);
       const description =
@@ -249,23 +271,6 @@ export const DetailedStatus: React.FC<{
         />,
       );
       mediaIcons.push('video-camera');
-    } else {
-      media.push(
-        <MediaGallery
-          standalone
-          sensitive={status.get('sensitive')}
-          media={status.get('media_attachments')}
-          lang={language}
-          height={300}
-          letterbox={letterboxMedia}
-          fullwidth={fullwidthMedia}
-          hidden={!expanded}
-          onOpenMedia={onOpenMedia}
-          visible={showMedia}
-          onToggleVisibility={onToggleMediaVisibility}
-        />,
-      );
-      mediaIcons.push('picture-o');
     }
   } else if (status.get('spoiler_text').length === 0) {
     media.push(

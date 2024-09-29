@@ -648,6 +648,27 @@ class Status extends ImmutablePureComponent {
             media={status.get('media_attachments')}
           />,
         );
+      } else if (['image', 'gifv'].includes(status.getIn(['media_attachments', 0, 'type'])) || status.get('media_attachments').size > 1) {
+        media.push(
+          <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery}>
+            {Component => (
+              <Component
+                media={attachments}
+                lang={language}
+                sensitive={status.get('sensitive')}
+                letterbox={settings.getIn(['media', 'letterbox'])}
+                fullwidth={!rootId && settings.getIn(['media', 'fullwidth'])}
+                hidden={isCollapsed || !isExpanded}
+                onOpenMedia={this.handleOpenMedia}
+                cacheWidth={this.props.cacheMediaWidth}
+                defaultWidth={this.props.cachedMediaWidth}
+                visible={this.state.showMedia}
+                onToggleVisibility={this.handleToggleMediaVisibility}
+              />
+            )}
+          </Bundle>,
+        );
+        mediaIcons.push('picture-o');
       } else if (attachments.getIn([0, 'type']) === 'audio') {
         const attachment = status.getIn(['media_attachments', 0]);
         const description = attachment.getIn(['translation', 'description']) || attachment.get('description');
@@ -703,27 +724,6 @@ class Status extends ImmutablePureComponent {
           </Bundle>,
         );
         mediaIcons.push('video-camera');
-      } else {  //  Media type is 'image' or 'gifv'
-        media.push(
-          <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery}>
-            {Component => (
-              <Component
-                media={attachments}
-                lang={language}
-                sensitive={status.get('sensitive')}
-                letterbox={settings.getIn(['media', 'letterbox'])}
-                fullwidth={!rootId && settings.getIn(['media', 'fullwidth'])}
-                hidden={isCollapsed || !isExpanded}
-                onOpenMedia={this.handleOpenMedia}
-                cacheWidth={this.props.cacheMediaWidth}
-                defaultWidth={this.props.cachedMediaWidth}
-                visible={this.state.showMedia}
-                onToggleVisibility={this.handleToggleMediaVisibility}
-              />
-            )}
-          </Bundle>,
-        );
-        mediaIcons.push('picture-o');
       }
 
       if (!status.get('sensitive') && !(status.get('spoiler_text').length > 0) && settings.getIn(['collapsed', 'backgrounds', 'preview_images'])) {
