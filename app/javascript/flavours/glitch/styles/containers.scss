@@ -63,7 +63,7 @@
   padding: 20px 0;
   margin-top: 40px;
   margin-bottom: 10px;
-  border-bottom: 1px solid lighten($ui-base-color, 8%);
+  border-bottom: 1px solid var(--background-border-color);
 
   @media screen and (width <= 440px) {
     width: 100%;
@@ -72,20 +72,16 @@
   }
 
   .avatar {
-    width: 40px;
-    height: 40px;
+    width: 48px;
+    height: 48px;
     flex: 0 0 auto;
-    @include avatar-size(40px);
-
-    margin-inline-end: 10px;
 
     img {
       width: 100%;
       height: 100%;
       display: block;
       margin: 0;
-      border-radius: 4px;
-      @include avatar-radius;
+      border-radius: var(--avatar-border-radius);
     }
   }
 

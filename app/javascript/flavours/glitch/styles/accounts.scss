@@ -10,7 +10,7 @@
     &:active,
     &:focus {
       .card__bar {
-        background: lighten($ui-base-color, 8%);
+        background: $ui-base-color;
       }
     }
   }
@@ -18,7 +18,9 @@
   &__img {
     height: 130px;
     position: relative;
-    background: darken($ui-base-color, 12%);
+    background: $ui-base-color;
+    border: 1px solid var(--background-border-color);
+    border-bottom: none;
 
     img {
       display: block;
@@ -39,14 +41,14 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    background: lighten($ui-base-color, 4%);
+    background: var(--background-color);
+    border: 1px solid var(--background-border-color);
+    border-top: none;
 
     .avatar {
       flex: 0 0 auto;
       width: 48px;
       height: 48px;
-      @include avatar-size(48px);
-
       padding-top: 2px;
 
       img {
@@ -55,8 +57,6 @@
         display: block;
         margin: 0;
         border-radius: 4px;
-        @include avatar-radius;
-
         background: darken($ui-base-color, 8%);
         object-fit: cover;
       }
@@ -130,21 +130,11 @@
   .older {
     float: left;
     padding-inline-start: 0;
-
-    .fa {
-      display: inline-block;
-      margin-inline-end: 5px;
-    }
   }
 
   .newer {
     float: right;
     padding-inline-start: 0;
-
-    .fa {
-      display: inline-block;
-      margin-inline-start: 5px;
-    }
   }
 
   .disabled {
@@ -354,6 +344,10 @@
     strong {
       color: $primary-text-color;
       font-weight: 700;
+    }
+
+    .warning-hint {
+      font-weight: normal !important;
     }
   }
 

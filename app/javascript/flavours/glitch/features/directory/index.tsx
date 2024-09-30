@@ -1,5 +1,5 @@
 import type { ChangeEventHandler } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 import { defineMessages, useIntl } from 'react-intl';
 
@@ -26,6 +26,8 @@ import { RadioButton } from 'flavours/glitch/components/radio_button';
 import ScrollContainer from 'flavours/glitch/containers/scroll_container';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
+import { useSearchParam } from '../../hooks/useSearchParam';
+
 import { AccountCard } from './components/account_card';
 
 const messages = defineMessages({
@@ -50,18 +52,19 @@ export const Directory: React.FC<{
   const intl = useIntl();
   const dispatch = useAppDispatch();
 
-  const [state, setState] = useState<{
-    order: string | null;
-    local: boolean | null;
-  }>({
-    order: null,
-    local: null,
-  });
-
   const column = useRef<Column>(null);
 
-  const order = state.order ?? params?.order ?? 'active';
-  const local = state.local ?? params?.local ?? false;
+  const [orderParam, setOrderParam] = useSearchParam('order');
+  const [localParam, setLocalParam] = useSearchParam('local');
+
+  let localParamBool: boolean | undefined;
+
+  if (localParam === 'false') {
+    localParamBool = false;
+  }
+
+  const order = orderParam ?? params?.order ?? 'active';
+  const local = localParamBool ?? params?.local ?? true;
 
   const handlePin = useCallback(() => {
     if (columnId) {
@@ -104,10 +107,10 @@ export const Directory: React.FC<{
       if (columnId) {
         dispatch(changeColumnParams(columnId, ['order'], e.target.value));
       } else {
-        setState((s) => ({ order: e.target.value, local: s.local }));
+        setOrderParam(e.target.value);
       }
     },
-    [dispatch, columnId],
+    [dispatch, columnId, setOrderParam],
   );
 
   const handleChangeLocal = useCallback<ChangeEventHandler<HTMLInputElement>>(
@@ -116,11 +119,13 @@ export const Directory: React.FC<{
         dispatch(
           changeColumnParams(columnId, ['local'], e.target.value === '1'),
         );
+      } else if (e.target.value === '1') {
+        setLocalParam('true');
       } else {
-        setState((s) => ({ local: e.target.value === '1', order: s.order }));
+        setLocalParam('false');
       }
     },
-    [dispatch, columnId],
+    [dispatch, columnId, setLocalParam],
   );
 
   const handleLoadMore = useCallback(() => {

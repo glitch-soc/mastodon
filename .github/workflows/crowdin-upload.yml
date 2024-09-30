@@ -19,13 +19,14 @@ on:
 jobs:
   upload-translations:
     runs-on: ubuntu-latest
+    if: github.repository == 'glitch-soc/mastodon'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: crowdin action
-        uses: crowdin/github-action@v1
+        uses: crowdin/github-action@v2
         with:
           config: crowdin-glitch.yml
           upload_sources: true

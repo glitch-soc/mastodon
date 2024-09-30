@@ -66,7 +66,7 @@ export default class StatusPrepend extends PureComponent {
       return (
         <FormattedMessage
           id='notification.favourite'
-          defaultMessage='{name} favorited your status'
+          defaultMessage='{name} favorited your post'
           values={{ name : link }}
         />
       );
@@ -74,7 +74,7 @@ export default class StatusPrepend extends PureComponent {
       return (
         <FormattedMessage
           id='notification.reblog'
-          defaultMessage='{name} boosted your status'
+          defaultMessage='{name} boosted your post'
           values={{ name : link }}
         />
       );
@@ -98,7 +98,7 @@ export default class StatusPrepend extends PureComponent {
         return (
           <FormattedMessage
             id='notification.poll'
-            defaultMessage='A poll you have voted in has ended'
+            defaultMessage='A poll you voted in has ended'
           />
         );
       }
@@ -150,11 +150,13 @@ export default class StatusPrepend extends PureComponent {
 
     return !type ? null : (
       <aside className={type === 'reblogged_by' || type === 'featured' ? 'status__prepend' : 'notification__message'}>
-        <Icon
-          className={`status__prepend-icon ${type === 'favourite' ? 'star-icon' : ''}`}
-          id={iconId}
-          icon={iconComponent}
-        />
+        <div className='status__prepend__icon'>
+          <Icon
+            className={type === 'favourite' ? 'star-icon' : null}
+            id={iconId}
+            icon={iconComponent}
+          />
+        </div>
         <Message />
         {children}
       </aside>

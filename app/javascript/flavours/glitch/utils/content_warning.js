@@ -11,7 +11,7 @@ function _autoUnfoldCW(spoiler_text, skip_unfold_regex) {
 
   try {
     regex = new RegExp(skip_unfold_regex.trim(), 'i');
-  } catch (e) {
+  } catch {
     // Bad regex, skip filters
     return true;
   }
