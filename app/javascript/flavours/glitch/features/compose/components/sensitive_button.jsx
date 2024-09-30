@@ -21,11 +21,11 @@ const messages = defineMessages({
 export const SensitiveButton = () => {
   const intl = useIntl();
 
-  const spoilersAlwaysOn = useAppSelector((state) => state.getIn(['local_settings', 'always_show_spoilers_field']));
-  const spoilerText = useAppSelector((state) => state.getIn(['compose', 'spoiler_text']));
-  const sensitive = useAppSelector((state) => state.getIn(['compose', 'sensitive']));
-  const spoiler = useAppSelector((state) => state.getIn(['compose', 'spoiler']));
-  const mediaCount = useAppSelector((state) => state.getIn(['compose', 'media_attachments']).size);
+  const spoilersAlwaysOn = useAppSelector((state) => state.local_settings.getIn(['always_show_spoilers_field']));
+  const spoilerText = useAppSelector((state) => state.compose.get('spoiler_text'));
+  const sensitive = useAppSelector((state) => state.compose.get('sensitive'));
+  const spoiler = useAppSelector((state) => state.compose.get('spoiler'));
+  const mediaCount = useAppSelector((state) => state.compose.get('media_attachments').size);
   const disabled = spoilersAlwaysOn ? (spoilerText && spoilerText.length > 0) : spoiler;
 
   const active = sensitive || (spoilersAlwaysOn && spoilerText && spoilerText.length > 0);

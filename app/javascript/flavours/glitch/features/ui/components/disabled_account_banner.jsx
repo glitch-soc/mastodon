@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { FormattedMessage, defineMessages, injectIntl } from 'react-intl';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 import { Link } from 'react-router-dom';
 
@@ -9,29 +9,15 @@ import { connect } from 'react-redux';
 
 import { openModal } from 'flavours/glitch/actions/modal';
 import { disabledAccountId, movedToAccountId, domain } from 'flavours/glitch/initial_state';
-import { logOut } from 'flavours/glitch/utils/log_out';
-
-const messages = defineMessages({
-  logoutMessage: { id: 'confirmations.logout.message', defaultMessage: 'Are you sure you want to log out?' },
-  logoutConfirm: { id: 'confirmations.logout.confirm', defaultMessage: 'Log out' },
-});
 
 const mapStateToProps = (state) => ({
   disabledAcct: state.getIn(['accounts', disabledAccountId, 'acct']),
   movedToAcct: movedToAccountId ? state.getIn(['accounts', movedToAccountId, 'acct']) : undefined,
 });
 
-const mapDispatchToProps = (dispatch, { intl }) => ({
+const mapDispatchToProps = (dispatch) => ({
   onLogout () {
-    dispatch(openModal({
-      modalType: 'CONFIRM',
-      modalProps: {
-        message: intl.formatMessage(messages.logoutMessage),
-        confirm: intl.formatMessage(messages.logoutConfirm),
-        closeWhenConfirm: false,
-        onConfirm: () => logOut(),
-      },
-    }));
+    dispatch(openModal({ modalType: 'CONFIRM_LOG_OUT' }));
   },
 });
 

@@ -92,7 +92,7 @@ class Notification extends ImmutablePureComponent {
     e.preventDefault();
 
     const { notification, onMention } = this.props;
-    onMention(notification.get('account'), this.props.history);
+    onMention(notification.get('account'));
   };
 
   handleHotkeyFavourite = () => {
@@ -385,7 +385,7 @@ class Notification extends ImmutablePureComponent {
       <bdi>
         <Permalink
           className='notification__display-name'
-          href={account.get('url')}
+          href={targetAccount.get('url')}
           title={targetAccount.get('acct')}
           to={`/@${targetAccount.get('acct')}`}
           dangerouslySetInnerHTML={targetDisplayNameHtml}

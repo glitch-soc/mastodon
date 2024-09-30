@@ -15,7 +15,7 @@ const getRegex = createSelector([
 
   try {
     regex = rawRegex && new RegExp(rawRegex.trim(), 'i');
-  } catch (e) {
+  } catch {
     // Bad regex, don't affect filters
   }
   return regex;

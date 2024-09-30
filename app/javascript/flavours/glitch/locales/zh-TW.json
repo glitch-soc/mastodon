@@ -31,12 +31,8 @@
   "confirmations.missing_media_description.confirm": "仍要張貼",
   "confirmations.missing_media_description.edit": "編輯媒體",
   "confirmations.missing_media_description.message": "至少有一個媒體附件缺少說明。 在發送貼文之前，請考慮為視障人士在所有媒體附件加上說明。",
-  "confirmations.unfilter.author": "作者",
-  "confirmations.unfilter.confirm": "顯示",
-  "confirmations.unfilter.edit_filter": "編輯篩選器",
   "direct.group_by_conversations": "以對話分組",
   "endorsed_accounts_editor.endorsed_accounts": "受推薦帳號",
-  "favourite_modal.combo": "下次您可以按 {combo} 跳過",
   "federation.federated.long": "允許此貼文發布到其他伺服器",
   "federation.federated.short": "聯邦",
   "federation.local_only.long": "避免此貼文發布到其他伺服器",
@@ -151,6 +147,5 @@
   "status.in_reply_to": "貼文有回覆",
   "status.is_poll": "貼文有投票",
   "status.local_only": "只在此實例可見",
-  "status.uncollapse": "展開",
-  "suggestions.dismiss": "關閉建議"
+  "status.uncollapse": "展開"
 }

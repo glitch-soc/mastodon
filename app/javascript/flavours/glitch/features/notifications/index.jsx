@@ -38,7 +38,10 @@ import { LoadGap } from '../../components/load_gap';
 import ScrollableList from '../../components/scrollable_list';
 import NotificationPurgeButtonsContainer from '../../containers/notification_purge_buttons_container';
 
-import { FilteredNotificationsBanner } from './components/filtered_notifications_banner';
+import {
+  FilteredNotificationsBanner,
+  FilteredNotificationsIconButton,
+} from './components/filtered_notifications_banner';
 import NotificationsPermissionBanner from './components/notifications_permission_banner';
 import ColumnSettingsContainer from './containers/column_settings_container';
 import FilterBarContainer from './containers/filter_bar_container';
@@ -237,7 +240,7 @@ class Notifications extends PureComponent {
         <LoadGap
           key={'gap:' + notifications.getIn([index + 1, 'id'])}
           disabled={isLoading}
-          maxId={index > 0 ? notifications.getIn([index - 1, 'id']) : null}
+          param={index > 0 ? notifications.getIn([index - 1, 'id']) : null}
           onClick={this.handleLoadGap}
         />
       ) : (
@@ -258,6 +261,13 @@ class Notifications extends PureComponent {
 
     let scrollContainer;
 
+    const prepend = (
+      <>
+        {needsNotificationPermission && <NotificationsPermissionBanner />}
+        <FilteredNotificationsBanner />
+      </>
+    );
+
     if (signedIn) {
       scrollContainer = (
         <ScrollableList
@@ -267,7 +277,7 @@ class Notifications extends PureComponent {
           showLoading={isLoading && notifications.size === 0}
           hasMore={hasMore}
           numPending={numPending}
-          prepend={needsNotificationPermission && <NotificationsPermissionBanner />}
+          prepend={prepend}
           alwaysPrepend
           emptyMessage={emptyMessage}
           onLoadMore={this.handleLoadOlder}
@@ -283,7 +293,9 @@ class Notifications extends PureComponent {
       scrollContainer = <NotSignedInIndicator />;
     }
 
-    const extraButtons = [];
+    const extraButtons = [
+      <FilteredNotificationsIconButton key='filtered-notifications-icon' className='column-header__button' />,
+    ];
 
     if (canMarkAsRead) {
       extraButtons.push(
@@ -355,8 +367,6 @@ class Notifications extends PureComponent {
         </ColumnHeader>
 
         {filterBarContainer}
-
-        <FilteredNotificationsBanner />
 
         {scrollContainer}
 

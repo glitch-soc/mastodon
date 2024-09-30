@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe Sanitize::Config do
+RSpec.describe Sanitize::Config do
   shared_examples 'common HTML sanitization' do
     it 'keeps h1' do
       expect(Sanitize.fragment('<h1>Foo</h1>', subject)).to eq '<h1>Foo</h1>'

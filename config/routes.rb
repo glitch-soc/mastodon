@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     /lists/(*any)
     /links/(*any)
     /notifications/(*any)
+    /notifications_v2/(*any)
     /favourites
     /bookmarks
     /pinned
@@ -105,13 +106,9 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, path: 'auth', format: false, controllers: {
-    omniauth_callbacks: 'auth/omniauth_callbacks',
-    sessions: 'auth/sessions',
-    registrations: 'auth/registrations',
-    passwords: 'auth/passwords',
-    confirmations: 'auth/confirmations',
-  }
+  scope module: :auth do
+    devise_for :users, path: 'auth', format: false
+  end
 
   with_options constraints: ->(req) { req.format.nil? || req.format.html? } do
     get '/users/:username', to: redirect_with_vary('/@%{username}')
@@ -130,6 +127,8 @@ Rails.application.routes.draw do
       end
 
       resources :replies, only: [:index], module: :activitypub
+      resources :likes, only: [:index], module: :activitypub
+      resources :shares, only: [:index], module: :activitypub
     end
 
     resources :followers, only: [:index], controller: :follower_accounts
@@ -138,7 +137,6 @@ Rails.application.routes.draw do
     scope module: :activitypub do
       resource :outbox, only: [:show]
       resource :inbox, only: [:create]
-      resource :claim, only: [:create]
       resources :collections, only: [:show]
       resource :followers_synchronization, only: [:show]
     end
@@ -146,7 +144,11 @@ Rails.application.routes.draw do
 
   resource :inbox, only: [:create], module: :activitypub
 
-  get '/:encoded_at(*path)', to: redirect('/@%{path}'), constraints: { encoded_at: /%40/ }
+  constraints(encoded_path: /%40.*/) do
+    get '/:encoded_path', to: redirect { |params|
+      "/#{params[:encoded_path].gsub('%40', '@')}"
+    }
+  end
 
   constraints(username: %r{[^@/.]+}) do
     with_options to: 'accounts#show' do

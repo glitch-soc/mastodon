@@ -12,6 +12,7 @@ import { TimelineHint } from 'flavours/glitch/components/timeline_hint';
 import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
 import { normalizeForLookup } from 'flavours/glitch/reducers/accounts_map';
 import { getAccountHidden } from 'flavours/glitch/selectors';
+import { useAppSelector } from 'flavours/glitch/store';
 
 import {
   lookupAccount,
@@ -50,12 +51,22 @@ const mapStateToProps = (state, { params: { acct, id } }) => {
   };
 };
 
-const RemoteHint = ({ url }) => (
-  <TimelineHint url={url} resource={<FormattedMessage id='timeline_hint.resources.followers' defaultMessage='Followers' />} />
-);
+const RemoteHint = ({ accountId, url }) => {
+  const acct = useAppSelector(state => state.accounts.get(accountId)?.acct);
+  const domain = acct ? acct.split('@')[1] : undefined;
+
+  return (
+    <TimelineHint
+      url={url}
+      message={<FormattedMessage id='hints.profiles.followers_may_be_missing' defaultMessage='Followers for this profile may be missing.' />}
+      label={<FormattedMessage id='hints.profiles.see_more_followers' defaultMessage='See more followers on {domain}' values={{ domain: <strong>{domain}</strong> }} />}
+    />
+  );
+};
 
 RemoteHint.propTypes = {
   url: PropTypes.string.isRequired,
+  accountId: PropTypes.string.isRequired,
 };
 
 class Followers extends ImmutablePureComponent {
@@ -145,12 +156,12 @@ class Followers extends ImmutablePureComponent {
     } else if (hideCollections && accountIds.isEmpty()) {
       emptyMessage = <FormattedMessage id='empty_column.account_hides_collections' defaultMessage='This user has chosen to not make this information available' />;
     } else if (remote && accountIds.isEmpty()) {
-      emptyMessage = <RemoteHint url={remoteUrl} />;
+      emptyMessage = <RemoteHint accountId={accountId} url={remoteUrl} />;
     } else {
       emptyMessage = <FormattedMessage id='account.followers.empty' defaultMessage='No one follows this user yet.' />;
     }
 
-    const remoteMessage = remote ? <RemoteHint url={remoteUrl} /> : null;
+    const remoteMessage = remote ? <RemoteHint accountId={accountId} url={remoteUrl} /> : null;
 
     return (
       <Column ref={this.setRef}>

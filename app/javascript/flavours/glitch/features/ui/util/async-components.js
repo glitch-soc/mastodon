@@ -7,7 +7,15 @@ export function Compose () {
 }
 
 export function Notifications () {
-  return import(/* webpackChunkName: "flavours/glitch/async/notifications" */'../../notifications');
+  return import(/* webpackChunkName: "flavours/glitch/async/notifications_v1" */'../../notifications');
+}
+
+export function Notifications_v2 () {
+  return import(/* webpackChunkName: "flavours/glitch/async/notifications_v2" */'../../notifications_v2');
+}
+
+export function NotificationsWrapper () {
+  return import(/* webpackChunkName: "flavours/glitch/async/notifications" */'../../notifications_wrapper');
 }
 
 export function HomeTimeline () {
@@ -136,6 +144,10 @@ export function ReportModal () {
 
 export function SettingsModal () {
   return import(/* webpackChunkName: "flavours/glitch/async/settings_modal" */'../../local_settings');
+}
+
+export function IgnoreNotificationsModal () {
+  return import(/* webpackChunkName: "flavours/glitch/async/ignore_notifications_modal" */'../components/ignore_notifications_modal');
 }
 
 export function MediaGallery () {

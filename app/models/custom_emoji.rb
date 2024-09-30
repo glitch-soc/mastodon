@@ -26,6 +26,7 @@ class CustomEmoji < ApplicationRecord
 
   LOCAL_LIMIT = (ENV['MAX_EMOJI_SIZE'] || 256.kilobytes).to_i
   LIMIT       = [LOCAL_LIMIT, (ENV['MAX_REMOTE_EMOJI_SIZE'] || 256.kilobytes).to_i].max
+  MINIMUM_SHORTCODE_SIZE = 2
 
   SHORTCODE_RE_FRAGMENT = '[a-zA-Z0-9_]{2,}'
 
@@ -47,10 +48,11 @@ class CustomEmoji < ApplicationRecord
   validates_attachment :image, content_type: { content_type: IMAGE_MIME_TYPES }, presence: true
   validates_attachment_size :image, less_than: LIMIT, unless: :local?
   validates_attachment_size :image, less_than: LOCAL_LIMIT, if: :local?
-  validates :shortcode, uniqueness: { scope: :domain }, format: { with: SHORTCODE_ONLY_RE }, length: { minimum: 2 }
+  validates :shortcode, uniqueness: { scope: :domain }, format: { with: SHORTCODE_ONLY_RE }, length: { minimum: MINIMUM_SHORTCODE_SIZE }
 
-  scope :local,      -> { where(domain: nil) }
-  scope :remote,     -> { where.not(domain: nil) }
+  scope :local, -> { where(domain: nil) }
+  scope :remote, -> { where.not(domain: nil) }
+  scope :enabled, -> { where(disabled: false) }
   scope :alphabetic, -> { order(domain: :asc, shortcode: :asc) }
   scope :by_domain_and_subdomains, ->(domain) { where(domain: domain).or(where(arel_table[:domain].matches("%.#{domain}"))) }
 

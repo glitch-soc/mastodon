@@ -333,7 +333,7 @@ module.exports = defineConfig({
       ],
 
       parserOptions: {
-        project: true,
+        projectService: true,
         tsconfigRootDir: __dirname,
       },
 
