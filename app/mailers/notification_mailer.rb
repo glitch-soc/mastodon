@@ -42,7 +42,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def reaction
-    return unless @user.functional? && @status.present?
+    return if @status.blank?
 
     locale_for_account(@me) do
       mail subject: default_i18n_subject(name: @account.acct)
