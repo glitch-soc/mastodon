@@ -28,6 +28,9 @@ en:
       trending_status_cw:
         desc_html: When trending posts are enabled, allow posts with Content Warnings to be eligible. Changes to this setting are not retroactive.
         title: Allow posts with Content Warnings to trend
+      trending_status_sensitive:
+        desc_html: When trending posts are enabled, allow posts with sensitive media to be eligible. Changes to this setting are not retroactive.
+        title: Allow posts with sensitive media to trend
   appearance:
     localization:
       glitch_guide_link: https://crowdin.com/project/glitch-soc
