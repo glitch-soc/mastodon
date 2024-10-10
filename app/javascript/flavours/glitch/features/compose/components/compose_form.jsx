@@ -263,7 +263,7 @@ class ComposeForm extends ImmutablePureComponent {
 
             {this.props.spoiler && (
               <div className='spoiler-input'>
-                <div className='spoiler-input__border' />
+                {/* <div className='spoiler-input__border' /> */}
 
                 <AutosuggestInput
                   placeholder={intl.formatMessage(messages.spoiler_placeholder)}
@@ -283,7 +283,7 @@ class ComposeForm extends ImmutablePureComponent {
                   spellCheck
                 />
 
-                <div className='spoiler-input__border' />
+                {/* <div className='spoiler-input__border' /> */}
               </div>
             )}
 
