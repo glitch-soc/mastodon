@@ -14,6 +14,7 @@ import { Icon } from 'flavours/glitch/components/icon';
 import {
   selectSettingsNotificationsQuickFilterActive,
   selectSettingsNotificationsQuickFilterAdvanced,
+  selectSettingsNotificationsQuickFilterShow,
 } from 'flavours/glitch/selectors/settings';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
@@ -65,6 +66,11 @@ export const FilterBar: React.FC = () => {
   const advancedMode = useAppSelector(
     selectSettingsNotificationsQuickFilterAdvanced,
   );
+  const useFilterBar = useAppSelector(
+    selectSettingsNotificationsQuickFilterShow,
+  );
+
+  if (!useFilterBar) return null;
 
   if (advancedMode)
     return (
