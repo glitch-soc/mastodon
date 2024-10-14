@@ -28,11 +28,12 @@ class Notification < ApplicationRecord
     'Follow' => :follow,
     'FollowRequest' => :follow_request,
     'Favourite' => :favourite,
+    'StatusReaction' => :reaction,
     'Poll' => :poll,
   }.freeze
 
   # `set_group_key!` needs to be updated if this list changes
-  GROUPABLE_NOTIFICATION_TYPES = %i(favourite reblog follow).freeze
+  GROUPABLE_NOTIFICATION_TYPES = %i(favourite reaction reblog follow).freeze
   MAXIMUM_GROUP_SPAN_HOURS = 12
 
   # Please update app/javascript/api_types/notification.ts if you change this
@@ -53,6 +54,9 @@ class Notification < ApplicationRecord
       filterable: true,
     }.freeze,
     favourite: {
+      filterable: true,
+    }.freeze,
+    reaction: {
       filterable: true,
     }.freeze,
     poll: {
@@ -82,6 +86,7 @@ class Notification < ApplicationRecord
     reblog: [status: :reblog],
     mention: [mention: :status],
     favourite: [favourite: :status],
+    reaction: [status_reaction: :status],
     poll: [poll: :status],
     update: :status,
     'admin.report': [report: :target_account],
@@ -97,6 +102,7 @@ class Notification < ApplicationRecord
     belongs_to :follow, inverse_of: :notification
     belongs_to :follow_request, inverse_of: :notification
     belongs_to :favourite, inverse_of: :notification
+    belongs_to :status_reaction, inverse_of: :notification
     belongs_to :poll, inverse_of: false
     belongs_to :report, inverse_of: false
     belongs_to :account_relationship_severance_event, inverse_of: false
@@ -119,6 +125,8 @@ class Notification < ApplicationRecord
       status&.reblog
     when :favourite
       favourite&.status
+    when :reaction
+      status_reaction&.status
     when :mention
       mention&.status
     when :poll
@@ -130,7 +138,7 @@ class Notification < ApplicationRecord
     return if filtered? || Notification::GROUPABLE_NOTIFICATION_TYPES.exclude?(type)
 
     type_prefix = case type
-                  when :favourite, :reblog
+                  when :favourite, :reaction, :reblog
                     [type, target_status&.id].join('-')
                   when :follow
                     type
@@ -292,6 +300,8 @@ class Notification < ApplicationRecord
     end
   end
 
+  alias reaction status_reaction
+
   after_initialize :set_from_account
   before_validation :set_from_account
 
@@ -303,7 +313,7 @@ class Notification < ApplicationRecord
     return unless new_record?
 
     case activity_type
-    when 'Status', 'Follow', 'Favourite', 'FollowRequest', 'Poll', 'Report'
+    when 'Status', 'Follow', 'Favourite', 'StatusReaction', 'FollowRequest', 'Poll', 'Report'
       self.from_account_id = activity&.account_id
     when 'Mention'
       self.from_account_id = activity&.status&.account_id
