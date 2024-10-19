@@ -1121,22 +1121,31 @@ body > [data-popper-placement] {
   }
 
   .status__content__spoiler-link {
-    background: $action-button-color;
+    font-size: 15px;
+    width: 100%;
+    padding: 6px;
+    line-height: 24px;
+    cursor: pointer;
+    align-items: center; // glitch: content indicator
+    color: lighten($highlight-text-color, 8%);
+    border-radius: 6px;
+    border: 1px solid lighten($highlight-text-color, 8%);
 
-    &:hover,
-    &:focus {
-      background: lighten($action-button-color, 7%);
-      text-decoration: none;
+    .status__content__spoiler-icon {
+      display: inline-block;
+      padding: 0;
+      width: 18px;
+      height: 18px;
+
+      &.icon-content-spoiler-icon {
+        width: 22px;
+        height: 22px;
+      }
     }
 
-    &::-moz-focus-inner {
-      border: 0;
-    }
-
-    &::-moz-focus-inner,
-    &:focus,
-    &:active {
-      outline: 0 !important;
+    & > span {
+      border-inline-start: 1px solid currentColor;
+      padding-inline-start: 8px;
     }
   }
 
@@ -1144,6 +1153,7 @@ body > [data-popper-placement] {
     display: none;
 
     &.status__content__spoiler--visible {
+      margin-top: 8px;
       display: block;
     }
   }
@@ -1398,38 +1408,6 @@ body > [data-popper-placement] {
   color: $dark-text-color;
 }
 
-.status__content__spoiler-link {
-  display: inline-flex; // glitch: media icon in spoiler button
-  border-radius: 2px;
-  background: $action-button-color; // glitch: design used in more places
-  border: 0;
-  color: $inverted-text-color;
-  font-weight: 700;
-  font-size: 11px;
-  padding: 0 6px;
-  text-transform: uppercase;
-  line-height: 20px;
-  cursor: pointer;
-  vertical-align: top;
-  align-items: center; // glitch: content indicator
-
-  &:hover {
-    // glitch: design used in more places
-    background: lighten($action-button-color, 7%);
-    text-decoration: none;
-  }
-
-  .status__content__spoiler-icon {
-    display: inline-block;
-    margin-inline-start: 5px;
-    border-inline-start: 1px solid currentColor;
-    padding: 0;
-    padding-inline-start: 4px;
-    width: 16px;
-    height: 16px;
-  }
-}
-
 .status__wrapper--filtered {
   color: $dark-text-color;
   border: 0;
@@ -1524,15 +1502,15 @@ body > [data-popper-placement] {
         color: $highlight-text-color;
       }
 
-      &__spoiler-link {
-        color: $primary-text-color;
-        background: $ui-primary-color;
+      // &__spoiler-link {
+      //   color: $primary-text-color;
+      //   background: $ui-primary-color;
 
-        &:hover,
-        &:focus {
-          background: lighten($ui-primary-color, 8%);
-        }
-      }
+      //   &:hover,
+      //   &:focus {
+      //     background: lighten($ui-primary-color, 8%);
+      //   }
+      // }
     }
   }
 
@@ -1919,11 +1897,6 @@ body > [data-popper-placement] {
     .emojione {
       width: 24px;
       height: 24px;
-      margin: -1px 0 0;
-    }
-
-    .status__content__spoiler-link {
-      line-height: 24px;
       margin: -1px 0 0;
     }
   }
@@ -2466,16 +2439,17 @@ a.account__display-name {
     opacity: 0.5;
   }
 
-  a.status__content__spoiler-link {
-    background: $ui-base-lighter-color;
-    color: $inverted-text-color;
+  // TODO: make CW grey when muted?
+  // a.status__content__spoiler-link {
+  //   background: $ui-base-lighter-color;
+  //   color: $inverted-text-color;
 
-    &:hover,
-    &:focus {
-      background: lighten($ui-base-lighter-color, 7%);
-      text-decoration: none;
-    }
-  }
+  //   &:hover,
+  //   &:focus {
+  //     background: lighten($ui-base-lighter-color, 7%);
+  //     text-decoration: none;
+  //   }
+  // }
 }
 
 .notification__report {
@@ -7030,15 +7004,6 @@ a.status-card {
   .status__content,
   .status__content p {
     color: $primary-text-color;
-  }
-
-  .status__content__spoiler-link {
-    color: $primary-text-color;
-    background: $ui-primary-color;
-
-    &:hover {
-      background: lighten($ui-primary-color, 8%);
-    }
   }
 
   .dialog-option {
