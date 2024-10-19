@@ -22,12 +22,15 @@ import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_p
 import { useAppHistory } from 'flavours/glitch/components/router';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
 import PollContainer from 'flavours/glitch/containers/poll_container';
+import { useIdentity } from 'flavours/glitch/identity_context';
 import { useAppSelector } from 'flavours/glitch/store';
 
 import { Avatar } from '../../../components/avatar';
 import { DisplayName } from '../../../components/display_name';
 import MediaGallery from '../../../components/media_gallery';
 import StatusContent from '../../../components/status_content';
+import StatusReactions from '../../../components/status_reactions';
+import { visibleReactions } from '../../../initial_state';
 import Audio from '../../audio';
 import scheduleIdleTask from '../../ui/util/schedule_idle_task';
 import Video from '../../video';
@@ -54,6 +57,8 @@ export const DetailedStatus: React.FC<{
   pictureInPicture: any;
   onToggleHidden?: (status: any) => void;
   onToggleMediaVisibility?: () => void;
+  onReactionAdd?: (status: any, name: string, url: string) => void;
+  onReactionRemove?: (status: any, name: string) => void;
   expanded: boolean;
 }> = ({
   status,
@@ -68,12 +73,15 @@ export const DetailedStatus: React.FC<{
   pictureInPicture,
   onToggleMediaVisibility,
   onToggleHidden,
+  onReactionAdd,
+  onReactionRemove,
   expanded,
 }) => {
   const properStatus = status?.get('reblog') ?? status;
   const [height, setHeight] = useState(0);
   const nodeRef = useRef<HTMLDivElement>();
   const history = useAppHistory();
+  const { signedIn } = useIdentity();
 
   const rewriteMentions = useAppSelector(
     (state) => state.local_settings.get('rewrite_mentions', false) as boolean,
@@ -402,6 +410,16 @@ export const DetailedStatus: React.FC<{
           disabled
           {...(statusContentProps as any)}
         />
+
+        {visibleReactions && visibleReactions > 0 && (
+          <StatusReactions
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            addReaction={onReactionAdd}
+            removeReaction={onReactionRemove}
+            canReact={signedIn}
+          />
+        )}
 
         <div className='detailed-status__meta'>
           <div className='detailed-status__meta__line'>
