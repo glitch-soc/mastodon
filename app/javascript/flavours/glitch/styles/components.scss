@@ -1399,9 +1399,9 @@ body > [data-popper-placement] {
 }
 
 .status__content__spoiler-link {
-  display: inline-flex; // glitch: media icon in spoiler button
+  display: inline-block;
   border-radius: 2px;
-  background: $action-button-color; // glitch: design used in more places
+  background: transparent;
   border: 0;
   color: $inverted-text-color;
   font-weight: 700;
@@ -1411,23 +1411,6 @@ body > [data-popper-placement] {
   line-height: 20px;
   cursor: pointer;
   vertical-align: top;
-  align-items: center; // glitch: content indicator
-
-  &:hover {
-    // glitch: design used in more places
-    background: lighten($action-button-color, 7%);
-    text-decoration: none;
-  }
-
-  .status__content__spoiler-icon {
-    display: inline-block;
-    margin-inline-start: 5px;
-    border-inline-start: 1px solid currentColor;
-    padding: 0;
-    padding-inline-start: 4px;
-    width: 16px;
-    height: 16px;
-  }
 }
 
 .status__wrapper--filtered {
@@ -11682,5 +11665,11 @@ noscript {
       font-weight: 500;
       color: $secondary-text-color;
     }
+  }
+
+  .status__content__spoiler-icon {
+    float: inline-end;
+    width: 20px;
+    height: 20px;
   }
 }
