@@ -1922,6 +1922,14 @@ body > [data-popper-placement] {
     margin-bottom: 16px;
   }
 
+  .content-warning {
+    margin-bottom: 16px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .logo {
     width: 40px;
     height: 40px;
