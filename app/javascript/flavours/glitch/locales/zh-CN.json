@@ -153,7 +153,5 @@
   "status.is_poll": "此嘟文是投票",
   "status.local_only": "此嘟文仅本站可见",
   "status.show_filter_reason": "仍然显示",
-  "status.show_less": "部分显示",
-  "status.show_more": "完全显示",
   "status.uncollapse": "展开"
 }

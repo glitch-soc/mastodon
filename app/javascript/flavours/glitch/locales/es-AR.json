@@ -154,7 +154,5 @@
   "status.is_poll": "Esta publicación es una encuesta",
   "status.local_only": "Sólo visible para tu instancia",
   "status.show_filter_reason": "Mostrar de todos modos",
-  "status.show_less": "Mostrar menos",
-  "status.show_more": "Mostrar más",
   "status.uncollapse": "Descolapsar"
 }

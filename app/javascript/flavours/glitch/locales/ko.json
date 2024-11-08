@@ -154,7 +154,5 @@
   "status.is_poll": "이 글은 설문입니다",
   "status.local_only": "당신의 서버에서만 보입니다",
   "status.show_filter_reason": "그냥 표시하기",
-  "status.show_less": "접기",
-  "status.show_more": "더보기",
   "status.uncollapse": "펼치기"
 }

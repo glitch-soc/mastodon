@@ -154,7 +154,5 @@
   "status.is_poll": "Dieser Toot ist eine Umfrage",
   "status.local_only": "Nur auf deiner Instanz sichtbar",
   "status.show_filter_reason": "Trotzdem anzeigen",
-  "status.show_less": "Weniger anzeigen",
-  "status.show_more": "Mehr anzeigen",
   "status.uncollapse": "Ausklappen"
 }
