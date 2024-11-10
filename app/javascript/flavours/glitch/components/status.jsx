@@ -806,7 +806,8 @@ class Status extends ImmutablePureComponent {
             {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
 
             {(!muted || !isCollapsed) && (
-              <header className='status__info'>
+              /* eslint-disable-next-line jsx-a11y/no-static-element-interactions */
+              <header onClick={this.parseClick} className='status__info'>
                 <StatusHeader
                   status={status}
                   friend={account}
