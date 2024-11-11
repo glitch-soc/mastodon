@@ -18,15 +18,10 @@ export default class StatusHeader extends PureComponent {
     parseClick: PropTypes.func.isRequired,
   };
 
-  //  Handles clicks on account name/image
-  handleClick = (acct, e) => {
-    const { parseClick } = this.props;
-    parseClick(e, `/@${acct}`);
-  };
-
   handleAccountClick = (e) => {
-    const { status } = this.props;
-    this.handleClick(status.getIn(['account', 'acct']), e);
+    const { status, parseClick } = this.props;
+    parseClick(e, `/@${status.getIn(['account', 'acct'])}`);
+    e.stopPropagation();
   };
 
   //  Rendering.
