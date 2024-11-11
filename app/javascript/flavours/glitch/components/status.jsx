@@ -372,26 +372,29 @@ class Status extends ImmutablePureComponent {
     const { isCollapsed } = this.state;
     if (!history) return;
 
-    if (e.button === 0 && !(e.ctrlKey || e.altKey || e.metaKey)) {
-      if (isCollapsed) this.setCollapsed(false);
-      else if (e.shiftKey) {
-        this.setCollapsed(true);
-        document.getSelection().removeAllRanges();
-      } else if (this.props.onClick) {
-        this.props.onClick();
-        return;
-      } else {
-        if (destination === undefined) {
-          destination = `/@${
-            status.getIn(['reblog', 'account', 'acct'], status.getIn(['account', 'acct']))
-          }/${
-            status.getIn(['reblog', 'id'], status.get('id'))
-          }`;
-        }
-        history.push(destination);
-      }
-      e.preventDefault();
+    if (e.button !== 0 || e.ctrlKey || e.altKey || e.metaKey) {
+      return;
     }
+
+    if (isCollapsed) this.setCollapsed(false);
+    else if (e.shiftKey) {
+      this.setCollapsed(true);
+      document.getSelection().removeAllRanges();
+    } else if (this.props.onClick) {
+      this.props.onClick();
+      return;
+    } else {
+      if (destination === undefined) {
+        destination = `/@${
+          status.getIn(['reblog', 'account', 'acct'], status.getIn(['account', 'acct']))
+        }/${
+          status.getIn(['reblog', 'id'], status.get('id'))
+        }`;
+      }
+      history.push(destination);
+    }
+
+    e.preventDefault();
   };
 
   handleToggleMediaVisibility = () => {
