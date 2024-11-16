@@ -19,6 +19,7 @@ export const CollapseButton = ({ collapsed, setCollapsed }) => {
     if (e.button === 0) {
       setCollapsed(!collapsed);
       e.preventDefault();
+      e.stopPropagation();
     }
   }, [collapsed, setCollapsed]);
 
