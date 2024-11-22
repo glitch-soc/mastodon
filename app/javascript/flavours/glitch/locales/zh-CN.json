@@ -36,6 +36,7 @@
   "confirmations.missing_media_description.message": "你没有为一个或多个媒体撰写描述。请考虑为视障人士添加描述。",
   "direct.group_by_conversations": "按对话分组",
   "endorsed_accounts_editor.endorsed_accounts": "精选账户",
+  "favourite_modal.favourite": "点赞嘟文?",
   "federation.federated.long": "允许此嘟文到达其它服务器",
   "federation.federated.short": "联动",
   "federation.local_only.long": "阻止此嘟文到达其它服务器",

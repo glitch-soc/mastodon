@@ -7,6 +7,7 @@ ru:
       flavour_and_skin:
         title: Стиль и цвета
       hide_followers_count:
+        desc_html: Не показывать число подписчиков в профилях пользователей
         title: Скрыть количество подписчиков
       other:
         preamble: Настройки glitch-soc, которые не могут быть отнесены к другим категориям.
