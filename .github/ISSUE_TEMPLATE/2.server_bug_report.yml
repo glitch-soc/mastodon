@@ -1,8 +1,7 @@
 name: Bug Report (server / API)
 description: |
   There is a problem with the HTTP server, REST API, ActivityPub interaction, etc.
-labels: ['status/to triage']
-type: 'Bug'
+labels: [bug, 'status/to triage']
 body:
   - type: markdown
     attributes:

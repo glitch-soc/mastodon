@@ -1,8 +1,7 @@
 name: Deployment troubleshooting
 description: |
   You are a server administrator and you are encountering a technical issue during installation, upgrade or operations of Mastodon.
-labels: ['status/to triage']
-type: 'Troubleshooting'
+labels: [bug, 'status/to triage']
 body:
   - type: markdown
     attributes:
