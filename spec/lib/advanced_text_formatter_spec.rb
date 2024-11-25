@@ -281,6 +281,14 @@ RSpec.describe AdvancedTextFormatter do
         end
       end
 
+      context 'with text containing a hashtag with underscores' do
+        let(:text) { '#_hashtag_' }
+
+        it 'creates a hashtag link' do
+          expect(subject).to include '/tags/_hashtag_" class="mention hashtag" rel="tag">#<span>_hashtag_</span></a>'
+        end
+      end
+
       context 'with text with a stand-alone xmpp: URI' do
         let(:text) { 'xmpp:user@instance.com' }
 
