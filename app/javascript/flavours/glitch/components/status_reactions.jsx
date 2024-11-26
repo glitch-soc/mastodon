@@ -89,7 +89,8 @@ class Reaction extends ImmutablePureComponent {
   };
 
   handleClick = () => {
-    const { reaction, statusId, addReaction, removeReaction } = this.props;
+    const { reaction, statusId, addReaction, removeReaction, canReact } = this.props;
+    if (!canReact) return;
 
     if (reaction.get('me') && removeReaction) {
       removeReaction(statusId, reaction.get('name'));
@@ -111,7 +112,6 @@ class Reaction extends ImmutablePureComponent {
         onClick={this.handleClick}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
-        disabled={!this.props.canReact}
         style={this.props.style}
       >
         <span className='reactions-bar__item__emoji'>
