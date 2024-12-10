@@ -238,6 +238,10 @@ module Account::Interactions
     status.proper.favourites.exists?(account: self)
   end
 
+  def reacted?(status, name, custom_emoji = nil)
+    status.proper.status_reactions.exists?(account: self, name: name, custom_emoji: custom_emoji)
+  end
+
   def bookmarked?(status)
     status.proper.bookmarks.exists?(account: self)
   end
