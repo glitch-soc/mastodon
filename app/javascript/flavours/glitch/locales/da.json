@@ -11,7 +11,6 @@
   "settings.content_warnings": "Indholdsadvarsler",
   "settings.content_warnings.regexp": "Regulært udtryk",
   "settings.general": "Generelt",
-  "settings.image_backgrounds_media_hint": "Hvis et indlæg har vedhæftede medier, brug den første som baggrund",
   "settings.media": "Medier",
   "settings.preferences": "Præferencer",
   "settings.rewrite_mentions": "Omskriv omtaler i viste indlæg",
