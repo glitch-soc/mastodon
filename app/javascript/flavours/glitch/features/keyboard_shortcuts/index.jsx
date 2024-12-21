@@ -5,7 +5,6 @@ import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
 import { Helmet } from 'react-helmet';
 
 import ImmutablePureComponent from 'react-immutable-pure-component';
-import { connect } from 'react-redux';
 
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import Column from 'flavours/glitch/components/column';
@@ -15,20 +14,15 @@ const messages = defineMessages({
   heading: { id: 'keyboard_shortcuts.heading', defaultMessage: 'Keyboard Shortcuts' },
 });
 
-const mapStateToProps = state => ({
-  collapseEnabled: state.getIn(['local_settings', 'collapsed', 'enabled']),
-});
-
 class KeyboardShortcuts extends ImmutablePureComponent {
 
   static propTypes = {
     intl: PropTypes.object.isRequired,
     multiColumn: PropTypes.bool,
-    collapseEnabled: PropTypes.bool,
   };
 
   render () {
-    const { intl, collapseEnabled, multiColumn } = this.props;
+    const { intl, multiColumn } = this.props;
 
     return (
       <Column>
@@ -88,12 +82,6 @@ class KeyboardShortcuts extends ImmutablePureComponent {
                 <td><kbd>h</kbd></td>
                 <td><FormattedMessage id='keyboard_shortcuts.toggle_sensitivity' defaultMessage='to show/hide media' /></td>
               </tr>
-              {collapseEnabled && (
-                <tr>
-                  <td><kbd>shift</kbd>+<kbd>x</kbd></td>
-                  <td><FormattedMessage id='keyboard_shortcuts.toggle_collapse' defaultMessage='to collapse/uncollapse toots' /></td>
-                </tr>
-              )}
               <tr>
                 <td><kbd>up</kbd>, <kbd>k</kbd></td>
                 <td><FormattedMessage id='keyboard_shortcuts.up' defaultMessage='to move up in the list' /></td>
@@ -135,6 +123,54 @@ class KeyboardShortcuts extends ImmutablePureComponent {
                 <td><FormattedMessage id='keyboard_shortcuts.unfocus' defaultMessage='to un-focus compose textarea/search' /></td>
               </tr>
               <tr>
+                <td><kbd>g</kbd>+<kbd>h</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.home' defaultMessage='to open home timeline' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>n</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.notifications' defaultMessage='to open notifications column' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>l</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.local' defaultMessage='to open local timeline' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>t</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.federated' defaultMessage='to open federated timeline' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>d</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.direct' defaultMessage='to open direct messages column' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>s</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.start' defaultMessage='to open "get started" column' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>f</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.favourites' defaultMessage='to open favorites list' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>p</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.pinned' defaultMessage='to open pinned posts list' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>u</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.my_profile' defaultMessage='to open your profile' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>b</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.blocked' defaultMessage='to open blocked users list' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>m</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.muted' defaultMessage='to open muted users list' /></td>
+              </tr>
+              <tr>
+                <td><kbd>g</kbd>+<kbd>r</kbd></td>
+                <td><FormattedMessage id='keyboard_shortcuts.requests' defaultMessage='to open follow requests list' /></td>
+              </tr>
+              <tr>
                 <td><kbd>?</kbd></td>
                 <td><FormattedMessage id='keyboard_shortcuts.legend' defaultMessage='to display this legend' /></td>
               </tr>
@@ -151,4 +187,4 @@ class KeyboardShortcuts extends ImmutablePureComponent {
 
 }
 
-export default connect(mapStateToProps)(injectIntl(KeyboardShortcuts));
+export default injectIntl(KeyboardShortcuts);

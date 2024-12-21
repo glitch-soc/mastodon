@@ -132,7 +132,6 @@ const keyMap = {
   goToRequests: 'g r',
   toggleHidden: 'x',
   bookmark: 'd',
-  toggleCollapse: 'shift+x',
   toggleSensitive: 'h',
   openMedia: 'e',
 };
