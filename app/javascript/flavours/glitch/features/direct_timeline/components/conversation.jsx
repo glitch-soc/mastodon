@@ -63,19 +63,6 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
   const sharedCWState = useSelector(state => state.getIn(['state', 'content_warnings', 'shared_state']));
   const [expanded, setExpanded] = useState(undefined);
 
-  const parseClick = useCallback((e, destination) => {
-    if (e.button === 0 && !(e.ctrlKey || e.altKey || e.metaKey)) {
-      if (destination === undefined) {
-        if (unread) {
-          dispatch(markConversationRead(id));
-        }
-        destination = `/statuses/${lastStatus.get('id')}`;
-      }
-      history.push(destination);
-      e.preventDefault();
-    }
-  }, [dispatch, history, unread, id, lastStatus]);
-
   const handleMouseEnter = useCallback(({ currentTarget }) => {
     if (autoPlayGif) {
       return;
@@ -215,7 +202,7 @@ export const Conversation = ({ conversation, scrollKey, onMoveUp, onMoveDown }) 
 
           <StatusContent
             status={lastStatus}
-            parseClick={parseClick}
+            onClick={handleClick}
             expanded={sharedCWState ? lastStatus.get('hidden') : expanded}
             onExpandedToggle={handleShowMore}
             collapsible

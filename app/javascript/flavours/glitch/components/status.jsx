@@ -24,10 +24,12 @@ import { SensitiveMediaContext } from '../features/ui/util/sensitive_media_conte
 import { displayMedia } from '../initial_state';
 
 import AttachmentList from './attachment_list';
+import { Avatar } from './avatar';
+import { AvatarOverlay } from './avatar_overlay';
+import { DisplayName } from './display_name';
 import { getHashtagBarForStatus } from './hashtag_bar';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
-import StatusHeader from './status_header';
 import StatusIcons from './status_icons';
 import StatusPrepend from './status_prepend';
 
@@ -262,35 +264,33 @@ class Status extends ImmutablePureComponent {
     this.setState({ isExpanded: value });
   };
 
-  //  `parseClick()` takes a click event and responds appropriately.
-  //  Open the url handed to us in `destination`, if applicable.
-  parseClick = (e, destination) => {
-    const { status, history } = this.props;
-    if (!history) return;
-
-    if (e.button !== 0 || e.ctrlKey || e.altKey || e.metaKey) {
-      return;
-    }
-
-    if (this.props.onClick) {
-      this.props.onClick();
-      return;
-    } else {
-      if (destination === undefined) {
-        destination = `/@${
-          status.getIn(['reblog', 'account', 'acct'], status.getIn(['account', 'acct']))
-        }/${
-          status.getIn(['reblog', 'id'], status.get('id'))
-        }`;
-      }
-      history.push(destination);
-    }
-
-    e.preventDefault();
-  };
-
   handleToggleMediaVisibility = () => {
     this.setState({ showMedia: !this.state.showMedia });
+  };
+
+  handleClick = e => {
+    if (e && (e.button !== 0 || e.ctrlKey || e.metaKey)) {
+      return;
+    }
+    
+    if (e) {
+      e.preventDefault();
+    }
+    
+    this.handleHotkeyOpen();
+  };
+
+  handleAccountClick = (e, proper = true) => {
+    if (e && (e.button !== 0 || e.ctrlKey || e.metaKey))  {
+      return;
+    }
+
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    this._openProfile(proper);
   };
 
   handleExpandedToggle = () => {
@@ -358,12 +358,34 @@ class Status extends ImmutablePureComponent {
   };
 
   handleHotkeyOpen = () => {
+    if (this.props.onClick) {
+      this.props.onClick();
+      return;
+    }
+    
+    const { history } = this.props;
     const status = this.props.status;
-    this.props.history.push(`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`);
+
+    if (!history) {
+      return;
+    }
+
+    history.push(`/@${status.getIn(['account', 'acct'])}/${status.get('id')}`);
   };
 
   handleHotkeyOpenProfile = () => {
-    this.props.history.push(`/@${this.props.status.getIn(['account', 'acct'])}`);
+    this._openProfile();
+  };
+
+  _openProfile = () => {
+    const { history } = this.props;
+    const status = this.props.status;
+
+    if (!history) {
+      return;
+    }
+
+    history.push(`/@${status.getIn(['account', 'acct'])}`);
   };
 
   handleHotkeyMoveUp = e => {
@@ -410,8 +432,6 @@ class Status extends ImmutablePureComponent {
   render () {
     const { intl, hidden, featured, unfocusable, unread, pictureInPicture, previousId, nextInReplyToId, rootId, skipPrepend, avatarSize = 46 } = this.props;
 
-    const { parseClick } = this;
-
     const {
       status,
       account,
@@ -435,6 +455,7 @@ class Status extends ImmutablePureComponent {
     let extraMediaIcons = [];
     let media = contentMedia;
     let mediaIcons = contentMediaIcons;
+    let statusAvatar;
 
     if (settings.getIn(['content_warnings', 'media_outside'])) {
       media = extraMedia;
@@ -633,7 +654,6 @@ class Status extends ImmutablePureComponent {
         <StatusPrepend
           type={this.props.prepend}
           account={account}
-          parseClick={parseClick}
           notificationId={this.props.notificationId}
         />
       );
@@ -641,6 +661,12 @@ class Status extends ImmutablePureComponent {
 
     if (this.props.prepend === 'reblog') {
       rebloggedByText = intl.formatMessage({ id: 'status.reblogged_by', defaultMessage: '{name} boosted' }, { name: account.get('acct') });
+    }
+
+    if (account === undefined || account === null) {
+      statusAvatar = <Avatar account={status.get('account')} size={avatarSize} />;
+    } else {
+      statusAvatar = <AvatarOverlay account={status.get('account')} friend={account} />;
     }
 
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
@@ -667,13 +693,14 @@ class Status extends ImmutablePureComponent {
 
             {(!muted) && (
               /* eslint-disable-next-line jsx-a11y/no-static-element-interactions */
-              <header onClick={this.parseClick} className='status__info'>
-                <StatusHeader
-                  status={status}
-                  friend={account}
-                  parseClick={parseClick}
-                  avatarSize={avatarSize}
-                />
+              <header onClick={this.handleClick} className='status__info'>
+                <a onClick={this.handleAccountClick} href={status.getIn(['account', 'url'])} title={status.getIn(['account', 'acct'])} data-hover-card-account={status.getIn(['account', 'id'])}  className='status__display-name' target='_blank' rel='noopener noreferrer'>
+                  <div className='status__avatar'>
+                    {statusAvatar}
+                  </div>
+
+                  <DisplayName account={status.get('account')} />
+                </a>
                 <StatusIcons
                   status={status}
                   mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
@@ -683,14 +710,15 @@ class Status extends ImmutablePureComponent {
             )}
             <StatusContent
               status={status}
+              onClick={this.handleClick}
+              onTranslate={this.handleTranslate}
+              collapsible
               media={contentMedia}
               extraMedia={extraMedia}
               mediaIcons={contentMediaIcons}
               expanded={isExpanded}
               onExpandedToggle={this.handleExpandedToggle}
-              onTranslate={this.handleTranslate}
-              parseClick={parseClick}
-              disabled={!history}
+              onCollapsedToggle={this.handleCollapsedToggle}
               tagLinks={settings.get('tag_misleading_links')}
               rewriteMentions={settings.get('rewrite_mentions')}
               {...statusContentProps}

@@ -19,7 +19,6 @@ import { getHashtagBarForStatus } from 'flavours/glitch/components/hashtag_bar';
 import { IconLogo } from 'flavours/glitch/components/logo';
 import { Permalink } from 'flavours/glitch/components/permalink';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
-import { useAppHistory } from 'flavours/glitch/components/router';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
 import PollContainer from 'flavours/glitch/containers/poll_container';
 import { useAppSelector } from 'flavours/glitch/store';
@@ -75,7 +74,6 @@ export const DetailedStatus: React.FC<{
   const properStatus = status?.get('reblog') ?? status;
   const [height, setHeight] = useState(0);
   const nodeRef = useRef<HTMLDivElement>();
-  const history = useAppHistory();
 
   const rewriteMentions = useAppSelector(
     (state) => state.local_settings.get('rewrite_mentions', false) as boolean,
@@ -141,18 +139,6 @@ export const DetailedStatus: React.FC<{
   const handleTranslate = useCallback(() => {
     if (onTranslate) onTranslate(status);
   }, [onTranslate, status]);
-
-  const parseClick = useCallback(
-    (e: React.MouseEvent, destination: string) => {
-      if (e.button === 0 && !(e.ctrlKey || e.altKey || e.metaKey)) {
-        e.preventDefault();
-        history.push(destination);
-      }
-
-      e.stopPropagation();
-    },
-    [history],
-  );
 
   if (!properStatus) {
     return null;
@@ -405,8 +391,6 @@ export const DetailedStatus: React.FC<{
           onUpdate={handleChildUpdate}
           tagLinks={tagMisleadingLinks}
           rewriteMentions={rewriteMentions}
-          parseClick={parseClick}
-          disabled
           {...(statusContentProps as any)}
         />
 

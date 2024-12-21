@@ -20,7 +20,6 @@ import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
 
-
 import { Permalink } from './permalink';
 
 const textMatchesTarget = (text, origin, host) => {
@@ -140,8 +139,7 @@ class StatusContent extends PureComponent {
     media: PropTypes.node,
     extraMedia: PropTypes.node,
     mediaIcons: PropTypes.arrayOf(PropTypes.string),
-    parseClick: PropTypes.func,
-    disabled: PropTypes.bool,
+    onClick: PropTypes.func,
     onUpdate: PropTypes.func,
     tagLinks: PropTypes.bool,
     rewriteMentions: PropTypes.string,
@@ -195,7 +193,6 @@ class StatusContent extends PureComponent {
       } else if (link.textContent[0] === '#' || (link.previousSibling && link.previousSibling.textContent && link.previousSibling.textContent[link.previousSibling.textContent.length - 1] === '#')) {
         link.addEventListener('click', this.onHashtagClick.bind(this, link.text), false);
       } else {
-        link.addEventListener('click', this.onLinkClick.bind(this), false);
         link.setAttribute('title', link.href);
         link.classList.add('unhandled-link');
 
@@ -265,23 +262,19 @@ class StatusContent extends PureComponent {
     if (this.props.onUpdate) this.props.onUpdate();
   }
 
-  onLinkClick = (e) => {
-    if (this.props.collapsed) {
-      if (this.props.parseClick) this.props.parseClick(e);
-    }
-  };
-
   onMentionClick = (mention, e) => {
-    if (this.props.parseClick) {
-      this.props.parseClick(e, `/@${mention.get('acct')}`);
+    if (this.props.history && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.props.history.push(`/@${mention.get('acct')}`);
     }
   };
 
   onHashtagClick = (hashtag, e) => {
     hashtag = hashtag.replace(/^#/, '');
 
-    if (this.props.parseClick) {
-      this.props.parseClick(e, `/tags/${hashtag}`);
+    if (this.props.history && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.props.history.push(`/tags/${hashtag}`);
     }
   };
 
@@ -290,9 +283,7 @@ class StatusContent extends PureComponent {
   };
 
   handleMouseUp = (e) => {
-    const { parseClick, disabled } = this.props;
-
-    if (disabled || !this.startXY) {
+    if (!this.startXY) {
       return;
     }
 
@@ -307,8 +298,8 @@ class StatusContent extends PureComponent {
       element = element.parentNode;
     }
 
-    if (deltaX + deltaY < 5 && e.button === 0 && parseClick) {
-      parseClick(e);
+    if (deltaX + deltaY < 5 && e.button === 0 && this.props.onClick) {
+      this.props.onClick(e);
     }
 
     this.startXY = null;
@@ -338,8 +329,6 @@ class StatusContent extends PureComponent {
       media,
       extraMedia,
       mediaIcons,
-      parseClick,
-      disabled,
       tagLinks,
       rewriteMentions,
       intl,
@@ -355,7 +344,7 @@ class StatusContent extends PureComponent {
     const spoilerHtml = status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml');
     const language = status.getIn(['translation', 'language']) || status.get('language');
     const classNames = classnames('status__content', {
-      'status__content--with-action': parseClick && !disabled,
+      'status__content--with-action': this.props.onClick && this.props.history,
       'status__content--with-spoiler': status.get('spoiler_text').length > 0,
     });
 
@@ -427,7 +416,7 @@ class StatusContent extends PureComponent {
           {extraMedia}
         </div>
       );
-    } else if (parseClick) {
+    } else if (this.props.onClick) {
       return (
         <div
           className={classNames}
