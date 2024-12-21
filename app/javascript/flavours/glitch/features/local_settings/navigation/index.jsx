@@ -6,7 +6,6 @@ import { injectIntl, defineMessages } from 'react-intl';
 
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import EditIcon from '@/material-icons/400-24px/edit.svg?react';
-import ExpandLessIcon from '@/material-icons/400-24px/expand_less.svg?react';
 import ImageIcon from '@/material-icons/400-24px/image.svg?react';
 import ManufacturingIcon from '@/material-icons/400-24px/manufacturing.svg?react';
 import SettingsIcon from '@/material-icons/400-24px/settings-fill.svg?react';
@@ -19,7 +18,6 @@ const messages = defineMessages({
   general: {  id: 'settings.general', defaultMessage: 'General' },
   compose: {  id: 'settings.compose_box_opts', defaultMessage: 'Compose box' },
   content_warnings: { id: 'settings.content_warnings', defaultMessage: 'Content Warnings' },
-  collapsed: { id: 'settings.collapsed_statuses', defaultMessage: 'Collapsed toots' },
   media: { id: 'settings.media', defaultMessage: 'Media' },
   preferences: { id: 'settings.preferences', defaultMessage: 'Preferences' },
   close: { id: 'settings.close', defaultMessage: 'Close' },
@@ -63,14 +61,6 @@ class LocalSettingsNavigation extends PureComponent {
           icon='warning'
           iconComponent={WarningIcon}
           title={intl.formatMessage(messages.content_warnings)}
-        />
-        <LocalSettingsNavigationItem
-          active={index === 3}
-          index={3}
-          onNavigate={onNavigate}
-          icon='angle-double-up'
-          iconComponent={ExpandLessIcon}
-          title={intl.formatMessage(messages.collapsed)}
         />
         <LocalSettingsNavigationItem
           active={index === 4}

@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
+import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
 import ImageIcon from '@/material-icons/400-24px/image.svg?react';
 import InsertChartIcon from '@/material-icons/400-24px/insert_chart.svg?react';
 import LinkIcon from '@/material-icons/400-24px/link.svg?react';
@@ -20,8 +21,9 @@ import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
 
-
 import { Permalink } from './permalink';
+
+const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
 
 const textMatchesTarget = (text, origin, host) => {
   return (text === origin || text === host
@@ -134,14 +136,14 @@ class StatusContent extends PureComponent {
     status: ImmutablePropTypes.map.isRequired,
     statusContent: PropTypes.string,
     expanded: PropTypes.bool,
-    collapsed: PropTypes.bool,
     onExpandedToggle: PropTypes.func,
     onTranslate: PropTypes.func,
     media: PropTypes.node,
     extraMedia: PropTypes.node,
     mediaIcons: PropTypes.arrayOf(PropTypes.string),
-    parseClick: PropTypes.func,
-    disabled: PropTypes.bool,
+    onClick: PropTypes.func,
+    collapsible: PropTypes.bool,
+    onCollapsedToggle: PropTypes.func,
     onUpdate: PropTypes.func,
     tagLinks: PropTypes.bool,
     rewriteMentions: PropTypes.string,
@@ -170,16 +172,21 @@ class StatusContent extends PureComponent {
       return;
     }
 
+    const { status, onCollapsedToggle } = this.props;
     const links = node.querySelectorAll('a');
 
+    let link, mention;
+
     for (var i = 0; i < links.length; ++i) {
-      let link = links[i];
+      link = links[i];
+
       if (link.classList.contains('status-link')) {
         continue;
       }
+
       link.classList.add('status-link');
 
-      let mention = this.props.status.get('mentions').find(item => link.href === item.get('url'));
+      mention = this.props.status.get('mentions').find(item => link.href === item.get('url'));
 
       if (mention) {
         link.addEventListener('click', this.onMentionClick.bind(this, mention), false);
@@ -195,7 +202,6 @@ class StatusContent extends PureComponent {
       } else if (link.textContent[0] === '#' || (link.previousSibling && link.previousSibling.textContent && link.previousSibling.textContent[link.previousSibling.textContent.length - 1] === '#')) {
         link.addEventListener('click', this.onHashtagClick.bind(this, link.text), false);
       } else {
-        link.addEventListener('click', this.onLinkClick.bind(this), false);
         link.setAttribute('title', link.href);
         link.classList.add('unhandled-link');
 
@@ -227,6 +233,18 @@ class StatusContent extends PureComponent {
           if (tagLinks && e instanceof TypeError) link.removeAttribute('href');
         }
       }
+    }
+
+    if (status.get('collapsed', null) === null && onCollapsedToggle) {
+      const { collapsible, onClick } = this.props;
+
+      const collapsed =
+          collapsible
+          && onClick
+          && node.clientHeight > MAX_HEIGHT
+          && status.get('spoiler_text').length === 0;
+
+      onCollapsedToggle(collapsed);
     }
   }
 
@@ -265,23 +283,19 @@ class StatusContent extends PureComponent {
     if (this.props.onUpdate) this.props.onUpdate();
   }
 
-  onLinkClick = (e) => {
-    if (this.props.collapsed) {
-      if (this.props.parseClick) this.props.parseClick(e);
-    }
-  };
-
   onMentionClick = (mention, e) => {
-    if (this.props.parseClick) {
-      this.props.parseClick(e, `/@${mention.get('acct')}`);
+    if (this.props.history && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.props.history.push(`/@${mention.get('acct')}`);
     }
   };
 
   onHashtagClick = (hashtag, e) => {
     hashtag = hashtag.replace(/^#/, '');
 
-    if (this.props.parseClick) {
-      this.props.parseClick(e, `/tags/${hashtag}`);
+    if (this.props.history && e.button === 0 && !(e.ctrlKey || e.metaKey)) {
+      e.preventDefault();
+      this.props.history.push(`/tags/${hashtag}`);
     }
   };
 
@@ -290,9 +304,7 @@ class StatusContent extends PureComponent {
   };
 
   handleMouseUp = (e) => {
-    const { parseClick, disabled } = this.props;
-
-    if (disabled || !this.startXY) {
+    if (!this.startXY) {
       return;
     }
 
@@ -307,8 +319,8 @@ class StatusContent extends PureComponent {
       element = element.parentNode;
     }
 
-    if (deltaX + deltaY < 5 && e.button === 0 && parseClick) {
-      parseClick(e);
+    if (deltaX + deltaY < 5 && e.button === 0 && this.props.onClick) {
+      this.props.onClick(e);
     }
 
     this.startXY = null;
@@ -338,14 +350,13 @@ class StatusContent extends PureComponent {
       media,
       extraMedia,
       mediaIcons,
-      parseClick,
-      disabled,
       tagLinks,
       rewriteMentions,
       intl,
       statusContent,
     } = this.props;
 
+    const renderReadMore = this.props.onClick && status.get('collapsed');
     const hidden = this.props.onExpandedToggle ? !this.props.expanded : this.state.hidden;
     const contentLocale = intl.locale.replace(/[_-].*/, '');
     const targetLanguages = this.props.languages?.get(status.get('language') || 'und');
@@ -355,9 +366,16 @@ class StatusContent extends PureComponent {
     const spoilerHtml = status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml');
     const language = status.getIn(['translation', 'language']) || status.get('language');
     const classNames = classnames('status__content', {
-      'status__content--with-action': parseClick && !disabled,
+      'status__content--with-action': this.props.onClick && this.props.history,
+      'status__content--collapsed': renderReadMore,
       'status__content--with-spoiler': status.get('spoiler_text').length > 0,
     });
+
+    const readMoreButton = renderReadMore && (
+      <button className='status__content__read-more-button' onClick={this.props.onClick} key='read-more'>
+        <FormattedMessage id='status.read_more' defaultMessage='Read more' /><Icon id='angle-right' icon={ChevronRightIcon} />
+      </button>
+    );
 
     const translateButton = renderTranslate && (
       <TranslateButton onClick={this.handleTranslate} translation={status.get('translation')} />
@@ -427,7 +445,7 @@ class StatusContent extends PureComponent {
           {extraMedia}
         </div>
       );
-    } else if (parseClick) {
+    } else if (this.props.onClick) {
       return (
         <div
           className={classNames}
@@ -446,6 +464,7 @@ class StatusContent extends PureComponent {
             lang={language}
           />
           {translateButton}
+          {readMoreButton}
           {media}
           {extraMedia}
         </div>
