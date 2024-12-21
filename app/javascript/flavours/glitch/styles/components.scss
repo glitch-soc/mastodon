@@ -1349,6 +1349,11 @@ body > [data-popper-placement] {
   }
 }
 
+.status__content.status__content--collapsed .status__content__text {
+  max-height: 20px * 15; // 15 lines is roughly above 500 characters
+  overflow: hidden;
+}
+
 .status__content__read-more-button,
 .status__content__translate-button {
   display: flex;

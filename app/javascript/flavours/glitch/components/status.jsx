@@ -100,6 +100,7 @@ class Status extends ImmutablePureComponent {
     onEmbed: PropTypes.func,
     onHeightChange: PropTypes.func,
     onToggleHidden: PropTypes.func,
+    onToggleCollapsed: PropTypes.func,
     onTranslate: PropTypes.func,
     onInteractionModal: PropTypes.func,
     muted: PropTypes.bool,
@@ -411,6 +412,10 @@ class Status extends ImmutablePureComponent {
 
   handleRef = c => {
     this.node = c;
+  };
+
+  handleCollapsedToggle = isCollapsed => {
+    this.props.onToggleCollapsed(this.props.status, isCollapsed);
   };
 
   handleTranslate = () => {
