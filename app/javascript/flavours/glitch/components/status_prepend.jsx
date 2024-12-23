@@ -30,7 +30,6 @@ export default class StatusPrepend extends PureComponent {
     const { type, account } = this.props;
     let link = (
       <Permalink
-        onClick={this.handleClick}
         to={`/@${account.get('acct')}`}
         href={account.get('url')}
         className='status__display-name'
