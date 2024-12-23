@@ -21,7 +21,6 @@
   "confirmations.missing_media_description.edit": "Redigera media",
   "confirmations.missing_media_description.message": "Minst en mediebilaga saknar beskrivning. Överväg att beskriva all media för synskadade innan du skickar din toot.",
   "direct.group_by_conversations": "Sortera efter konversation",
-  "endorsed_accounts_editor.endorsed_accounts": "Utvalda konton",
   "firehose.column_settings.allow_local_only": "Visa endast lokala inlägg i \"Alla\"",
   "home.column_settings.advanced": "Avancerat",
   "home.column_settings.filter_regex": "Filtrera bort med reguljära uttryck",

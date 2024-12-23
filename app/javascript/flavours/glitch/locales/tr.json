@@ -22,11 +22,7 @@
   "confirmations.missing_media_description.edit": "Medyayı düzenle",
   "confirmations.missing_media_description.message": "En az bir medya eki açıklaması eksik. Gönderinizi göndermeden önce görme engelliler için tüm medya eklerini açıklamayı ön görün.",
   "direct.group_by_conversations": "Grup sohbeti",
-  "endorsed_accounts_editor.endorsed_accounts": "Öne çıkan hesaplar",
   "settings.always_show_spoilers_field": "Her zaman İçerik Uyarısı alanını etkinleştir",
-  "settings.auto_collapse": "Otomatik küçülme",
-  "settings.auto_collapse_all": "Her şey",
-  "settings.auto_collapse_height": "Yükseklik olarak değerlendirilmesi için gönderi genişliği (piksel türünde)",
   "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }
