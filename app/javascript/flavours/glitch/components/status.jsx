@@ -10,7 +10,6 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { HotKeys } from 'react-hotkeys';
 
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
-import PollContainer from 'flavours/glitch/containers/poll_container';
 import NotificationOverlayContainer from 'flavours/glitch/features/notifications/containers/overlay_container';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { withOptionalRouter, WithOptionalRouterPropTypes } from 'flavours/glitch/utils/react_router';
@@ -618,10 +617,7 @@ class Status extends ImmutablePureComponent {
       mediaIcons.push('link');
     }
 
-    // TODO: move polls to StatusContent
     if (status.get('poll')) {
-      const language = status.getIn(['translation', 'language']) || status.get('language');
-      media.push(<PollContainer pollId={status.get('poll')} status={status} lang={language} />);
       mediaIcons.push('tasks');
     }
 

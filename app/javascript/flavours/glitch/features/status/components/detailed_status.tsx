@@ -20,7 +20,6 @@ import { IconLogo } from 'flavours/glitch/components/logo';
 import { Permalink } from 'flavours/glitch/components/permalink';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
-import PollContainer from 'flavours/glitch/containers/poll_container';
 import { useAppSelector } from 'flavours/glitch/store';
 
 import { Avatar } from '../../../components/avatar';
@@ -253,16 +252,7 @@ export const DetailedStatus: React.FC<{
     mediaIcons.push('link');
   }
 
-  // TODO: move poll to StatusContent
   if (status.get('poll')) {
-    media.push(
-      <PollContainer
-        pollId={status.get('poll')}
-        // @ts-expect-error -- Poll/PollContainer is not typed yet
-        status={status}
-        lang={status.get('language')}
-      />,
-    );
     mediaIcons.push('tasks');
   }
 

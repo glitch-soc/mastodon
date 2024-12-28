@@ -17,6 +17,7 @@ import MovieIcon from '@/material-icons/400-24px/movie.svg?react';
 import MusicNoteIcon from '@/material-icons/400-24px/music_note.svg?react';
 import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import { Icon } from 'flavours/glitch/components/icon';
+import PollContainer from 'flavours/glitch/containers/poll_container';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
@@ -379,6 +380,10 @@ class StatusContent extends PureComponent {
       <TranslateButton onClick={this.handleTranslate} translation={status.get('translation')} />
     );
 
+    const poll = !!status.get('poll') && (
+      <PollContainer pollId={status.get('poll')} status={status} lang={language} />
+    );
+
     if (status.get('spoiler_text').length > 0) {
       let mentionsPlaceholder = '';
 
@@ -459,6 +464,8 @@ class StatusContent extends PureComponent {
             onMouseLeave={this.handleMouseLeave}
             lang={language}
           />
+
+          {poll}
           {translateButton}
           {readMoreButton}
           {media}
@@ -480,6 +487,8 @@ class StatusContent extends PureComponent {
             onMouseLeave={this.handleMouseLeave}
             lang={language}
           />
+
+          {poll}
           {translateButton}
           {media}
         </div>
