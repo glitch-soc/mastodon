@@ -68,8 +68,6 @@
   "settings.content_warnings": "Content Warnings",
   "settings.content_warnings.regexp": "Regular expression",
   "settings.content_warnings_filter": "Content warnings to not automatically unfold:",
-  "settings.content_warnings_media_outside": "Display media attachments outside content warnings",
-  "settings.content_warnings_media_outside_hint": "Reproduce upstream Mastodon behavior by having the Content Warning toggle not affect media attachments",
   "settings.content_warnings_shared_state": "Show/hide content of all copies at once",
   "settings.content_warnings_shared_state_hint": "Reproduce upstream Mastodon behavior by having the Content Warning button affect all copies of a post at once. This will prevent automatic collapsing of any copy of a toot with unfolded CW",
   "settings.content_warnings_unfold_opts": "Auto-unfolding options",

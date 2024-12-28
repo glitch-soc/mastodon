@@ -448,21 +448,9 @@ class Status extends ImmutablePureComponent {
     } = this.props;
     let attachments = null;
 
-    //  Depending on user settings, some media are considered as parts of the
-    //  contents (affected by CW) while other will be displayed outside of the
-    //  CW.
-    let contentMedia = [];
-    let contentMediaIcons = [];
-    let extraMedia = [];
-    let extraMediaIcons = [];
-    let media = contentMedia;
-    let mediaIcons = contentMediaIcons;
+    let media = [];
+    let mediaIcons = [];
     let statusAvatar;
-
-    if (settings.getIn(['content_warnings', 'media_outside'])) {
-      media = extraMedia;
-      mediaIcons = extraMediaIcons;
-    }
 
     if (status === null) {
       return null;
@@ -630,10 +618,11 @@ class Status extends ImmutablePureComponent {
       mediaIcons.push('link');
     }
 
+    // TODO: move polls to StatusContent
     if (status.get('poll')) {
       const language = status.getIn(['translation', 'language']) || status.get('language');
-      contentMedia.push(<PollContainer pollId={status.get('poll')} status={status} lang={language} />);
-      contentMediaIcons.push('tasks');
+      media.push(<PollContainer pollId={status.get('poll')} status={status} lang={language} />);
+      mediaIcons.push('tasks');
     }
 
     //  Here we prepare extra data-* attributes for CSS selectors.
@@ -672,7 +661,7 @@ class Status extends ImmutablePureComponent {
     }
 
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
-    contentMedia.push(hashtagBar);
+    media.push(hashtagBar);
 
     return (
       <HotKeys handlers={handlers} tabIndex={unfocusable ? null : -1}>
@@ -704,19 +693,19 @@ class Status extends ImmutablePureComponent {
                 </Permalink>
                 <StatusIcons
                   status={status}
-                  mediaIcons={contentMediaIcons.concat(extraMediaIcons)}
+                  mediaIcons={mediaIcons}
                   settings={settings.get('status_icons')}
                 />
               </header>
             )}
+
             <StatusContent
               status={status}
               onClick={this.handleClick}
               onTranslate={this.handleTranslate}
               collapsible
-              media={contentMedia}
-              extraMedia={extraMedia}
-              mediaIcons={contentMediaIcons}
+              media={media}
+              mediaIcons={mediaIcons}
               expanded={isExpanded}
               onExpandedToggle={this.handleExpandedToggle}
               onCollapsedToggle={this.handleCollapsedToggle}

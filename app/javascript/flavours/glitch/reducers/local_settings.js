@@ -23,7 +23,6 @@ const initialState = ImmutableMap({
   rewrite_mentions: 'no',
   content_warnings : ImmutableMap({
     filter       : null,
-    media_outside: false,
     shared_state : false,
   }),
   media     : ImmutableMap({

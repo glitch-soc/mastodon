@@ -139,7 +139,6 @@ class StatusContent extends PureComponent {
     onExpandedToggle: PropTypes.func,
     onTranslate: PropTypes.func,
     media: PropTypes.node,
-    extraMedia: PropTypes.node,
     mediaIcons: PropTypes.arrayOf(PropTypes.string),
     onClick: PropTypes.func,
     collapsible: PropTypes.bool,
@@ -348,7 +347,6 @@ class StatusContent extends PureComponent {
     const {
       status,
       media,
-      extraMedia,
       mediaIcons,
       tagLinks,
       rewriteMentions,
@@ -441,8 +439,6 @@ class StatusContent extends PureComponent {
             {!hidden && translateButton}
             {media}
           </div>
-
-          {extraMedia}
         </div>
       );
     } else if (this.props.onClick) {
@@ -466,7 +462,6 @@ class StatusContent extends PureComponent {
           {translateButton}
           {readMoreButton}
           {media}
-          {extraMedia}
         </div>
       );
     } else {
@@ -487,7 +482,6 @@ class StatusContent extends PureComponent {
           />
           {translateButton}
           {media}
-          {extraMedia}
         </div>
       );
     }

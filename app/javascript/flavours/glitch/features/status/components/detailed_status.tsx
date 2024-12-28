@@ -4,7 +4,7 @@
                   @typescript-eslint/no-unsafe-assignment */
 
 import type { CSSProperties } from 'react';
-import { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 
 import { FormattedDate, FormattedMessage } from 'react-intl';
 
@@ -82,13 +82,6 @@ export const DetailedStatus: React.FC<{
     (state) =>
       state.local_settings.get('tag_misleading_links', false) as boolean,
   );
-  const mediaOutsideCW = useAppSelector(
-    (state) =>
-      state.local_settings.getIn(
-        ['content_warnings', 'media_outside'],
-        false,
-      ) as boolean,
-  );
   const letterboxMedia = useAppSelector(
     (state) =>
       state.local_settings.getIn(['media', 'letterbox'], false) as boolean,
@@ -147,20 +140,8 @@ export const DetailedStatus: React.FC<{
   let applicationLink;
   let reblogLink;
 
-  //  Depending on user settings, some media are considered as parts of the
-  //  contents (affected by CW) while other will be displayed outside of the
-  //  CW.
-  const contentMedia: React.ReactNode[] = [];
-  const contentMediaIcons: string[] = [];
-  const extraMedia: React.ReactNode[] = [];
-  const extraMediaIcons: string[] = [];
-  let media = contentMedia;
-  let mediaIcons: string[] = contentMediaIcons;
-
-  if (mediaOutsideCW) {
-    media = extraMedia;
-    mediaIcons = extraMediaIcons;
-  }
+  const media: React.ReactNode[] = [];
+  const mediaIcons: string[] = [];
 
   const outerStyle = { boxSizing: 'border-box' } as CSSProperties;
 
@@ -272,8 +253,9 @@ export const DetailedStatus: React.FC<{
     mediaIcons.push('link');
   }
 
+  // TODO: move poll to StatusContent
   if (status.get('poll')) {
-    contentMedia.push(
+    media.push(
       <PollContainer
         pollId={status.get('poll')}
         // @ts-expect-error -- Poll/PollContainer is not typed yet
@@ -281,7 +263,7 @@ export const DetailedStatus: React.FC<{
         lang={status.get('language')}
       />,
     );
-    contentMediaIcons.push('tasks');
+    mediaIcons.push('tasks');
   }
 
   if (status.get('application')) {
@@ -345,7 +327,7 @@ export const DetailedStatus: React.FC<{
   const { statusContentProps, hashtagBar } = getHashtagBarForStatus(
     status as StatusLike,
   );
-  contentMedia.push(hashtagBar);
+  media.push(hashtagBar);
 
   return (
     <div style={outerStyle}>
@@ -381,9 +363,8 @@ export const DetailedStatus: React.FC<{
 
         <StatusContent
           status={status}
-          media={contentMedia}
-          extraMedia={extraMedia}
-          mediaIcons={contentMediaIcons}
+          media={media}
+          mediaIcons={mediaIcons}
           expanded={expanded}
           collapsed={false}
           onExpandedToggle={onToggleHidden}
