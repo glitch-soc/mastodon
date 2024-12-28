@@ -8,23 +8,14 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import ForumIcon from '@/material-icons/400-24px/forum.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home.svg?react';
-import ImageIcon from '@/material-icons/400-24px/image.svg?react';
-import InsertChartIcon from '@/material-icons/400-24px/insert_chart.svg?react';
-import LinkIcon from '@/material-icons/400-24px/link.svg?react';
-import MovieIcon from '@/material-icons/400-24px/movie.svg?react';
-import MusicNoteIcon from '@/material-icons/400-24px/music_note.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
+import { MediaIcon } from 'flavours/glitch/components/media_icon';
 import { languages } from 'flavours/glitch/initial_state';
 
 import { VisibilityIcon } from './visibility_icon';
 
 const messages = defineMessages({
   inReplyTo: { id: 'status.in_reply_to', defaultMessage: 'This toot is a reply' },
-  previewCard: { id: 'status.has_preview_card', defaultMessage: 'Features an attached preview card' },
-  pictures: { id: 'status.has_pictures', defaultMessage: 'Features attached pictures' },
-  poll: { id: 'status.is_poll', defaultMessage: 'This toot is a poll' },
-  video: { id: 'status.has_video', defaultMessage: 'Features attached videos' },
-  audio: { id: 'status.has_audio', defaultMessage: 'Features attached audio files' },
   localOnly: { id: 'status.local_only', defaultMessage: 'Only visible from your instance' },
 });
 
@@ -54,47 +45,6 @@ class StatusIcons extends PureComponent {
     settings: ImmutablePropTypes.map.isRequired,
   };
 
-  renderIcon (mediaIcon) {
-    const { intl } = this.props;
-
-    let title, iconComponent;
-
-    switch (mediaIcon) {
-    case 'link':
-      title = messages.previewCard;
-      iconComponent = LinkIcon;
-      break;
-    case 'picture-o':
-      title = messages.pictures;
-      iconComponent = ImageIcon;
-      break;
-    case 'tasks':
-      title = messages.poll;
-      iconComponent = InsertChartIcon;
-      break;
-    case 'video-camera':
-      title = messages.video;
-      iconComponent = MovieIcon;
-      break;
-    case 'music':
-      title = messages.audio;
-      iconComponent = MusicNoteIcon;
-      break;
-    }
-
-    return (
-      <Icon
-        fixedWidth
-        className='status__media-icon'
-        key={`media-icon--${mediaIcon}`}
-        id={mediaIcon}
-        icon={iconComponent}
-        aria-hidden='true'
-        title={title && intl.formatMessage(title)}
-      />
-    );
-  }
-
   render () {
     const {
       status,
@@ -122,7 +72,7 @@ class StatusIcons extends PureComponent {
             aria-hidden='true'
             title={intl.formatMessage(messages.localOnly)}
           />}
-        {settings.get('media') && !!mediaIcons && mediaIcons.map(icon => this.renderIcon(icon))}
+        {settings.get('media') && !!mediaIcons && mediaIcons.map(icon => (<MediaIcon key={`media-icon--${icon}`} className='status__media-icon' icon={icon} />))}
         {settings.get('visibility') && <VisibilityIcon visibility={status.get('visibility')} />}
       </div>
     );

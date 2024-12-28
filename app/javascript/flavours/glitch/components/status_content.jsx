@@ -10,11 +10,6 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
 import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
-import ImageIcon from '@/material-icons/400-24px/image.svg?react';
-import InsertChartIcon from '@/material-icons/400-24px/insert_chart.svg?react';
-import LinkIcon from '@/material-icons/400-24px/link.svg?react';
-import MovieIcon from '@/material-icons/400-24px/movie.svg?react';
-import MusicNoteIcon from '@/material-icons/400-24px/music_note.svg?react';
 import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import { Icon } from 'flavours/glitch/components/icon';
 import PollContainer from 'flavours/glitch/containers/poll_container';
@@ -398,35 +393,13 @@ class StatusContent extends PureComponent {
         </Permalink>
       )).reduce((aggregate, item) => [...aggregate, item, ' '], []);
 
-      let spoilerIcons = [];
-      if (mediaIcons) {
-        const mediaComponents = {
-          'link': LinkIcon,
-          'picture-o': ImageIcon,
-          'tasks': InsertChartIcon,
-          'video-camera': MovieIcon,
-          'music': MusicNoteIcon,
-        };
-
-        spoilerIcons = mediaIcons.map((mediaIcon) => (
-          <Icon
-            fixedWidth
-            className='status__content__spoiler-icon'
-            id={mediaIcon}
-            icon={mediaComponents[mediaIcon]}
-            aria-hidden='true'
-            key={`icon-${mediaIcon}`}
-          />
-        ));
-      }
-
       if (hidden) {
         mentionsPlaceholder = <div>{mentionLinks}</div>;
       }
 
       return (
         <div className={classNames} tabIndex={0} onMouseDown={this.handleMouseDown} onMouseUp={this.handleMouseUp}>
-          <ContentWarning text={spoilerHtml} expanded={!hidden} onClick={this.handleSpoilerClick} icons={spoilerIcons} />
+          <ContentWarning text={spoilerHtml} expanded={!hidden} onClick={this.handleSpoilerClick} icons={mediaIcons} />
 
           {mentionsPlaceholder}
 
