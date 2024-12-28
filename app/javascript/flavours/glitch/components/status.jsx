@@ -9,6 +9,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 
 import { HotKeys } from 'react-hotkeys';
 
+import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import NotificationOverlayContainer from 'flavours/glitch/features/notifications/containers/overlay_container';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
@@ -456,6 +457,7 @@ class Status extends ImmutablePureComponent {
     }
 
     const isExpanded = settings.getIn(['content_warnings', 'shared_state']) ? !status.get('hidden') : this.state.isExpanded;
+    const expanded = isExpanded || status.get('spoiler_text').length === 0;
 
     const handlers = {
       reply: this.handleHotkeyReply,
@@ -485,7 +487,7 @@ class Status extends ImmutablePureComponent {
           <div ref={this.handleRef} className='status focusable' tabIndex={unfocusable ? null : 0}>
             <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
             {status.get('spoiler_text').length > 0 && (<span>{status.get('spoiler_text')}</span>)}
-            {isExpanded && <span>{status.get('content')}</span>}
+            {expanded && <span>{status.get('content')}</span>}
           </div>
         </HotKeys>
       );
@@ -539,7 +541,7 @@ class Status extends ImmutablePureComponent {
                 sensitive={status.get('sensitive')}
                 letterbox={settings.getIn(['media', 'letterbox'])}
                 fullwidth={!rootId && settings.getIn(['media', 'fullwidth'])}
-                hidden={!isExpanded}
+                hidden={!expanded}
                 onOpenMedia={this.handleOpenMedia}
                 cacheWidth={this.props.cacheMediaWidth}
                 defaultWidth={this.props.cachedMediaWidth}
@@ -596,7 +598,7 @@ class Status extends ImmutablePureComponent {
               sensitive={status.get('sensitive')}
               letterbox={settings.getIn(['media', 'letterbox'])}
               fullwidth={!rootId && settings.getIn(['media', 'fullwidth'])}
-              preventPlayback={!isExpanded}
+              preventPlayback={!expanded}
               onOpenVideo={this.handleOpenVideo}
               deployPictureInPicture={pictureInPicture.get('available') ? this.handleDeployPictureInPicture : undefined}
               visible={this.state.showMedia}
@@ -657,7 +659,6 @@ class Status extends ImmutablePureComponent {
     }
 
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
-    media.push(hashtagBar);
 
     return (
       <HotKeys handlers={handlers} tabIndex={unfocusable ? null : -1}>
@@ -695,20 +696,27 @@ class Status extends ImmutablePureComponent {
               </header>
             )}
 
-            <StatusContent
-              status={status}
-              onClick={this.handleClick}
-              onTranslate={this.handleTranslate}
-              collapsible
-              media={media}
-              mediaIcons={mediaIcons}
-              expanded={isExpanded}
-              onExpandedToggle={this.handleExpandedToggle}
-              onCollapsedToggle={this.handleCollapsedToggle}
-              tagLinks={settings.get('tag_misleading_links')}
-              rewriteMentions={settings.get('rewrite_mentions')}
-              {...statusContentProps}
-            />
+            {status.get('spoiler_text').length > 0 && <ContentWarning text={status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml')} expanded={expanded} onClick={this.handleExpandedToggle} icons={mediaIcons} />}
+
+            { /* TODO: mention placeholders */ }
+            {expanded && (
+              <>
+                <StatusContent
+                  status={status}
+                  onClick={this.handleClick}
+                  onTranslate={this.handleTranslate}
+                  collapsible
+                  media={media}
+                  onCollapsedToggle={this.handleCollapsedToggle}
+                  tagLinks={settings.get('tag_misleading_links')}
+                  rewriteMentions={settings.get('rewrite_mentions')}
+                  {...statusContentProps}
+                />
+
+                {media}
+                {hashtagBar}
+              </>
+            )}
 
             <StatusActionBar
               status={status}

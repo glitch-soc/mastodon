@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 
 import { AnimatedNumber } from 'flavours/glitch/components/animated_number';
 import AttachmentList from 'flavours/glitch/components/attachment_list';
+import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import EditedTimestamp from 'flavours/glitch/components/edited_timestamp';
 import type { StatusLike } from 'flavours/glitch/components/hashtag_bar';
 import { getHashtagBarForStatus } from 'flavours/glitch/components/hashtag_bar';
@@ -100,6 +101,10 @@ export const DetailedStatus: React.FC<{
     [onOpenVideo, status],
   );
 
+  const handleExpandedToggle = useCallback(() => {
+    if (onToggleHidden) onToggleHidden(status);
+  }, [onToggleHidden, status]);
+
   const _measureHeight = useCallback(
     (heightJustChanged?: boolean) => {
       if (measureHeight && nodeRef.current) {
@@ -124,10 +129,6 @@ export const DetailedStatus: React.FC<{
     [_measureHeight],
   );
 
-  const handleChildUpdate = useCallback(() => {
-    _measureHeight();
-  }, [_measureHeight]);
-
   const handleTranslate = useCallback(() => {
     if (onTranslate) onTranslate(status);
   }, [onTranslate, status]);
@@ -136,10 +137,10 @@ export const DetailedStatus: React.FC<{
     return null;
   }
 
+  let media;
   let applicationLink;
   let reblogLink;
 
-  const media: React.ReactNode[] = [];
   const mediaIcons: string[] = [];
 
   const outerStyle = { boxSizing: 'border-box' } as CSSProperties;
@@ -152,7 +153,7 @@ export const DetailedStatus: React.FC<{
     status.getIn(['translation', 'language']) || status.get('language');
 
   if (pictureInPicture.get('inUse')) {
-    media.push(<PictureInPicturePlaceholder />);
+    media = <PictureInPicturePlaceholder />;
     mediaIcons.push('video-camera');
   } else if (status.get('media_attachments').size > 0) {
     if (
@@ -162,14 +163,14 @@ export const DetailedStatus: React.FC<{
           (item: Immutable.Map<string, any>) => item.get('type') === 'unknown',
         )
     ) {
-      media.push(<AttachmentList media={status.get('media_attachments')} />);
+      media = <AttachmentList media={status.get('media_attachments')} />;
     } else if (
       ['image', 'gifv', 'unknown'].includes(
         status.getIn(['media_attachments', 0, 'type']) as string,
       ) ||
       status.get('media_attachments').size > 1
     ) {
-      media.push(
+      media = (
         <MediaGallery
           standalone
           sensitive={status.get('sensitive')}
@@ -182,7 +183,7 @@ export const DetailedStatus: React.FC<{
           onOpenMedia={onOpenMedia}
           visible={showMedia}
           onToggleVisibility={onToggleMediaVisibility}
-        />,
+        />
       );
       mediaIcons.push('picture-o');
     } else if (status.getIn(['media_attachments', 0, 'type']) === 'audio') {
@@ -191,7 +192,7 @@ export const DetailedStatus: React.FC<{
         attachment.getIn(['translation', 'description']) ||
         attachment.get('description');
 
-      media.push(
+      media = (
         <Audio
           src={attachment.get('url')}
           alt={description}
@@ -209,7 +210,7 @@ export const DetailedStatus: React.FC<{
           blurhash={attachment.get('blurhash')}
           height={150}
           onToggleVisibility={onToggleMediaVisibility}
-        />,
+        />
       );
       mediaIcons.push('music');
     } else if (status.getIn(['media_attachments', 0, 'type']) === 'video') {
@@ -218,7 +219,7 @@ export const DetailedStatus: React.FC<{
         attachment.getIn(['translation', 'description']) ||
         attachment.get('description');
 
-      media.push(
+      media = (
         <Video
           preview={attachment.get('preview_url')}
           frameRate={attachment.getIn(['meta', 'original', 'frame_rate'])}
@@ -237,17 +238,17 @@ export const DetailedStatus: React.FC<{
           letterbox={letterboxMedia}
           fullwidth={fullwidthMedia}
           preventPlayback={!expanded}
-        />,
+        />
       );
       mediaIcons.push('video-camera');
     }
   } else if (status.get('spoiler_text').length === 0) {
-    media.push(
+    media = (
       <Card
         sensitive={status.get('sensitive')}
         onOpenMedia={onOpenMedia}
         card={status.get('card', null)}
-      />,
+      />
     );
     mediaIcons.push('link');
   }
@@ -317,7 +318,8 @@ export const DetailedStatus: React.FC<{
   const { statusContentProps, hashtagBar } = getHashtagBarForStatus(
     status as StatusLike,
   );
-  media.push(hashtagBar);
+
+  expanded ||= status.get('spoiler_text').length === 0;
 
   return (
     <div style={outerStyle}>
@@ -351,19 +353,32 @@ export const DetailedStatus: React.FC<{
           )}
         </Permalink>
 
-        <StatusContent
-          status={status}
-          media={media}
-          mediaIcons={mediaIcons}
-          expanded={expanded}
-          collapsed={false}
-          onExpandedToggle={onToggleHidden}
-          onTranslate={handleTranslate}
-          onUpdate={handleChildUpdate}
-          tagLinks={tagMisleadingLinks}
-          rewriteMentions={rewriteMentions}
-          {...(statusContentProps as any)}
-        />
+        {status.get('spoiler_text').length > 0 && (
+          <ContentWarning
+            text={
+              status.getIn(['translation', 'spoilerHtml']) ||
+              status.get('spoilerHtml')
+            }
+            expanded={expanded}
+            onClick={handleExpandedToggle}
+          />
+        )}
+
+        {/* TODO: mention placeholders */}
+        {expanded && (
+          <>
+            <StatusContent
+              status={status}
+              onTranslate={handleTranslate}
+              tagLinks={tagMisleadingLinks}
+              rewriteMentions={rewriteMentions}
+              {...(statusContentProps as any)}
+            />
+
+            {media}
+            {hashtagBar}
+          </>
+        )}
 
         <div className='detailed-status__meta'>
           <div className='detailed-status__meta__line'>
