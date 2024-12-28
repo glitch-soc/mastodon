@@ -18,6 +18,7 @@ import EditedTimestamp from 'flavours/glitch/components/edited_timestamp';
 import type { StatusLike } from 'flavours/glitch/components/hashtag_bar';
 import { getHashtagBarForStatus } from 'flavours/glitch/components/hashtag_bar';
 import { IconLogo } from 'flavours/glitch/components/logo';
+import { MentionsPlaceholder } from 'flavours/glitch/components/mentions_placeholder';
 import { Permalink } from 'flavours/glitch/components/permalink';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
@@ -364,7 +365,6 @@ export const DetailedStatus: React.FC<{
           />
         )}
 
-        {/* TODO: mention placeholders */}
         {expanded && (
           <>
             <StatusContent
@@ -379,6 +379,9 @@ export const DetailedStatus: React.FC<{
             {hashtagBar}
           </>
         )}
+
+        {/* This is a glitch-soc addition to have a placeholder */}
+        {!expanded && <MentionsPlaceholder status={status} />}
 
         <div className='detailed-status__meta'>
           <div className='detailed-status__meta__line'>

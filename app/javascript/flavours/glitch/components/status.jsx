@@ -28,6 +28,7 @@ import { Avatar } from './avatar';
 import { AvatarOverlay } from './avatar_overlay';
 import { DisplayName } from './display_name';
 import { getHashtagBarForStatus } from './hashtag_bar';
+import { MentionsPlaceholder } from './mentions_placeholder';
 import { Permalink } from './permalink';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
@@ -698,7 +699,6 @@ class Status extends ImmutablePureComponent {
 
             {status.get('spoiler_text').length > 0 && <ContentWarning text={status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml')} expanded={expanded} onClick={this.handleExpandedToggle} icons={mediaIcons} />}
 
-            { /* TODO: mention placeholders */ }
             {expanded && (
               <>
                 <StatusContent
@@ -717,6 +717,9 @@ class Status extends ImmutablePureComponent {
                 {hashtagBar}
               </>
             )}
+
+            {/* This is a glitch-soc addition to have a placeholder */}
+            {!expanded && <MentionsPlaceholder status={status} />}
 
             <StatusActionBar
               status={status}
