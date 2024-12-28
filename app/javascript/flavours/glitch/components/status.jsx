@@ -133,7 +133,7 @@ class Status extends ImmutablePureComponent {
     showMedia: defaultMediaVisibility(this.props.status, this.props.settings) && !(this.context?.hideMediaByDefault),
     revealBehindCW: undefined,
     showCard: false,
-    forceFilter: undefined,
+    showDespiteFilter: undefined,
   };
 
   // Avoid checking props that are functions (and whose equality will always
@@ -157,7 +157,7 @@ class Status extends ImmutablePureComponent {
   updateOnStates = [
     'isExpanded',
     'showMedia',
-    'forceFilter',
+    'showDespiteFilter',
   ];
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -241,7 +241,7 @@ class Status extends ImmutablePureComponent {
     if (this.props.status?.get('id') !== prevProps.status?.get('id')) {
       this.setState({
         showMedia: defaultMediaVisibility(this.props.status, this.props.settings) && !(this.context?.hideMediaByDefault),
-        forceFilter: undefined,
+        showDespiteFilter: undefined,
       });
     }
   }
@@ -398,12 +398,12 @@ class Status extends ImmutablePureComponent {
   };
 
   handleUnfilterClick = e => {
-    this.setState({ forceFilter: false });
+    this.setState({ showDespiteFilter: false });
     e.preventDefault();
   };
 
   handleFilterClick = () => {
-    this.setState({ forceFilter: true });
+    this.setState({ showDespiteFilter: true });
   };
 
   handleRef = c => {
@@ -491,7 +491,7 @@ class Status extends ImmutablePureComponent {
       );
     }
 
-    if (this.state.forceFilter === undefined ? matchedFilters : this.state.forceFilter) {
+    if (this.state.showDespiteFilter === undefined ? matchedFilters : this.state.showDespiteFilter) {
       const minHandlers = this.props.muted ? {} : {
         moveUp: this.handleHotkeyMoveUp,
         moveDown: this.handleHotkeyMoveDown,
