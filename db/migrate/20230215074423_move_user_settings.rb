@@ -43,7 +43,17 @@ class MoveUserSettings < ActiveRecord::Migration[6.1]
       must_be_follower: 'interactions.must_be_follower',
       must_be_following: 'interactions.must_be_following',
       must_be_following_dm: 'interactions.must_be_following_dm',
+      # Glitch-soc additions
+      trending_link: 'notification_emails.link_trends',
+      trending_status: 'notification_emails.status_trends',
     }.freeze,
+    # Glitch-soc additions
+    favourite_modal: 'web.favourite_modal',
+    system_emoji_font: 'web.use_system_emoji_font',
+    hide_followers_count: 'hide_followers_count',
+    default_content_type: 'default_content_type',
+    flavour: 'flavour',
+    skin: 'skin',
   }.freeze
 
   class LegacySetting < ApplicationRecord
