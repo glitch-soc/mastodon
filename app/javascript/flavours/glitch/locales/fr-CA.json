@@ -63,8 +63,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Expression rationnelle",
   "settings.content_warnings_filter": "Avertissement de contenu à ne pas automatiquement déplier :",
-  "settings.content_warnings_media_outside": "Afficher les médias en dehors des avertissements de contenu",
-  "settings.content_warnings_media_outside_hint": "Reproduit le comportement par défaut de Mastodon, les médias attachés ne sont plus affectés par le bouton d'affichage d'un post avec avertissement",
   "settings.content_warnings_shared_state": "Affiche/cache le contenu de toutes les copies à la fois",
   "settings.content_warnings_shared_state_hint": "Reproduit le comportement par défaut de Mastodon, le bouton d'avertissement de contenu affecte toutes les copies d'un post à la fois. Cela empêchera le repliement automatique de n'importe quelle copie d'un post avec un avertissement déplié",
   "settings.content_warnings_unfold_opts": "Options de dépliement automatique",

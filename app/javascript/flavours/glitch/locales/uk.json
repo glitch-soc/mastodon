@@ -50,8 +50,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Регулярний вираз",
   "settings.content_warnings_filter": "Застереження щодо автоматичного розгортання вмісту:",
-  "settings.content_warnings_media_outside": "Відображати вкладені медіафайли поза попередженнями про вміст",
-  "settings.content_warnings_media_outside_hint": "Відтворити поведінку Mastodon перед початком роботи, встановивши перемикач попередження про вміст, щоб не впливати на вкладені файли мультимедіа",
   "settings.content_warnings_shared_state": "Показати/приховати вміст усіх копій одночасно",
   "settings.content_warnings_shared_state_hint": "Відтворити поведінку Mastodon, що передує, за допомогою кнопки попередження про вміст, яка впливає на всі копії допису одразу. Це запобігатиме автоматичному згортанню будь-якої копії допису з розгорнутим CW",
   "settings.content_warnings_unfold_opts": "Параметри автоматичного розгортання",

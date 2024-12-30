@@ -55,7 +55,6 @@
   "settings.content_warnings": "コンテンツワーニング",
   "settings.content_warnings.regexp": "正規表現",
   "settings.content_warnings_filter": "説明に指定した文字が含まれているものを自動で展開しないようにする",
-  "settings.content_warnings_media_outside": "コンテンツワーニングの外側にメディア添付ファイルを表示する",
   "settings.content_warnings_shared_state": "すべてのコピーの内容を一度に表示/非表示",
   "settings.content_warnings_unfold_opts": "自動展開オプション",
   "settings.enable_content_warnings_auto_unfold": "コンテンツワーニング指定されている投稿を常に表示する",

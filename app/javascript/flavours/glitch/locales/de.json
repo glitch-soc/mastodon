@@ -68,8 +68,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Regulärer Ausdruck",
   "settings.content_warnings_filter": "Inhaltswarnungen, die nicht ausgeklappt werden sollen:",
-  "settings.content_warnings_media_outside": "Medienanhänge außerhalb von Inhaltswarnungen anzeigen",
-  "settings.content_warnings_media_outside_hint": "Das ursprüngliche Verhalten von Mastodon wiederherstellen, in welchem Inhaltswarnungen keine Auswirkungen auf Anhänge haben",
   "settings.content_warnings_shared_state": "Inhalt aller Kopien auf einmal ein-/ausblenden",
   "settings.content_warnings_shared_state_hint": "Das ursprüngliche Verhalten von Mastodon wiederhertstellen, in welchem der Inhaltswarnungs-Knopf alle Kopien eines Posts auf einmal ein-/ausklappt. Das wird das automatische Einklappen jedweder Kopie eines Toots mit ausgeklappter Inhaltswarnung",
   "settings.content_warnings_unfold_opts": "Optionen zum automatischen Ausklappen",

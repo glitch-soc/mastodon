@@ -59,8 +59,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Ekspresi reguler",
   "settings.content_warnings_filter": "Peringatan konten yang tidak akan dibuka secara otomatis:",
-  "settings.content_warnings_media_outside": "Tampilkan lampiran media di luar peringatan konten",
-  "settings.content_warnings_media_outside_hint": "Reproduksi perilaku Mastodon upstream dengan membuat tombol Peringatan Konten tidak memengaruhi lampiran media",
   "settings.content_warnings_shared_state": "Tampilkan/sembunyikan konten semua salinan sekaligus",
   "settings.preferences": "Preferences",
   "settings.status_icons_reply": "Indikator balasan",

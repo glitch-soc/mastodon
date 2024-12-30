@@ -68,8 +68,6 @@
   "settings.content_warnings": "Enhavaj avertoj",
   "settings.content_warnings.regexp": "Regula esprimo",
   "settings.content_warnings_filter": "Enhavaj avertoj, kiujn ne aŭtomate malkaŝu:",
-  "settings.content_warnings_media_outside": "Montri plurmediojn ekstere de enhavaj avertoj",
-  "settings.content_warnings_media_outside_hint": "Fari same, kiel la originala programaro Mastodon, por ke la enhavaj avertoj ne influas plurmediojn",
   "settings.content_warnings_shared_state": "Montri/Malmontri enhavon de kopiaĵoj tuje",
   "settings.content_warnings_shared_state_hint": "Redonu normalan kondukton de Mastodon per havante la butonon por la Averto por la Enhavo rezultas tutajn kopiaĵojn tuje. Tion preventos aŭtomatan kolapsadon de kopiiaĵo de afiŝo ajn, kiu havus malkolapsan EA-on",
   "settings.content_warnings_unfold_opts": "Aŭtomat-malkolapsintaj agordoj",

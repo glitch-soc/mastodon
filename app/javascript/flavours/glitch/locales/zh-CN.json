@@ -68,8 +68,6 @@
   "settings.content_warnings": "内容警告",
   "settings.content_warnings.regexp": "正则表达式",
   "settings.content_warnings_filter": "不会自动展开的内容警告：",
-  "settings.content_warnings_media_outside": "在内容警告外显示媒体附件",
-  "settings.content_warnings_media_outside_hint": "通过让内容警告开关不影响媒体附件来复制上游Mastodon行为",
   "settings.content_warnings_shared_state": "一次显示/隐藏所有副本的内容",
   "settings.content_warnings_shared_state_hint": "通过让内容警告按钮同时影响所有帖子的副本来重现上游Mastodon行为。这将防止任何展开内容警告的嘟文自动折叠。",
   "settings.content_warnings_unfold_opts": "自动展开设置项",

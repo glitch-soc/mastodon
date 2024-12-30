@@ -29,8 +29,6 @@
   "settings.content_warnings": "Varování o obsahu",
   "settings.content_warnings.regexp": "Regulární výraz",
   "settings.content_warnings_filter": "Tato varování o obsahu automaticky nerozbalovat:",
-  "settings.content_warnings_media_outside": "Zobrazit obrázky a videa mimo varování o obsahu",
-  "settings.content_warnings_media_outside_hint": "Obrázky a videa z příspěvku s varováním o obsahu se zobrazí se separátním přepínačem zobrazení, stejně jako na běžném Mastodonu.",
   "settings.content_warnings_shared_state": "Zobrazit/schovat všechny kopie naráz",
   "settings.content_warnings_shared_state_hint": "Tlačítko varování o obsahu bude mít efekt na všechny kopie příspěvku naráz, stejně jako na běžném Mastodonu. Nebude pak možné automaticky sbalit jakoukoliv kopii příspěvku, která má rozbalené varování o obsahu",
   "settings.content_warnings_unfold_opts": "Možnosti automatického rozbalení",
