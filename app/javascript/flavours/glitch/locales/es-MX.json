@@ -63,8 +63,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Regexp (expresión regular)",
   "settings.content_warnings_filter": "No descolapsar estas advertencias de contenido:",
-  "settings.content_warnings_media_outside": "Mostrar archivos adjuntos fuera de las advertencias de contenido",
-  "settings.content_warnings_media_outside_hint": "Reproduce el comportamiento normal de Mastodon teniendo al tener el interruptor de advertencia de contenido activado, no afectando los archivos adjuntos",
   "settings.content_warnings_shared_state": "Mostrar/ocultar el contenido de todas las copias a la vez",
   "settings.content_warnings_shared_state_hint": "Reproduce el comportamiento normal de Mastodon al hacer que el botón Advertencia de contenido afecte a todas las copias de un mensaje a la vez. Esto evitará el colapso automático de cualquier copia de un toot con CW desplegado",
   "settings.content_warnings_unfold_opts": "Opciones de Auto-desplegado",

@@ -55,8 +55,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Регулярное выражение",
   "settings.content_warnings_filter": "Предупреждения о содержании, к которым автоматическое разворачивание не применяется:",
-  "settings.content_warnings_media_outside": "Показывать медиафайлы внизу под предупреждением о содержании",
-  "settings.content_warnings_media_outside_hint": "Воспроизводить исходное поведение Mastodon, когда предупреждение о содержании сворачивает только текст поста",
   "settings.content_warnings_shared_state": "Показывать/скрывать содержимое всех копий вместе",
   "settings.content_warnings_shared_state_hint": "Воспроизводить исходное поведение Mastodon, когда раскрывание и закрывание предупреждения о содержимом охватывает все копии поста сразу. Это предотвращает автоматическое сворачивание копий поста с уже однажды раскрытым CW",
   "settings.content_warnings_unfold_opts": "Автоматическое раскрытие",

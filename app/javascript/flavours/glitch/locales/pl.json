@@ -49,8 +49,6 @@
   "settings.content_warnings": "Content warnings",
   "settings.content_warnings.regexp": "Wyrażenie regularne",
   "settings.content_warnings_filter": "Ostrzeżenia o zawartości nieodkrywane automatycznie:",
-  "settings.content_warnings_media_outside": "Wyświetlaj załączniki multimedialne poza ostrzeżeniem o zawartości",
-  "settings.content_warnings_media_outside_hint": "Nie ukrywaj załączników multimedialnych, gdy wpis jest ukryty za ostrzeżeniem, tak jak robi to niezmodyfikowany Mastodon",
   "settings.content_warnings_shared_state": "Pokaż/ukryj zawartość wszystkich kopii jednocześnie",
   "settings.content_warnings_shared_state_hint": "Zachowaj się tak, jak niezmodyfikowany Mastodon, tj. wymuś działanie przycisku ostrzeżenia o zawartości na wszystkie kopie danego wpisu. Włączenie tego ustawienia spowoduje wyłączenie automatycznego zwijania kopii wpisów z odkrytym ostrzeżeniem o zawartości.",
   "settings.content_warnings_unfold_opts": "Opcje automatycznego odkrywania",

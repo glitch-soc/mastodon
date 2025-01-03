@@ -68,8 +68,6 @@
   "settings.content_warnings": "열람주의",
   "settings.content_warnings.regexp": "정규표현식",
   "settings.content_warnings_filter": "자동으로 펼치지 않을 열람주의 문구:",
-  "settings.content_warnings_media_outside": "미디어 첨부를 열람주의 바깥에 보이기",
-  "settings.content_warnings_media_outside_hint": "마스토돈 원본처럼 열람주의 토글이 미디어 첨부에는 영향을 미치지 않게 합니다",
   "settings.content_warnings_shared_state": "동일한 글의 열람주의를 한번에 열고 닫기",
   "settings.content_warnings_shared_state_hint": "마스토돈 원본처럼 열람주의 버튼이 동일한 모든 글에 대해 영향을 미치게 합니다. 펼쳐진 열람주의 글이 자동으로 다시 접히는 것을 방지합니다",
   "settings.content_warnings_unfold_opts": "자동 펼치기 옵션",

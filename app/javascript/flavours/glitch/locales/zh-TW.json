@@ -64,8 +64,6 @@
   "settings.content_warnings": "內容警告",
   "settings.content_warnings.regexp": "正規表達式",
   "settings.content_warnings_filter": "不要自動展開內容警告：",
-  "settings.content_warnings_media_outside": "在內容警告外顯示媒體檔案",
-  "settings.content_warnings_media_outside_hint": "透過內容警告切換不影響媒體檔案來重現上游 Mastodon 行為",
   "settings.content_warnings_shared_state": "一次顯示/隱藏所有副本的內容",
   "settings.content_warnings_shared_state_hint": "透過內容警告按鈕同時影響貼文的所有副本來重現上游 Mastodon 行為。 這將防止任何帶有展開的內容警告的貼文副本自動折疊",
   "settings.content_warnings_unfold_opts": "自動展開選項",
