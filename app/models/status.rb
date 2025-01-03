@@ -496,7 +496,7 @@ class Status < ApplicationRecord
   def set_local_only
     return unless account.domain.nil? && !attribute_changed?(:local_only)
 
-    self.local_only = marked_local_only?
+    self.local_only = marked_local_only? || thread&.local_only
   end
 
   def set_conversation
