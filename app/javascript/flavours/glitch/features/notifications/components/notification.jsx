@@ -20,7 +20,6 @@ import StatusContainer from 'flavours/glitch/containers/status_container';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import FollowRequestContainer from '../containers/follow_request_container';
-import NotificationOverlayContainer from '../containers/overlay_container';
 
 import { ModerationWarning } from './moderation_warning';
 import { RelationshipsSeveranceEvent } from './relationships_severance_event';
@@ -133,7 +132,6 @@ class Notification extends ImmutablePureComponent {
           </div>
 
           <Account id={account.get('id')} hidden={this.props.hidden} />
-          <NotificationOverlayContainer notification={notification} />
         </div>
       </HotKeys>
     );
@@ -154,7 +152,6 @@ class Notification extends ImmutablePureComponent {
           </div>
 
           <FollowRequestContainer id={account.get('id')} withNote={false} hidden={this.props.hidden} />
-          <NotificationOverlayContainer notification={notification} />
         </div>
       </HotKeys>
     );
@@ -366,7 +363,6 @@ class Notification extends ImmutablePureComponent {
           </div>
 
           <Account id={account.get('id')} hidden={this.props.hidden} />
-          <NotificationOverlayContainer notification={notification} />
         </div>
       </HotKeys>
     );
@@ -406,7 +402,6 @@ class Notification extends ImmutablePureComponent {
           </div>
 
           <Report account={account} report={notification.get('report')} hidden={this.props.hidden} />
-          <NotificationOverlayContainer notification={notification} />
         </div>
       </HotKeys>
     );

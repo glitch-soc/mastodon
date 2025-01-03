@@ -2,8 +2,8 @@ import { connect } from 'react-redux';
 
 import { mentionCompose } from '../../../actions/compose';
 import {
-  toggleReblog,
   toggleFavourite,
+  toggleReblog,
 } from '../../../actions/interactions';
 import { makeGetNotification, makeGetStatus, makeGetReport } from '../../../selectors';
 import Notification from '../components/notification';
@@ -19,7 +19,6 @@ const makeMapStateToProps = () => {
       notification: notification,
       status: notification.get('status') ? getStatus(state, { id: notification.get('status'), contextType: 'notifications' }) : null,
       report: notification.get('report') ? getReport(state, notification.get('report'), notification.getIn(['report', 'target_account', 'id'])) : null,
-      notifCleaning: state.getIn(['notifications', 'cleaningMode']),
     };
   };
 

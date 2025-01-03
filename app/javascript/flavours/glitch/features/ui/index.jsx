@@ -14,7 +14,7 @@ import { HotKeys } from 'react-hotkeys';
 
 import { focusApp, unfocusApp, changeLayout } from 'flavours/glitch/actions/app';
 import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'flavours/glitch/actions/markers';
-import { initializeNotifications } from 'flavours/glitch/actions/notifications_migration';
+import { fetchNotifications } from 'flavours/glitch/actions/notification_groups';
 import { INTRODUCTION_VERSION } from 'flavours/glitch/actions/onboarding';
 import { HoverCardController } from 'flavours/glitch/components/hover_card_controller';
 import { Permalink } from 'flavours/glitch/components/permalink';
@@ -26,7 +26,6 @@ import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
 import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
 import { clearHeight } from '../../actions/height_cache';
-import { notificationsSetVisibility } from '../../actions/notifications';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
 import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding, disableHoverCards } from '../../initial_state';
@@ -316,7 +315,6 @@ class UI extends PureComponent {
 
   handleVisibilityChange = () => {
     const visibility = !document[this.visibilityHiddenProp];
-    this.props.dispatch(notificationsSetVisibility(visibility));
     if (visibility) {
       this.props.dispatch(focusApp());
       this.props.dispatch(submitMarkers({ immediate: true }));
@@ -436,7 +434,7 @@ class UI extends PureComponent {
     if (signedIn) {
       this.props.dispatch(fetchMarkers());
       this.props.dispatch(expandHomeTimeline());
-      this.props.dispatch(initializeNotifications());
+      this.props.dispatch(fetchNotifications());
       this.props.dispatch(fetchServerTranslationLanguages());
 
       setTimeout(() => this.props.dispatch(fetchServer()), 3000);

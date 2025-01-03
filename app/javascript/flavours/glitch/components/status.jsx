@@ -11,7 +11,6 @@ import { HotKeys } from 'react-hotkeys';
 
 import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import PictureInPicturePlaceholder from 'flavours/glitch/components/picture_in_picture_placeholder';
-import NotificationOverlayContainer from 'flavours/glitch/features/notifications/containers/overlay_container';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
 import { withOptionalRouter, WithOptionalRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
@@ -729,12 +728,6 @@ class Status extends ImmutablePureComponent {
               onFilter={matchedFilters ? this.handleFilterClick : null}
               {...other}
             />
-
-            {notification && (
-              <NotificationOverlayContainer
-                notification={notification}
-              />
-            )}
           </div>
         </div>
       </HotKeys>

@@ -1,21 +1,13 @@
 import { IntlMessageFormat } from 'intl-messageformat';
 import { defineMessages } from 'react-intl';
 
-import { List as ImmutableList } from 'immutable';
-
-import { compareId } from 'flavours/glitch/compare_id';
-import { usePendingItems as preferPendingItems } from 'flavours/glitch/initial_state';
-
-import api, { getLinks } from '../api';
 import { unescapeHTML } from '../utils/html';
 import { requestNotificationPermission } from '../utils/notifications';
 
 import { fetchFollowRequests } from './accounts';
 import {
   importFetchedAccount,
-  importFetchedAccounts,
   importFetchedStatus,
-  importFetchedStatuses,
 } from './importer';
 import { submitMarkers } from './markers';
 import { notificationsUpdate } from "./notifications_typed";
@@ -26,39 +18,10 @@ export * from "./notifications_typed";
 
 export const NOTIFICATIONS_UPDATE_NOOP = 'NOTIFICATIONS_UPDATE_NOOP';
 
-// tracking the notif cleaning request
-export const NOTIFICATIONS_DELETE_MARKED_REQUEST = 'NOTIFICATIONS_DELETE_MARKED_REQUEST';
-export const NOTIFICATIONS_DELETE_MARKED_SUCCESS = 'NOTIFICATIONS_DELETE_MARKED_SUCCESS';
-export const NOTIFICATIONS_DELETE_MARKED_FAIL = 'NOTIFICATIONS_DELETE_MARKED_FAIL';
-export const NOTIFICATIONS_MARK_ALL_FOR_DELETE = 'NOTIFICATIONS_MARK_ALL_FOR_DELETE';
-export const NOTIFICATIONS_ENTER_CLEARING_MODE = 'NOTIFICATIONS_ENTER_CLEARING_MODE'; // arg: yes
-// Unmark notifications (when the cleaning mode is left)
-export const NOTIFICATIONS_UNMARK_ALL_FOR_DELETE = 'NOTIFICATIONS_UNMARK_ALL_FOR_DELETE';
-// Mark one for delete
-export const NOTIFICATION_MARK_FOR_DELETE = 'NOTIFICATION_MARK_FOR_DELETE';
-
-export const NOTIFICATIONS_EXPAND_REQUEST = 'NOTIFICATIONS_EXPAND_REQUEST';
-export const NOTIFICATIONS_EXPAND_SUCCESS = 'NOTIFICATIONS_EXPAND_SUCCESS';
-export const NOTIFICATIONS_EXPAND_FAIL    = 'NOTIFICATIONS_EXPAND_FAIL';
-
 export const NOTIFICATIONS_FILTER_SET = 'NOTIFICATIONS_FILTER_SET';
-
-export const NOTIFICATIONS_SCROLL_TOP   = 'NOTIFICATIONS_SCROLL_TOP';
-export const NOTIFICATIONS_LOAD_PENDING = 'NOTIFICATIONS_LOAD_PENDING';
-
-export const NOTIFICATIONS_MOUNT   = 'NOTIFICATIONS_MOUNT';
-export const NOTIFICATIONS_UNMOUNT = 'NOTIFICATIONS_UNMOUNT';
-
-export const NOTIFICATIONS_SET_VISIBILITY = 'NOTIFICATIONS_SET_VISIBILITY';
-
-export const NOTIFICATIONS_MARK_AS_READ = 'NOTIFICATIONS_MARK_AS_READ';
 
 export const NOTIFICATIONS_SET_BROWSER_SUPPORT    = 'NOTIFICATIONS_SET_BROWSER_SUPPORT';
 export const NOTIFICATIONS_SET_BROWSER_PERMISSION = 'NOTIFICATIONS_SET_BROWSER_PERMISSION';
-
-export const NOTIFICATION_REQUESTS_ACCEPT_REQUEST = 'NOTIFICATION_REQUESTS_ACCEPT_REQUEST';
-export const NOTIFICATION_REQUESTS_ACCEPT_SUCCESS = 'NOTIFICATION_REQUESTS_ACCEPT_SUCCESS';
-export const NOTIFICATION_REQUESTS_ACCEPT_FAIL    = 'NOTIFICATION_REQUESTS_ACCEPT_FAIL';
 
 export const NOTIFICATION_REQUESTS_DISMISS_REQUEST = 'NOTIFICATION_REQUESTS_DISMISS_REQUEST';
 export const NOTIFICATION_REQUESTS_DISMISS_SUCCESS = 'NOTIFICATION_REQUESTS_DISMISS_SUCCESS';
@@ -66,10 +29,7 @@ export const NOTIFICATION_REQUESTS_DISMISS_FAIL    = 'NOTIFICATION_REQUESTS_DISM
 
 defineMessages({
   mention: { id: 'notification.mention', defaultMessage: '{name} mentioned you' },
-});
-
-export const loadPending = () => ({
-  type: NOTIFICATIONS_LOAD_PENDING,
+  group: { id: 'notifications.group', defaultMessage: '{count} notifications' },
 });
 
 export function updateNotifications(notification, intlMessages, intlLocale) {
@@ -108,8 +68,7 @@ export function updateNotifications(notification, intlMessages, intlLocale) {
         dispatch(importFetchedAccount(notification.report.target_account));
       }
 
-
-      dispatch(notificationsUpdate({ notification, preferPendingItems, playSound: playSound && !filtered}));
+      dispatch(notificationsUpdate({ notification, playSound: playSound && !filtered}));
     } else if (playSound && !filtered) {
       dispatch({
         type: NOTIFICATIONS_UPDATE_NOOP,
@@ -132,198 +91,7 @@ export function updateNotifications(notification, intlMessages, intlLocale) {
   };
 }
 
-const excludeTypesFromSettings = state => state.getIn(['settings', 'notifications', 'shows']).filter(enabled => !enabled).keySeq().toJS();
-
-const excludeTypesFromFilter = filter => {
-  const allTypes = ImmutableList([
-    'follow',
-    'follow_request',
-    'favourite',
-    'reblog',
-    'mention',
-    'poll',
-    'status',
-    'update',
-    'admin.sign_up',
-    'admin.report',
-  ]);
-
-  return allTypes.filterNot(item => item === filter).toJS();
-};
-
 const noOp = () => {};
-
-let expandNotificationsController = new AbortController();
-
-export function expandNotifications({ maxId = undefined, forceLoad = false }) {
-  return async (dispatch, getState) => {
-    const activeFilter = getState().getIn(['settings', 'notifications', 'quickFilter', 'active']);
-    const notifications = getState().get('notifications');
-    const isLoadingMore = !!maxId;
-
-    if (notifications.get('isLoading')) {
-      if (forceLoad) {
-        expandNotificationsController.abort();
-        expandNotificationsController = new AbortController();
-      } else {
-        return;
-      }
-    }
-
-    const params = {
-      max_id: maxId,
-      exclude_types: activeFilter === 'all'
-        ? excludeTypesFromSettings(getState())
-        : excludeTypesFromFilter(activeFilter),
-    };
-
-    if (!params.max_id && (notifications.get('items', ImmutableList()).size + notifications.get('pendingItems', ImmutableList()).size) > 0) {
-      const a = notifications.getIn(['pendingItems', 0, 'id']);
-      const b = notifications.getIn(['items', 0, 'id']);
-
-      if (a && b && compareId(a, b) > 0) {
-        params.since_id = a;
-      } else {
-        params.since_id = b || a;
-      }
-    }
-
-    const isLoadingRecent = !!params.since_id;
-
-    dispatch(expandNotificationsRequest(isLoadingMore));
-
-    try {
-      const response = await api().get('/api/v1/notifications', { params, signal: expandNotificationsController.signal });
-      const next = getLinks(response).refs.find(link => link.rel === 'next');
-
-      dispatch(importFetchedAccounts(response.data.map(item => item.account)));
-      dispatch(importFetchedStatuses(response.data.map(item => item.status).filter(status => !!status)));
-      dispatch(importFetchedAccounts(response.data.filter(item => item.report).map(item => item.report.target_account)));
-
-      dispatch(expandNotificationsSuccess(response.data, next ? next.uri : null, isLoadingMore, isLoadingRecent, isLoadingRecent && preferPendingItems));
-      dispatch(submitMarkers());
-    } catch(error) {
-      dispatch(expandNotificationsFail(error, isLoadingMore));
-    }
-  };
-}
-
-export function expandNotificationsRequest(isLoadingMore) {
-  return {
-    type: NOTIFICATIONS_EXPAND_REQUEST,
-    skipLoading: !isLoadingMore,
-  };
-}
-
-export function expandNotificationsSuccess(notifications, next, isLoadingMore, isLoadingRecent, usePendingItems) {
-  return {
-    type: NOTIFICATIONS_EXPAND_SUCCESS,
-    notifications,
-    next,
-    isLoadingRecent: isLoadingRecent,
-    usePendingItems,
-    skipLoading: !isLoadingMore,
-  };
-}
-
-export function expandNotificationsFail(error, isLoadingMore) {
-  return {
-    type: NOTIFICATIONS_EXPAND_FAIL,
-    error,
-    skipLoading: !isLoadingMore,
-    skipAlert: !isLoadingMore || error.name === 'AbortError',
-  };
-}
-
-export function scrollTopNotifications(top) {
-  return {
-    type: NOTIFICATIONS_SCROLL_TOP,
-    top,
-  };
-}
-
-export function deleteMarkedNotifications() {
-  return (dispatch, getState) => {
-    dispatch(deleteMarkedNotificationsRequest());
-
-    let ids = [];
-    getState().getIn(['notifications', 'items']).forEach((n) => {
-      if (n.get('markedForDelete')) {
-        ids.push(n.get('id'));
-      }
-    });
-
-    if (ids.length === 0) {
-      return;
-    }
-
-    api().delete(`/api/v1/notifications/destroy_multiple?ids[]=${ids.join('&ids[]=')}`).then(() => {
-      dispatch(deleteMarkedNotificationsSuccess());
-    }).catch(error => {
-      console.error(error);
-      dispatch(deleteMarkedNotificationsFail(error));
-    });
-  };
-}
-
-export function enterNotificationClearingMode(yes) {
-  return {
-    type: NOTIFICATIONS_ENTER_CLEARING_MODE,
-    yes: yes,
-  };
-}
-
-export function markAllNotifications(yes) {
-  return {
-    type: NOTIFICATIONS_MARK_ALL_FOR_DELETE,
-    yes: yes, // true, false or null. null = invert
-  };
-}
-
-export function deleteMarkedNotificationsRequest() {
-  return {
-    type: NOTIFICATIONS_DELETE_MARKED_REQUEST,
-  };
-}
-
-export function deleteMarkedNotificationsFail() {
-  return {
-    type: NOTIFICATIONS_DELETE_MARKED_FAIL,
-  };
-}
-
-export function markNotificationForDelete(id, yes) {
-  return {
-    type: NOTIFICATION_MARK_FOR_DELETE,
-    id: id,
-    yes: yes,
-  };
-}
-
-export function deleteMarkedNotificationsSuccess() {
-  return {
-    type: NOTIFICATIONS_DELETE_MARKED_SUCCESS,
-  };
-}
-
-export function mountNotifications() {
-  return {
-    type: NOTIFICATIONS_MOUNT,
-  };
-}
-
-export function unmountNotifications() {
-  return {
-    type: NOTIFICATIONS_UNMOUNT,
-  };
-}
-
-export function notificationsSetVisibility(visibility) {
-  return {
-    type: NOTIFICATIONS_SET_VISIBILITY,
-    visibility: visibility,
-  };
-}
 
 export function setFilter (filterType) {
   return dispatch => {
@@ -332,14 +100,7 @@ export function setFilter (filterType) {
       path: ['notifications', 'quickFilter', 'active'],
       value: filterType,
     });
-    dispatch(expandNotifications({ forceLoad: true }));
     dispatch(saveSettings());
-  };
-}
-
-export function markNotificationsAsRead() {
-  return {
-    type: NOTIFICATIONS_MARK_AS_READ,
   };
 }
 
