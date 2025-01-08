@@ -1344,7 +1344,7 @@ body > [data-popper-placement] {
   }
 }
 
-.status__content.status__content--collapsed .status__content__text {
+.status__content.status__content--collapsed {
   max-height: 20px * 15; // 15 lines is roughly above 500 characters
 }
 
