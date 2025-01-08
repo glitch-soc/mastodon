@@ -3,7 +3,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { Permalink } from 'flavours/glitch/components/permalink';
 
 export const MentionsPlaceholder = ({ status }) => {
-  if (status.get('spoiler_text').length === 0 || !status.get('mentions')) {
+  if (status.get('spoiler_text').length === 0 || !status.get('mentions') || status.get('mentions').isEmpty()) {
     return null;
   }
 
