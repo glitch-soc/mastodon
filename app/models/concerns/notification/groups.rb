@@ -4,14 +4,14 @@ module Notification::Groups
   extend ActiveSupport::Concern
 
   # `set_group_key!` needs to be updated if this list changes
-  GROUPABLE_NOTIFICATION_TYPES = %i(favourite reblog follow).freeze
+  GROUPABLE_NOTIFICATION_TYPES = %i(favourite reaction reblog follow).freeze
   MAXIMUM_GROUP_SPAN_HOURS = 12
 
   def set_group_key!
     return if filtered? || GROUPABLE_NOTIFICATION_TYPES.exclude?(type)
 
     type_prefix = case type
-                  when :favourite, :reblog
+                  when :favourite, :reaction, :reblog
                     [type, target_status&.id].join('-')
                   when :follow
                     type
