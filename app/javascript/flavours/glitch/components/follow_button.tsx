@@ -78,10 +78,10 @@ export const FollowButton: React.FC<{
     label = intl.formatMessage(messages.edit_profile);
   } else if (!relationship) {
     label = <LoadingIndicator />;
-  } else if (!relationship.following && relationship.followed_by) {
-    label = intl.formatMessage(messages.followBack);
   } else if (relationship.following || relationship.requested) {
     label = intl.formatMessage(messages.unfollow);
+  } else if (relationship.followed_by) {
+    label = intl.formatMessage(messages.followBack);
   } else {
     label = intl.formatMessage(messages.follow);
   }
