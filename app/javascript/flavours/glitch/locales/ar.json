@@ -26,8 +26,6 @@
   "confirmation_modal.do_not_ask_again": "لا تطلب التأكيد مرة أخرى",
   "confirmations.deprecated_settings.confirm": "استخدام تفضيلات ماستدون",
   "confirmations.deprecated_settings.message": "تم استبدال بعض من الجهاز الخاص بالماستدون {preferences} الذي تستخدمه {app_settings} الخاص بجهاز ماستدون سيتم تجاوزه:",
-  "confirmations.missing_media_description.confirm": "أرسل على أيّة حال",
-  "confirmations.missing_media_description.edit": "تعديل الوسائط",
   "direct.group_by_conversations": "تجميع حسب المحادثة",
   "federation.federated.long": "السماح لهذا المنشور الوصول إلى خوادم أخرى",
   "federation.local_only.long": "منع هذا المنشور من الوصول إلى الخوادم الأخرى",

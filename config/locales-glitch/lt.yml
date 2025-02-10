@@ -1,1 +1,21 @@
+---
 lt:
+  admin:
+    custom_emojis:
+      batch_copy_error: 'Kopijuojant kai kurias pasirinktas jaustukus įvyko klaida: %{message}.'
+      batch_error: 'Įvyko klaida: %{message}.'
+    settings:
+      captcha_enabled:
+        desc_html: Tai priklauso nuo „hCaptcha“ išorinių skriptų, kurie gali kelti susirūpinimą dėl saugumo ir privatumo. Be to, <strong>dėl to registracijos procesas kai kuriems asmenims (ypač neįgaliesiems) gali būti gerokai sunkiau prieinami</strong>. Dėl šių priežasčių apsvarstykite alternatyvias priemones, pavyzdžiui, patvirtinimu arba kvietimu pagrįstą registraciją.
+        title: Reikalauti naujus naudotojus išspręsti saugos testą („CAPTCHA“), kad patvirtintų savo paskyrą
+      flavour_and_skin:
+        title: Atmaina ir apipavidalinimas
+      hide_followers_count:
+        desc_html: Nerodyti sekėjų skaičiaus naudotojų profiliuose
+        title: Slėpti sekėjų skaičių
+      other:
+        preamble: Įvairūs „glitch-soc“ nustatymai, netelpantys kitose kategorijose.
+        title: Kita
+      outgoing_spoilers:
+        desc_html: Federuodami įrašus, pridėkite šį turinio įspėjimą prie įrašų, kuriuose jo nėra. Tai – naudinga, jei jūsų serveris specializuojasi turinio srityje, kurią kiti serveriai gali norėti turėti po turinio įspėjimu. Medija taip pat bus pažymėta kaip jautri.
+        title: Turinio įspėjimas siunčiamiems įrašams

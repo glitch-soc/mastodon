@@ -1,4 +1,8 @@
 {
+  "about.fork_disclaimer": ".",
+  "account.disclaimer_full": ".",
+  "account.follows": "",
+  "community.column_settings.allow_local_only": "",
   "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }

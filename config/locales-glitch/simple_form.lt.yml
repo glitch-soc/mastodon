@@ -1,1 +1,20 @@
+---
 lt:
+  simple_form:
+    hints:
+      defaults:
+        setting_skin: Iš naujo sukuria pasirinktą „Mastodon“ apipavidalinimą
+    labels:
+      defaults:
+        setting_default_content_type: Numatytasis įrašų formatas
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Ženklinimas
+        setting_default_content_type_plain: Grynasis tekstas
+        setting_favourite_modal: Rodyti patvirtinimo dialogo langą prieš pamėgant (taikoma tik „Glitch“ atmainiui)
+        setting_show_followers_count: Rodyti savo sekėjų skaičių
+        setting_skin: Apipavidalinimas
+        setting_system_emoji_font: Naudoti numatytąjį sistemos šriftą jaustukams (taikoma tik „Glitch“ atmainiui)
+      notification_emails:
+        trending_link: Nauja tendencinga nuoroda reikia peržiūros
+        trending_status: Naujas tendencingas įrašas reikia peržiūros
+        trending_tag: Nauja tendencinga žymė reikia peržiūros

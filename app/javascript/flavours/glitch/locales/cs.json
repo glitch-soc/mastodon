@@ -18,7 +18,6 @@
   "settings.compose_box_opts": "Editační pole",
   "settings.confirm_before_clearing_draft": "Zobrazit potvrzovací dialog před přepsáním právě vytvářené zprávy",
   "settings.confirm_boost_missing_media_description": "Zobrazit potvrzovací dialog před boostnutím příspěvku s chybějícími popisky obrázků",
-  "settings.confirm_missing_media_description": "Zobrazit potvrzovací dialog při odesílání příspěvku, ve kterém chybí popisky obrázků",
   "settings.content_warnings": "Varování o obsahu",
   "settings.content_warnings.regexp": "Regulární výraz",
   "settings.content_warnings_filter": "Tato varování o obsahu automaticky nerozbalovat:",
