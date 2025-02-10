@@ -16,8 +16,6 @@
   "compose.content-type.html": "HTML",
   "compose.content-type.markdown": "Markdown",
   "compose.content-type.plain": "Testun plaen",
-  "confirmations.missing_media_description.confirm": "Anfon beth bynnag",
-  "confirmations.missing_media_description.edit": "Golygu cyfryngau",
   "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }
