@@ -1,18 +1,23 @@
 ---
 cs:
   simple_form:
+    glitch_only: glitch-soc
     hints:
       defaults:
         setting_default_content_type_html: Předpokládat, že nové příspěvky jsou napsané v HTML, pokud není uvedeno jinak
         setting_default_content_type_markdown: Předpokládat, že nové příspěvky používají pro formátování Markdown, pokud není uvedeno jinak
         setting_default_content_type_plain: Předpokládat, že nové příspěvky nejsou nijak formátované, pokud není uvedeno jinak (standardní chování Mastodonu)
         setting_default_language: Jazyk vašich příspěvků lze detekovat automaticky, ale není to vždycky přesné
+        setting_show_followers_count: Ukázat počet sledujících na vašem profilu. Pokud počet svých sledujících skryjete, pak ho nebudete vidět, ani vy a některé aplikace mohou ukazovat negativní číslo sledujících.
         setting_skin: Aplikuje barevný styl na zvolené rozhraní Mastodonu
     labels:
       defaults:
         setting_default_content_type: Výchozí formát příspěvků
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Markdown
         setting_default_content_type_plain: Prostý text
         setting_favourite_modal: Před oblíbením příspěvku zobrazit potvrzovací dialog (pouze pro rozhraní Glitch)
+        setting_show_followers_count: Ukázat počet mých sledujících
         setting_skin: Styl
         setting_system_emoji_font: Použít výchozí emoji systému (pouze pro rozhraní Glitch)
       notification_emails:
