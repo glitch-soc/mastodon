@@ -66,11 +66,11 @@ class Rack::Attack
     IpBlock.blocked?(req.remote_ip)
   end
 
-  throttle('throttle_authenticated_api', limit: (ENV['AUTHENTICATED_USER_API_LIMIT'] || 1_500).to_i, period: (ENV['AUTHENTICATED_USER_API_PERIOD'] || 5).to_i.minutes) do |req|
+  throttle('throttle_authenticated_api', limit: (ENV['AUTHENTICATED_USER_API_LIMIT'] || 1500)&.to_i, period: (ENV['AUTHENTICATED_USER_API_PERIOD'] || 5)&.to_i.minutes) do |req|
     req.authenticated_user_id if req.api_request?
   end
 
-  throttle('throttle_per_token_api', limit: (ENV['AUTHENTICATED_TOKEN_API_LIMIT'] || 300).to_i, period: (ENV['AUTHENTICATED_TOKEN_API_PERIOD'] || 5).to_i.minutes) do |req|
+  throttle('throttle_per_token_api', limit: (ENV['AUTHENTICATED_TOKEN_API_LIMIT'] || 300)&.to_i, period: (ENV['AUTHENTICATED_TOKEN_API_PERIOD'] || 5)&.to_i.minutes) do |req|
     req.authenticated_token_id if req.api_request?
   end
 
@@ -82,7 +82,7 @@ class Rack::Attack
     req.authenticated_user_id if req.post? && req.path.match?(%r{\A/api/v\d+/media\z}i)
   end
 
-  throttle('throttle_media_proxy', limit: (ENV['MEDIA_PROXY_API_LIMIT'] || 30).to_i, period: (ENV['MEDIA_PROXY_API_PERIOD'] || 10).to_i.minutes) do |req|
+  throttle('throttle_media_proxy', limit: (ENV['MEDIA_PROXY_API_LIMIT'] || 30)&.to_i, period: (ENV['MEDIA_PROXY_API_PERIOD'] || 10)&.to_i.minutes) do |req|
     req.throttleable_remote_ip if req.path.start_with?('/media_proxy')
   end
 
