@@ -88,7 +88,16 @@
   "settings.rewrite_mentions_no": "Non rescribir mencións",
   "settings.rewrite_mentions_username": "Rescribir con identificador",
   "settings.shared_settings_link": "preferencias da usuaria",
+  "settings.side_arm": "Botón secundario de publicación:",
+  "settings.side_arm.none": "Ningún",
+  "settings.side_arm_reply_mode": "Ao responder, o botón secundario de publicación debería:",
+  "settings.side_arm_reply_mode.copy": "Copiar a privacidade da publicación á que se responde",
   "settings.side_arm_reply_mode.keep": "Manter a privacidade establecida",
   "settings.side_arm_reply_mode.restrict": "Limita o nivel de privacidade a aquel que teña a publicación á que se responde",
-  "settings.status_icons": "Iconas das publicacións"
+  "settings.status_icons": "Iconas das publicacións",
+  "settings.status_icons_language": "Indicador de idioma",
+  "settings.status_icons_local_only": "Indicador de só-local",
+  "settings.status_icons_media": "Indicadores multimedia e enquisas",
+  "settings.status_icons_reply": "Indicador de resposta",
+  "settings.status_icons_visibility": "Indicador de nivel de privacidade"
 }
