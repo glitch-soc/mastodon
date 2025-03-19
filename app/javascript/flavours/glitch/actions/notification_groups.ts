@@ -71,7 +71,7 @@ function dispatchAssociatedRecords(
 }
 
 function selectNotificationGroupedTypes(state: RootState) {
-  const types: NotificationType[] = ['favourite', 'reblog'];
+  const types: NotificationType[] = ['favourite', 'reblog', 'reaction'];
 
   if (selectSettingsNotificationsGroupFollows(state)) types.push('follow');
 
