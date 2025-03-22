@@ -39,6 +39,7 @@ class Item extends PureComponent {
 
   state = {
     loaded: false,
+    error: false,
   };
 
   handleMouseEnter = (e) => {
@@ -80,6 +81,10 @@ class Item extends PureComponent {
 
   handleImageLoad = () => {
     this.setState({ loaded: true });
+  };
+
+  handleImageError = () => {
+    this.setState({ error: true });
   };
 
   render () {
@@ -150,6 +155,7 @@ class Item extends PureComponent {
             lang={lang}
             style={{ objectPosition: letterbox ? null : `${x}% ${y}%` }}
             onLoad={this.handleImageLoad}
+            onError={this.handleImageError}
           />
         </a>
       );
@@ -185,7 +191,7 @@ class Item extends PureComponent {
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone, letterbox, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
+      <div className={classNames('media-gallery__item', { standalone, letterbox, 'media-gallery__item--error': this.state.error, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
         <Blurhash
           hash={attachment.get('blurhash')}
           dummy={!useBlurhash}
