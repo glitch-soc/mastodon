@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 
 import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
-import PollContainer from 'flavours/glitch/containers/poll_container';
+import { Poll } from 'flavours/glitch/components/poll';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { autoPlayGif, languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
@@ -342,7 +342,7 @@ class StatusContent extends PureComponent {
     );
 
     const poll = !!status.get('poll') && (
-      <PollContainer pollId={status.get('poll')} status={status} lang={language} />
+      <Poll pollId={status.get('poll')} status={status} lang={language} />
     );
 
     if (this.props.onClick) {
