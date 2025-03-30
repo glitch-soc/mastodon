@@ -3,6 +3,8 @@
 //  Modified by kibi! to use webpack package syntax for urls (eg,
 //  `url(~images/…)`) for easy importing into skins.
 
+@use 'mastodon/functions' as *;
+
 $win95-bg: #bfbfbf;
 $win95-dark-grey: #404040;
 $win95-mid-grey: #808080;
@@ -15,6 +17,8 @@ $win95-cyan: #008080;
   $ui-base-lighter-color: $win95-dark-grey,
   $ui-highlight-color: $win95-window-header
 );
+
+@use 'application';
 
 @mixin win95-border-outset() {
   border-left: 2px solid #efefef;
@@ -96,8 +100,6 @@ $win95-cyan: #008080;
   font-family:"premillenium";
   src: url('~fonts/premillenium/MSSansSerif.ttf') format('truetype');
 }
-
-@import 'application';
 
 /* borrowed from cybrespace style: wider columns and full column width images */
 
