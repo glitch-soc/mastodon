@@ -24,7 +24,11 @@ class PublicFeed
 
     scope.merge!(without_local_only_scope) unless allow_local_only?
     scope.merge!(without_replies_scope) unless with_replies?
-    scope.merge!(without_reblogs_scope) unless with_reblogs?
+    if with_reblogs?
+      scope.merge!(with_reblogs_of_public_scope)
+    else
+      scope.merge!(without_reblogs_scope)
+    end
     scope.merge!(local_only_scope) if local_only?
     scope.merge!(remote_only_scope) if remote_only?
     scope.merge!(account_filters_scope) if account?
@@ -88,6 +92,10 @@ class PublicFeed
 
   def without_reblogs_scope
     Status.without_reblogs
+  end
+
+  def with_reblogs_of_public_scope
+    Status.left_outer_joins(:reblog).where(reblog: { visibility: [nil, :public] })
   end
 
   def media_only_scope
