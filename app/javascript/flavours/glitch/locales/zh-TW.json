@@ -29,6 +29,7 @@
   "confirmations.deprecated_settings.confirm": "使用 Mastodon 偏好",
   "confirmations.deprecated_settings.message": "您正在使用的某些特定於 glitch-soc 設備的 {app_settings} 已被 Mastodon {preferences} 所取代，並將被覆蓋：",
   "direct.group_by_conversations": "以對話分組",
+  "favourite_modal.favourite": "將貼文加入最愛?",
   "federation.federated.long": "允許此貼文發布到其他伺服器",
   "federation.federated.short": "聯邦",
   "federation.local_only.long": "避免此貼文發布到其他伺服器",
@@ -106,11 +107,14 @@
   "settings.tag_misleading_links.hint": "在每個未明確提及的連結添加帶有連結目標主機的視覺指示",
   "settings.wide_view": "寬廣模式（僅限桌面模式）",
   "settings.wide_view_hint": "延伸欄以更好地填充可用空間。",
+  "status.filtered": "已過濾的",
   "status.has_audio": "包含音訊檔案",
   "status.has_pictures": "包含圖片",
   "status.has_preview_card": "包含預覽卡",
   "status.has_video": "包含視訊檔案",
+  "status.hide": "隱藏貼文",
   "status.in_reply_to": "貼文有回覆",
   "status.is_poll": "貼文有投票",
-  "status.local_only": "只在此實例可見"
+  "status.local_only": "只在此實例可見",
+  "status.show_filter_reason": "仍要顯示"
 }
