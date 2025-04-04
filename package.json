@@ -1,7 +1,7 @@
 {
   "name": "@mastodon/mastodon",
   "license": "AGPL-3.0-or-later",
-  "packageManager": "yarn@4.7.0",
+  "packageManager": "yarn@4.8.1",
   "engines": {
     "node": ">=18"
   },
@@ -151,7 +151,7 @@
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "@types/babel__core": "^7.20.1",
-    "@types/emoji-mart": "^3.0.9",
+    "@types/emoji-mart": "3.0.14",
     "@types/escape-html": "^1.0.2",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/http-link-header": "^1.0.3",
@@ -197,7 +197,7 @@
     "stylelint": "^16.11.0",
     "stylelint-config-prettier-scss": "^1.0.0",
     "stylelint-config-standard-scss": "^14.0.0",
-    "typescript": "^5.0.4",
+    "typescript": "~5.7.3",
     "typescript-eslint": "^8.28.0",
     "webpack-dev-server": "^3.11.3"
   },
