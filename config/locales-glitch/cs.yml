@@ -28,6 +28,10 @@ cs:
       trending_status_cw:
         desc_html: Zobrazovat v rámci trendů (pokud jsou zapnuté) i příspěvky s varováním o obsahu. Změny tohoto nastavení se neprojeví retroaktivně.
         title: Povolit v trendech příspěvky s varováním o obsahu
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: A stejně tak i pro gitch-soc!
   auth:
     captcha_confirmation:
       hint_html: Už jen poslední krok! Pro potvrzení svého účtu opište prosím text z obrázku (CAPTCHA). Pokud máte dotazy nebo potřebujete s potvrzením pomoct, můžete <a href="/about/more">kontaktovat administrátora</a>.
