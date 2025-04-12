@@ -63,6 +63,8 @@
   "settings.content_warnings_unfold_opts": "Auto-unfolding options",
   "settings.deprecated_setting": "This setting is now controlled from Mastodon's {settings_page_link}",
   "settings.enable_content_warnings_auto_unfold": "Automatically unfold content-warnings",
+  "settings.fullwidth_view": "Stretch columns to full width (Desktop mode only)",
+  "settings.fullwidth_view_hint": "Stretches columns to fill all the available space.",
   "settings.general": "General",
   "settings.hicolor_privacy_icons": "High color privacy icons",
   "settings.hicolor_privacy_icons.hint": "Display privacy icons in bright and easily distinguishable colors",
