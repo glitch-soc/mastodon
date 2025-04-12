@@ -2,7 +2,7 @@
 lt:
   admin:
     custom_emojis:
-      batch_copy_error: 'Kopijuojant kai kurias pasirinktas jaustukus įvyko klaida: %{message}.'
+      batch_copy_error: 'Kopijuojant kai kuriuos pasirinktus jaustukus įvyko klaida: %{message}.'
       batch_error: 'Įvyko klaida: %{message}.'
     settings:
       captcha_enabled:
@@ -17,5 +17,26 @@ lt:
         preamble: Įvairūs „glitch-soc“ nustatymai, netelpantys kitose kategorijose.
         title: Kita
       outgoing_spoilers:
-        desc_html: Federuodami įrašus, pridėkite šį turinio įspėjimą prie įrašų, kuriuose jo nėra. Tai – naudinga, jei jūsų serveris specializuojasi turinio srityje, kurią kiti serveriai gali norėti turėti po turinio įspėjimu. Medija taip pat bus pažymėta kaip jautri.
+        desc_html: Federuojant įrašus, pridėkite šį turinio įspėjimą prie įrašų, kuriuose jo nėra. Tai – naudinga, jei jūsų serveris specializuojasi turinio srityje, kurią kiti serveriai gali norėti turėti po turinio įspėjimu. Medija taip pat bus pažymėta kaip jautri.
         title: Turinio įspėjimas siunčiamiems įrašams
+      show_reblogs_in_public_timelines:
+        desc_html: Rodykite viešus viešų įrašų pasidalinimus vietinėse ir viešose laiko skalėse.
+        title: Rodyti pasidalinimus viešose laiko skalėse
+      show_replies_in_public_timelines:
+        desc_html: Be viešų savarankiškų atsakymų (gijų), rodykite viešus atsakymus vietinėse ir viešose laiko skalėse.
+        title: Rodyti atsakymus viešose laiko skalėse
+      trending_status_cw:
+        desc_html: Kai įjungti tendencingi įrašai, leiskite įrašus su turinio įspėjimais būti tinkamais. Šio nustatymo pakeitimai nėra retroaktyvūs.
+        title: Leisti įrašus su turinio įspėjimais tendencinguoti
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: Taip pat ir „glitch-soc“!
+  auth:
+    captcha_confirmation:
+      hint_html: Tik dar vienas žingsnis! Kad patvirtintumėte savo paskyrą, šis serveris reikalauja išspręsti saugos testą („CAPTCHA“). Jei turite klausimų arba reikia pagalbos patvirtinant paskyrą, galite <a href="/about/more">susisiekti su serverio administratoriumi</a>.
+      title: Naudotojo patvirtinimas
+  generic:
+    use_this: Nautoti šis
+  settings:
+    flavours: Atmainos

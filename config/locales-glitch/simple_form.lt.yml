@@ -1,9 +1,15 @@
 ---
 lt:
   simple_form:
+    glitch_only: "„glitch-soc“"
     hints:
       defaults:
-        setting_skin: Iš naujo sukuria pasirinktą „Mastodon“ apipavidalinimą
+        setting_default_content_type_html: Rašant įrašus, manyti, kad jie parašyti neapdorotu HTML, nebent nurodyta kitaip.
+        setting_default_content_type_markdown: Rašant įrašus, manyti, kad jie naudoja ženklinimą raiškiam teksto formatavimui, nebent nurodyta kitaip.
+        setting_default_content_type_plain: Rašant įrašus manyti, kad jie yra grynas tekstas be ypatingo formatavimo, nebent nurodyta kitaip (numatytoji „Mastodon“ elgsena).
+        setting_default_language: Įrašų kalba gali būti aptikta automatiškai, bet tai ne visada tiksliai.
+        setting_show_followers_count: Rodykite sekėjų skaičių savo profilyje. Jei slėpsite sekėjų skaičių, jis bus paslėptas net nuo jūsų pačių, o kai kurios programos gali rodyti neigiamą sekėjų skaičių.
+        setting_skin: Iš naujo pridėta pasirinktą „Mastodon“ atmainą
     labels:
       defaults:
         setting_default_content_type: Numatytasis įrašų formatas
