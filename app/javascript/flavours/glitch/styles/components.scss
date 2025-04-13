@@ -7477,6 +7477,13 @@ img.modal-warning {
   }
 }
 
+.fullwidth-columns .columns-area:not(.columns-area--mobile) {
+  .column {
+    flex: auto;
+    max-width: unset;
+  }
+}
+
 .media-gallery__actions {
   position: absolute;
   top: 6px;
