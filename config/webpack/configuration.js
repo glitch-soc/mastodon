@@ -14,12 +14,11 @@ const skinFiles = glob.sync('app/javascript/skins/*/*');
 const flavours = {};
 
 flavourFiles.forEach((flavourFile) => {
-  const { locales, inherit_locales, pack_directory } = load(readFileSync(flavourFile), 'utf8');
+  const { locales, pack_directory } = load(readFileSync(flavourFile), 'utf8');
 
   flavours[basename(dirname(flavourFile))] = {
     name: basename(dirname(flavourFile)),
     locales: locales ? join(dirname(flavourFile), locales) : null,
-    inherit_locales,
     pack_directory: pack_directory,
     skin: {},
   };

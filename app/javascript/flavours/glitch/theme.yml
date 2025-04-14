@@ -14,9 +14,6 @@ signed_in_preload:
 #  language tags and whose default exports are a messages object.
 locales: locales
 
-#  (OPTIONAL) Which flavour to inherit locales from
-inherit_locales: vanilla
-
 #  (OPTIONAL) A file to use as the preview screenshot for the flavour,
 #  or an array thereof. These are the full path from `app/javascript/`.
 screenshot: flavours/glitch/images/glitch-preview.png
