@@ -103,12 +103,6 @@ $font-sans-serif: 'mastodon-font-sans-serif' !default;
 $font-display: 'mastodon-font-display' !default;
 $font-monospace: 'mastodon-font-monospace' !default;
 
-// Avatar border size (8% default, 100% for rounded avatars)
-$ui-avatar-border-size: 8%;
-
-// More variables
-$dismiss-overlay-width: 4rem;
-
 $emojis-requiring-inversion: 'back' 'copyright' 'curly_loop' 'currency_exchange'
   'end' 'heavy_check_mark' 'heavy_division_sign' 'heavy_dollar_sign'
   'heavy_minus_sign' 'heavy_multiplication_x' 'heavy_plus_sign' 'on'

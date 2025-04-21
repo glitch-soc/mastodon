@@ -1133,6 +1133,14 @@ body > [data-popper-placement] {
     outline: 0;
   }
 
+  &.status__content--with-spoiler {
+    white-space: normal;
+
+    .status__content__text {
+      white-space: pre-wrap;
+    }
+  }
+
   .emojione {
     width: 20px;
     height: 20px;
@@ -1179,10 +1187,10 @@ body > [data-popper-placement] {
     }
   }
 
-  .status__content__spoiler {
+  .status__content__text {
     display: none;
 
-    &.status__content__spoiler--visible {
+    &.status__content__text--visible {
       display: block;
     }
   }
@@ -2343,8 +2351,7 @@ a.account__display-name {
 .muted {
   .status__content,
   .status__content p,
-  .status__content a,
-  .status__content__text {
+  .status__content a {
     color: $dark-text-color;
   }
 
@@ -4398,45 +4405,6 @@ a.status-card {
   }
 }
 
-.column-header__notif-cleaning-buttons {
-  display: flex;
-  align-items: stretch;
-  justify-content: space-around;
-
-  .column-header__button {
-    background: transparent;
-    text-align: center;
-    padding: 10px 5px;
-    font-size: 14px;
-  }
-
-  b {
-    font-weight: bold;
-  }
-}
-
-.layout-single-column .column-header__notif-cleaning-buttons {
-  @media screen and (min-width: $no-gap-breakpoint) {
-    b,
-    i {
-      margin-inline-end: 5px;
-    }
-
-    br {
-      display: none;
-    }
-
-    button {
-      padding: 15px 5px;
-    }
-  }
-}
-
-// The notifs drawer with no padding to have more space for the buttons
-.column-header__collapsible-inner.nopad-drawer {
-  padding: 0;
-}
-
 .no-reduce-motion .column-header__button .icon-sliders {
   transition: transform 150ms ease-in-out;
 }
@@ -4477,16 +4445,6 @@ a.status-card {
     border: 0;
     border-top: 1px solid var(--background-border-color);
     margin: 10px 0;
-  }
-
-  // notif cleaning drawer
-  &.ncd {
-    transition: none;
-
-    &.collapsed {
-      max-height: 0;
-      opacity: 0.7;
-    }
   }
 }
 
@@ -4557,58 +4515,6 @@ a.status-card {
       &:focus {
         background-color: $ui-highlight-color;
       }
-    }
-  }
-}
-
-.scrollable > div > :first-child .notification__dismiss-overlay > .wrappy {
-  border-top: 1px solid $ui-base-color;
-}
-
-.notification__dismiss-overlay {
-  overflow: hidden;
-  position: absolute;
-  top: 0;
-  inset-inline-end: 0;
-  bottom: -1px;
-  padding-inline-start: 15px; // space for the box shadow to be visible
-  z-index: 999;
-  align-items: center;
-  justify-content: flex-end;
-  cursor: pointer;
-  display: flex;
-
-  .wrappy {
-    width: $dismiss-overlay-width;
-    align-self: stretch;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: lighten($ui-base-color, 8%);
-    border-inline-start: 1px solid lighten($ui-base-color, 20%);
-    box-shadow: 0 0 5px black;
-    border-bottom: 1px solid $ui-base-color;
-  }
-
-  .ckbox {
-    border: 2px solid $ui-primary-color;
-    border-radius: 2px;
-    width: 30px;
-    height: 30px;
-    font-size: 20px;
-    color: $darker-text-color;
-    text-shadow: 0 0 5px black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &:focus {
-    outline: 0 !important;
-
-    .ckbox {
-      box-shadow: 0 0 1px 1px $ui-highlight-color;
     }
   }
 }
@@ -5542,13 +5448,6 @@ a.status-card {
 
   abbr {
     color: $highlight-text-color;
-  }
-}
-
-.notif-cleaning {
-  .status,
-  .notification {
-    padding-inline-end: ($dismiss-overlay-width + 0.5rem);
   }
 }
 
@@ -6874,19 +6773,6 @@ a.status-card {
         }
       }
     }
-  }
-}
-
-// TODO
-.confirmation-modal__do_not_ask_again {
-  padding-inline-start: 20px;
-  padding-inline-end: 20px;
-  padding-bottom: 10px;
-  font-size: 14px;
-
-  label,
-  input {
-    vertical-align: middle;
   }
 }
 
