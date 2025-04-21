@@ -77,7 +77,6 @@
     "detect-passive-events": "^2.0.3",
     "emoji-mart": "npm:emoji-mart-lazyload@latest",
     "escape-html": "^1.0.3",
-    "exif-js": "^2.3.0",
     "favico.js": "^0.3.10",
     "file-loader": "^6.2.0",
     "fuzzysort": "^3.0.0",

@@ -2900,7 +2900,6 @@ __metadata:
     eslint-plugin-promise: "npm:~7.2.1"
     eslint-plugin-react: "npm:^7.37.4"
     eslint-plugin-react-hooks: "npm:^5.2.0"
-    exif-js: "npm:^2.3.0"
     favico.js: "npm:^0.3.10"
     file-loader: "npm:^6.2.0"
     fuzzysort: "npm:^3.0.0"
@@ -8564,13 +8563,6 @@ __metadata:
     signal-exit: "npm:^4.1.0"
     strip-final-newline: "npm:^3.0.0"
   checksum: 10c0/2c52d8775f5bf103ce8eec9c7ab3059909ba350a5164744e9947ed14a53f51687c040a250bda833f906d1283aa8803975b84e6c8f7a7c42f99dc8ef80250d1af
-  languageName: node
-  linkType: hard
-
-"exif-js@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "exif-js@npm:2.3.0"
-  checksum: 10c0/6bcb081cfd141147e9e13c412fa52fa8a6b915d441bdaefb8c9882058f0e12843b8249ecf6f620709ce43ef069ebdd45181176560160a066f03e2cae384a10f7
   languageName: node
   linkType: hard
 
