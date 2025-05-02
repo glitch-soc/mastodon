@@ -64,7 +64,8 @@ const statusTranslateUndo = (state, id) => {
   });
 };
 
-/** @type {ImmutableMap<string, ImmutableMap<string, any>>} */
+
+/** @type {ImmutableMap<string, import('flavours/glitch/models/status').Status>} */
 const initialState = ImmutableMap();
 
 /** @type {import('@reduxjs/toolkit').Reducer<typeof initialState>} */

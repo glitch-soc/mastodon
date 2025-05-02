@@ -27,7 +27,7 @@ import { Button } from 'flavours/glitch/components/button';
 import { GIFV } from 'flavours/glitch/components/gifv';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
-import Audio from 'flavours/glitch/features/audio';
+import { Audio } from 'flavours/glitch/features/audio';
 import { CharacterCounter } from 'flavours/glitch/features/compose/components/character_counter';
 import { Tesseract as fetchTesseract } from 'flavours/glitch/features/ui/util/async-components';
 import { Video, getPointerPosition } from 'flavours/glitch/features/video';
@@ -212,11 +212,11 @@ const Preview: React.FC<{
     return (
       <Audio
         src={media.get('url') as string}
-        duration={media.getIn(['meta', 'original', 'duration'], 0) as number}
         poster={
           (media.get('preview_url') as string | undefined) ??
           account?.avatar_static
         }
+        duration={media.getIn(['meta', 'original', 'duration'], 0) as number}
         backgroundColor={
           media.getIn(['meta', 'colors', 'background']) as string
         }

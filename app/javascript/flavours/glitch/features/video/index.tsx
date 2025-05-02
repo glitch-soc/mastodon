@@ -810,7 +810,7 @@ export const Video: React.FC<{
   // The outer wrapper is necessary to avoid reflowing the layout when going into full screen
   return (
     <div>
-      <div
+      <div /* eslint-disable-line jsx-a11y/click-events-have-key-events */
         role='menuitem'
         className={classNames('video-player', {
           inactive: !revealed,
@@ -826,7 +826,7 @@ export const Video: React.FC<{
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onClick={handleClickRoot}
-        onKeyDown={handleKeyDown}
+        onKeyDownCapture={handleKeyDown}
         tabIndex={0}
       >
         {blurhash && (
@@ -851,7 +851,7 @@ export const Video: React.FC<{
             title={alt}
             lang={lang}
             onClick={handleClick}
-            onKeyDown={handleVideoKeyDown}
+            onKeyDownCapture={handleVideoKeyDown}
             onPlay={handlePlay}
             onPause={handlePause}
             onLoadedData={handleLoadedData}

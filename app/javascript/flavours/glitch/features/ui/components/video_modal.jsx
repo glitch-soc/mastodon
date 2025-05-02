@@ -5,7 +5,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
 import { getAverageFromBlurhash } from 'flavours/glitch/blurhash';
-import Footer from 'flavours/glitch/features/picture_in_picture/components/footer';
+import { Footer } from 'flavours/glitch/features/picture_in_picture/components/footer';
 import { Video } from 'flavours/glitch/features/video';
 
 const mapStateToProps = (state, { statusId }) => ({
