@@ -91,6 +91,7 @@ class REST::InstanceSerializer < ActiveModel::Serializer
       },
 
       polls: {
+        allow_media: true,
         max_options: PollOptionsValidator::MAX_OPTIONS,
         max_characters_per_option: PollOptionsValidator::MAX_OPTION_CHARS,
         min_expiration: PollExpirationValidator::MIN_EXPIRATION,
