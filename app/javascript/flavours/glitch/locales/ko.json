@@ -2,7 +2,6 @@
   "about.fork_disclaimer": "글리치는 마스토돈에서 포크한 자유 오픈소스 소프트웨어입니다.",
   "account.disclaimer_full": "아래에 있는 정보들은 사용자의 프로필을 완벽하게 나타내지 못하고 있을 수도 있습니다.",
   "account.follows": "팔로우",
-  "account.follows_you": "날 팔로우합니다",
   "account.suspended_disclaimer_full": "이 사용자는 중재자에 의해 정지되었습니다.",
   "account.view_full_profile": "전체 프로필 보기",
   "boost_modal.missing_description": "이 게시물은 설명이 없는 미디어를 포함하고 있습니다",
