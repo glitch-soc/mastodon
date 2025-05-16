@@ -150,6 +150,7 @@ class DeleteAccountService < BaseService
     purge_polls!
     purge_generated_notifications!
     purge_favourites!
+    purge_status_reactions!
     purge_bookmarks!
     purge_feeds!
     purge_other_associations!
@@ -194,6 +195,15 @@ class DeleteAccountService < BaseService
       Chewy.strategy.current.update(StatusesIndex, ids) if Chewy.enabled?
       Rails.cache.delete_multi(ids.map { |id| "statuses/#{id}" })
       favourites.delete_all
+    end
+  end
+
+  def purge_status_reactions!
+    @account.status_reactions.in_batches do |status_reactions|
+      ids = status_reactions.pluck(:status_id)
+      Chewy.strategy.current.update(StatusesIndex, ids) if Chewy.enabled?
+      Rails.cache.delete_multi(ids.map { |id| "statuses/#{id}" })
+      status_reactions.delete_all
     end
   end
 
