@@ -101,6 +101,10 @@ class REST::InstanceSerializer < ActiveModel::Serializer
         enabled: TranslationService.configured?,
       },
 
+      reactions: {
+        max_reactions: StatusReactionValidator::LIMIT,
+      },
+
       limited_federation: limited_federation?,
     }
   end
