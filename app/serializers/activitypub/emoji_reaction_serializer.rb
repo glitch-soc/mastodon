@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ActivityPub::EmojiReactionSerializer < ActivityPub::Serializer
+  context_extensions :emoji, :emoji_react
+
   attributes :id, :type, :actor, :content
   attribute :virtual_object, key: :object
   attribute :custom_emoji, key: :tag, unless: -> { object.custom_emoji.nil? }
