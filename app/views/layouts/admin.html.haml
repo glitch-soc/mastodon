@@ -1,7 +1,7 @@
 - content_for :header_tags do
   = render_initial_state
-  = flavoured_javascript_pack_tag 'public', crossorigin: 'anonymous'
-  = flavoured_javascript_pack_tag 'admin', async: true, crossorigin: 'anonymous'
+  = flavoured_vite_typescript_tag 'public.tsx', crossorigin: 'anonymous'
+  = flavoured_vite_typescript_tag 'admin.tsx', crossorigin: 'anonymous'
 
 - content_for :body_classes, 'admin'
 

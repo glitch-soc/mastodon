@@ -1,243 +1,243 @@
 export function EmojiPicker () {
-  return import(/* webpackChunkName: "flavours/glitch/async/emoji_picker" */'../../emoji/emoji_picker');
+  return import('../../emoji/emoji_picker');
 }
 
 export function Compose () {
-  return import(/* webpackChunkName: "flavours/glitch/async/compose" */'../../compose');
+  return import('../../compose');
 }
 
 export function Notifications () {
-  return import(/* webpackChunkName: "flavours/glitch/async/notifications" */'../../notifications_v2');
+  return import('../../notifications_v2');
 }
 
 export function HomeTimeline () {
-  return import(/* webpackChunkName: "flavours/glitch/async/home_timeline" */'../../home_timeline');
+  return import('../../home_timeline');
 }
 
 export function PublicTimeline () {
-  return import(/* webpackChunkName: "flavours/glitch/async/public_timeline" */'../../public_timeline');
+  return import('../../public_timeline');
 }
 
 export function CommunityTimeline () {
-  return import(/* webpackChunkName: "flavours/glitch/async/community_timeline" */'../../community_timeline');
+  return import('../../community_timeline');
 }
 
 export function Firehose () {
-  return import(/* webpackChunkName: "flavours/glitch/async/firehose" */'../../firehose');
+  return import('../../firehose');
 }
 
 export function HashtagTimeline () {
-  return import(/* webpackChunkName: "flavours/glitch/async/hashtag_timeline" */'../../hashtag_timeline');
+  return import('../../hashtag_timeline');
 }
 
 export function ListTimeline () {
-  return import(/* webpackChunkName: "flavours/glitch/async/list_timeline" */'../../list_timeline');
+  return import('../../list_timeline');
 }
 
 export function Lists () {
-  return import(/* webpackChunkName: "flavours/glitch/async/lists" */'../../lists');
+  return import('../../lists');
 }
 
 export function DirectTimeline() {
-  return import(/* webpackChunkName: "flavours/glitch/async/direct_timeline" */'../../direct_timeline');
+  return import('../../direct_timeline');
 }
 
 export function Status () {
-  return import(/* webpackChunkName: "flavours/glitch/async/status" */'../../status');
+  return import('../../status');
 }
 
 export function GettingStarted () {
-  return import(/* webpackChunkName: "flavours/glitch/async/getting_started" */'../../getting_started');
+  return import('../../getting_started');
 }
 
 export function GettingStartedMisc () {
-  return import(/* webpackChunkName: "flavours/glitch/async/getting_started_misc" */'../../getting_started_misc');
+  return import('../../getting_started_misc');
 }
 
 export function KeyboardShortcuts () {
-  return import(/* webpackChunkName: "flavours/glitch/async/keyboard_shortcuts" */'../../keyboard_shortcuts');
+  return import('../../keyboard_shortcuts');
 }
 
 export function PinnedStatuses () {
-  return import(/* webpackChunkName: "flavours/glitch/async/pinned_statuses" */'../../pinned_statuses');
+  return import('../../pinned_statuses');
 }
 
 export function AccountTimeline () {
-  return import(/* webpackChunkName: "flavours/glitch/async/account_timeline" */'../../account_timeline');
+  return import('../../account_timeline');
 }
 
 export function AccountGallery () {
-  return import(/* webpackChunkName: "flavours/glitch/async/account_gallery" */'../../account_gallery');
+  return import('../../account_gallery');
 }
 
 export function AccountFeatured() {
-  return import(/* webpackChunkName: "flavours/glitch/async/account_featured" */'../../account_featured');
+  return import('../../account_featured');
 }
 
 export function Followers () {
-  return import(/* webpackChunkName: "flavours/glitch/async/followers" */'../../followers');
+  return import('../../followers');
 }
 
 export function Following () {
-  return import(/* webpackChunkName: "flavours/glitch/async/following" */'../../following');
+  return import('../../following');
 }
 
 export function Reblogs () {
-  return import(/* webpackChunkName: "flavours/glitch/async/reblogs" */'../../reblogs');
+  return import('../../reblogs');
 }
 
 export function Favourites () {
-  return import(/* webpackChunkName: "flavours/glitch/async/favourites" */'../../favourites');
+  return import('../../favourites');
 }
 
 export function FollowRequests () {
-  return import(/* webpackChunkName: "flavours/glitch/async/follow_requests" */'../../follow_requests');
+  return import('../../follow_requests');
 }
 
 export function FavouritedStatuses () {
-  return import(/* webpackChunkName: "flavours/glitch/async/favourited_statuses" */'../../favourited_statuses');
+  return import('../../favourited_statuses');
 }
 
 export function FollowedTags () {
-  return import(/* webpackChunkName: "flavours/glitch/async/followed_tags" */'../../followed_tags');
+  return import('../../followed_tags');
 }
 
 export function BookmarkedStatuses () {
-  return import(/* webpackChunkName: "flavours/glitch/async/bookmarked_statuses" */'../../bookmarked_statuses');
+  return import('../../bookmarked_statuses');
 }
 
 export function Blocks () {
-  return import(/* webpackChunkName: "flavours/glitch/async/blocks" */'../../blocks');
+  return import('../../blocks');
 }
 
 export function DomainBlocks () {
-  return import(/* webpackChunkName: "flavours/glitch/async/domain_blocks" */'../../domain_blocks');
+  return import('../../domain_blocks');
 }
 
 export function Mutes () {
-  return import(/* webpackChunkName: "flavours/glitch/async/mutes" */'../../mutes');
+  return import('../../mutes');
 }
 
 export function MuteModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/mute_modal" */'../components/mute_modal');
+  return import('../components/mute_modal');
 }
 
 export function BlockModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/block_modal" */'../components/block_modal');
+  return import('../components/block_modal');
 }
 
 export function DomainBlockModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/modals/domain_block_modal" */'../components/domain_block_modal');
+  return import('../components/domain_block_modal');
 }
 
 export function ReportModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/report_modal" */'../components/report_modal');
+  return import('../components/report_modal');
 }
 
 export function SettingsModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/settings_modal" */'../../local_settings');
+  return import('../../local_settings');
 }
 
 export function IgnoreNotificationsModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/ignore_notifications_modal" */'../components/ignore_notifications_modal');
+  return import('../components/ignore_notifications_modal');
 }
 
 export function MediaGallery () {
-  return import(/* webpackChunkName: "flavours/glitch/async/media_gallery" */'../../../components/media_gallery');
+  return import('../../../components/media_gallery');
 }
 
 export function Video () {
-  return import(/* webpackChunkName: "flavours/glitch/async/video" */'../../video');
+  return import('../../video');
 }
 
 export function EmbedModal () {
-  return import(/* webpackChunkName: "flavours/glitch/async/embed_modal" */'../components/embed_modal');
+  return import('../components/embed_modal');
 }
 
 export function ListAdder () {
-  return import(/* webpackChunkName: "features/glitch/async/list_adder" */'../../list_adder');
+  return import('../../list_adder');
 }
 
 export function Tesseract () {
-  return import(/*webpackChunkName: "tesseract" */'tesseract.js');
+  return import('tesseract.js');
 }
 
 export function Audio () {
-  return import(/* webpackChunkName: "features/glitch/async/audio" */'../../audio');
+  return import('../../audio');
 }
 
 export function Directory () {
-  return import(/* webpackChunkName: "features/glitch/async/directory" */'../../directory');
+  return import('../../directory');
 }
 
 export function OnboardingProfile () {
-  return import(/* webpackChunkName: "features/glitch/async/onboarding" */'../../onboarding/profile');
+  return import('../../onboarding/profile');
 }
 
 export function OnboardingFollows () {
-  return import(/* webpackChunkName: "features/glitch/async/onboarding" */'../../onboarding/follows');
+  return import('../../onboarding/follows');
 }
 
 export function CompareHistoryModal () {
-  return import(/*webpackChunkName: "flavours/glitch/async/compare_history_modal" */'../components/compare_history_modal');
+  return import('../components/compare_history_modal');
 }
 
 export function Explore () {
-  return import(/* webpackChunkName: "flavours/glitch/async/explore" */'../../explore');
+  return import('../../explore');
 }
 
 export function Search () {
-  return import(/* webpackChunkName: "features/glitch/async/explore" */'../../search');
+  return import('../../search');
 }
 
 export function FilterModal () {
-  return import(/*webpackChunkName: "flavours/glitch/async/filter_modal" */'../components/filter_modal');
+  return import('../components/filter_modal');
 }
 
 export function InteractionModal () {
-  return import(/*webpackChunkName: "flavours/glitch/async/modals/interaction_modal" */'../../interaction_modal');
+  return import('../../interaction_modal');
 }
 
 export function SubscribedLanguagesModal () {
-  return import(/*webpackChunkName: "flavours/glitch/async/modals/subscribed_languages_modal" */'../../subscribed_languages_modal');
+  return import('../../subscribed_languages_modal');
 }
 
 export function ClosedRegistrationsModal () {
-  return import(/*webpackChunkName: "flavours/glitch/async/modals/closed_registrations_modal" */'../../closed_registrations_modal');
+  return import('../../closed_registrations_modal');
 }
 
 export function About () {
-  return import(/*webpackChunkName: "features/glitch/async/about" */'../../about');
+  return import('../../about');
 }
 
 export function PrivacyPolicy () {
-  return import(/*webpackChunkName: "features/glitch/async/privacy_policy" */'../../privacy_policy');
+  return import('../../privacy_policy');
 }
 
 export function TermsOfService () {
-  return import(/*webpackChunkName: "features/glitch/async/terms_of_service" */'../../terms_of_service');
+  return import('../../terms_of_service');
 }
 
 export function NotificationRequests () {
-  return import(/*webpackChunkName: "features/glitch/notifications/requests" */'../../notifications/requests');
+  return import('../../notifications/requests');
 }
 
 export function NotificationRequest () {
-  return import(/*webpackChunkName: "features/glitch/notifications/request" */'../../notifications/request');
+  return import('../../notifications/request');
 }
 
 export function LinkTimeline () {
-  return import(/*webpackChunkName: "features/glitch/link_timeline" */'../../link_timeline');
+  return import('../../link_timeline');
 }
 
 export function AnnualReportModal () {
-  return import(/*webpackChunkName: "flavours/glitch/async/modals/annual_report_modal" */'../components/annual_report_modal');
+  return import('../components/annual_report_modal');
 }
 
 export function ListEdit () {
-  return import(/*webpackChunkName: "flavours/glitch/async/lists" */'../../lists/new');
+  return import('../../lists/new');
 }
 
 export function ListMembers () {
-  return import(/* webpackChunkName: "flavours/glitch/async/lists" */'../../lists/members');
+  return import('../../lists/members');
 }

@@ -12,7 +12,7 @@ module ThemingConcern
   def current_skin
     @current_skin ||= begin
       skins = Themes.instance.skins_for(current_flavour)
-      [current_user&.setting_skin, Setting.skin, 'system', 'default'].find { |skin| skins.include?(skin) }
+      [current_user&.setting_skin, Setting.skin, 'system', 'application'].find { |skin| skins.include?(skin) }
     end
   end
 

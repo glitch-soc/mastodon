@@ -2,8 +2,8 @@
 @use 'mixins';
 @use 'variables';
 @use 'css_variables';
-@use 'styles/fonts/roboto';
-@use 'styles/fonts/roboto-mono';
+@use '@/styles/fonts/roboto';
+@use '@/styles/fonts/roboto-mono';
 
 @use 'reset';
 @use 'basics';

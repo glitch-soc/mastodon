@@ -69,7 +69,7 @@ class Themes
 
   def skins_for(name)
     skins = @flavours[name]['skins']
-    skins.include?('default') && skins.include?('mastodon-light') ? ['system'] + skins : skins
+    skins.include?('application') && skins.include?('mastodon-light') ? ['system'] + skins : skins
   end
 
   def flavours_and_skins

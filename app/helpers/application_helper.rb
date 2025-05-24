@@ -248,22 +248,8 @@ module ApplicationHelper
   end
 
   # glitch-soc addition to handle the multiple flavors
-  def preload_locale_pack
-    supported_locales = Themes.instance.flavour(current_flavour)['locales']
-    preload_pack_asset "locales/#{current_flavour}/#{I18n.locale}-json.js" if supported_locales.include?(I18n.locale.to_s)
-  end
-
-  def flavoured_javascript_pack_tag(pack_name, **)
-    javascript_pack_tag("flavours/#{current_flavour}/#{pack_name}", **)
-  end
-
-  def flavoured_stylesheet_pack_tag(pack_name, **)
-    stylesheet_pack_tag("flavours/#{current_flavour}/#{pack_name}", **)
-  end
-
-  def preload_signed_in_js_packs
-    preload_files = Themes.instance.flavour(current_flavour)&.fetch('signed_in_preload', nil) || []
-    safe_join(preload_files.map { |entry| preload_pack_asset entry })
+  def flavoured_vite_typescript_tag(pack_name, **)
+    vite_typescript_tag("#{Themes.instance.flavour(current_flavour)['pack_directory'].delete_prefix('app/javascript/')}/#{pack_name}", **)
   end
 
   private
