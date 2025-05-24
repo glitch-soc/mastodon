@@ -1,4 +1,3 @@
-import '@/entrypoints/public-path';
 import ready from 'flavours/glitch/ready';
 
 ready(() => {

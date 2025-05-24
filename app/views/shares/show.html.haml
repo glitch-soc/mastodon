@@ -1,5 +1,5 @@
 - content_for :header_tags do
   = render_initial_state
-  = flavoured_javascript_pack_tag 'share', crossorigin: 'anonymous'
+  = flavoured_vite_typescript_tag 'share.tsx', crossorigin: 'anonymous'
 
 #mastodon-compose{ data: { props: Oj.dump(default_props) } }

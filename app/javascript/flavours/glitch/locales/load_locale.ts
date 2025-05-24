@@ -5,6 +5,13 @@ import { isLocaleLoaded, setLocale } from './global_locale';
 
 const localeLoadingSemaphore = new Semaphore(1);
 
+const upstreamLocaleFiles = import.meta.glob<{ default: LocaleData['messages'] }>([
+  '@/mastodon/locales/*.json',
+]);
+const localeFiles = import.meta.glob<{ default: LocaleData['messages'] }>([
+  './*.json',
+]);
+
 export async function loadLocale() {
   // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- we want to match empty strings
   const locale = document.querySelector<HTMLElement>('html')?.lang || 'en';
@@ -17,21 +24,23 @@ export async function loadLocale() {
     // if the locale is already set, then do nothing
     if (isLocaleLoaded()) return;
 
-    const upstreamLocaleData = await import(
-      /* webpackMode: "lazy" */
-      /* webpackChunkName: "locales/vanilla/[request]" */
-      /* webpackInclude: /\.json$/ */
-      /* webpackPreload: true */
-      `mastodon/locales/${locale}.json`
-    ) as LocaleData['messages'];
+    // If there is no locale file, then fallback to english
+    const upstreamLocaleFile = Object.hasOwn(upstreamLocaleFiles, `@/mastodon/locales/${locale}.json`)
+      ? upstreamLocaleFiles[`/mastodon/locales/${locale}.json`]
+      : upstreamLocaleFiles['/mastodon/locales/en.json'];
 
-    const localeData = await import(
-      /* webpackMode: "lazy" */
-      /* webpackChunkName: "locales/glitch/[request]" */
-      /* webpackInclude: /\.json$/ */
-      /* webpackPreload: true */
-      `flavours/glitch/locales/${locale}.json`
-    ) as LocaleData['messages'];
+    if (!upstreamLocaleFile) throw new Error('Could not load the upstream locale JSON file');
+
+    const { default: upstreamLocaleData } = await upstreamLocaleFile();
+
+    // If there is no locale file, then fallback to english
+    const localeFile = Object.hasOwn(localeFiles, `./${locale}.json`)
+      ? localeFiles[`./${locale}.json`]
+      : localeFiles['./en.json'];
+
+    if (!localeFile) throw new Error('Could not load the locale JSON file');
+
+    const { default: localeData } = await localeFile();
 
     setLocale({ messages: { ...upstreamLocaleData, ...localeData }, locale });
   });

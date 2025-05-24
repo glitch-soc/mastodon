@@ -1,7 +1,7 @@
 //  win95 theme from cybrespace.
 
 //  Modified by kibi! to use webpack package syntax for urls (eg,
-//  `url(~images/…)`) for easy importing into skins.
+//  `url(@/images/…)`) for easy importing into skins.
 
 @use 'mastodon/functions' as *;
 
@@ -98,7 +98,7 @@ $win95-cyan: #008080;
 
 @font-face {
   font-family:"premillenium";
-  src: url('~fonts/premillenium/MSSansSerif.ttf') format('truetype');
+  src: url('@/fonts/premillenium/MSSansSerif.ttf') format('truetype');
 }
 
 /* borrowed from cybrespace style: wider columns and full column width images */
@@ -254,7 +254,7 @@ body.admin {
   font-size:0px;
   color:$win95-bg;
 
-  background-image: url("~images/start.png");
+  background-image: url("@/images/start.png");
   background-repeat:no-repeat;
   background-position:8%;
   background-clip:padding-box;
@@ -276,7 +276,7 @@ body.admin {
     left:15px;
     width:132px;
     height:117px;
-    background-image:url("~images/clippy_wave.gif"), url("~images/clippy_frame.png");
+    background-image:url("@/images/clippy_wave.gif"), url("@/images/clippy_frame.png");
     background-repeat:no-repeat;
     background-position: 4px 20px, 0px 0px;
     z-index:0;
@@ -916,7 +916,7 @@ body.admin {
   font-size:0px;
   color:$win95-bg;
 
-  background-image: url("~images/start.png");
+  background-image: url("@/images/start.png");
   background-repeat:no-repeat;
   background-position:8%;
   background-clip:padding-box;
@@ -1259,7 +1259,7 @@ body.admin {
 }
 
 .column-link__badge {
-  background-image: url('~images/alert_badge.png');
+  background-image: url('@/images/alert_badge.png');
   background-repeat: no-repeat;
   background-size:contain;
   background-color:transparent;
@@ -1477,97 +1477,97 @@ body.admin {
 }
 
 .column-link[href="/web/timelines/home"] {
-  background-image: url("~images/icon_home.png");
-  &:hover { background-image: url("~images/icon_home.png"); }
+  background-image: url("@/images/icon_home.png");
+  &:hover { background-image: url("@/images/icon_home.png"); }
 }
 .column-link[href="/web/notifications"] {
-  background-image: url("~images/icon_notifications.png");
-  &:hover { background-image: url("~images/icon_notifications.png"); }
+  background-image: url("@/images/icon_notifications.png");
+  &:hover { background-image: url("@/images/icon_notifications.png"); }
 }
 .column-link[href="/web/timelines/public"] {
-  background-image: url("~images/icon_public.png");
-  &:hover { background-image: url("~images/icon_public.png"); }
+  background-image: url("@/images/icon_public.png");
+  &:hover { background-image: url("@/images/icon_public.png"); }
 }
 .column-link[href="/web/timelines/public/local"] {
-  background-image: url("~images/icon_local.png");
-  &:hover { background-image: url("~images/icon_local.png"); }
+  background-image: url("@/images/icon_local.png");
+  &:hover { background-image: url("@/images/icon_local.png"); }
 }
 .column-link[href="/web/timelines/direct"] {
-  background-image: url("~images/icon_direct.png");
-  &:hover { background-image: url("~images/icon_direct.png"); }
+  background-image: url("@/images/icon_direct.png");
+  &:hover { background-image: url("@/images/icon_direct.png"); }
 }
 .column-link[href="/web/pinned"] {
-  background-image: url("~images/icon_pin.png");
-  &:hover { background-image: url("~images/icon_pin.png"); }
+  background-image: url("@/images/icon_pin.png");
+  &:hover { background-image: url("@/images/icon_pin.png"); }
 }
 .column-link[href="/web/favourites"] {
-  background-image: url("~images/icon_likes.png");
-  &:hover { background-image: url("~images/icon_likes.png"); }
+  background-image: url("@/images/icon_likes.png");
+  &:hover { background-image: url("@/images/icon_likes.png"); }
 }
 .column-link[href="/web/lists"] {
-  background-image: url("~images/icon_lists.png");
-  &:hover { background-image: url("~images/icon_lists.png"); }
+  background-image: url("@/images/icon_lists.png");
+  &:hover { background-image: url("@/images/icon_lists.png"); }
 }
 .column-link[href="/web/follow_requests"] {
-  background-image: url("~images/icon_follow_requests.png");
-  &:hover { background-image: url("~images/icon_follow_requests.png"); }
+  background-image: url("@/images/icon_follow_requests.png");
+  &:hover { background-image: url("@/images/icon_follow_requests.png"); }
 }
 .column-link[href="/web/blocks"] {
-  background-image: url("~images/icon_blocks.png");
-  &:hover { background-image: url("~images/icon_blocks.png"); }
+  background-image: url("@/images/icon_blocks.png");
+  &:hover { background-image: url("@/images/icon_blocks.png"); }
 }
 .column-link[href="/web/domain_blocks"] {
-  background-image: url("~images/icon_domain_blocks.png");
-  &:hover { background-image: url("~images/icon_domain_blocks.png"); }
+  background-image: url("@/images/icon_domain_blocks.png");
+  &:hover { background-image: url("@/images/icon_domain_blocks.png"); }
 }
 .column-link[href="/web/mutes"] {
-  background-image: url("~images/icon_mutes.png");
-  &:hover { background-image: url("~images/icon_mutes.png"); }
+  background-image: url("@/images/icon_mutes.png");
+  &:hover { background-image: url("@/images/icon_mutes.png"); }
 }
 .column-link[href="/web/directory"] {
-  background-image: url("~images/icon_profile_directory.png");
-  &:hover { background-image: url("~images/icon_profile_directory.png"); }
+  background-image: url("@/images/icon_profile_directory.png");
+  &:hover { background-image: url("@/images/icon_profile_directory.png"); }
 }
 .column-link[href="/web/bookmarks"] {
-  background-image: url("~images/icon_bookmarks.png");
-  &:hover { background-image: url("~images/icon_bookmarks.png"); }
+  background-image: url("@/images/icon_bookmarks.png");
+  &:hover { background-image: url("@/images/icon_bookmarks.png"); }
 }
 
 .getting-started__footer ul li a[href="/web/keyboard-shortcuts"] {
-  background-image: url("~images/icon_keyboard_shortcuts.png");
-  &:hover { background-image: url("~images/icon_keyboard_shortcuts.png"); }
+  background-image: url("@/images/icon_keyboard_shortcuts.png");
+  &:hover { background-image: url("@/images/icon_keyboard_shortcuts.png"); }
 }
 .getting-started__footer ul li a[href="/invites"] {
-  background-image: url("~images/icon_invite.png");
-  &:hover { background-image: url("~images/icon_invite.png"); }
+  background-image: url("@/images/icon_invite.png");
+  &:hover { background-image: url("@/images/icon_invite.png"); }
 }
 .getting-started__footer ul li a[href="/terms"] {
-  background-image: url("~images/icon_tos.png");
-  &:hover { background-image: url("~images/icon_tos.png"); }
+  background-image: url("@/images/icon_tos.png");
+  &:hover { background-image: url("@/images/icon_tos.png"); }
 }
 .getting-started__footer ul li a[href="https://docs.joinmastodon.org"] {
-  background-image: url("~images/icon_docs.png");
-  &:hover { background-image: url("~images/icon_docs.png"); }
+  background-image: url("@/images/icon_docs.png");
+  &:hover { background-image: url("@/images/icon_docs.png"); }
 }
 .getting-started__footer ul li a[href="/about/more"] {
-  background-image: url("~images/icon_about.png");
-  &:hover { background-image: url("~images/icon_about.png"); }
+  background-image: url("@/images/icon_about.png");
+  &:hover { background-image: url("@/images/icon_about.png"); }
 }
 .getting-started__footer ul li a[href="/auth/sign_out"] {
-  background-image: url("~images/icon_logout.png");
-  &:hover { background-image: url("~images/icon_logout.png"); }
+  background-image: url("@/images/icon_logout.png");
+  &:hover { background-image: url("@/images/icon_logout.png"); }
 }
 .getting-started__footer ul li a[href="https://joinmastodon.org/apps"] {
-  background-image: url("~images/icon_mobile_apps.png");
-  &:hover { background-image: url("~images/icon_mobile_apps.png"); }
+  background-image: url("@/images/icon_mobile_apps.png");
+  &:hover { background-image: url("@/images/icon_mobile_apps.png"); }
 }
 .getting-started__footer ul li a[href="/settings/applications"] {
-  background-image: url("~images/icon_developers.png");
-  &:hover { background-image: url("~images/icon_developers.png"); }
+  background-image: url("@/images/icon_developers.png");
+  &:hover { background-image: url("@/images/icon_developers.png"); }
 }
 .getting-started__footer ul li a[href="/auth/edit"] {
-  background-image: url("~images/icon_settings.png");
-  &:hover { background-image: url("~images/icon_settings.png"); }
+  background-image: url("@/images/icon_settings.png");
+  &:hover { background-image: url("@/images/icon_settings.png"); }
 }
 
 .column .static-content.getting-started {

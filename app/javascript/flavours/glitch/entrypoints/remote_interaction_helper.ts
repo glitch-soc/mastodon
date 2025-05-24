@@ -8,8 +8,6 @@ and performs no other task.
 
 */
 
-import '@/entrypoints/public-path';
-
 import axios from 'axios';
 
 interface JRDLink {
