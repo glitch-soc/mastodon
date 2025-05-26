@@ -25,7 +25,7 @@ export async function loadLocale() {
     if (isLocaleLoaded()) return;
 
     // If there is no locale file, then fallback to english
-    const upstreamLocaleFile = Object.hasOwn(upstreamLocaleFiles, `@/mastodon/locales/${locale}.json`)
+    const upstreamLocaleFile = Object.hasOwn(upstreamLocaleFiles, `/mastodon/locales/${locale}.json`)
       ? upstreamLocaleFiles[`/mastodon/locales/${locale}.json`]
       : upstreamLocaleFiles['/mastodon/locales/en.json'];
 
