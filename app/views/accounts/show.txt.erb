@@ -1,0 +1,39 @@
+<% account_url = params[:tag].present? ? short_account_tag_url(@account, params[:tag]) : short_account_url(@account) %>
+# Twtxt is an open, distributed microblogging platform that
+# uses human-readable text files, common transport protocols,
+# and free software.
+#
+# Learn more about twtxt at https://github.com/buckket/twtxt
+#
+# The numeric value between the date and the status text (#...) is the id
+# of that toot, so you can easily find the URL of a toot.
+#
+# By default, you will only see the 20 most recent statuses.
+#
+# You can also set parameters "limit" and "offset" in your query string if
+# you want to fetch more statuses. Please note that you can only fetch up
+# to 200 statuses at a time.
+#
+# E.g. to get the latest 200 statuses:
+# <%= account_url %>.txt?limit=200
+#
+# E.g. to skip the latest 200 status, and fetch the 200 previous ones:
+# <%= account_url %>.txt?offset=200&limit=200
+#
+# nick        = @<%= @account.local_username_and_domain %>
+# url         = <%= account_url %>.txt
+# avatar      = <%= full_asset_url(@account.avatar.url(:original)) %>
+# description = <%= I18n.t('rss.descriptions.account', acct: @account.local_username_and_domain) %>
+
+<% @statuses.each do |status| %>
+<%   plain_text_status = (extract_status_plain_text status).gsub("\n", "\u2028") %>
+<%   status.ordered_media_attachments.each do |media| %>
+<%     media_url = full_asset_url(media.file.url(:original, false)) %>
+<%     media_description = media.description.nil? ? "" : media.description.gsub("\n", " ") %>
+<%     plain_text_status += " ![#{media_description}](#{media_url})" %>
+<%   end %>
+<%   if !plain_text_status.empty? %>
+<%     plain_text_status = " (\##{status.id}) #{plain_text_status}" %>
+<%=    status.created_at.rfc3339 %>	<%= plain_text_status %>
+<%   end %>
+<% end %>
