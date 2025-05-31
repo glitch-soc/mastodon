@@ -28,10 +28,13 @@ import { Permalink } from 'flavours/glitch/components/permalink';
 import { PictureInPicturePlaceholder } from 'flavours/glitch/components/picture_in_picture_placeholder';
 import StatusContent from 'flavours/glitch/components/status_content';
 import { QuotedStatus } from 'flavours/glitch/components/status_quoted';
+import StatusReactions from 'flavours/glitch/components/status_reactions';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
 import { Audio } from 'flavours/glitch/features/audio';
 import scheduleIdleTask from 'flavours/glitch/features/ui/util/schedule_idle_task';
 import { Video } from 'flavours/glitch/features/video';
+import { useIdentity } from 'flavours/glitch/identity_context';
+import { visibleReactions } from 'flavours/glitch/initial_state';
 import { useAppSelector } from 'flavours/glitch/store';
 
 import Card from './card';
@@ -56,6 +59,8 @@ export const DetailedStatus: React.FC<{
   pictureInPicture: any;
   onToggleHidden?: (status: any) => void;
   onToggleMediaVisibility?: () => void;
+  onReactionAdd?: (status: any, name: string, url: string) => void;
+  onReactionRemove?: (status: any, name: string) => void;
   expanded: boolean;
 }> = ({
   status,
@@ -71,12 +76,15 @@ export const DetailedStatus: React.FC<{
   pictureInPicture,
   onToggleMediaVisibility,
   onToggleHidden,
+  onReactionAdd,
+  onReactionRemove,
   expanded,
 }) => {
   const properStatus = status?.get('reblog') ?? status;
   const [height, setHeight] = useState(0);
   const [showDespiteFilter, setShowDespiteFilter] = useState(false);
   const nodeRef = useRef<HTMLDivElement>();
+  const { signedIn } = useIdentity();
 
   const rewriteMentions = useAppSelector(
     (state) => state.local_settings.get('rewrite_mentions', false) as boolean,
@@ -425,6 +433,16 @@ export const DetailedStatus: React.FC<{
 
         {/* This is a glitch-soc addition to have a placeholder */}
         {!expanded && <MentionsPlaceholder status={status} />}
+
+        {visibleReactions && visibleReactions > 0 && (
+          <StatusReactions
+            statusId={status.get('id')}
+            reactions={status.get('reactions')}
+            addReaction={onReactionAdd}
+            removeReaction={onReactionRemove}
+            canReact={signedIn}
+          />
+        )}
 
         <div className='detailed-status__meta'>
           <div className='detailed-status__meta__line'>
