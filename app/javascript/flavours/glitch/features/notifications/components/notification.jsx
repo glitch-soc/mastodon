@@ -187,7 +187,7 @@ class Notification extends ImmutablePureComponent {
 
   renderReaction (notification) {
     return (
-      <StatusContainer
+      <StatusQuoteManager
         containerId={notification.get('id')}
         hidden={!!this.props.hidden}
         id={notification.get('status')}
