@@ -7613,6 +7613,7 @@ img.modal-warning {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.1s ease;
+    will-change: opacity, pointer-events;
 
     &.active {
       opacity: 1;
@@ -7718,6 +7719,9 @@ img.modal-warning {
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0 5px;
+
+    // Ensure digits maintain a consistent width
+    font-variant-numeric: tabular-nums;
   }
 
   &__time-sep,
@@ -11211,6 +11215,11 @@ noscript {
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
     }
+  }
+
+  &__limited-account-note {
+    text-align: center;
+    font-weight: 500;
   }
 
   .display-name {
