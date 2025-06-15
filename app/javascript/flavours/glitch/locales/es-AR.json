@@ -1,9 +1,7 @@
 {
   "about.fork_disclaimer": "Glitch-soc es software gratuito, de código abierto, bifurcado de Mastodon.",
   "account.disclaimer_full": "La información aquí presentada puede reflejar de manera incompleta el perfil del usuario.",
-  "account.featured_tags.title": "Etiquetas destacadas de {name}",
   "account.follows": "Sigue",
-  "account.follows_you": "Te sigue",
   "account.suspended_disclaimer_full": "Este usuario ha sido suspendido por un moderador.",
   "account.view_full_profile": "Ver perfil completo",
   "boost_modal.missing_description": "Esta publicación contiene medios sin descripción",
@@ -63,6 +61,8 @@
   "settings.content_warnings_unfold_opts": "Opciones de Auto-desplegado",
   "settings.deprecated_setting": "Esta configuración ahora está controlada desde {settings_page_link} de Mastodon",
   "settings.enable_content_warnings_auto_unfold": "Descolapsar automáticamente advertencias de contenido",
+  "settings.fullwidth_view": "Estirar columnas al ancho total (solo en Modo escritorio)",
+  "settings.fullwidth_view_hint": "Estira las columnas para rellenar todo el espacio disponible.",
   "settings.general": "General",
   "settings.hicolor_privacy_icons": "Íconos de privacidad más visibles",
   "settings.hicolor_privacy_icons.hint": "Mostrar iconos de privacidad en colores brillantes y fácilmente distinguibles",
