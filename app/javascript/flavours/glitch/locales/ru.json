@@ -2,7 +2,6 @@
   "about.fork_disclaimer": "Glitch-soc — это свободное программное обеспечение с открытым исходным кодом, ответвлённое от Mastodon.",
   "account.disclaimer_full": "Приведённые ниже сведения могут не полностью соответствовать профилю пользователя.",
   "account.follows": "Подписки",
-  "account.follows_you": "Подписан(а) на вас",
   "account.suspended_disclaimer_full": "Этот пользователь был заблокирован модератором.",
   "account.view_full_profile": "Открыть полный профиль",
   "boost_modal.missing_description": "Этот пост содержит медиафайлы без описания",

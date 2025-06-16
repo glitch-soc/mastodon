@@ -2,7 +2,6 @@
   "about.fork_disclaimer": "Glitch-socはMastodonからフォークされたフリーなオープンソースソフトウェアです。",
   "account.disclaimer_full": "このユーザー情報は不正確な可能性があります。",
   "account.follows": "フォロー",
-  "account.follows_you": "フォローされています",
   "account.suspended_disclaimer_full": "このユーザーはモデレータにより停止されました。",
   "account.view_full_profile": "正確な情報を見る",
   "boost_modal.missing_description": "このトゥートには少なくとも1つの画像に説明が付与されていません",
