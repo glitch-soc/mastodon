@@ -47,7 +47,11 @@
   "navigation_bar.app_settings": "App settings",
   "navigation_bar.keyboard_shortcuts": "Keyboard shortcuts",
   "navigation_bar.misc": "Misc",
+  "notification.reaction": "{name} reacted to your post",
+  "notification.reaction.name_and_others": "{name} and {count, plural, one {# other} other {# others}} reacted to your post",
   "notifications.column_settings.filter_bar.show_bar": "Show filter bar",
+  "notifications.column_settings.reaction": "Reactions:",
+  "notifications.filter.reactions": "Reactions",
   "settings.always_show_spoilers_field": "Always enable the Content Warning field",
   "settings.close": "Close",
   "settings.compose_box_opts": "Compose box",
@@ -120,5 +124,6 @@
   "status.in_reply_to": "This toot is a reply",
   "status.is_poll": "This toot is a poll",
   "status.local_only": "Only visible from your instance",
+  "status.react": "React",
   "status.show_filter_reason": "Show anyway"
 }
