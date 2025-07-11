@@ -56,6 +56,10 @@ const mapStateToProps = (state, { params: { acct, id, tagged }, withReplies = fa
 
 class AccountTimeline extends ImmutablePureComponent {
 
+  static contextTypes = {
+    identity: PropTypes.object,
+  };
+
   static propTypes = {
     params: PropTypes.shape({
       acct: PropTypes.string,
@@ -75,7 +79,11 @@ class AccountTimeline extends ImmutablePureComponent {
   };
 
   _load () {
-    const { accountId, withReplies, params: { tagged }, dispatch } = this.props;
+    const { accountId, withReplies, remote, remoteUrl, params: { tagged }, dispatch } = this.props;
+
+    if (remote && !this.context.identity.signedIn) {
+      window.location.replace(remoteUrl);
+    }
 
     dispatch(fetchAccount(accountId));
 
