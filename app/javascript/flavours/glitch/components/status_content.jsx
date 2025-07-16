@@ -190,7 +190,7 @@ class StatusContent extends PureComponent {
         link.classList.add('unhandled-link');
 
         link.setAttribute('target', '_blank');
-        link.setAttribute('rel', 'noopener nofollow noreferrer');
+        link.setAttribute('rel', 'noopener nofollow');
 
         try {
           if (tagLinks && isLinkMisleading(link)) {
