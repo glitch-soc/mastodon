@@ -6,7 +6,6 @@
   "account.view_full_profile": "Ver o perfil completo",
   "boost_modal.missing_description": "Este post contém alguns media sem descrição",
   "column.favourited_by": "Adicionado aos favoritos de",
-  "column.heading": "Diversos",
   "moved_to_warning": "Esta conta mudou-se para {moved_to_link} e, portanto, pode não aceitar novos seguidores.",
   "notifications.column_settings.filter_bar.show_bar": "Mostrar barra de filtros",
   "settings.always_show_spoilers_field": "Mostrar sempre o campo Aviso de Conteúdo",
