@@ -13,6 +13,11 @@ import {
   BOOKMARK_FAIL,
   UNBOOKMARK_REQUEST,
   UNBOOKMARK_FAIL,
+  REACTION_UPDATE,
+  REACTION_ADD_FAIL,
+  REACTION_REMOVE_FAIL,
+  REACTION_ADD_REQUEST,
+  REACTION_REMOVE_REQUEST,
 } from '../actions/interactions';
 import {
   reblog,
@@ -42,6 +47,43 @@ const deleteStatus = (state, id, references) => {
 
   return state.delete(id);
 };
+
+const updateReaction = (state, id, name, updater) => state.update(
+  id,
+  status => status.update(
+    'reactions',
+    reactions => {
+      const index = reactions.findIndex(reaction => reaction.get('name') === name);
+      if (index > -1) {
+        return reactions.update(index, reaction => updater(reaction));
+      } else {
+        return reactions.push(updater(fromJS({ name, count: 0 })));
+      }
+    },
+  ),
+);
+
+const updateReactionCount = (state, reaction) => updateReaction(state, reaction.status_id, reaction.name, x => x.set('count', reaction.count));
+
+// The url parameter is only used when adding a new custom emoji reaction
+// (one that wasn't in the reactions list before) because we don't have its
+// URL yet.  In all other cases, it's undefined.
+const addReaction = (state, id, name, url) => updateReaction(
+  state,
+  id,
+  name,
+  x => x.set('me', true)
+    .update('count', n => n + 1)
+    .update('url', old => old ? old : url)
+    .update('static_url', old => old ? old : url),
+);
+
+const removeReaction = (state, id, name) => updateReaction(
+  state,
+  id,
+  name,
+  x => x.set('me', false).update('count', n => n - 1),
+);
 
 const statusTranslateSuccess = (state, id, translation) => {
   return state.withMutations(map => {
@@ -95,6 +137,14 @@ export default function statuses(state = initialState, action) {
     return state.get(action.status.get('id')) === undefined ? state : state.setIn([action.status.get('id'), 'bookmarked'], false);
   case UNBOOKMARK_FAIL:
     return state.get(action.status.get('id')) === undefined ? state : state.setIn([action.status.get('id'), 'bookmarked'], true);
+  case REACTION_UPDATE:
+    return updateReactionCount(state, action.reaction);
+  case REACTION_ADD_REQUEST:
+  case REACTION_REMOVE_FAIL:
+    return addReaction(state, action.id, action.name, action.url);
+  case REACTION_REMOVE_REQUEST:
+  case REACTION_ADD_FAIL:
+    return removeReaction(state, action.id, action.name);
   case STATUS_MUTE_SUCCESS:
     return state.setIn([action.id, 'muted'], true);
   case STATUS_UNMUTE_SUCCESS:
