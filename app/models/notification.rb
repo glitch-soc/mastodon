@@ -29,6 +29,7 @@ class Notification < ApplicationRecord
     'Follow' => :follow,
     'FollowRequest' => :follow_request,
     'Favourite' => :favourite,
+    'StatusReaction' => :reaction,
     'Poll' => :poll,
     'Quote' => :quote,
   }.freeze
@@ -51,6 +52,9 @@ class Notification < ApplicationRecord
       filterable: true,
     }.freeze,
     favourite: {
+      filterable: true,
+    }.freeze,
+    reaction: {
       filterable: true,
     }.freeze,
     poll: {
@@ -87,6 +91,7 @@ class Notification < ApplicationRecord
     mention: [mention: :status],
     quote: [quote: :status],
     favourite: [favourite: :status],
+    reaction: [status_reaction: :status],
     poll: [poll: :status],
     update: :status,
     'admin.report': [report: :target_account],
@@ -102,6 +107,7 @@ class Notification < ApplicationRecord
     belongs_to :follow, inverse_of: :notification
     belongs_to :follow_request, inverse_of: :notification
     belongs_to :favourite, inverse_of: :notification
+    belongs_to :status_reaction, inverse_of: :notification
     belongs_to :poll, inverse_of: false
     belongs_to :report, inverse_of: false
     belongs_to :account_relationship_severance_event, inverse_of: false
@@ -126,6 +132,8 @@ class Notification < ApplicationRecord
       status&.reblog
     when :favourite
       favourite&.status
+    when :reaction
+      status_reaction&.status
     when :mention
       mention&.status
     when :quote
@@ -191,6 +199,8 @@ class Notification < ApplicationRecord
     end
   end
 
+  alias reaction status_reaction
+
   after_initialize :set_from_account
   before_validation :set_from_account
 
@@ -202,7 +212,7 @@ class Notification < ApplicationRecord
     return unless new_record?
 
     case activity_type
-    when 'Status', 'Follow', 'Favourite', 'FollowRequest', 'Poll', 'Report', 'Quote'
+    when 'Status', 'Follow', 'Favourite', 'StatusReaction', 'FollowRequest', 'Poll', 'Report', 'Quote'
       self.from_account_id = activity&.account_id
     when 'Mention'
       self.from_account_id = activity&.status&.account_id
