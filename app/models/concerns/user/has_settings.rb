@@ -127,6 +127,10 @@ module User::HasSettings
     settings['hide_followers_count']
   end
 
+  def setting_visible_reactions
+    integer_cast_setting('visible_reactions', 0)
+  end
+
   def setting_default_quote_policy
     settings['default_quote_policy'] || 'public'
   end
@@ -173,5 +177,15 @@ module User::HasSettings
 
   def hide_all_media?
     settings['web.display_media'] == 'hide_all'
+  end
+
+  def integer_cast_setting(key, min = nil, max = nil)
+    i = ActiveModel::Type::Integer.new.cast(settings[key])
+    # the cast above doesn't return a number if passed the string "e"
+    i = 0 unless i.is_a? Numeric
+    return min if !min.nil? && i < min
+    return max if !max.nil? && i > max
+
+    i
   end
 end
