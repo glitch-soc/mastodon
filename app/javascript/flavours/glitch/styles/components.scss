@@ -1543,6 +1543,7 @@ body > [data-popper-placement] {
 
     & > .status__content,
     & > .status__action-bar,
+    & > .reactions-bar,
     & > .media-gallery,
     & > .video-player,
     & > .audio-player,
@@ -1787,6 +1788,14 @@ body > [data-popper-placement] {
 
   &-spacer {
     flex-grow: 1;
+  }
+
+  & > .emoji-picker-dropdown {
+    height: 24px;
+
+    > .emoji-button {
+      padding: 0;
+    }
   }
 }
 
@@ -5091,6 +5100,10 @@ a.status-card {
 .detailed-status__button {
   flex: 1 1 auto;
   text-align: center;
+}
+
+.detailed-status__button .emoji-button {
+  padding: 0;
 }
 
 .column-settings {
@@ -9288,6 +9301,8 @@ noscript {
   }
 
   &--empty {
+    margin-top: 0;
+
     .emoji-button {
       padding: 0;
     }
@@ -11132,6 +11147,10 @@ noscript {
     color: $gold-star;
   }
 
+  &--reaction &__icon {
+    color: $blurple-300;
+  }
+
   &--reblog &__icon {
     color: $valid-value-color;
   }
@@ -11345,6 +11364,7 @@ noscript {
 
   .status__content,
   .status__action-bar,
+  .reactions-bar,
   .media-gallery,
   .video-player,
   .audio-player,
