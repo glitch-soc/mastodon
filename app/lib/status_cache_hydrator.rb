@@ -71,6 +71,7 @@ class StatusCacheHydrator
     payload[:bookmarked] = Bookmark.exists?(account_id: account_id, status_id: status.id)
     payload[:pinned]     = StatusPin.exists?(account_id: account_id, status_id: status.id) if status.account_id == account_id
     payload[:filtered]   = mapped_applied_custom_filter(account_id, status)
+    payload[:reactions]  = serialized_reactions(account_id, status)
     # TODO: performance optimization by not loading `Account` twice
     payload[:quote_approval][:current_user] = status.quote_policy_for_account(Account.find_by(id: account_id)) if payload[:quote_approval]
     payload[:quote] = hydrate_quote_payload(payload[:quote], status.quote, account_id, nested:) if payload[:quote]
@@ -124,6 +125,16 @@ class StatusCacheHydrator
     ActiveModelSerializers::SerializableResource.new(
       filter,
       serializer: REST::FilterResultSerializer
+    ).as_json
+  end
+
+  def serialized_reactions(account_id, status)
+    reactions = status.reactions(account_id)
+    ActiveModelSerializers::SerializableResource.new(
+      reactions,
+      each_serializer: REST::ReactionSerializer,
+      scope: account_id, # terrible
+      scope_name: :current_user
     ).as_json
   end
 
