@@ -148,7 +148,7 @@ export const Conversation = ({ conversation, scrollKey }) => {
 
   menu.push({ text: intl.formatMessage(messages.delete), action: handleDelete });
 
-  const names = accounts.map(a => (
+  const names = accounts.map((account) => (
     <LinkedDisplayName displayProps={{account, variant: 'simple'}} key={account.get('id')} />
   )).reduce((prev, cur) => [prev, ', ', cur]);
 
