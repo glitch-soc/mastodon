@@ -4,6 +4,7 @@ class CustomEmojiFilter
   KEYS = %i(
     local
     remote
+    remote_only
     by_domain
     shortcode
   ).freeze
@@ -21,6 +22,8 @@ class CustomEmojiFilter
       next if key.to_s == 'page'
 
       scope.merge!(scope_for(key, value)) if value.present?
+
+      scope = CustomEmoji.remote_only if key.to_s == 'remote_only'
     end
 
     scope
@@ -34,6 +37,8 @@ class CustomEmojiFilter
       CustomEmoji.local.left_joins(:category).reorder(CustomEmojiCategory.arel_table[:name].asc.nulls_first).order(shortcode: :asc)
     when 'remote'
       CustomEmoji.remote
+    when 'remote_only'
+      CustomEmoji.remote_only
     when 'by_domain'
       CustomEmoji.where(domain: value)
     when 'shortcode'
