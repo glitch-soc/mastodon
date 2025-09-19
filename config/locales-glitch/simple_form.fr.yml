@@ -17,7 +17,7 @@ fr:
         setting_default_content_type_markdown: Markdown
         setting_default_content_type_plain: Texte brut
         setting_favourite_modal: Demander confirmation avant de mettre un post en favori (s'applique uniquement au mode Glitch)
-        setting_show_followers_count: Cacher votre nombre d'abonné·e·s
+        setting_show_followers_count: Montrez votre nombre d'abonnés
         setting_skin: Thème
         setting_system_emoji_font: Utiliser la police par défaut du système pour les émojis (s'applique uniquement au mode Glitch)
       notification_emails:
