@@ -38,6 +38,7 @@ const domParser = new DOMParser();
 
 const messages = defineMessages({
   quote_noun: { id: 'status.quote_noun', defaultMessage: 'Quote', description: 'Quote as a noun' },
+  contains_quote: { id: 'status.contains_quote', defaultMessage: 'Contains quote' },
   quote_cancel: { id: 'status.quote.cancel', defaultMessage: 'Cancel quote' },
 });
 
