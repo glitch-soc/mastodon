@@ -4,6 +4,7 @@ class Api::V1::Statuses::InteractionPoliciesController < Api::V1::Statuses::Base
   include Api::InteractionPoliciesConcern
 
   before_action -> { doorkeeper_authorize! :write, :'write:statuses' }
+  before_action -> { check_feature_enabled }
 
   def update
     authorize @status, :update?
@@ -19,6 +20,10 @@ class Api::V1::Statuses::InteractionPoliciesController < Api::V1::Statuses::Base
 
   def status_params
     params.permit(:quote_approval_policy)
+  end
+
+  def check_feature_enabled
+    raise ActionController::RoutingError unless Mastodon::Feature.outgoing_quotes_enabled?
   end
 
   def broadcast_updates!

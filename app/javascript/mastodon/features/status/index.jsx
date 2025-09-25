@@ -5,7 +5,6 @@ import { defineMessages, injectIntl } from 'react-intl';
 import classNames from 'classnames';
 import { Helmet } from 'react-helmet';
 import { withRouter } from 'react-router-dom';
-import { difference } from 'lodash';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
@@ -151,11 +150,6 @@ class Status extends ImmutablePureComponent {
     fullscreen: false,
     showMedia: defaultMediaVisibility(this.props.status),
     loadedStatusId: undefined,
-    /**
-     * Holds the ids of newly added replies, excluding the initial load.
-     * Used to highlight newly added replies in the UI
-     */
-    newRepliesIds: [],
   };
 
   UNSAFE_componentWillMount () {
@@ -468,7 +462,6 @@ class Status extends ImmutablePureComponent {
         previousId={i > 0 ? list[i - 1] : undefined}
         nextId={list[i + 1] || (ancestors && statusId)}
         rootId={statusId}
-        shouldHighlightOnMount={this.state.newRepliesIds.includes(id)}
       />
     ));
   }
@@ -502,19 +495,10 @@ class Status extends ImmutablePureComponent {
   }
 
   componentDidUpdate (prevProps) {
-    const { status, ancestorsIds, descendantsIds } = this.props;
+    const { status, ancestorsIds } = this.props;
 
     if (status && (ancestorsIds.length > prevProps.ancestorsIds.length || prevProps.status?.get('id') !== status.get('id'))) {
       this._scrollStatusIntoView();
-    }
-
-    // Only highlight replies after the initial load
-    if (prevProps.descendantsIds.length) {
-      const newRepliesIds = difference(descendantsIds, prevProps.descendantsIds);
-      
-      if (newRepliesIds.length) {
-        this.setState({newRepliesIds});
-      }
     }
   }
 
@@ -648,8 +632,8 @@ class Status extends ImmutablePureComponent {
               </div>
             </Hotkeys>
 
-            {descendants}
             {remoteHint}
+            {descendants}
           </div>
         </ScrollContainer>
 

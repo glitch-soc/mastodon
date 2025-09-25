@@ -118,7 +118,6 @@ class Status extends ImmutablePureComponent {
     prepend: PropTypes.string,
     withDismiss: PropTypes.bool,
     isQuotedPost: PropTypes.bool,
-    shouldHighlightOnMount: PropTypes.bool, 
     getScrollPosition: PropTypes.func,
     updateScrollBottom: PropTypes.func,
     expanded: PropTypes.bool,
@@ -706,7 +705,6 @@ class Status extends ImmutablePureComponent {
                 muted: this.props.muted,
                 'status--is-quote': isQuotedPost,
                 'status--has-quote': !!status.get('quote'),
-                'status--highlighted-entry': this.props.shouldHighlightOnMount,
               })
             }
             data-id={status.get('id')}

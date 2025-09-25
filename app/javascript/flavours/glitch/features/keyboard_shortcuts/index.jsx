@@ -9,6 +9,7 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import Column from 'flavours/glitch/components/column';
 import ColumnHeader from 'flavours/glitch/components/column_header';
+import { isFeatureEnabled } from 'flavours/glitch/utils/environment';
 
 const messages = defineMessages({
   heading: { id: 'keyboard_shortcuts.heading', defaultMessage: 'Keyboard Shortcuts' },
@@ -62,10 +63,12 @@ class KeyboardShortcuts extends ImmutablePureComponent {
                 <td><kbd>b</kbd></td>
                 <td><FormattedMessage id='keyboard_shortcuts.boost' defaultMessage='to boost' /></td>
               </tr>
-              <tr>
-                <td><kbd>q</kbd></td>
-                <td><FormattedMessage id='keyboard_shortcuts.quote' defaultMessage='Quote post' /></td>
-              </tr>
+              {isFeatureEnabled('outgoing_quotes') && (
+                <tr>
+                  <td><kbd>q</kbd></td>
+                  <td><FormattedMessage id='keyboard_shortcuts.quote' defaultMessage='Quote post' /></td>
+                </tr>
+              )}
               <tr>
                 <td><kbd>d</kbd></td>
                 <td><FormattedMessage id='keyboard_shortcuts.bookmark' defaultMessage='to bookmark' /></td>

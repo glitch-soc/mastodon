@@ -1,7 +1,5 @@
 import type { ComponentPropsWithoutRef, ElementType } from 'react';
 
-import classNames from 'classnames';
-
 import { isModernEmojiEnabled } from '@/mastodon/utils/environment';
 
 import { useEmojify } from './hooks';
@@ -9,13 +7,12 @@ import type { CustomEmojiMapArg } from './types';
 
 type EmojiHTMLProps<Element extends ElementType = 'div'> = Omit<
   ComponentPropsWithoutRef<Element>,
-  'dangerouslySetInnerHTML' | 'className'
+  'dangerouslySetInnerHTML'
 > & {
   htmlString: string;
   extraEmojis?: CustomEmojiMapArg;
   as?: Element;
   shallow?: boolean;
-  className?: string;
 };
 
 export const ModernEmojiHTML = ({
@@ -23,7 +20,6 @@ export const ModernEmojiHTML = ({
   htmlString,
   as: Wrapper = 'div', // Rename for syntax highlighting
   shallow,
-  className = '',
   ...props
 }: EmojiHTMLProps<ElementType>) => {
   const emojifiedHtml = useEmojify({
@@ -37,11 +33,7 @@ export const ModernEmojiHTML = ({
   }
 
   return (
-    <Wrapper
-      {...props}
-      className={classNames(className, 'animate-parent')}
-      dangerouslySetInnerHTML={{ __html: emojifiedHtml }}
-    />
+    <Wrapper {...props} dangerouslySetInnerHTML={{ __html: emojifiedHtml }} />
   );
 };
 
@@ -51,13 +43,7 @@ export const EmojiHTML = <Element extends ElementType>(
   if (isModernEmojiEnabled()) {
     return <ModernEmojiHTML {...props} />;
   }
-  const { as: asElement, htmlString, extraEmojis, className, ...rest } = props;
+  const { as: asElement, htmlString, extraEmojis, ...rest } = props;
   const Wrapper = asElement ?? 'div';
-  return (
-    <Wrapper
-      {...rest}
-      dangerouslySetInnerHTML={{ __html: htmlString }}
-      className={classNames(className, 'animate-parent')}
-    />
-  );
+  return <Wrapper {...rest} dangerouslySetInnerHTML={{ __html: htmlString }} />;
 };

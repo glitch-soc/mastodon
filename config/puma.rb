@@ -27,7 +27,7 @@ if ENV['MASTODON_PROMETHEUS_EXPORTER_ENABLED'] == 'true'
     end
   end
 
-  before_worker_boot do
+  on_worker_boot do
     # Ruby process metrics (memory, GC, etc)
     PrometheusExporter::Instrumentation::Process.start(type: 'puma')
 
@@ -44,7 +44,7 @@ if ENV['MASTODON_PROMETHEUS_EXPORTER_ENABLED'] == 'true'
   end
 end
 
-before_worker_boot do
+on_worker_boot do
   ActiveSupport.on_load(:active_record) do
     ActiveRecord::Base.establish_connection
   end

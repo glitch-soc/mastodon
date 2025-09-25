@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { StatusVisibility } from '@/mastodon/api_types/statuses';
 import { statusFactoryState } from '@/testing/factories';
 
-import { BoostButton } from './boost_button';
+import { LegacyReblogButton, StatusBoostButton } from './boost_button';
 
 interface StoryProps {
   visibility: StatusVisibility;
@@ -38,7 +38,10 @@ const meta = {
     },
   },
   render: (args) => (
-    <BoostButton status={argsToStatus(args)} counters={args.reblogCount > 0} />
+    <StatusBoostButton
+      status={argsToStatus(args)}
+      counters={args.reblogCount > 0}
+    />
   ),
 } satisfies Meta<StoryProps>;
 
@@ -74,4 +77,13 @@ export const Mine: Story = {
       },
     },
   },
+};
+
+export const Legacy: Story = {
+  render: (args) => (
+    <LegacyReblogButton
+      status={argsToStatus(args)}
+      counters={args.reblogCount > 0}
+    />
+  ),
 };

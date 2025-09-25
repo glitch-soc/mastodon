@@ -1,3 +1,4 @@
+import type { MouseEventHandler } from 'react';
 import { useCallback } from 'react';
 
 import { FormattedMessage, defineMessages, useIntl } from 'react-intl';
@@ -42,6 +43,39 @@ export const AccountCard: React.FC<{ accountId: string }> = ({ accountId }) => {
   const intl = useIntl();
   const account = useAppSelector((s) => getAccount(s, accountId));
   const dispatch = useAppDispatch();
+
+  const handleMouseEnter = useCallback<MouseEventHandler>(
+    ({ currentTarget }) => {
+      if (autoPlayGif) {
+        return;
+      }
+      const emojis =
+        currentTarget.querySelectorAll<HTMLImageElement>('.custom-emoji');
+
+      emojis.forEach((emoji) => {
+        const original = emoji.getAttribute('data-original');
+        if (original) emoji.src = original;
+      });
+    },
+    [],
+  );
+
+  const handleMouseLeave = useCallback<MouseEventHandler>(
+    ({ currentTarget }) => {
+      if (autoPlayGif) {
+        return;
+      }
+
+      const emojis =
+        currentTarget.querySelectorAll<HTMLImageElement>('.custom-emoji');
+
+      emojis.forEach((emoji) => {
+        const staticUrl = emoji.getAttribute('data-static');
+        if (staticUrl) emoji.src = staticUrl;
+      });
+    },
+    [],
+  );
 
   const handleFollow = useCallback(() => {
     if (!account) return;
@@ -151,7 +185,9 @@ export const AccountCard: React.FC<{ accountId: string }> = ({ accountId }) => {
 
       {account.get('note').length > 0 && (
         <div
-          className='account-card__bio translate animate-parent'
+          className='account-card__bio translate'
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           dangerouslySetInnerHTML={{ __html: account.get('note_emojified') }}
         />
       )}
