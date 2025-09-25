@@ -38,7 +38,7 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
   attribute :quote, key: :quote_uri, if: :quote?
   attribute :quote_authorization, if: :quote_authorization?
 
-  attribute :interaction_policy, if: -> { Mastodon::Feature.outgoing_quotes_enabled? }
+  attribute :interaction_policy
 
   def id
     raise Mastodon::NotPermittedError, 'Local-only statuses should not be serialized' if object.local_only? && !instance_options[:allow_local_only]

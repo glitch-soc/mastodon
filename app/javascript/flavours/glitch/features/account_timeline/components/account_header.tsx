@@ -383,36 +383,6 @@ export const AccountHeader: React.FC<{
     });
   }, [account]);
 
-  const handleMouseEnter = useCallback(
-    ({ currentTarget }: React.MouseEvent) => {
-      if (autoPlayGif) {
-        return;
-      }
-
-      currentTarget
-        .querySelectorAll<HTMLImageElement>('.custom-emoji')
-        .forEach((emoji) => {
-          emoji.src = emoji.getAttribute('data-original') ?? '';
-        });
-    },
-    [],
-  );
-
-  const handleMouseLeave = useCallback(
-    ({ currentTarget }: React.MouseEvent) => {
-      if (autoPlayGif) {
-        return;
-      }
-
-      currentTarget
-        .querySelectorAll<HTMLImageElement>('.custom-emoji')
-        .forEach((emoji) => {
-          emoji.src = emoji.getAttribute('data-static') ?? '';
-        });
-    },
-    [],
-  );
-
   const suspended = account?.suspended;
   const isRemote = account?.acct !== account?.username;
   const remoteDomain = isRemote ? account?.acct.split('@')[1] : null;
@@ -812,11 +782,9 @@ export const AccountHeader: React.FC<{
       )}
 
       <div
-        className={classNames('account__header', {
+        className={classNames('account__header animate-parent', {
           inactive: !!account.moved,
         })}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
         {!(suspended || hidden || account.moved) &&
           relationship?.requested_by && (

@@ -25,11 +25,12 @@ import { layoutFromWindow } from 'flavours/glitch/is_mobile';
 import { selectUnreadNotificationGroupsCount } from 'flavours/glitch/selectors/notifications';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 
+import { handleAnimateGif } from '../emoji/handlers';
 import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
-import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding, disableHoverCards } from '../../initial_state';
+import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding, disableHoverCards, autoPlayGif } from '../../initial_state';
 
 import BundleColumnError from './components/bundle_column_error';
 import { NavigationBar } from './components/navigation_bar';
@@ -392,6 +393,11 @@ class UI extends PureComponent {
     window.addEventListener('beforeunload', this.handleBeforeUnload, false);
     window.addEventListener('resize', this.handleResize, { passive: true });
 
+    if (!autoPlayGif) {
+      window.addEventListener('mouseover', handleAnimateGif, { passive: true });
+      window.addEventListener('mouseout', handleAnimateGif, { passive: true });
+    }
+
     document.addEventListener('dragenter', this.handleDragEnter, false);
     document.addEventListener('dragover', this.handleDragOver, false);
     document.addEventListener('drop', this.handleDrop, false);
@@ -450,6 +456,8 @@ class UI extends PureComponent {
 
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
     window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener('mouseover', handleAnimateGif);
+    window.removeEventListener('mouseout', handleAnimateGif);
 
     document.removeEventListener('dragenter', this.handleDragEnter);
     document.removeEventListener('dragover', this.handleDragOver);

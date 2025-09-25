@@ -23,7 +23,6 @@ import { IconButton } from 'flavours/glitch/components/icon_button';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 import StatusContent from 'flavours/glitch/components/status_content';
 import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
-import { autoPlayGif } from 'flavours/glitch/initial_state';
 import { makeGetStatus } from 'flavours/glitch/selectors';
 import { LinkedDisplayName } from '@/flavours/glitch/components/display_name';
 
@@ -60,32 +59,6 @@ export const Conversation = ({ conversation, scrollKey }) => {
   // glitch-soc additions
   const sharedCWState = useSelector(state => state.getIn(['state', 'content_warnings', 'shared_state']));
   const [expanded, setExpanded] = useState(undefined);
-
-  const handleMouseEnter = useCallback(({ currentTarget }) => {
-    if (autoPlayGif) {
-      return;
-    }
-
-    const emojis = currentTarget.querySelectorAll('.custom-emoji');
-
-    for (var i = 0; i < emojis.length; i++) {
-      let emoji = emojis[i];
-      emoji.src = emoji.getAttribute('data-original');
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(({ currentTarget }) => {
-    if (autoPlayGif) {
-      return;
-    }
-
-    const emojis = currentTarget.querySelectorAll('.custom-emoji');
-
-    for (var i = 0; i < emojis.length; i++) {
-      let emoji = emojis[i];
-      emoji.src = emoji.getAttribute('data-static');
-    }
-  }, []);
 
   const handleClick = useCallback(() => {
     if (unread) {
@@ -171,7 +144,7 @@ export const Conversation = ({ conversation, scrollKey }) => {
               {unread && <span className='conversation__unread' />} <RelativeTimestamp timestamp={lastStatus.get('created_at')} />
             </div>
 
-            <div className='conversation__content__names' onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+            <div className='conversation__content__names animate-parent'>
               <FormattedMessage id='conversation.with' defaultMessage='With {names}' values={{ names: <span>{names}</span> }} />
             </div>
           </div>
