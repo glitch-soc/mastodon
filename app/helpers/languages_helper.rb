@@ -211,6 +211,7 @@ module LanguagesHelper
     xal: ['Kalmyk', 'Хальмг келн'].freeze,
     zba: ['Balaibalan', 'باليبلن'].freeze,
     zgh: ['Standard Moroccan Tamazight', 'ⵜⴰⵎⴰⵣⵉⵖⵜ'].freeze,
+    zxx: ['No linguistic content', 'Toot!'].freeze,
   }.freeze
 
   # e.g. For Chinese, which is not a language,
