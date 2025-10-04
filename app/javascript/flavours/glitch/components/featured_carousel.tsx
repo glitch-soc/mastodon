@@ -20,7 +20,7 @@ import { useDrag } from '@use-gesture/react';
 import { expandAccountFeaturedTimeline } from '@/flavours/glitch/actions/timelines';
 import { Icon } from '@/flavours/glitch/components/icon';
 import { IconButton } from '@/flavours/glitch/components/icon_button';
-import StatusContainer from '@/flavours/glitch/containers/status_container';
+import { StatusQuoteManager } from '@/flavours/glitch/components/status_quoted';
 import { usePrevious } from '@/flavours/glitch/hooks/usePrevious';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 import ChevronLeftIcon from '@/material-icons/400-24px/chevron_left.svg?react';
@@ -218,12 +218,7 @@ const FeaturedCarouselItem: React.FC<
       ref={handleRef}
       {...props}
     >
-      <StatusContainer
-        // @ts-expect-error inferred props are wrong
-        id={statusId}
-        contextType='account'
-        withCounters
-      />
+      <StatusQuoteManager id={statusId} contextType='account' withCounters />
     </animated.div>
   );
 };
