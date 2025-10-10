@@ -16,7 +16,7 @@ ko:
         setting_default_content_type_html: HTML
         setting_default_content_type_markdown: 마크다운
         setting_default_content_type_plain: 일반 텍스트
-        setting_favourite_modal: 관심글을 지정할 때 확인 창을 띄웁니다(글리치 풍미에만 적용됨)
+        setting_favourite_modal: 관심글을 지정할 때 확인창을 띄웁니다(글리치 풍미에만 적용됨)
         setting_show_followers_count: 팔로워 수 표시
         setting_skin: 스킨
         setting_system_emoji_font: 에모지에 시스템 기본 폰트 적용하기 (글리치 풍미에만 적용됨)

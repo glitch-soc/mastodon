@@ -7,7 +7,7 @@ cs:
     settings:
       captcha_enabled:
         desc_html: Tato funkce používá externí skripty služby hCaptcha, což může být problém z hlediska bezpečí a ochrany dat. Také to může <strong>některým (hlavně postiženým) lidem registrační proces výrazně zkomplikovat</strong>. Z tohoto důvodu prosím raději zvažte jiné možnosti, jako je schvalování registrací nebo registrace pouze pro zvané.<br>Uživatelům pozvaným skrze omezenou pozvánku se CAPTCHA nezobrazí.
-        title: Vyžadovat po nových uživatelích opsání textu z obrázku (CAPTCHA)
+        title: Vyžadovat po nových uživatelích, aby vyřešili CAPTCHu pro potvrzení jejich účtu
       flavour_and_skin:
         title: Rozhraní a styl
       hide_followers_count:
@@ -28,6 +28,10 @@ cs:
       trending_status_cw:
         desc_html: Zobrazovat v rámci trendů (pokud jsou zapnuté) i příspěvky s varováním o obsahu. Změny tohoto nastavení se neprojeví retroaktivně.
         title: Povolit v trendech příspěvky s varováním o obsahu
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: A stejně tak i pro gitch-soc!
   auth:
     captcha_confirmation:
       hint_html: Už jen poslední krok! Pro potvrzení svého účtu opište prosím text z obrázku (CAPTCHA). Pokud máte dotazy nebo potřebujete s potvrzením pomoct, můžete <a href="/about/more">kontaktovat administrátora</a>.

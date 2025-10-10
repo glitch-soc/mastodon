@@ -36,6 +36,7 @@
   "confirmations.missing_media_description.message": "你没有为一个或多个媒体撰写描述。请考虑为视障人士添加描述。",
   "direct.group_by_conversations": "按对话分组",
   "endorsed_accounts_editor.endorsed_accounts": "精选账户",
+  "favourite_modal.favourite": "点赞嘟文?",
   "federation.federated.long": "允许此嘟文到达其它服务器",
   "federation.federated.short": "联动",
   "federation.local_only.long": "阻止此嘟文到达其它服务器",
@@ -89,6 +90,8 @@
   "settings.enable_collapsed": "启用折叠嘟文",
   "settings.enable_collapsed_hint": "让折叠的帖子隐藏部分内容以占用较少的屏幕空间。这与“内容警告”功能不同。",
   "settings.enable_content_warnings_auto_unfold": "自动展开内容警告",
+  "settings.fullwidth_view": "将列拉伸至全宽 (仅桌面模式)",
+  "settings.fullwidth_view_hint": "拉伸列以利用所有可用空间。",
   "settings.general": "一般",
   "settings.hicolor_privacy_icons": "彩色隐私图标 ",
   "settings.hicolor_privacy_icons.hint": "以明亮且易于区分的颜色显示隐私图标",
@@ -153,7 +156,5 @@
   "status.is_poll": "此嘟文是投票",
   "status.local_only": "此嘟文仅本站可见",
   "status.show_filter_reason": "仍然显示",
-  "status.show_less": "部分显示",
-  "status.show_more": "完全显示",
   "status.uncollapse": "展开"
 }

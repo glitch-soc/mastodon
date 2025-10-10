@@ -1,1 +1,20 @@
+---
 ru:
+  simple_form:
+    glitch_only: glitch-soc
+    hints:
+      defaults:
+        setting_skin: Меняет оформление выбранного стиля Mastodon
+    labels:
+      defaults:
+        setting_default_content_type: Формат постов по умолчанию
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Markdown
+        setting_default_content_type_plain: Простой текст
+        setting_favourite_modal: Всегда спрашивать перед добавлением в избранное (применяется только к стилю Glitch)
+        setting_skin: Тема
+        setting_system_emoji_font: Использовать системный шрифт эмодзи по умолчанию (применяется только к стилю Glitch)
+      notification_emails:
+        trending_link: Новая актуальная ссылка требует проверки
+        trending_status: Новый актуальный пост требует проверки
+        trending_tag: Новый актуальный хештег требует проверки

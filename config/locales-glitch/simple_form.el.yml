@@ -1,1 +1,15 @@
+---
 el:
+  simple_form:
+    glitch_only: glitch-soc
+    hints:
+      defaults:
+        setting_default_language: Η γλώσσα των τουτ σας μπορεί να εντοπιστεί αυτόματα, αλλά δεν είναι πάντα ακριβής
+        setting_show_followers_count: Εμφάνιση του αριθμού ακολούθων σας στο προφίλ σας. Αν αποκρύψετε τον αριθμό των ακολούθων σας, θα είναι κρυμμένος ακόμη και από εσάς, και μερικές εφαρμογές μπορεί να εμφανίσουν έναν αρνητικό αριθμό ακολούθων.
+    labels:
+      defaults:
+        setting_default_content_type: Προεπιλεγμένη μορφή για τουτς
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Markdown
+        setting_default_content_type_plain: Απλό κείμενο
+        setting_show_followers_count: Δείξε τον αριθμό των ακολούθων σου

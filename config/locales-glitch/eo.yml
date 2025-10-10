@@ -6,12 +6,37 @@ eo:
       batch_error: 'Eraro okazis: %{message}'
     settings:
       captcha_enabled:
+        desc_html: Ĉi tio dependas de eksteraj hCaptcha-skriptoj, kiuj povas esti problemo pri sekureco kaj privateco. Ankaŭ, <strong>ĝi povas igi la registran procezon multe malpli alirebla por iuj homoj (precipe homoj kun handikapoj)</strong>. Pro ĉi tiuj kialoj, bonvolu konsideri alternativajn rimedojn kiel registradon per aprobo aŭ per invito.
         title: Postuli, ke novaj uzantoj solvi CAPTCHA-on por ke oni konfirmu sian konton
+      flavour_and_skin:
+        title: Gustumo kaj apero
       hide_followers_count:
         desc_html: Ne montri la kvanton de sekvantoj en profiloj de uzantoj
         title: Kaŝi la kvanton de sekvantoj
       other:
+        preamble: Kelkaj agordoj por glitch-soc, kiuj ne povas metiĝi en aliajn kategoriojn.
         title: Aliaj
       outgoing_spoilers:
         desc_html: Elsendante la afiŝoj al aliaj instancoj, aldoni ĉi tiun averton al afiŝoj, kiuj ne havas averton. Ĝi estas utila, se via instanco temas pri enhavo, kiun aliaj instancoj volus kovri per averto. Ambaŭ plurmedioj estos markita kiel tiklaj.
         title: Averto por elsenditaj afiŝoj
+      show_reblogs_in_public_timelines:
+        desc_html: Montri publikajn stimulojn de publikaj stimuloj en lokaj kaj publikaj templinioj.
+        title: Montri stimulojn en publikaj templinioj
+      show_replies_in_public_timelines:
+        desc_html: Ankaŭ kiel publikaj memrespondoj (tredoj), montri publikajn respondojn en lokaj kaj publikaj templinioj.
+        title: Montri stimulojn en publikaj templinioj
+      trending_status_cw:
+        desc_html: Kiam furorantaj afiŝoj ŝaltiĝas, permesi afiŝojn, kiujn havas Avertojn por enhavo, esti permisataj. Ŝanĝoj al ĉi tiun aferon ne estas retroaktiva.
+        title: Permesi afiŝojn, kiun havas Avertojn por Enhavo furori
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: Kaj ankaŭ por glitch-soc!
+  auth:
+    captcha_confirmation:
+      hint_html: Nur unu paŝo pli! Por konfirmi vian konton, ĉi tiun servilon postulas al vi solvi CAPTCHA. Vi povas <a href="/about/more">kontakti la administrulo de la servilo</a> se vi havas demandojn aŭ bezonas helpon pri la konfirmado de via konto.
+      title: Kontrolado de la uzanto
+  generic:
+    use_this: Uzu ĉi tion
+  settings:
+    flavours: Gustumoj

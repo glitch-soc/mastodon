@@ -75,9 +75,9 @@
   "settings.close": "닫기",
   "settings.collapsed_statuses": "접힌 글",
   "settings.compose_box_opts": "작성 상자",
-  "settings.confirm_before_clearing_draft": "작성 중인 메시지를 덮어씌우기 전에 확인창을 보여주기",
-  "settings.confirm_boost_missing_media_description": "미디어 설명이 없는 글을 부스트하려 할 때 확인창을 보여주기",
-  "settings.confirm_missing_media_description": "미디어 설명이 없는 글을 작성하려 할 때 확인창을 보여주기",
+  "settings.confirm_before_clearing_draft": "작성 중인 메시지를 덮어씌우기 전에 확인창을 띄웁니다",
+  "settings.confirm_boost_missing_media_description": "미디어 설명이 없는 글을 부스트하려 할 때 확인창을 띄웁니다",
+  "settings.confirm_missing_media_description": "미디어 설명이 없는 글을 작성하려 할 때 확인창을 띄웁니다",
   "settings.content_warnings": "열람주의",
   "settings.content_warnings.regexp": "정규표현식",
   "settings.content_warnings_filter": "자동으로 펼치지 않을 열람주의 문구:",
@@ -154,7 +154,5 @@
   "status.is_poll": "이 글은 설문입니다",
   "status.local_only": "당신의 서버에서만 보입니다",
   "status.show_filter_reason": "그냥 표시하기",
-  "status.show_less": "접기",
-  "status.show_more": "더보기",
   "status.uncollapse": "펼치기"
 }

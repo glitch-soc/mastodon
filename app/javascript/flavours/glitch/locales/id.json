@@ -75,6 +75,7 @@
   "settings.content_warnings_media_outside": "Tampilkan lampiran media di luar peringatan konten",
   "settings.content_warnings_media_outside_hint": "Reproduksi perilaku Mastodon upstream dengan membuat tombol Peringatan Konten tidak memengaruhi lampiran media",
   "settings.content_warnings_shared_state": "Tampilkan/sembunyikan konten semua salinan sekaligus",
+  "settings.pop_in_right": "Kanan",
   "settings.preferences": "Preferences",
   "settings.status_icons_reply": "Indikator balasan",
   "settings.status_icons_visibility": "Indikator privasi toot",

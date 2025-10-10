@@ -1,1 +1,20 @@
+---
 ru:
+  admin:
+    custom_emojis:
+      batch_error: 'Произошла ошибка: %{message}'
+    settings:
+      flavour_and_skin:
+        title: Стиль и цвета
+      hide_followers_count:
+        desc_html: Не показывать число подписчиков в профилях пользователей
+        title: Скрыть количество подписчиков
+      other:
+        preamble: Настройки glitch-soc, которые не могут быть отнесены к другим категориям.
+        title: Прочее
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: И для glitch-soc тоже!
+  settings:
+    flavours: Стили
