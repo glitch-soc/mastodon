@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
 import type { ApiMentionJSON } from '@/flavours/glitch/api_types/statuses';
+import { useAppSelector } from '@/flavours/glitch/store';
 import type { OnElementHandler } from '@/flavours/glitch/utils/html';
 
 export interface HandledLinkProps {
@@ -12,7 +13,7 @@ export interface HandledLinkProps {
   text: string;
   prevText?: string;
   hashtagAccountId?: string;
-  mention?: Pick<ApiMentionJSON, 'id' | 'acct'>;
+  mention?: Pick<ApiMentionJSON, 'id' | 'acct' | 'username'>;
 }
 
 export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
@@ -25,6 +26,11 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
   children,
   ...props
 }) => {
+  const rewriteMentions = useAppSelector(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    (state) => state.local_settings.get('rewrite_mentions', 'no') as string,
+  );
+
   // Handle hashtags
   if (text.startsWith('#') || prevText?.endsWith('#')) {
     const hashtag = text.slice(1).trim();
@@ -39,6 +45,23 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
       </Link>
     );
   } else if (mention) {
+    // glitch-soc feature to rewrite mentions
+    if (rewriteMentions !== 'no') {
+      return (
+        <Link
+          className={classNames('mention', className)}
+          to={`/@${mention.acct}`}
+          title={`@${mention.acct}`}
+          data-hover-card-account={mention.id}
+        >
+          @
+          <span>
+            {rewriteMentions === 'acct' ? mention.acct : mention.username}
+          </span>
+        </Link>
+      );
+    }
+
     // Handle mentions
     return (
       <Link
