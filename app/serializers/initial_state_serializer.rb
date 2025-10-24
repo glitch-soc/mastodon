@@ -6,12 +6,16 @@ class InitialStateSerializer < ActiveModel::Serializer
   attributes :meta, :compose, :accounts,
              :media_attachments, :settings,
              :max_feed_hashtags, :poll_limits,
-             :languages, :features
+             :languages, :features, :max_reactions
 
   attribute :critical_updates_pending, if: -> { object&.role&.can?(:view_devops) && SoftwareUpdate.check_enabled? }
 
   has_one :push_subscription, serializer: REST::WebPushSubscriptionSerializer
   has_one :role, serializer: REST::RoleSerializer
+
+  def max_reactions
+    StatusReactionValidator::LIMIT
+  end
 
   def max_feed_hashtags
     TagFeed::LIMIT_PER_MODE
@@ -29,8 +33,8 @@ class InitialStateSerializer < ActiveModel::Serializer
   def meta
     store = default_meta_store
 
-    if object.current_account
-      store[:me]                = object.current_account.id.to_s
+    if object_account
+      store[:me]                = object_account.id.to_s
       store[:boost_modal]       = object_account_user.setting_boost_modal
       store[:favourite_modal]   = object_account_user.setting_favourite_modal
       store[:quick_boosting]    = object_account_user.setting_quick_boosting
@@ -48,6 +52,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:default_content_type] = object_account_user.setting_default_content_type
       store[:system_emoji_font] = object_account_user.setting_system_emoji_font
       store[:show_trends]       = Setting.trends && object_account_user.setting_trends
+      store[:visible_reactions] = object_account_user.setting_visible_reactions
       store[:emoji_style]       = object_account_user.settings['web.emoji_style'] if Mastodon::Feature.modern_emojis_enabled?
     else
       store[:auto_play_gif] = Setting.auto_play_gif
@@ -133,12 +138,17 @@ class InitialStateSerializer < ActiveModel::Serializer
       trends_as_landing_page: Setting.trends_as_landing_page,
       trends_enabled: Setting.trends,
       version: instance_presenter.version,
+      visible_reactions: Setting.visible_reactions,
       terms_of_service_enabled: TermsOfService.current.present?,
       local_live_feed_access: Setting.local_live_feed_access,
       remote_live_feed_access: Setting.remote_live_feed_access,
       local_topic_feed_access: Setting.local_topic_feed_access,
       remote_topic_feed_access: Setting.remote_topic_feed_access,
     }
+  end
+
+  def object_account
+    object.current_account
   end
 
   def object_account_user

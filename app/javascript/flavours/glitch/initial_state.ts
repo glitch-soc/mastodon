@@ -23,6 +23,7 @@ interface InitialStateMeta {
   limited_federation_mode: boolean;
   locale: string;
   mascot: string | null;
+  max_reactions: number;
   me?: string;
   moved_to_account_id?: string;
   owner?: string;
@@ -45,6 +46,7 @@ interface InitialStateMeta {
   use_blurhash: boolean;
   use_pending_items?: boolean;
   version: string;
+  visible_reactions: number;
   sso_redirect: string;
   status_page_url: string;
   terms_of_service_enabled: boolean;
@@ -78,6 +80,7 @@ export interface InitialState {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   local_settings: any;
   max_feed_hashtags: number;
+  max_reactions: number;
   poll_limits: PollLimits;
 }
 
@@ -178,6 +181,8 @@ export const favouriteModal = getMeta('favourite_modal');
 export const pollLimits = initialState?.poll_limits;
 export const defaultContentType = getMeta('default_content_type');
 export const useSystemEmojiFont = getMeta('system_emoji_font');
+export const maxReactions = initialState?.max_reactions ?? 1;
+export const visibleReactions = getMeta('visible_reactions');
 
 export function getAccessToken(): string | undefined {
   return getMeta('access_token');

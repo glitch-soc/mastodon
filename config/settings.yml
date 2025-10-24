@@ -25,6 +25,7 @@ defaults: &defaults
   trends_as_landing_page: true
   trendable_by_default: false
   trending_status_cw: true
+  visible_reactions: 6
   hide_followers_count: false
   disallowed_hashtags: # space separated string or list of hashtags without the hash
   bootstrap_timeline_accounts: ''
