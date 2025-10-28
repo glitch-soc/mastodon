@@ -14,69 +14,13 @@ import { Icon } from 'flavours/glitch/components/icon';
 import { Poll } from 'flavours/glitch/components/poll';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { languages as preloadedLanguages } from 'flavours/glitch/initial_state';
-import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
 
 import { isModernEmojiEnabled } from '../utils/environment';
 
 import { EmojiHTML } from './emoji/html';
-import { HandledLink } from './status/handled_link';
+import { HandledLink, isLinkMisleading, tagMisleadingLink } from './status/handled_link';
 
 const MAX_HEIGHT = 706; // 22px * 32 (+ 2px padding at the top)
-
-const textMatchesTarget = (text, origin, host) => {
-  return (text === origin || text === host
-          || text.startsWith(origin + '/') || text.startsWith(host + '/')
-          || 'www.' + text === host || ('www.' + text).startsWith(host + '/'));
-};
-
-const isLinkMisleading = (link) => {
-  let linkTextParts = [];
-
-  // Reconstruct visible text, as we do not have much control over how links
-  // from remote software look, and we can't rely on `innerText` because the
-  // `invisible` class does not set `display` to `none`.
-
-  const walk = (node) => {
-    switch (node.nodeType) {
-    case Node.TEXT_NODE:
-      linkTextParts.push(node.textContent);
-      break;
-    case Node.ELEMENT_NODE: {
-      if (node.classList.contains('invisible')) return;
-      const children = node.childNodes;
-      for (let i = 0; i < children.length; i++) {
-        walk(children[i]);
-      }
-      break;
-    }
-    }
-  };
-
-  walk(link);
-
-  const linkText = linkTextParts.join('');
-  const targetURL = new URL(link.href);
-
-  if (targetURL.protocol === 'magnet:') {
-    return !linkText.startsWith('magnet:');
-  }
-
-  if (targetURL.protocol === 'xmpp:') {
-    return !(linkText === targetURL.href || 'xmpp:' + linkText === targetURL.href);
-  }
-
-  // The following may not work with international domain names
-  if (textMatchesTarget(linkText, targetURL.origin, targetURL.host) || textMatchesTarget(linkText.toLowerCase(), targetURL.origin, targetURL.host)) {
-    return false;
-  }
-
-  // The link hasn't been recognized, maybe it features an international domain name
-  const hostname = decodeIDNA(targetURL.hostname).normalize('NFKC');
-  const host = targetURL.host.replace(targetURL.hostname, hostname);
-  const origin = targetURL.origin.replace(targetURL.host, host);
-  const text = linkText.normalize('NFKC');
-  return !(textMatchesTarget(text, origin, host) || textMatchesTarget(text.toLowerCase(), origin, host));
-};
 
 /**
  *
@@ -214,30 +158,7 @@ class StatusContent extends PureComponent {
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noopener nofollow');
 
-        try {
-          if (tagLinks && isLinkMisleading(link)) {
-            // Add a tag besides the link to display its origin
-
-            const url = new URL(link.href);
-            const tag = document.createElement('span');
-            tag.classList.add('link-origin-tag');
-            switch (url.protocol) {
-            case 'xmpp:':
-              tag.textContent = `[${url.href}]`;
-              break;
-            case 'magnet:':
-              tag.textContent = '(magnet)';
-              break;
-            default:
-              tag.textContent = `[${url.host}]`;
-            }
-            link.insertAdjacentText('beforeend', ' ');
-            link.insertAdjacentElement('beforeend', tag);
-          }
-        } catch (e) {
-          // The URL is invalid, remove the href just to be safe
-          if (tagLinks && e instanceof TypeError) link.removeAttribute('href');
-        }
+        if (tagLinks) tagMisleadingLink(link);
       }
     }
   }
