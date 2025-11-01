@@ -4,6 +4,9 @@ el:
     glitch_only: glitch-soc
     hints:
       defaults:
+        setting_default_content_type_html: Κατά τη γραφή των τουτς, υποθέτει ότι είναι γραμμένα σε ανεπεξέργαστη HTML, εκτός αν ορίζεται διαφορετικά
+        setting_default_content_type_markdown: Κατά τη γραφή των τουτς, υποθέτει ότι χρησιμοποιείται το Markdown για μορφοποίηση πλούσιου κειμένου, εκτός αν ορίζεται διαφορετικά
+        setting_default_content_type_plain: Κατά τη γραφή των τουτς, υποθέτει ότι είναι απλό κείμενο χωρίς ειδική μορφοποίηση, εκτός αν ορίζεται διαφορετικά (προεπιλεγμένη συμπεριφορά Mastodon)
         setting_default_language: Η γλώσσα των τουτ σας μπορεί να εντοπιστεί αυτόματα, αλλά δεν είναι πάντα ακριβής
         setting_show_followers_count: Εμφάνιση του αριθμού ακολούθων σας στο προφίλ σας. Αν αποκρύψετε τον αριθμό των ακολούθων σας, θα είναι κρυμμένος ακόμη και από εσάς, και μερικές εφαρμογές μπορεί να εμφανίσουν έναν αρνητικό αριθμό ακολούθων.
     labels:
@@ -13,3 +16,7 @@ el:
         setting_default_content_type_markdown: Markdown
         setting_default_content_type_plain: Απλό κείμενο
         setting_show_followers_count: Δείξε τον αριθμό των ακολούθων σου
+      notification_emails:
+        trending_link: Νέος σύνδεσμος σε τάση απαιτεί αναθεώρηση
+        trending_status: Νέα ανάρτηση σε τάση απαιτεί αναθεώρηση
+        trending_tag: Νέα ετικέτα σε τάση απαιτεί αναθεώρηση
