@@ -129,9 +129,9 @@ class ComposeForm extends ImmutablePureComponent {
         e.preventDefault();
         this.textareaRef.current?.focus();
       }
-     }
+    }
     this.blurOnEscape(e);
-  }
+  };
 
   getFulltextForCharacterCounting = () => {
     return [this.props.spoiler? this.props.spoilerText: '', countableText(this.props.text)].join('');
@@ -156,7 +156,7 @@ class ComposeForm extends ImmutablePureComponent {
     }
 
     this.props.onSubmit({
-      missingAltTextModal: missingAltTextModal && this.props.missingAltText && this.props.privacy !== 'direct',
+      missingAltText: missingAltTextModal && this.props.missingAltText && this.props.privacy !== 'direct',
       quoteToPrivate: this.props.quoteToPrivate,
       overridePrivacy,
     });
