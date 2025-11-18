@@ -70,7 +70,7 @@
       margin-inline-start: 15px;
       text-align: start;
 
-      i[data-hidden] {
+      svg[data-hidden] {
         display: none;
       }
 
@@ -138,7 +138,7 @@
 
   .newer {
     float: right;
-    padding-inline-start: 0;
+    padding-inline-end: 0;
   }
 
   .disabled {
@@ -204,6 +204,7 @@
 }
 
 .information-badge,
+.simple_form .overridden,
 .simple_form .recommended,
 .simple_form .not_recommended {
   background-color: color.change($ui-secondary-color, $alpha: 0.1);

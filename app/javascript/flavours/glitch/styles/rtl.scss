@@ -41,25 +41,9 @@ body.rtl {
     float: left;
   }
 
-  .activity-stream .status.light {
-    padding-left: 10px;
-    padding-right: 68px;
-  }
-
-  .status__info .status__display-name,
-  .activity-stream .status.light .status__display-name {
+  .status__info .status__display-name {
     padding-left: 25px;
     padding-right: 0;
-  }
-
-  .activity-stream .pre-header {
-    padding-right: 68px;
-    padding-left: 0;
-  }
-
-  .activity-stream .pre-header .pre-header__icon {
-    left: auto;
-    right: 42px;
   }
 
   .account__header__tabs__buttons > .icon-button {
@@ -90,6 +74,10 @@ body.rtl {
   }
 
   .admin-wrapper {
+    direction: rtl;
+  }
+
+  .react-swipeable-view-container > * {
     direction: rtl;
   }
 

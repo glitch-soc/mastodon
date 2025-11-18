@@ -700,9 +700,10 @@ code {
       font-family: inherit;
       pointer-events: none;
       cursor: default;
-      max-width: 140px;
+      max-width: 50%;
       white-space: nowrap;
       overflow: hidden;
+      text-overflow: ellipsis;
 
       &::after {
         content: '';
@@ -831,7 +832,7 @@ code {
     }
   }
 
-  @media screen and (width <= 740px) and (width >= 441px) {
+  @media screen and (440px < width <= 740px) {
     margin-top: 40px;
   }
 
