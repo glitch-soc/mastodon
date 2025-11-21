@@ -3852,25 +3852,25 @@ a.account__display-name {
     padding-inline-start: 16px;
   }
 
-  @media screen and (height <= 930px) {
+  @media screen and (height <= 871px) {
     &__portal .trends__item:nth-child(n + 5) {
       display: none;
     }
   }
 
-  @media screen and (height <= (930px - 56px)) {
+  @media screen and (height <= (871px - 56px)) {
     &__portal .trends__item:nth-child(n + 4) {
       display: none;
     }
   }
 
-  @media screen and (height <= (930px - 56px * 2)) {
+  @media screen and (height <= (871px - 56px * 2)) {
     &__portal .trends__item:nth-child(n + 3) {
       display: none;
     }
   }
 
-  @media screen and (height <= (930px - 56px * 3)) {
+  @media screen and (height <= (871px - 56px * 3)) {
     &__portal {
       display: none;
     }
