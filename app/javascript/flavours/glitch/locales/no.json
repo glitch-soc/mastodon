@@ -1,4 +1,23 @@
 {
-  "settings.content_warnings": "Content warnings",
-  "settings.preferences": "Preferences"
+  "about.fork_disclaimer": "Glitch-soc er fri programvare med åpen kildekode, forgrenet fra Mastodon.",
+  "compose.content-type.html": "HTML",
+  "compose.content-type.html_meta": "Formater innleggene dine med HTML",
+  "compose.content-type.markdown": "Markdown",
+  "compose.content-type.markdown_meta": "Formater innleggene dine med Markdown",
+  "compose.content-type.plain": "Ren tekst",
+  "compose.disable_threaded_mode": "Deaktiver trådmodus",
+  "compose.enable_threaded_mode": "Aktiver trådmodus",
+  "confirmations.deprecated_settings.confirm": "Bruk Mastodon-innstillinger",
+  "federation.federated.short": "Føderert",
+  "federation.local_only.short": "Kun lokalt",
+  "navigation_bar.app_settings": "App-innstillinger",
+  "settings.always_show_spoilers_field": "Aktiver alltid feltet for innholdsvarsler",
+  "settings.close": "Lukk",
+  "settings.content_warnings": "Innholdsvarsler",
+  "settings.content_warnings.regexp": "Regulært uttrykk",
+  "settings.pop_in_left": "Venstre",
+  "settings.pop_in_player": "Aktiver flytende avspiller",
+  "settings.pop_in_right": "Høyre",
+  "settings.preferences": "Brukerinnstillinger",
+  "settings.side_arm.none": "Ingen"
 }

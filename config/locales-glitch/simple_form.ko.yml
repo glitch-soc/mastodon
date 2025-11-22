@@ -8,7 +8,7 @@ ko:
         setting_default_content_type_markdown: 게시물을 작성할 때, 형식을 지정하지 않았다면, 마크다운이라고 가정합니다
         setting_default_content_type_plain: 게시물을 작성할 때, 형식을 지정하지 않았다면, 일반적인 텍스트라고 가정합니다. (마스토돈의 기본 동작)
         setting_default_language: 작성하는 게시물의 언어는 자동으로 설정될 수 있습니다, 하지만 언제나 정확하지는 않습니다
-        setting_show_followers_count: 팔로워 카운트를 프로필에서 숨깁니다. 팔로워 수를 숨기면 나에게도 보이지 않으며 몇몇 앱에서는 팔로워 수가 음수로 표시될 수 있습니다.
+        setting_show_followers_count: 팔로워 카운트를 프로필에 표시합니다. 팔로워 수를 숨기면 나에게도 보이지 않으며 몇몇 앱에서는 팔로워 수가 음수로 표시될 수 있습니다.
         setting_skin: 선택한 마스토돈 풍미의 스킨을 바꿉니다
     labels:
       defaults:
