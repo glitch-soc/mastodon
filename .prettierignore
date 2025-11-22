@@ -96,6 +96,7 @@ AUTHORS.md
 
 # Ignore glitch-soc vendored CSS reset
 app/javascript/flavours/glitch/styles/reset.scss
+app/javascript/flavours/glitch/styles_new/mastodon/reset.scss
 
 # Ignore win95 theme
 app/javascript/styles/win95.scss

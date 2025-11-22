@@ -1,0 +1,89 @@
+@use 'variables' as *;
+
+body.rtl {
+  direction: rtl;
+
+  .reactions-bar {
+    direction: rtl;
+  }
+
+  .announcements__mastodon,
+  .drawer__inner__mastodon > img {
+    transform: scaleX(-1);
+  }
+
+  .boost-modal__status-time {
+    float: left;
+  }
+
+  .compose-form .autosuggest-textarea__textarea {
+    padding-right: 10px;
+    padding-left: 10px + 22px;
+  }
+
+  .columns-area {
+    direction: rtl;
+  }
+
+  .account__avatar-wrapper {
+    float: right;
+  }
+
+  .column-header__setting-arrows {
+    float: left;
+  }
+
+  .setting-meta__label {
+    float: left;
+  }
+
+  .status__info .status__display-name {
+    padding-left: 25px;
+    padding-right: 0;
+  }
+
+  .account__header__tabs__buttons > .icon-button {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+
+  .status__relative-time {
+    float: left;
+    text-align: left;
+  }
+
+  .status__action-bar-button {
+    float: right;
+  }
+
+  .status__action-bar-dropdown {
+    float: right;
+  }
+
+  .detailed-status__display-name .display-name {
+    text-align: right;
+  }
+
+  .detailed-status__display-avatar {
+    float: right;
+  }
+
+  .admin-wrapper {
+    direction: rtl;
+  }
+
+  .react-swipeable-view-container > * {
+    direction: rtl;
+  }
+
+  .column-back-button__icon {
+    transform: scale(-1, 1);
+  }
+
+  .dismissable-banner,
+  .warning-banner {
+    &__action {
+      float: left;
+    }
+  }
+}

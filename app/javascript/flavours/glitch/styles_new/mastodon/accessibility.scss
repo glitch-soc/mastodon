@@ -1,0 +1,36 @@
+@use 'variables' as *;
+
+%emoji-color-inversion {
+  filter: invert(1);
+}
+
+.emojione {
+  @each $emoji in $emojis-requiring-inversion {
+    &[title=':#{$emoji}:'] {
+      @extend %emoji-color-inversion;
+    }
+  }
+}
+
+// glitch-soc addition
+.hicolor-privacy-icons {
+  .status__visibility-icon.icon-globe,
+  .privacy-dropdown__option .icon-globe {
+    color: #1976d2;
+  }
+
+  .status__visibility-icon.icon-unlock,
+  .privacy-dropdown__option .icon-unlock {
+    color: #388e3c;
+  }
+
+  .status__visibility-icon.icon-lock,
+  .privacy-dropdown__option .icon-lock {
+    color: #ffa000;
+  }
+
+  .status__visibility-icon.icon-envelope,
+  .privacy-dropdown__option .icon-envelope {
+    color: #d32f2f;
+  }
+}
