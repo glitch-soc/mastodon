@@ -53,6 +53,7 @@ class CustomEmoji < ApplicationRecord
   scope :local, -> { where(domain: nil) }
   scope :remote, -> { where.not(domain: nil) }
   scope :enabled, -> { where(disabled: false) }
+  scope :remote_only, -> { where.not(domain: nil).where(category_id: nil).where(local_counterpart: { id: nil }) }
   scope :alphabetic, -> { order(domain: :asc, shortcode: :asc) }
   scope :by_domain_and_subdomains, ->(domain) { where(domain: domain).or(where(arel_table[:domain].matches("%.#{domain}"))) }
   scope :listed, -> { local.enabled.where(visible_in_picker: true) }
