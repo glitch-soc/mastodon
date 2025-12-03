@@ -11265,7 +11265,7 @@ noscript {
   }
 
   &--reaction &__icon {
-    color: $blurple-300;
+    color: var(--color-text-brand);
   }
 
   &--reblog &__icon {
