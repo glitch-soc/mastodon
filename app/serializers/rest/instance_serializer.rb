@@ -101,6 +101,10 @@ class REST::InstanceSerializer < ActiveModel::Serializer
         enabled: TranslationService.configured?,
       },
 
+      reactions: {
+        max_reactions: StatusReactionValidator::LIMIT,
+      },
+
       timelines_access: {
         live_feeds: {
           local: Setting.local_live_feed_access,
