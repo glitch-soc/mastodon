@@ -1,1 +1,32 @@
+---
 'no':
+  admin:
+    custom_emojis:
+      batch_copy_error: 'En feil oppsto ved kopiering av noen av de valgte emojiene: %{message}'
+      batch_error: 'En feil oppsto: %{message}'
+    settings:
+      flavour_and_skin:
+        title: Variant og tema
+      hide_followers_count:
+        desc_html: Ikke vis følgerantallet på brukerprofiler
+        title: Skjul følgerantall
+      other:
+        preamble: Diverse innstillinger for glitch-soc som ikke passer i andre kategorier.
+        title: Andre
+      outgoing_spoilers:
+        title: Innholdsvarsel for utgående innlegg
+      show_reblogs_in_public_timelines:
+        desc_html: Vis offentlige fremhevinger av offentlige innlegg i lokale og offentlige tidslinjer.
+        title: Vis fremhevinger i offentlige tidslinjer
+      show_replies_in_public_timelines:
+        title: Vis svar i offentlige tidslinjer
+      trending_status_cw:
+        title: Tillat innlegg med innholdsvarsler å trende
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: Det gjelder også glitch-soc!
+  generic:
+    use_this: Bruk dette
+  settings:
+    flavours: Varianter
