@@ -103,6 +103,8 @@ module Account::Interactions
     follow = active_relationships.find_by(target_account: other_account)
     follow&.destroy
     try(:invalidate_mute_boosts_cache)
+
+    follow
   end
 
   def unblock!(other_account)

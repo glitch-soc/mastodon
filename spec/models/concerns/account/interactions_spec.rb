@@ -757,9 +757,9 @@ RSpec.describe Account::Interactions do
 
       it 'evicts the cache of boost muted accounts' do
         expect(me.excluded_boosts_from_timeline_account_ids).to be_empty
-        me.follow(you, reblogs: false)
+        me.follow!(you, reblogs: false)
         expect(me.excluded_boosts_from_timeline_account_ids).to include(you.id)
-        me.follow(you, reblogs: true)
+        me.follow!(you, reblogs: true)
         expect(me.excluded_boosts_from_timeline_account_ids).to be_empty
       end
     end
