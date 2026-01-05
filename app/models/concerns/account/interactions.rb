@@ -55,6 +55,7 @@ module Account::Interactions
     rel.languages    = languages unless languages.nil?
 
     rel.save! if rel.changed?
+    try(:invalidate_mute_boosts_cache)
 
     rel
   end
@@ -68,6 +69,7 @@ module Account::Interactions
     rel.languages    = languages unless languages.nil?
 
     rel.save! if rel.changed?
+    try(:invalidate_mute_boosts_cache)
 
     rel
   end
@@ -100,6 +102,7 @@ module Account::Interactions
   def unfollow!(other_account)
     follow = active_relationships.find_by(target_account: other_account)
     follow&.destroy
+    try(:invalidate_mute_boosts_cache)
   end
 
   def unblock!(other_account)

@@ -378,6 +378,17 @@ class Account < ApplicationRecord
     Rails.cache.fetch("exclude_account_ids_for:#{id}") { block_relationships.pluck(:target_account_id) + blocked_by_relationships.pluck(:account_id) + mute_relationships.pluck(:target_account_id) }
   end
 
+  # Accounts that are followed but have reblogs hidden
+  def excluded_boosts_from_timeline_account_ids
+    Rails.cache.fetch("exclude_boosts_account_ids_for:#{id}", expires_in: 72.hours) do
+      active_relationships.where(show_reblogs: false).pluck(:target_account_id)
+    end
+  end
+
+  def invalidate_mute_boosts_cache
+    Rails.cache.delete("exclude_boosts_account_ids_for:#{id}")
+  end
+
   def excluded_from_timeline_domains
     Rails.cache.fetch("exclude_domains_for:#{id}") { domain_blocks.pluck(:domain) }
   end
