@@ -16,7 +16,7 @@ class UserSettings
   setting :default_language, default: nil
   setting :default_sensitive, default: false
   setting :default_privacy, default: nil, in: %w(public unlisted private)
-  setting :default_content_type, default: 'text/plain'
+  setting :default_content_type, default: -> { ::Setting.default_content_type }
   setting :hide_followers_count, default: false
   setting :default_quote_policy, default: 'public', in: %w(public followers nobody)
 
