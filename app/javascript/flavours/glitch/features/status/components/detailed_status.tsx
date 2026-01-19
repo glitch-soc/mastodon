@@ -504,7 +504,7 @@ export const DetailedStatus: React.FC<{
         {/* This is a glitch-soc addition to have a placeholder */}
         {!expanded && <MentionsPlaceholder status={status} />}
 
-        {visibleReactions && visibleReactions > 0 && (
+        {!!visibleReactions && (
           <StatusReactions
             statusId={status.get('id')}
             reactions={status.get('reactions')}
