@@ -275,6 +275,23 @@ RSpec.describe Status do
         end
       end
     end
+
+    describe 'on a status in a local-only thread' do
+      subject { described_class.new }
+
+      context 'when a status does not contain the local-only emoji' do
+        let(:thread) { Fabricate(:Status, local_only: true) }
+
+        before do
+          subject.thread = thread
+        end
+        
+        it 'is marked local-only' do
+          subject.save!
+
+          expect(subject).to be_local_only
+        end
+    end
   end
 
   describe '#reported?' do
