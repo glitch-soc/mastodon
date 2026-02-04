@@ -437,6 +437,63 @@ RSpec.describe '/api/v1/statuses' do
           end
         end
       end
+
+      context 'with local_only param set to true' do
+        let(:params) { { status: 'Hello world', local_only: true } }
+
+        it 'returns a local-only post' do
+          subject
+
+          expect(response).to have_http_status(200)
+          expect(response.content_type)
+            .to start_with('application/json')
+          expect(response.parsed_body[:content]).to match(/Hello world/)
+          expect(response.parsed_body[:local_only]).to be true
+        end
+      end
+
+      context 'with local_only param set to false' do
+        let(:params) { { status: 'Hello world', local_only: false } }
+
+        it 'returns a non-local-only post' do
+          subject
+
+          expect(response).to have_http_status(200)
+          expect(response.content_type)
+            .to start_with('application/json')
+          expect(response.parsed_body[:content]).to match(/Hello world/)
+          expect(response.parsed_body[:local_only]).to be false
+        end
+      end
+
+      context 'with local_only param omitted' do
+        let(:params) { { status: 'Hello world' } }
+
+        it 'returns a non-local-only post' do
+          subject
+
+          expect(response).to have_http_status(200)
+          expect(response.content_type)
+            .to start_with('application/json')
+          expect(response.parsed_body[:content]).to match(/Hello world/)
+          expect(response.parsed_body[:local_only]).to be false
+        end
+      end
+
+      context 'with local_only param omitted in reply to a local-only post' do
+        let(:local_only_post) { Fabricate(:status, local_only: true) }
+        let(:params) { { status: 'Hello world', in_reply_to_id: local_only_post.id } }
+
+        it 'returns a non-local-only post' do
+          subject
+
+          expect(response).to have_http_status(200)
+          expect(response.content_type)
+            .to start_with('application/json')
+          expect(response.parsed_body[:content]).to match(/Hello world/)
+          expect(response.parsed_body[:local_only]).to be true
+        end
+      end
     end
 
     describe 'DELETE /api/v1/statuses/:id' do

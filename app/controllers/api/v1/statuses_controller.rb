@@ -93,6 +93,7 @@ class Api::V1::StatusesController < Api::BaseController
       application: doorkeeper_token.application,
       poll: status_params[:poll],
       content_type: status_params[:content_type],
+      local_only: status_params[:local_only],
       allowed_mentions: status_params[:allowed_mentions],
       idempotency: request.headers['Idempotency-Key'],
       with_rate_limit: true
@@ -191,6 +192,7 @@ class Api::V1::StatusesController < Api::BaseController
       :language,
       :scheduled_at,
       :content_type,
+      :local_only,
       allowed_mentions: [],
       media_ids: [],
       media_attributes: [
