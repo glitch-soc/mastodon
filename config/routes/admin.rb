@@ -238,44 +238,5 @@ namespace :admin do
     end
   end
 
-  # Gamepatch Admin
-  namespace :gamepatch do
-    get '/', to: 'dashboard#index', as: :dashboard
-    resources :imports, only: [:index, :create] do
-      collection do
-        post :csv
-        post :sheet
-        post :dialogue
-        get :templates
-      end
-    end
-    resources :scenarios, only: [:index, :create, :destroy] do
-      member do
-        post :load
-      end
-    end
-    resources :api_keys, only: [:index, :create, :destroy]
-    resource :config, only: [:show, :update]
-    resources :analytics, only: [:index] do
-      collection do
-        get :widgets
-        get :dialogues
-        get :responses
-        get :export
-      end
-    end
-
-    # Payments admin
-    resources :payments, only: [:index] do
-      collection do
-        get :subscriptions
-        get :payments
-        get :export
-      end
-    end
-    get 'payments/subscription/:id', to: 'payments#show_subscription', as: :payments_subscription
-    get 'payments/payment/:id', to: 'payments#show_payment', as: :payments_payment
-    post 'payments/subscription/:id/cancel', to: 'payments#cancel_subscription', as: :payments_cancel_subscription
-    post 'payments/payment/:id/refund', to: 'payments#refund_payment', as: :payments_refund_payment
-  end
+  # Gamepatch admin routes are injected by the engine via initializer
 end
