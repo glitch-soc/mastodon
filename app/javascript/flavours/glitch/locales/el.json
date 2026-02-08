@@ -34,7 +34,7 @@
   "federation.local_only.short": "Τοπικά μόνο",
   "firehose.column_settings.allow_local_only": "Εμφάνιση τοπικών αναρτήσεων σε \"Όλα\"",
   "home.column_settings.advanced": "Για προχωρημένους",
-  "home.column_settings.filter_regex": "Φιλτράρισμα βάσει των κανονικών εκφράσεων",
+  "home.column_settings.filter_regex": "Φιλτράρισμα με χρήση κανονικών εκφράσεων (regex)",
   "home.column_settings.show_direct": "Εμφάνιση ιδιωτικών επισημάνσεων",
   "home.settings": "Ρυθμίσεις στήλης",
   "keyboard_shortcuts.bookmark": "για να σελιδοποιήσει",
@@ -55,7 +55,7 @@
   "settings.content_warnings_unfold_opts": "Επιλογές αυτόματου ξεδιπλώματος",
   "settings.deprecated_setting": "Αυτή η ρύθμιση τώρα ελέγχεται από τις {settings_page_link} του Mastodon",
   "settings.enable_content_warnings_auto_unfold": "Αυτόματη ξεδίπλωμα προειδοποιήσεων περιεχομένου",
-  "settings.fullwidth_view": "Επέκταση στηλών σε πλήρες πλάτος (Λειτουργία επιτραπέζιων υπολογιστών μόνο)",
+  "settings.fullwidth_view": "Επέκταση στηλών σε πλήρες πλάτος (Λειτουργία για υπολογιστές μόνο)",
   "settings.fullwidth_view_hint": "Επεκτείνει τις στήλες για γέμισμα του διαθέσιμου χώρου.",
   "settings.general": "Γενικά",
   "settings.hicolor_privacy_icons": "Εικονίδια απορρήτου υψηλού χρώματος",
@@ -103,7 +103,7 @@
   "settings.swipe_to_change_columns": "Να επιτρέπεται το σύρσιμο με δάχτυλα για την αλλαγή στηλών (Κινητά μόνο)",
   "settings.tag_misleading_links": "Σήμανση παραπλανητικών συνδέσμων",
   "settings.tag_misleading_links.hint": "Προσθήκη οπτικής ένδειξης με τον εξυπηρετητή στόχο του συνδέσμου σε κάθε σύνδεσμο που δεν αναφέρεται ρητά",
-  "settings.wide_view": "Ευρεία προβολή (Λειτουργία επιτραπέζιων υπολογιστών μόνο)",
+  "settings.wide_view": "Ευρεία προβολή (Λειτουργία για υπολογιστές μόνο)",
   "settings.wide_view_hint": "Επεκτείνει τις στήλες για καλύτερο γέμισμα του διαθέσιμου χώρου.",
   "status.filtered": "Φιλτραρισμένο",
   "status.has_audio": "Διαθέτει συνημμένα αρχεία ήχου",
@@ -113,5 +113,6 @@
   "status.hide": "Απόκρυψη ανάρτησης",
   "status.in_reply_to": "Αυτό το τουτ είναι απάντηση",
   "status.is_poll": "Αυτό το τουτ είναι δημοσκόπηση",
+  "status.local_only": "Ορατό μόνο από τον διακομιστή σας",
   "status.show_filter_reason": "Εμφάνιση ούτως ή άλλως"
 }
