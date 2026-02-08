@@ -92,7 +92,7 @@ SimpleNavigation::Configuration.run do |navigation|
       s.item :gamepatch_bots, safe_join([material_symbol('smart_toy'), t('admin.gamepatch.bots.title')]), admin_gamepatch_bots_path, highlights_on: %r{/admin/gamepatch/bots}
       s.item :gamepatch_simulations, safe_join([material_symbol('play_circle'), t('admin.gamepatch.simulations.title')]), admin_gamepatch_simulations_path, highlights_on: %r{/admin/gamepatch/simulations}
       s.item :gamepatch_data, safe_join([material_symbol('database'), t('admin.gamepatch.data.title')]), admin_gamepatch_data_index_path, highlights_on: %r{/admin/gamepatch/data}
-      s.item :gamepatch_analytics, safe_join([material_symbol('analytics'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_index_path, highlights_on: %r{/admin/gamepatch/analytics}
+      s.item :gamepatch_analytics, safe_join([material_symbol('analytics'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_path, highlights_on: %r{/admin/gamepatch/analytics}
       s.item :gamepatch_theme_packs, safe_join([material_symbol('palette'), t('admin.gamepatch.theme_packs.title')]), admin_gamepatch_theme_packs_path, highlights_on: %r{/admin/gamepatch/theme_packs}
       s.item :gamepatch_payments, safe_join([material_symbol('payments'), t('admin.gamepatch.payments.title')]), admin_gamepatch_payments_path, highlights_on: %r{/admin/gamepatch/payments}
       s.item :gamepatch_api_keys, safe_join([material_symbol('key'), t('admin.gamepatch.api_keys.title')]), admin_gamepatch_api_keys_path, highlights_on: %r{/admin/gamepatch/api_keys}
