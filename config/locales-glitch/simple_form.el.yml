@@ -9,13 +9,17 @@ el:
         setting_default_content_type_plain: Κατά τη γραφή των τουτς, υποθέτει ότι είναι απλό κείμενο χωρίς ειδική μορφοποίηση, εκτός αν ορίζεται διαφορετικά (προεπιλεγμένη συμπεριφορά Mastodon)
         setting_default_language: Η γλώσσα των τουτ σας μπορεί να εντοπιστεί αυτόματα, αλλά δεν είναι πάντα ακριβής
         setting_show_followers_count: Εμφάνιση του αριθμού ακολούθων σας στο προφίλ σας. Αν αποκρύψετε τον αριθμό των ακολούθων σας, θα είναι κρυμμένος ακόμα και από εσάς, και μερικές εφαρμογές μπορεί να εμφανίσουν έναν αρνητικό αριθμό ακολούθων.
+        setting_skin: Αλλάζει το θέμα στην επιλεγμένη διασκευή του Mastodon
     labels:
       defaults:
         setting_default_content_type: Προεπιλεγμένη μορφή για τουτς
         setting_default_content_type_html: HTML
         setting_default_content_type_markdown: Markdown
         setting_default_content_type_plain: Απλό κείμενο
+        setting_favourite_modal: Εμφάνιση διαλόγου επιβεβαίωσης πριν αγαπηθεί (ισχύει μόνο για τη διασκευή Glitch)
         setting_show_followers_count: Δείξε τον αριθμό των ακολούθων σου
+        setting_skin: Θέμα
+        setting_system_emoji_font: Χρήση προεπιλεγμένης γραμματοσειράς συστήματος για emoji (ισχύει μόνο για τη διασκευή Glitch)
       notification_emails:
         trending_link: Νέος σύνδεσμος σε τάση απαιτεί αναθεώρηση
         trending_status: Νέα ανάρτηση σε τάση απαιτεί αναθεώρηση
