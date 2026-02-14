@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   include CacheConcern
   include PreloadingConcern
   include DomainControlHelper
+  include ThemeHelper
   include DatabaseHelper
   include AuthorizedFetchHelper
   include SelfDestructHelper
