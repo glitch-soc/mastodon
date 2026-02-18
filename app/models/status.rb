@@ -375,19 +375,19 @@ class Status < ApplicationRecord
 
       # _from_me part does not require any timeline filters
       query_from_me = where(account_id: account.id)
-                      .direct_visibility
-                      .limit(limit)
-                      .order(id: :desc)
+        .direct_visibility
+        .limit(limit)
+        .order(id: :desc)
 
       # _to_me part requires mute and block filter.
       # FIXME: may we check mutes.hide_notifications?
       query_to_me = Status
-                    .direct_visibility
-                    .joins(:mentions)
-                    .where(mentions: { account_id: account.id })
-                    .limit(limit)
-                    .order('mentions.status_id DESC')
-                    .not_excluded_by_account(account)
+        .direct_visibility
+        .joins(:mentions)
+        .where(mentions: { account_id: account.id })
+        .limit(limit)
+        .order('mentions.status_id DESC')
+        .not_excluded_by_account(account)
 
       if max_id.present?
         query_from_me = query_from_me.where(id: ...max_id)

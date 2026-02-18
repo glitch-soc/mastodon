@@ -22,7 +22,7 @@ import { identityContextPropShape, withIdentity } from 'mastodon/identity_contex
 import { layoutFromWindow } from 'mastodon/is_mobile';
 import { WithRouterPropTypes } from 'mastodon/utils/react_router';
 import { checkAnnualReport } from '@/mastodon/reducers/slices/annual_report';
-import { isServerFeatureEnabled } from '@/mastodon/utils/environment';
+import { isClientFeatureEnabled, isServerFeatureEnabled } from '@/mastodon/utils/environment';
 
 import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
 import { clearHeight } from '../../actions/height_cache';
@@ -65,6 +65,7 @@ import {
   ListEdit,
   ListMembers,
   Collections,
+  CollectionDetail,
   CollectionsEditor,
   Blocks,
   DomainBlocks,
@@ -80,6 +81,7 @@ import {
   TermsOfService,
   AccountFeatured,
   AccountAbout,
+  AccountEdit,
   Quotes,
 } from './util/async-components';
 import { ColumnsContextProvider } from './util/columns_context';
@@ -232,6 +234,8 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/bookmarks' component={BookmarkedStatuses} content={children} />
             <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} />
 
+            {isClientFeatureEnabled('profile_editing') && <WrappedRoute key="edit" path='/profile/edit' component={AccountEdit} content={children} />}
+
             <WrappedRoute path={['/start', '/start/profile']} exact component={OnboardingProfile} content={children} />
             <WrappedRoute path='/start/follows' component={OnboardingFollows} content={children} />
             <WrappedRoute path='/directory' component={Directory} content={children} />
@@ -266,12 +270,12 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/mutes' component={Mutes} content={children} />
             <WrappedRoute path='/lists' component={Lists} content={children} />
             {areCollectionsEnabled() &&
-              <WrappedRoute path={['/collections/new', '/collections/:id/edit']} component={CollectionsEditor} content={children} />
+              [
+                <WrappedRoute path={['/collections/new', '/collections/:id/edit']} component={CollectionsEditor} content={children} />,
+                <WrappedRoute path='/collections/:id' component={CollectionDetail} content={children} />,
+                <WrappedRoute path='/collections' component={Collections} content={children} />
+              ]
             }
-            {areCollectionsEnabled() &&
-              <WrappedRoute path='/collections' component={Collections} content={children} />
-            }
-
             <Route component={BundleColumnError} />
           </WrappedSwitch>
         </ColumnsAreaContainer>
