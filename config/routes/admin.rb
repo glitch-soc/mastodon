@@ -154,6 +154,8 @@ namespace :admin do
     resource :reset, only: [:create]
     resource :action, only: [:new, :create], controller: 'account_actions'
 
+    resources :collections, only: [:show]
+
     resources :statuses, only: [:index, :show] do
       collection do
         post :batch
