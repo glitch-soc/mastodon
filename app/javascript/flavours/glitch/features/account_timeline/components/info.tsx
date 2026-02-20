@@ -4,9 +4,13 @@ import { FormattedMessage } from 'react-intl';
 
 import type { Relationship } from '@/flavours/glitch/models/relationship';
 
+import { isRedesignEnabled } from '../common';
+
 export const AccountInfo: FC<{ relationship?: Relationship }> = ({
   relationship,
 }) => {
+  const isRedesign = isRedesignEnabled();
+
   if (!relationship) {
     return null;
   }
@@ -17,17 +21,17 @@ export const AccountInfo: FC<{ relationship?: Relationship }> = ({
           <AccountInfoFollower relationship={relationship} />
         </span>
       )}
-      {relationship.blocking && (
+      {!isRedesign && relationship.blocking && (
         <span className='relationship-tag'>
           <FormattedMessage id='account.blocking' defaultMessage='Blocking' />
         </span>
       )}
-      {relationship.muting && (
+      {!isRedesign && relationship.muting && (
         <span key='muting' className='relationship-tag'>
           <FormattedMessage id='account.muting' defaultMessage='Muting' />
         </span>
       )}
-      {relationship.domain_blocking && (
+      {!isRedesign && relationship.domain_blocking && (
         <span key='domain_blocking' className='relationship-tag'>
           <FormattedMessage
             id='account.domain_blocking'

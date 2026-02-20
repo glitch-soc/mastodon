@@ -122,7 +122,7 @@ export const AccountHeader: React.FC<{
             isRedesign && redesignClasses.header,
           )}
         >
-          {me !== account.id && relationship && !isRedesign && (
+          {me !== account.id && relationship && (
             <AccountInfo relationship={relationship} />
           )}
 
