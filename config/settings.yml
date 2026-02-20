@@ -31,7 +31,6 @@ defaults: &defaults
   peers_api_enabled: true
   show_reblogs_in_public_timelines: false
   show_replies_in_public_timelines: false
-  default_content_type: 'text/plain'
   show_domain_blocks: 'disabled'
   show_domain_blocks_rationale: 'disabled'
   outgoing_spoilers: ''
