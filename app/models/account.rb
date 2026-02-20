@@ -272,6 +272,10 @@ class Account < ApplicationRecord
     ResolveAccountService.new.call(acct) unless local?
   end
 
+  def trendable?
+    boolean_with_default('trendable', Setting.trendable_by_default)
+  end
+
   def memorialize!
     update!(memorial: true)
   end
