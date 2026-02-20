@@ -1,22 +1,22 @@
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { useAccount } from 'flavours/glitch/hooks/useAccount';
+import { useAccount } from 'mastodon/hooks/useAccount';
 
 import type { BaseConfirmationModalProps } from './confirmation_modal';
 import { ConfirmationModal } from './confirmation_modal';
 
 const messages = defineMessages({
   title: {
-    id: 'confirmations.follow_to_list.title',
-    defaultMessage: 'Follow user?',
+    id: 'confirmations.follow_to_collection.title',
+    defaultMessage: 'Follow account?',
   },
   confirm: {
-    id: 'confirmations.follow_to_list.confirm',
-    defaultMessage: 'Follow and add to list',
+    id: 'confirmations.follow_to_collection.confirm',
+    defaultMessage: 'Follow and add to collection',
   },
 });
 
-export const ConfirmFollowToListModal: React.FC<
+export const ConfirmFollowToCollectionModal: React.FC<
   {
     accountId: string;
     onConfirm: () => void;
@@ -30,8 +30,8 @@ export const ConfirmFollowToListModal: React.FC<
       title={intl.formatMessage(messages.title)}
       message={
         <FormattedMessage
-          id='confirmations.follow_to_list.message'
-          defaultMessage='You need to be following {name} to add them to a list.'
+          id='confirmations.follow_to_collection.message'
+          defaultMessage='You need to be following {name} to add them to a collection.'
           values={{ name: <strong>@{account?.acct}</strong> }}
         />
       }
