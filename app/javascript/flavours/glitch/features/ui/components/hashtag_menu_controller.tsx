@@ -4,11 +4,11 @@ import { useIntl, defineMessages } from 'react-intl';
 
 import { useLocation } from 'react-router-dom';
 
-import Overlay from 'react-overlays/Overlay';
 import type {
   OffsetValue,
   UsePopperOptions,
 } from 'react-overlays/esm/usePopper';
+import Overlay from 'react-overlays/Overlay';
 
 import { DropdownMenu } from 'flavours/glitch/components/dropdown_menu';
 import { useIdentity } from 'flavours/glitch/identity_context';

@@ -2,11 +2,11 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import Overlay from 'react-overlays/Overlay';
 import type {
   OffsetValue,
   UsePopperOptions,
 } from 'react-overlays/esm/usePopper';
+import Overlay from 'react-overlays/Overlay';
 
 import { HoverCardAccount } from 'flavours/glitch/components/hover_card_account';
 import { useTimeout } from 'flavours/glitch/hooks/useTimeout';
