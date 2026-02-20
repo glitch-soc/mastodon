@@ -71,7 +71,7 @@ class ColumnSettings extends PureComponent {
 
         <section role='group' aria-labelledby='notifications-filter-bar'>
           <h3 id='notifications-filter-bar'><FormattedMessage id='notifications.column_settings.filter_bar.category' defaultMessage='Quick filter bar' /></h3>
- 
+
           <div className='column-settings__row'>
             <SettingToggle id='show-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'show']} onChange={onChange} label={filterBarShowStr} />
             <SettingToggle id='show-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'advanced']} onChange={onChange} label={filterAdvancedStr} />
@@ -122,6 +122,17 @@ class ColumnSettings extends PureComponent {
             {showPushSettings && <PillBarButton prefix='notifications_push' settings={pushSettings} settingPath={['alerts', 'favourite']} onChange={this.onPushChange} label={pushStr} />}
             <PillBarButton prefix='notifications' settings={settings} settingPath={['shows', 'favourite']} onChange={onChange} label={showStr} />
             <PillBarButton prefix='notifications' settings={settings} settingPath={['sounds', 'favourite']} onChange={onChange} label={soundStr} />
+          </div>
+        </section>
+
+        <section role='group' aria-labelledby='notifications-reaction'>
+          <h3 id='notifications-reaction'><FormattedMessage id='notifications.column_settings.reaction' defaultMessage='Reactions:' /></h3>
+
+          <div className='column-settings__pillbar'>
+            <PillBarButton disabled={browserPermission === 'denied'} prefix='notifications_desktop' settings={settings} settingPath={['alerts', 'reaction']} onChange={onChange} label={alertStr} />
+            {showPushSettings && <PillBarButton prefix='notifications_push' settings={pushSettings} settingPath={['alerts', 'reaction']} onChange={this.onPushChange} label={pushStr} />}
+            <PillBarButton prefix='notifications' settings={settings} settingPath={['shows', 'reaction']} onChange={onChange} label={showStr} />
+            <PillBarButton prefix='notifications' settings={settings} settingPath={['sounds', 'reaction']} onChange={onChange} label={soundStr} />
           </div>
         </section>
 
