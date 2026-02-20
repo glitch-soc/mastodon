@@ -5,9 +5,9 @@ import { isLocaleLoaded, setLocale } from './global_locale';
 
 const localeLoadingSemaphore = new Semaphore(1);
 
-const upstreamLocaleFiles = import.meta.glob<{ default: LocaleData['messages'] }>([
-  '@/mastodon/locales/*.json',
-]);
+const upstreamLocaleFiles = import.meta.glob<{
+  default: LocaleData['messages'];
+}>(['@/mastodon/locales/*.json']);
 const localeFiles = import.meta.glob<{ default: LocaleData['messages'] }>([
   './*.json',
 ]);
@@ -25,11 +25,15 @@ export async function loadLocale() {
     if (isLocaleLoaded()) return;
 
     // If there is no locale file, then fallback to english
-    const upstreamLocaleFile = Object.hasOwn(upstreamLocaleFiles, `/mastodon/locales/${locale}.json`)
+    const upstreamLocaleFile = Object.hasOwn(
+      upstreamLocaleFiles,
+      `/mastodon/locales/${locale}.json`,
+    )
       ? upstreamLocaleFiles[`/mastodon/locales/${locale}.json`]
       : upstreamLocaleFiles['/mastodon/locales/en.json'];
 
-    if (!upstreamLocaleFile) throw new Error('Could not load the upstream locale JSON file');
+    if (!upstreamLocaleFile)
+      throw new Error('Could not load the upstream locale JSON file');
 
     const { default: upstreamLocaleData } = await upstreamLocaleFile();
 
