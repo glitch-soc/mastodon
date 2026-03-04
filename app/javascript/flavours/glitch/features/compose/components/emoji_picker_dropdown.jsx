@@ -10,6 +10,7 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { supportsPassiveEvents } from 'detect-passive-events';
 import Overlay from 'react-overlays/Overlay';
 
+import AddReactionIcon from '@/material-icons/400-24px/add_reaction.svg?react';
 import MoodIcon from '@/material-icons/400-20px/mood.svg?react';
 import { IconButton } from 'flavours/glitch/components/icon_button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
@@ -31,6 +32,7 @@ const messages = defineMessages({
   objects: { id: 'emoji_button.objects', defaultMessage: 'Objects' },
   symbols: { id: 'emoji_button.symbols', defaultMessage: 'Symbols' },
   flags: { id: 'emoji_button.flags', defaultMessage: 'Flags' },
+  react: { id: 'status.react', defaultMessage: 'React' },
 });
 
 let EmojiPicker, Emoji; // load asynchronously
@@ -323,8 +325,7 @@ class EmojiPickerDropdown extends PureComponent {
     onPickEmoji: PropTypes.func.isRequired,
     onSkinTone: PropTypes.func.isRequired,
     skinTone: PropTypes.number.isRequired,
-    title: PropTypes.string,
-    icon: PropTypes.node,
+    react: PropTypes.bool,
     disabled: PropTypes.bool,
   };
 
@@ -388,8 +389,9 @@ class EmojiPickerDropdown extends PureComponent {
   };
 
   render() {
-    const { intl, onPickEmoji, onSkinTone, skinTone, frequentlyUsedEmojis, title: propsTitle, icon, disabled } = this.props;
-    const title = propsTitle ?? intl.formatMessage(messages.emoji);
+    const { intl, onPickEmoji, onSkinTone, skinTone, frequentlyUsedEmojis, react, disabled } = this.props;
+    const title = react ? intl.formatMessage(messages.react) : intl.formatMessage(messages.emoji);
+    const icon = react ? AddReactionIcon : MoodIcon;
     const { active, loading, placement } = this.state;
 
     return (
@@ -398,7 +400,7 @@ class EmojiPickerDropdown extends PureComponent {
           title={title}
           aria-expanded={active}
           active={active}
-          iconComponent={icon || MoodIcon}
+          iconComponent={icon}
           onClick={this.onToggle}
           disabled={disabled}
           id="emoji"
