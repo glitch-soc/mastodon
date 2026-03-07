@@ -38,5 +38,10 @@ en:
       title: User verification
   generic:
     use_this: Use this
+  notification_mailer:
+    reaction:
+      body: "%{name} reacted to your post:"
+      subject: "%{name} reacted to your post"
+      title: New reaction
   settings:
     flavours: Flavours
