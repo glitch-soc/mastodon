@@ -41,6 +41,6 @@ class ReactService < BaseService
   end
 
   def build_json(reaction)
-    Oj.dump(serialize_payload(reaction, ActivityPub::EmojiReactionSerializer))
+    JSON.generate(serialize_payload(reaction, ActivityPub::EmojiReactionSerializer))
   end
 end
