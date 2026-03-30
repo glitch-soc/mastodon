@@ -13,7 +13,7 @@ class Api::V1::Statuses::ReactionsController < Api::V1::Statuses::BaseController
     UnreactWorker.perform_async(current_account.id, @status.id, params[:id])
 
     render json: @status, serializer: REST::StatusSerializer, relationships: StatusRelationshipsPresenter.new([@status], current_account.id, reactions_map: { @status.id => false })
-  rescue Mastodon::NotPermittedError
+  rescue ActiveRecord::RecordNotFound, Mastodon::NotPermittedError
     not_found
   end
 end
