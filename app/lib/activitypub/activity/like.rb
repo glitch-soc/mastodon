@@ -22,7 +22,7 @@ class ActivityPub::Activity::Like < ActivityPub::Activity
   # See https://misskey-hub.net/ns.html#misskey-reaction for details
   def maybe_process_embedded_reaction
     original_status = status_from_uri(object_uri)
-    name = @json['content'] || @json['_misskey_reaction']
+    name = (@json['content'] || @json['_misskey_reaction']).dup
     return false if name.nil?
 
     if CUSTOM_EMOJI_REGEX.match?(name)
