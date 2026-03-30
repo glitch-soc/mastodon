@@ -22,6 +22,6 @@ class UnreactService < BaseService
   end
 
   def build_json(reaction)
-    JSON.generate(serialize_payload(reaction, ActivityPub::UndoEmojiReactionSerializer))
+    serialize_payload(reaction, ActivityPub::UndoEmojiReactionSerializer).to_json
   end
 end
