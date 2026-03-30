@@ -5,7 +5,7 @@ class ActivityPub::Activity::EmojiReact < ActivityPub::Activity
 
   def perform
     original_status = status_from_uri(object_uri)
-    name = @json['content']
+    name = @json['content'].dup
     return if original_status.nil? ||
               !original_status.account.local? ||
               delete_arrived_first?(@json['id'])
