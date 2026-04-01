@@ -120,7 +120,7 @@ class ActivityPub::Activity::Undo < ActivityPub::Activity
   end
 
   def undo_emoji_react
-    name = @object['content'] || @object['_misskey_reaction']
+    name = (@object['content'] || @object['_misskey_reaction']).dup
     return if name.nil?
 
     status = status_from_uri(target_uri)
