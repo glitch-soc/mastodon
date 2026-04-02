@@ -8,6 +8,7 @@ pl:
         setting_default_content_type_markdown: Jeżeli nie powiedziano inaczej, załóż, że wpisy są pisane w Markdown
         setting_default_content_type_plain: Jeżeli nie powiedziano inaczej, załóż, że wpisy zawierają jedynie czysty tekst (domyślne zachowane Mastodonu)
         setting_default_language: Język Twoich wpisów może zostać wykryty automatycznie, aczkolwiek poprawność działania tej fukcji nie jest gwarantowana
+        setting_show_followers_count: Pokazuj liczbę obserwujących na twoim profilu. Jeśli ukryjesz swoją liczbę obserwujących, nie będzie ona widoczna nawet dla ciebie, a niektóre aplikacje mogą na jej miejscu wyświetlać ujemną liczbę obserwujących.
         setting_skin: Zmienia wygląd używanej odmiany Mastodona
     labels:
       defaults:
@@ -16,6 +17,7 @@ pl:
         setting_default_content_type_markdown: Markdown
         setting_default_content_type_plain: Czysty tekst
         setting_favourite_modal: Pytaj o potwierdzenie przed dodaniem do ulubionych
+        setting_show_followers_count: Pokazuj liczbę twoich obserwujących
         setting_skin: Motyw
         setting_system_emoji_font: Użyj systemowej czcionki emotikon (tylko w wypadku odmiany „Glitch”)
       notification_emails:
