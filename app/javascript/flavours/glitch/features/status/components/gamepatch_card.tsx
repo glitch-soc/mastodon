@@ -2,9 +2,11 @@ import { useMemo } from 'react';
 
 import type { Map as ImmutableMap } from 'immutable';
 
-import { ensureGamepatchCard } from "mastodon/gamepatch";
+import { ensureGamepatchCard } from "flavours/glitch/gamepatch";
+import 'flavours/glitch/gamepatch/card.css';
+
+// Register <gamepatch-card> custom element (prevents tree-shaking)
 ensureGamepatchCard();
-import 'mastodon/gamepatch/card.css';
 
 type Payload = ImmutableMap<string, unknown>;
 
