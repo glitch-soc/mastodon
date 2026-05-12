@@ -85,3 +85,5 @@ gamepatch/
 # Allow frontend card runtime assets
 !app/javascript/mastodon/gamepatch/
 !app/javascript/mastodon/gamepatch/**
+!app/javascript/flavours/glitch/gamepatch/
+!app/javascript/flavours/glitch/gamepatch/**
