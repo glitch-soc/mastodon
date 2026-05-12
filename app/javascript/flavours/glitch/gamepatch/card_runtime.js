@@ -1,11 +1,16 @@
-(() => {
-  'use strict';
+// ESM-first card runtime. Loaded directly by the embed page as
+// <script type="module"> AND consumed by Vite in the Mastodon fork
+// (both flavors import this file via mastodon/gamepatch/card_runtime
+// and flavours/glitch/gamepatch/card_runtime — synced copies). The
+// named export `ensureGamepatchCard` exists as a tree-shake-resistant
+// symbol so Vite can't drop the module under strict sideEffects.
+//
+// Module-scoped (no IIFE wrap needed — ESM modules don't leak to
+// globals). The customElements.define + window.GamepatchCard pin at
+// the bottom run at module-load and are idempotent across multiple
+// evaluations (HMR, double-import).
 
-  if (window.GamepatchCard) {
-    return;
-  }
-
-  function setCssVariables(el, tokens, prefix) {
+function setCssVariables(el, tokens, prefix) {
     Object.entries(tokens || {}).forEach(([key, value]) => {
       const path = prefix ? `${prefix}-${key}` : key;
       if (value && typeof value === 'object' && !Array.isArray(value)) {
@@ -1311,9 +1316,14 @@
     return String(value).replace(/["\\]/g, '\\$&');
   }
 
+if (typeof window !== 'undefined' && !window.GamepatchCard) {
   if (!customElements.get('gamepatch-card')) {
     customElements.define('gamepatch-card', GamepatchCardElement);
   }
-
   window.GamepatchCard = GamepatchCardElement;
-})();
+}
+
+// Tree-shake-resistant export. The customElements.define above runs at
+// module evaluation; this function exists purely so importers can hold
+// a callable reference Vite won't prune under sideEffects:false.
+export function ensureGamepatchCard() {}

@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import type { Map as ImmutableMap } from 'immutable';
 
-import { ensureGamepatchCard } from "mastodon/gamepatch";
+import { ensureGamepatchCard } from "mastodon/gamepatch/card_runtime";
 ensureGamepatchCard();
 import 'mastodon/gamepatch/card.css';
 
