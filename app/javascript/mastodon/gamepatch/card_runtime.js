@@ -1317,3 +1317,9 @@
 
   window.GamepatchCard = GamepatchCardElement;
 })();
+
+// No-op tree-shake guard for Vite. The IIFE above runs at module
+// evaluation and registers <gamepatch-card>; this exported symbol
+// exists so consumers can call ensureGamepatchCard() and prevent
+// bundlers from dropping the side-effect import.
+export function ensureGamepatchCard() {}

@@ -2,7 +2,8 @@ import { useMemo } from 'react';
 
 import type { Map as ImmutableMap } from 'immutable';
 
-import 'mastodon/gamepatch/card_runtime';
+import { ensureGamepatchCard } from "mastodon/gamepatch/card_runtime";
+ensureGamepatchCard();
 import 'mastodon/gamepatch/card.css';
 
 type Payload = ImmutableMap<string, unknown>;
