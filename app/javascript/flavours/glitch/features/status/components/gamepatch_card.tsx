@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import type { Map as ImmutableMap } from 'immutable';
 
-import { ensureGamepatchCard } from "flavours/glitch/gamepatch/card_runtime";
+import { ensureGamepatchCard } from "gamepatch-card-runtime";
 import 'flavours/glitch/gamepatch/card.css';
 
 // Register <gamepatch-card> custom element (prevents tree-shaking)
