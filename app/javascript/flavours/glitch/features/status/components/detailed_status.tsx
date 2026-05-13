@@ -17,6 +17,7 @@ import { Avatar } from 'flavours/glitch/components/avatar';
 import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { EditedTimestamp } from 'flavours/glitch/components/edited_timestamp';
+import { AnimateEmojiProvider } from 'flavours/glitch/components/emoji/context';
 import { FilterWarning } from 'flavours/glitch/components/filter_warning';
 import { FormattedDateWrapper } from 'flavours/glitch/components/formatted_date';
 import type { StatusLike } from 'flavours/glitch/components/hashtag_bar';
@@ -534,10 +535,12 @@ export const DetailedStatus: React.FC<{
         {!expanded && <MentionsPlaceholder status={status} />}
 
         {!!visibleReactions && (
-          <StatusReactions
-            id={status.get('id')}
-            reactions={status.get('reactions').toArray()}
-          />
+          <AnimateEmojiProvider>
+            <StatusReactions
+              id={status.get('id')}
+              reactions={status.get('reactions').toArray()}
+            />
+          </AnimateEmojiProvider>
         )}
 
         <div className='detailed-status__meta'>

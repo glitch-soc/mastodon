@@ -13,7 +13,6 @@ import {
 import { AnimatedNumber } from '@/flavours/glitch/components/animated_number';
 import { Emoji } from '@/flavours/glitch/components/emoji';
 import { isUnicodeEmoji } from '@/flavours/glitch/features/emoji/utils';
-import { useCustomEmojis } from '@/flavours/glitch/hooks/useCustomEmojis';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
   reduceMotion,
@@ -81,7 +80,6 @@ const Reaction: FC<{
 }> = ({ id, reaction, style }) => {
   const dispatch = useAppDispatch();
   const { signedIn } = useIdentity();
-  const customEmoji = useCustomEmojis();
   const handleClick = useCallback(() => {
     if (!signedIn) return;
     if (reaction.get('me')) {
@@ -95,6 +93,17 @@ const Reaction: FC<{
     ? (reaction.get('name') as string)
     : `:${reaction.get('name') as string}:`;
 
+  let custom;
+  if (reaction.get('url')) {
+    custom = {
+      [reaction.get('name') as string]: {
+        shortcode: reaction.get('name') as string,
+        static_url: reaction.get('static_url') as string,
+        url: reaction.get('url') as string,
+      },
+    };
+  }
+
   return (
     <animated.button
       className={classNames('reactions-bar__item', {
@@ -104,7 +113,7 @@ const Reaction: FC<{
       style={style}
     >
       <span className='reactions-bar__item__emoji'>
-        <Emoji code={code} customEmoji={customEmoji} />
+        <Emoji code={code} customEmoji={custom} />
       </span>
       <span className='reactions-bar__item__count'>
         <AnimatedNumber value={reaction.get('count') as number} />
