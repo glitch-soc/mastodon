@@ -537,7 +537,12 @@ class Status extends ImmutablePureComponent {
           </Bundle>
         );
       }
-    } else if (status.get('card') && !status.get('quote')) {
+    } else if (status.get('card') && !status.get('quote') && !status.get('gamepatch_card')) {
+      // Suppress the standard PreviewCard when this status carries a
+      // gamepatch_card payload — we render the interactive inline card
+      // below and the PreviewCard would just be a dead iframe placeholder
+      // for the same URL. Federation viewers on non-gamepatch instances
+      // (which don't strip the URL preview) still get the link card.
       media = (
         <Card
           key={`${status.get('id')}-${status.get('edited_at')}`}
