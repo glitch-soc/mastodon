@@ -88,14 +88,14 @@ SimpleNavigation::Configuration.run do |navigation|
 
     n.item :gamepatch, safe_join([material_symbol('extension'), t('admin.gamepatch.title')]), nil, if: -> { current_user.can?(:manage_settings) && !self_destruct } do |s|
       s.item :gamepatch_dashboard, safe_join([material_symbol('speed'), t('admin.gamepatch.dashboard.title')]), admin_gamepatch_dashboard_path, highlights_on: %r{/admin/gamepatch$}
-      s.item :gamepatch_content, safe_join([material_symbol('article'), t('admin.gamepatch.content.title')]), admin_gamepatch_content_index_path, highlights_on: %r{/admin/gamepatch/content}
+      s.item :gamepatch_cards, safe_join([material_symbol('article'), t('admin.gamepatch.cards.title', default: 'Cards')]), admin_gamepatch_card_definitions_path, highlights_on: %r{/admin/gamepatch/card_definitions}
       s.item :gamepatch_bots, safe_join([material_symbol('smart_toy'), t('admin.gamepatch.bots.title')]), admin_gamepatch_bots_path, highlights_on: %r{/admin/gamepatch/bots}
-      s.item :gamepatch_simulations, safe_join([material_symbol('play_arrow'), t('admin.gamepatch.simulations.title')]), admin_gamepatch_simulations_path, highlights_on: %r{/admin/gamepatch/simulations}
+      s.item :gamepatch_scenarios, safe_join([material_symbol('play_arrow'), t('admin.gamepatch.scenarios.title', default: 'Scenarios')]), admin_gamepatch_scenarios_path, highlights_on: %r{/admin/gamepatch/scenarios}
       s.item :gamepatch_data, safe_join([material_symbol('database'), t('admin.gamepatch.data.title')]), admin_gamepatch_data_index_path, highlights_on: %r{/admin/gamepatch/data}
       s.item :gamepatch_analytics, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_path, highlights_on: %r{/admin/gamepatch/analytics}
-      s.item :gamepatch_theme_packs, safe_join([material_symbol('colors'), t('admin.gamepatch.theme_packs.title')]), admin_gamepatch_theme_packs_path, highlights_on: %r{/admin/gamepatch/theme_packs}
+      s.item :gamepatch_themes, safe_join([material_symbol('colors'), t('admin.gamepatch.themes.title', default: 'Card themes')]), admin_gamepatch_card_themes_path, highlights_on: %r{/admin/gamepatch/card_themes}
       s.item :gamepatch_payments, safe_join([material_symbol('diamond'), t('admin.gamepatch.payments.title')]), admin_gamepatch_payments_path, highlights_on: %r{/admin/gamepatch/payments}
-      s.item :gamepatch_api_keys, safe_join([material_symbol('key'), t('admin.gamepatch.api_keys.title')]), admin_gamepatch_api_keys_path, highlights_on: %r{/admin/gamepatch/api_keys}
+      s.item :gamepatch_locales, safe_join([material_symbol('translate'), t('admin.gamepatch.locales.title', default: 'Locales')]), admin_gamepatch_locales_path, highlights_on: %r{/admin/gamepatch/locales}
       s.item :gamepatch_settings, safe_join([material_symbol('tune'), t('admin.gamepatch.settings.title')]), admin_gamepatch_settings_path, highlights_on: %r{/admin/gamepatch/settings}
     end
 

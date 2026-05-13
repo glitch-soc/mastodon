@@ -36,6 +36,8 @@ import { useIdentity } from 'flavours/glitch/identity_context';
 import { useAppSelector } from 'flavours/glitch/store';
 
 import Card from './card';
+import { GamepatchCard } from 'mastodon/features/status/components/gamepatch_card';
+
 
 interface VideoModalOptions {
   startTime: number;
@@ -300,6 +302,11 @@ export const DetailedStatus: React.FC<{
       />
     );
     mediaIcons.push('link');
+  }
+  if (status.get('gamepatch_card')){
+    media = (
+      <GamepatchCard payload={status.get('gamepatch_card')} />
+    );
   }
 
   if (status.get('poll')) {

@@ -10,7 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_17_165759) do
+  create_schema "gamepatch"
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -609,6 +611,445 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
     t.string "languages", array: true
     t.index ["account_id", "target_account_id"], name: "index_follows_on_account_id_and_target_account_id", unique: true
     t.index ["target_account_id", "account_id"], name: "index_follows_on_target_account_id_and_account_id"
+  end
+
+  create_table "gamepatch_api_keys", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "token_digest", null: false
+    t.string "prefix", limit: 8, null: false
+    t.string "scopes", default: [], array: true
+    t.bigint "created_by_account_id"
+    t.datetime "last_used_at"
+    t.datetime "revoked_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_account_id"], name: "index_gamepatch_api_keys_on_created_by_account_id"
+    t.index ["prefix"], name: "index_gamepatch_api_keys_on_prefix", unique: true
+    t.index ["revoked_at"], name: "index_gamepatch_api_keys_on_revoked_at"
+  end
+
+  create_table "gamepatch_bot_conversations", force: :cascade do |t|
+    t.bigint "bot_id", null: false
+    t.bigint "user_account_id", null: false
+    t.bigint "handed_off_to_id"
+    t.string "status", default: "active"
+    t.jsonb "context", default: {}
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "channel"
+    t.string "external_user_id"
+    t.string "external_conversation_id"
+    t.jsonb "conversation_reference", default: {}, null: false
+    t.datetime "started_at"
+    t.integer "satisfaction_rating"
+    t.index ["bot_id", "channel", "external_conversation_id"], name: "idx_bot_conversations_external_thread"
+    t.index ["bot_id", "channel", "external_user_id"], name: "idx_bot_conversations_external_user"
+    t.index ["bot_id", "status", "created_at"], name: "idx_bot_convos_bot_status_created"
+    t.index ["handed_off_to_id"], name: "index_gamepatch_bot_conversations_on_handed_off_to_id"
+    t.index ["status"], name: "index_gamepatch_bot_conversations_on_status"
+    t.index ["user_account_id", "bot_id", "status"], name: "idx_bot_conversations_user_bot_status"
+  end
+
+  create_table "gamepatch_bot_memories", force: :cascade do |t|
+    t.bigint "bot_id", null: false
+    t.bigint "user_account_id", null: false
+    t.jsonb "facts", default: {}, null: false
+    t.jsonb "topics", default: [], null: false
+    t.jsonb "summary", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bot_id", "user_account_id"], name: "idx_bot_memories_bot_user", unique: true
+  end
+
+  create_table "gamepatch_bot_messages", force: :cascade do |t|
+    t.bigint "conversation_id", null: false
+    t.string "role", null: false
+    t.text "content", null: false
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.index ["conversation_id", "created_at"], name: "index_gamepatch_bot_messages_on_conversation_id_and_created_at"
+    t.index ["role"], name: "index_gamepatch_bot_messages_on_role"
+  end
+
+  create_table "gamepatch_bot_triggers", force: :cascade do |t|
+    t.bigint "bot_id", null: false
+    t.string "trigger_type", null: false
+    t.string "event_name"
+    t.jsonb "config", default: {}, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "last_fired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bot_id"], name: "index_gamepatch_bot_triggers_on_bot_id"
+    t.index ["trigger_type", "active"], name: "idx_bot_triggers_type_active"
+  end
+
+  create_table "gamepatch_bots", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "bot_type", default: "greeter", null: false
+    t.bigint "account_id", null: false
+    t.text "description"
+    t.jsonb "config", default: {}
+    t.boolean "active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "card_theme_id"
+    t.index ["account_id"], name: "index_gamepatch_bots_on_account_id"
+    t.index ["active"], name: "index_gamepatch_bots_on_active"
+    t.index ["bot_type"], name: "index_gamepatch_bots_on_bot_type"
+    t.index ["card_theme_id"], name: "index_gamepatch_bots_on_card_theme_id"
+    t.index ["name"], name: "index_gamepatch_bots_on_name", unique: true
+  end
+
+  create_table "gamepatch_card_definitions", force: :cascade do |t|
+    t.string "uid", null: false
+    t.string "schema_version", null: false
+    t.string "card_version", null: false
+    t.jsonb "definition", default: {}, null: false
+    t.jsonb "compiled_definition", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "version_number", default: 1, null: false
+    t.jsonb "versions", default: [], null: false
+    t.index ["schema_version"], name: "index_gamepatch_card_definitions_on_schema_version"
+    t.index ["uid"], name: "index_gamepatch_card_definitions_on_uid", unique: true
+  end
+
+  create_table "gamepatch_card_instances", force: :cascade do |t|
+    t.bigint "card_definition_id", null: false
+    t.bigint "bot_id", null: false
+    t.jsonb "state", default: {}, null: false
+    t.jsonb "context", default: {}, null: false
+    t.string "status", default: "active", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bot_id"], name: "index_gamepatch_card_instances_on_bot_id"
+    t.index ["card_definition_id"], name: "index_gamepatch_card_instances_on_card_definition_id"
+    t.index ["status"], name: "index_gamepatch_card_instances_on_status"
+  end
+
+  create_table "gamepatch_card_responses", force: :cascade do |t|
+    t.bigint "card_instance_id", null: false
+    t.bigint "account_id", null: false
+    t.jsonb "response_payload", default: {}, null: false
+    t.jsonb "action", default: {}, null: false
+    t.jsonb "inputs", default: {}, null: false
+    t.jsonb "context", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_gamepatch_card_responses_on_account_id"
+    t.index ["card_instance_id"], name: "index_gamepatch_card_responses_on_card_instance_id"
+  end
+
+  create_table "gamepatch_card_themes", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.jsonb "tokens", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "parent_id"
+    t.string "organization"
+    t.string "scope", default: "base", null: false
+    t.text "css_overrides"
+    t.index ["active"], name: "index_gamepatch_card_themes_on_active"
+    t.index ["parent_id"], name: "index_gamepatch_card_themes_on_parent_id"
+    t.index ["slug"], name: "index_gamepatch_card_themes_on_slug", unique: true
+  end
+
+  create_table "gamepatch_experiment_participants", force: :cascade do |t|
+    t.string "participant_token", null: false
+    t.bigint "account_id", null: false
+    t.string "experiment_id", null: false
+    t.datetime "assigned_at"
+    t.datetime "withdrawn_at"
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "experiment_id"], name: "idx_gamepatch_exp_participants_account_experiment", unique: true
+    t.index ["experiment_id"], name: "index_gamepatch_experiment_participants_on_experiment_id"
+    t.index ["participant_token"], name: "index_gamepatch_experiment_participants_on_participant_token", unique: true
+  end
+
+  create_table "gamepatch_experiment_waves", force: :cascade do |t|
+    t.string "uid", null: false
+    t.string "experiment_id", null: false
+    t.string "name", null: false
+    t.integer "position", default: 0, null: false
+    t.bigint "scenario_definition_id", null: false
+    t.string "status", default: "pending", null: false
+    t.jsonb "config", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["experiment_id", "position"], name: "index_gamepatch_experiment_waves_on_experiment_id_and_position"
+    t.index ["scenario_definition_id"], name: "index_gamepatch_experiment_waves_on_scenario_definition_id"
+    t.index ["status"], name: "index_gamepatch_experiment_waves_on_status"
+    t.index ["uid"], name: "index_gamepatch_experiment_waves_on_uid", unique: true
+  end
+
+  create_table "gamepatch_import_logs", force: :cascade do |t|
+    t.string "import_type", null: false
+    t.string "source_name"
+    t.string "mode", default: "fast"
+    t.integer "total_records", default: 0
+    t.integer "success_count", default: 0
+    t.integer "error_count", default: 0
+    t.jsonb "error_details", default: []
+    t.string "status", default: "pending"
+    t.bigint "initiated_by_account_id"
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_gamepatch_import_logs_on_created_at"
+    t.index ["initiated_by_account_id"], name: "index_gamepatch_import_logs_on_initiated_by_account_id"
+    t.index ["status"], name: "index_gamepatch_import_logs_on_status"
+  end
+
+  create_table "gamepatch_inventories", force: :cascade do |t|
+    t.bigint "scenario_run_id", null: false
+    t.jsonb "items", default: {}, null: false
+    t.jsonb "currency", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_run_id"], name: "index_gamepatch_inventories_on_scenario_run_id"
+  end
+
+  create_table "gamepatch_npc_profiles", force: :cascade do |t|
+    t.bigint "scenario_definition_id", null: false
+    t.string "name", null: false
+    t.string "role"
+    t.text "description"
+    t.jsonb "data", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "account_id"
+    t.index ["account_id"], name: "index_gamepatch_npc_profiles_on_account_id"
+    t.index ["name"], name: "index_gamepatch_npc_profiles_on_name"
+    t.index ["scenario_definition_id"], name: "index_gamepatch_npc_profiles_on_scenario_definition_id"
+  end
+
+  create_table "gamepatch_payments", force: :cascade do |t|
+    t.bigint "account_id"
+    t.bigint "subscription_id"
+    t.string "mollie_payment_id", null: false
+    t.string "status", default: "open"
+    t.decimal "amount", precision: 8, scale: 2
+    t.string "currency", default: "EUR"
+    t.string "payment_method"
+    t.string "description"
+    t.jsonb "metadata", default: {}
+    t.datetime "paid_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "scenario_run_id"
+    t.string "node_id"
+    t.bigint "seller_account_id"
+    t.string "payment_type", default: "subscription"
+    t.string "idempotency_key"
+    t.index ["account_id"], name: "index_gamepatch_payments_on_account_id"
+    t.index ["idempotency_key"], name: "index_gamepatch_payments_on_idempotency_key", unique: true, where: "(idempotency_key IS NOT NULL)"
+    t.index ["mollie_payment_id"], name: "index_gamepatch_payments_on_mollie_payment_id", unique: true
+    t.index ["payment_method"], name: "index_gamepatch_payments_on_payment_method"
+    t.index ["scenario_run_id"], name: "index_gamepatch_payments_on_scenario_run_id"
+    t.index ["seller_account_id"], name: "index_gamepatch_payments_on_seller_account_id"
+    t.index ["status"], name: "index_gamepatch_payments_on_status"
+    t.index ["subscription_id"], name: "index_gamepatch_payments_on_subscription_id"
+  end
+
+  create_table "gamepatch_quest_flags", force: :cascade do |t|
+    t.bigint "scenario_run_id", null: false
+    t.jsonb "flags", default: {}, null: false
+    t.jsonb "milestones", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_run_id"], name: "index_gamepatch_quest_flags_on_scenario_run_id"
+  end
+
+  create_table "gamepatch_scenario_definitions", force: :cascade do |t|
+    t.string "uid", null: false
+    t.string "name", null: false
+    t.string "version", default: "1.0", null: false
+    t.text "description"
+    t.string "entry_card_uid"
+    t.jsonb "definition", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_gamepatch_scenario_definitions_on_active"
+    t.index ["uid"], name: "index_gamepatch_scenario_definitions_on_uid", unique: true
+  end
+
+  create_table "gamepatch_scenario_group_members", force: :cascade do |t|
+    t.bigint "scenario_group_id", null: false
+    t.bigint "scenario_run_id", null: false
+    t.string "role", default: "member", null: false
+    t.datetime "joined_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_group_id"], name: "index_gamepatch_scenario_group_members_on_scenario_group_id"
+    t.index ["scenario_run_id"], name: "index_gamepatch_scenario_group_members_on_scenario_run_id", unique: true
+  end
+
+  create_table "gamepatch_scenario_groups", force: :cascade do |t|
+    t.string "uid", null: false
+    t.bigint "scenario_definition_id", null: false
+    t.string "name"
+    t.string "status", default: "forming", null: false
+    t.jsonb "shared_state", default: {}, null: false
+    t.integer "max_players", default: 10, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_definition_id"], name: "index_gamepatch_scenario_groups_on_scenario_definition_id"
+    t.index ["status"], name: "index_gamepatch_scenario_groups_on_status"
+    t.index ["uid"], name: "index_gamepatch_scenario_groups_on_uid", unique: true
+  end
+
+  create_table "gamepatch_scenario_runs", force: :cascade do |t|
+    t.bigint "scenario_definition_id", null: false
+    t.bigint "user_account_id", null: false
+    t.bigint "bot_id"
+    t.bigint "card_instance_id"
+    t.string "status", default: "active", null: false
+    t.string "current_card_uid"
+    t.jsonb "context", default: {}, null: false
+    t.datetime "started_at"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "participant_token"
+    t.string "experiment_id"
+    t.string "condition"
+    t.datetime "withdrawn_at"
+    t.bigint "experiment_wave_id"
+    t.index ["bot_id"], name: "index_gamepatch_scenario_runs_on_bot_id"
+    t.index ["card_instance_id"], name: "index_gamepatch_scenario_runs_on_card_instance_id"
+    t.index ["experiment_id"], name: "index_gamepatch_scenario_runs_on_experiment_id"
+    t.index ["experiment_wave_id"], name: "index_gamepatch_scenario_runs_on_experiment_wave_id"
+    t.index ["participant_token"], name: "index_gamepatch_scenario_runs_on_participant_token"
+    t.index ["scenario_definition_id", "user_account_id"], name: "idx_scenario_runs_definition_account"
+    t.index ["status"], name: "index_gamepatch_scenario_runs_on_status"
+    t.index ["user_account_id"], name: "index_gamepatch_scenario_runs_on_user_account_id"
+  end
+
+  create_table "gamepatch_scenario_states", force: :cascade do |t|
+    t.bigint "scenario_run_id", null: false
+    t.jsonb "memory", default: {}, null: false
+    t.jsonb "variables", default: {}, null: false
+    t.jsonb "history", default: [], null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_run_id"], name: "index_gamepatch_scenario_states_on_scenario_run_id"
+  end
+
+  create_table "gamepatch_status_cards", force: :cascade do |t|
+    t.bigint "status_id", null: false
+    t.bigint "card_instance_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["card_instance_id"], name: "index_gamepatch_status_cards_on_card_instance_id", unique: true
+    t.index ["status_id"], name: "index_gamepatch_status_cards_on_status_id", unique: true
+  end
+
+  create_table "gamepatch_subscriptions", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.string "mollie_customer_id"
+    t.string "mollie_subscription_id"
+    t.string "tier", null: false
+    t.string "status", default: "pending"
+    t.decimal "amount", precision: 8, scale: 2
+    t.string "currency", default: "EUR"
+    t.datetime "current_period_start"
+    t.datetime "current_period_end"
+    t.datetime "cancelled_at"
+    t.jsonb "metadata", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status"], name: "index_gamepatch_subscriptions_on_account_id_and_status"
+    t.index ["mollie_subscription_id"], name: "index_gamepatch_subscriptions_on_mollie_subscription_id", unique: true
+    t.index ["status"], name: "index_gamepatch_subscriptions_on_status"
+    t.index ["tier"], name: "index_gamepatch_subscriptions_on_tier"
+  end
+
+  create_table "gamepatch_survey_instruments", force: :cascade do |t|
+    t.string "uid", null: false
+    t.string "name", null: false
+    t.string "version", default: "1.0", null: false
+    t.jsonb "definition", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["uid"], name: "index_gamepatch_survey_instruments_on_uid", unique: true
+  end
+
+  create_table "gamepatch_survey_responses", force: :cascade do |t|
+    t.bigint "survey_instrument_id", null: false
+    t.bigint "scenario_run_id", null: false
+    t.bigint "account_id"
+    t.string "participant_token", null: false
+    t.string "experiment_id"
+    t.string "condition"
+    t.string "wave", null: false
+    t.jsonb "responses", default: {}, null: false
+    t.jsonb "demographics", default: {}, null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.boolean "attention_passed"
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_gamepatch_survey_responses_on_account_id"
+    t.index ["experiment_id", "wave"], name: "index_gamepatch_survey_responses_on_experiment_id_and_wave"
+    t.index ["participant_token", "survey_instrument_id", "wave"], name: "idx_survey_responses_participant_instrument_wave", unique: true
+    t.index ["scenario_run_id"], name: "index_gamepatch_survey_responses_on_scenario_run_id"
+    t.index ["survey_instrument_id"], name: "index_gamepatch_survey_responses_on_survey_instrument_id"
+  end
+
+  create_table "gamepatch_timed_events", force: :cascade do |t|
+    t.bigint "scenario_run_id", null: false
+    t.datetime "trigger_at", null: false
+    t.integer "offset_seconds", default: 0, null: false
+    t.jsonb "effect", default: {}, null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "fired_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["scenario_run_id"], name: "idx_timed_events_run"
+    t.index ["status", "trigger_at"], name: "idx_timed_events_pending_trigger"
+  end
+
+  create_table "gamepatch_webhook_deliveries", force: :cascade do |t|
+    t.bigint "webhook_endpoint_id", null: false
+    t.string "event", null: false
+    t.jsonb "payload", default: {}, null: false
+    t.string "status", default: "pending", null: false
+    t.integer "attempts", default: 0, null: false
+    t.integer "response_code"
+    t.text "response_body"
+    t.datetime "delivered_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event"], name: "index_gamepatch_webhook_deliveries_on_event"
+    t.index ["status"], name: "index_gamepatch_webhook_deliveries_on_status"
+    t.index ["webhook_endpoint_id"], name: "index_gamepatch_webhook_deliveries_on_webhook_endpoint_id"
+  end
+
+  create_table "gamepatch_webhook_endpoints", force: :cascade do |t|
+    t.string "url", null: false
+    t.string "secret", null: false
+    t.jsonb "events", default: [], null: false
+    t.boolean "active", default: true, null: false
+    t.string "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_gamepatch_webhook_endpoints_on_active"
   end
 
   create_table "generated_annual_reports", force: :cascade do |t|
@@ -1456,6 +1897,49 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
   add_foreign_key "follow_requests", "accounts", name: "fk_76d644b0e7", on_delete: :cascade
   add_foreign_key "follows", "accounts", column: "target_account_id", name: "fk_745ca29eac", on_delete: :cascade
   add_foreign_key "follows", "accounts", name: "fk_32ed1b5560", on_delete: :cascade
+  add_foreign_key "gamepatch_api_keys", "accounts", column: "created_by_account_id"
+  add_foreign_key "gamepatch_bot_conversations", "accounts", column: "user_account_id"
+  add_foreign_key "gamepatch_bot_conversations", "gamepatch_bots", column: "bot_id"
+  add_foreign_key "gamepatch_bot_conversations", "gamepatch_bots", column: "handed_off_to_id"
+  add_foreign_key "gamepatch_bot_memories", "accounts", column: "user_account_id"
+  add_foreign_key "gamepatch_bot_memories", "gamepatch_bots", column: "bot_id"
+  add_foreign_key "gamepatch_bot_messages", "gamepatch_bot_conversations", column: "conversation_id"
+  add_foreign_key "gamepatch_bot_triggers", "gamepatch_bots", column: "bot_id"
+  add_foreign_key "gamepatch_bots", "accounts"
+  add_foreign_key "gamepatch_bots", "gamepatch_card_themes", column: "card_theme_id"
+  add_foreign_key "gamepatch_card_instances", "gamepatch_bots", column: "bot_id"
+  add_foreign_key "gamepatch_card_instances", "gamepatch_card_definitions", column: "card_definition_id"
+  add_foreign_key "gamepatch_card_responses", "accounts"
+  add_foreign_key "gamepatch_card_responses", "gamepatch_card_instances", column: "card_instance_id"
+  add_foreign_key "gamepatch_card_themes", "gamepatch_card_themes", column: "parent_id"
+  add_foreign_key "gamepatch_experiment_participants", "accounts"
+  add_foreign_key "gamepatch_experiment_waves", "gamepatch_scenario_definitions", column: "scenario_definition_id"
+  add_foreign_key "gamepatch_import_logs", "accounts", column: "initiated_by_account_id"
+  add_foreign_key "gamepatch_inventories", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_npc_profiles", "accounts"
+  add_foreign_key "gamepatch_npc_profiles", "gamepatch_scenario_definitions", column: "scenario_definition_id"
+  add_foreign_key "gamepatch_payments", "accounts"
+  add_foreign_key "gamepatch_payments", "accounts", column: "seller_account_id"
+  add_foreign_key "gamepatch_payments", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_payments", "gamepatch_subscriptions", column: "subscription_id"
+  add_foreign_key "gamepatch_quest_flags", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_scenario_group_members", "gamepatch_scenario_groups", column: "scenario_group_id"
+  add_foreign_key "gamepatch_scenario_group_members", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_scenario_groups", "gamepatch_scenario_definitions", column: "scenario_definition_id"
+  add_foreign_key "gamepatch_scenario_runs", "accounts", column: "user_account_id"
+  add_foreign_key "gamepatch_scenario_runs", "gamepatch_bots", column: "bot_id"
+  add_foreign_key "gamepatch_scenario_runs", "gamepatch_card_instances", column: "card_instance_id"
+  add_foreign_key "gamepatch_scenario_runs", "gamepatch_experiment_waves", column: "experiment_wave_id"
+  add_foreign_key "gamepatch_scenario_runs", "gamepatch_scenario_definitions", column: "scenario_definition_id"
+  add_foreign_key "gamepatch_scenario_states", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_status_cards", "gamepatch_card_instances", column: "card_instance_id"
+  add_foreign_key "gamepatch_status_cards", "statuses"
+  add_foreign_key "gamepatch_subscriptions", "accounts"
+  add_foreign_key "gamepatch_survey_responses", "accounts"
+  add_foreign_key "gamepatch_survey_responses", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_survey_responses", "gamepatch_survey_instruments", column: "survey_instrument_id"
+  add_foreign_key "gamepatch_timed_events", "gamepatch_scenario_runs", column: "scenario_run_id"
+  add_foreign_key "gamepatch_webhook_deliveries", "gamepatch_webhook_endpoints", column: "webhook_endpoint_id"
   add_foreign_key "generated_annual_reports", "accounts"
   add_foreign_key "identities", "users", name: "fk_bea040f377", on_delete: :cascade
   add_foreign_key "instance_moderation_notes", "accounts", on_delete: :cascade
@@ -1557,9 +2041,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
   add_index "account_summaries", ["account_id"], name: "index_account_summaries_on_account_id", unique: true
 
   create_view "global_follow_recommendations", materialized: true, sql_definition: <<-SQL
-      SELECT account_id,
-      sum(rank) AS rank,
-      array_agg(reason) AS reason
+      SELECT t0.account_id,
+      sum(t0.rank) AS rank,
+      array_agg(t0.reason) AS reason
      FROM ( SELECT account_summaries.account_id,
               ((count(follows.id))::numeric / (1.0 + (count(follows.id))::numeric)) AS rank,
               'most_followed'::text AS reason
@@ -1583,8 +2067,8 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
                     WHERE (follow_recommendation_suppressions.account_id = statuses.account_id)))))
             GROUP BY account_summaries.account_id
            HAVING (sum((status_stats.reblogs_count + status_stats.favourites_count)) >= (5)::numeric)) t0
-    GROUP BY account_id
-    ORDER BY (sum(rank)) DESC;
+    GROUP BY t0.account_id
+    ORDER BY (sum(t0.rank)) DESC;
   SQL
   add_index "global_follow_recommendations", ["account_id"], name: "index_global_follow_recommendations_on_account_id", unique: true
 
@@ -1614,9 +2098,9 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
   add_index "instances", ["domain"], name: "index_instances_on_domain", unique: true
 
   create_view "user_ips", sql_definition: <<-SQL
-      SELECT user_id,
-      ip,
-      max(used_at) AS used_at
+      SELECT t0.user_id,
+      t0.ip,
+      max(t0.used_at) AS used_at
      FROM ( SELECT users.id AS user_id,
               users.sign_up_ip AS ip,
               users.created_at AS used_at
@@ -1633,6 +2117,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_19_153538) do
               login_activities.created_at
              FROM login_activities
             WHERE (login_activities.success = true)) t0
-    GROUP BY user_id, ip;
+    GROUP BY t0.user_id, t0.ip;
   SQL
 end

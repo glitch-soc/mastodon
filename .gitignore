@@ -87,3 +87,6 @@ gamepatch/
 !app/javascript/mastodon/gamepatch/**
 !app/javascript/flavours/glitch/gamepatch/
 !app/javascript/flavours/glitch/gamepatch/**
+
+# Gamepatch deploy backups (timestamped snapshot dirs)
+gamepatch_backups/

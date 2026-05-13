@@ -33,6 +33,8 @@ import StatusContent from './status_content';
 import StatusIcons from './status_icons';
 import StatusPrepend from './status_prepend';
 import { IconButton } from './icon_button';
+import { GamepatchCard } from 'mastodon/features/status/components/gamepatch_card';
+
 
 const domParser = new DOMParser();
 
@@ -642,6 +644,11 @@ class Status extends ImmutablePureComponent {
         />,
       );
       mediaIcons.push('link');
+    }
+    if (status.get('gamepatch_card')){
+      media.push(
+        <GamepatchCard key='gamepatch-card' payload={status.get('gamepatch_card')} />
+      );
     }
 
     if (status.get('poll')) {
