@@ -59,6 +59,17 @@ export const config: UserConfigFnPromise = async ({ mode, command }) => {
           __dirname,
           'gamepatch/app/assets/stylesheets/gamepatch/card.css',
         ),
+        // ADR 0007: UISlot plugin system. <GamepatchSlot name="..."/>
+        // mounts widget React components registered by the engine. Each
+        // widget self-registers when its module loads (side-effect import).
+        'gamepatch-widget-slot': path.resolve(
+          __dirname,
+          'gamepatch/app/javascript/gamepatch/widget_slot.tsx',
+        ),
+        'gamepatch-widget-styles': path.resolve(
+          __dirname,
+          'gamepatch/app/javascript/gamepatch/widget_slot.css',
+        ),
       },
     },
     css: {

@@ -11,6 +11,11 @@ import {
   termsOfServiceEnabled,
 } from 'mastodon/initial_state';
 
+// ADR 0007: UISlot plugin system. The colophon footer hosts the
+// 'footer-colophon' slot — engine-registered widgets mount here.
+import { GamepatchSlot } from 'gamepatch-widget-slot';
+import 'gamepatch-widget-styles';
+
 const DividingCircle: React.FC = () => <span aria-hidden>{' · '}</span>;
 
 export const LinkFooter: React.FC<{
@@ -99,6 +104,8 @@ export const LinkFooter: React.FC<{
         <DividingCircle />
         <span className='version'>v{version}</span>
       </p>
+
+      <GamepatchSlot name='footer-colophon' />
     </div>
   );
 };
