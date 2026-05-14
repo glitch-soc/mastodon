@@ -221,7 +221,7 @@ class Status extends ImmutablePureComponent {
 
     // Hack to fix timeline jumps when a preview card is fetched
     this.setState({
-      showCard: !this.props.muted && !this.props.hidden && this.props.status && this.props.status.get('card') && this.props.settings.get('inline_preview_cards'),
+      showCard: !this.props.muted && !this.props.hidden && this.props.status && this.props.status.get('card') && !this.props.status.get('gamepatch_card') && this.props.settings.get('inline_preview_cards'),
     });
   }
 
@@ -232,7 +232,7 @@ class Status extends ImmutablePureComponent {
 
     const { muted, hidden, status, settings } = this.props;
 
-    const doShowCard = !muted && !hidden && status && status.get('card') && settings.get('inline_preview_cards');
+    const doShowCard = !muted && !hidden && status && status.get('card') && !status.get('gamepatch_card') && settings.get('inline_preview_cards');
     if (doShowCard && !this.state.showCard) {
       if (doShowCard) this.setState({ showCard: true });
       return this.props.getScrollPosition();
@@ -635,7 +635,7 @@ class Status extends ImmutablePureComponent {
         );
         mediaIcons.push('video-camera');
       }
-    } else if (status.get('card') && settings.get('inline_preview_cards') && !this.props.muted && !status.get('quote')) {
+    } else if (status.get('card') && settings.get('inline_preview_cards') && !this.props.muted && !status.get('quote') && !status.get('gamepatch_card')) {
       media.push(
         <Card
           key={`${status.get('id')}-${status.get('edited_at')}`}
