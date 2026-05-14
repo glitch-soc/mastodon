@@ -36,6 +36,8 @@ jobs:
 
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
+        with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
 
       - name: Set up Javascript environment
         uses: ./.github/actions/setup-javascript
@@ -142,6 +144,7 @@ jobs:
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
         with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
           ruby-version: ${{ matrix.ruby-version}}
           additional-system-dependencies: ffmpeg libpam-dev
 
@@ -236,6 +239,7 @@ jobs:
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
         with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
           ruby-version: ${{ matrix.ruby-version}}
           additional-system-dependencies: ffmpeg
 
@@ -370,6 +374,7 @@ jobs:
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
         with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
           ruby-version: ${{ matrix.ruby-version}}
           additional-system-dependencies: ffmpeg
 

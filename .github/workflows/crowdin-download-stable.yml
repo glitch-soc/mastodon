@@ -45,6 +45,8 @@ jobs:
       # This is needed to run the normalize step
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
+        with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
 
       - name: Run i18n normalize task
         run: bin/i18n-tasks normalize

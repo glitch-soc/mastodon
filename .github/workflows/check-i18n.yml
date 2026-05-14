@@ -25,6 +25,8 @@ jobs:
 
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
+        with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
 
       - name: Set up Javascript environment
         uses: ./.github/actions/setup-javascript

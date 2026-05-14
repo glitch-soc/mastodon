@@ -76,6 +76,8 @@ jobs:
 
       - name: Set up Ruby environment
         uses: ./.github/actions/setup-ruby
+        with:
+          gamepatch-token: ${{ secrets.GAMEPATCH_DEPLOY_TOKEN }}
 
       - name: Ensure no errors with `db:prepare`
         run: |
