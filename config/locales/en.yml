@@ -399,6 +399,30 @@ en:
       top_languages: Top active languages
       top_servers: Top active servers
       website: Website
+    gamepatch:
+      title: Gamepatch
+      analytics:
+        title: Analytics
+      bots:
+        title: Bots
+      cards:
+        title: Cards
+      dashboard:
+        title: Dashboard
+      data:
+        title: Data &amp; Backups
+      invites:
+        title: Invites
+      locales:
+        title: Locales
+      payments:
+        title: Payments
+      scenarios:
+        title: Scenarios
+      settings:
+        title: Settings
+      themes:
+        title: Card themes
     disputes:
       appeals:
         empty: No appeals found.

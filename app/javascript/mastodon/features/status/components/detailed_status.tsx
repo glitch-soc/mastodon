@@ -261,7 +261,11 @@ export const DetailedStatus: React.FC<{
         />
       );
     }
-  } else if (status.get('card') && !status.get('quote') && !properStatus.get('gamepatch_card')) {
+  } else if (
+    status.get('card') &&
+    !status.get('quote') &&
+    !properStatus.get('gamepatch_card')
+  ) {
     // See status.jsx: suppress the standard PreviewCard when an
     // interactive gamepatch_card is present — they target the same URL
     // and the PreviewCard is dead iframe chrome for gamepatch viewers.
