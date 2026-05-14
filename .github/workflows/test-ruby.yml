@@ -152,10 +152,11 @@ jobs:
         run: |
           # Install engine migrations into db/migrate (creates the
           # gamepatch_* tables the Mention after_commit hook + serializer
-          # override need). Without this, every spec that creates a status
-          # crashes when after_commit tries to query Gamepatch::Bot.active.
+          # override need). Use db:migrate (not db:schema:load) so the
+          # newly-copied engine migrations actually run — schema.rb on the
+          # host does not contain gamepatch tables.
           bin/rails gamepatch:install:migrations
-          bin/rails db:setup
+          bin/rails db:create db:migrate db:seed
           bin/flatware fan bin/rails db:test:prepare
 
       - name: Cache RSpec persistence file
@@ -253,8 +254,11 @@ jobs:
 
       - name: Load database schema
         run: |
+          # Install engine migrations and run db:migrate (schema.rb on the
+          # host does not include gamepatch tables, so db:schema:load alone
+          # would leave the test DB without gamepatch_*).
           bin/rails gamepatch:install:migrations
-          ./bin/rails db:create db:schema:load db:seed
+          ./bin/rails db:create db:migrate db:seed
 
       - name: Cache Playwright Chromium browser
         id: playwright-cache
@@ -390,8 +394,11 @@ jobs:
 
       - name: Load database schema
         run: |
+          # Install engine migrations and run db:migrate (schema.rb on the
+          # host does not include gamepatch tables, so db:schema:load alone
+          # would leave the test DB without gamepatch_*).
           bin/rails gamepatch:install:migrations
-          ./bin/rails db:create db:schema:load db:seed
+          ./bin/rails db:create db:migrate db:seed
 
       - run: bin/rspec --tag search
 
