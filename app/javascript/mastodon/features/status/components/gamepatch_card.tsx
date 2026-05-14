@@ -4,7 +4,7 @@ import type { Map as ImmutableMap } from 'immutable';
 
 import { ensureGamepatchCard } from 'gamepatch-card-runtime';
 ensureGamepatchCard();
-import 'mastodon/gamepatch/card.css';
+import 'gamepatch-card-styles';
 
 type Payload = ImmutableMap<string, unknown>;
 

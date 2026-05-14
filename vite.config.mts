@@ -47,12 +47,17 @@ export const config: UserConfigFnPromise = async ({ mode, command }) => {
       alias: {
         '~/': `${jsRoot}/`,
         '@/': `${jsRoot}/`,
-        // Phase 3 follow-up: import the engine's card.js directly instead
-        // of maintaining hand-synced copies under app/javascript/{mastodon,flavours/glitch}/gamepatch/.
-        // Single source of truth; no `cp` step on engine update.
+        // Phase 3 follow-up: import the engine's card.js + card.css directly
+        // instead of maintaining hand-synced copies under
+        // app/javascript/{mastodon,flavours/glitch}/gamepatch/. Single source
+        // of truth; no `cp` step on engine update.
         'gamepatch-card-runtime': path.resolve(
           __dirname,
           'gamepatch/app/assets/javascripts/gamepatch/card.js',
+        ),
+        'gamepatch-card-styles': path.resolve(
+          __dirname,
+          'gamepatch/app/assets/stylesheets/gamepatch/card.css',
         ),
       },
     },
