@@ -88,16 +88,34 @@ SimpleNavigation::Configuration.run do |navigation|
 
     n.item :gamepatch, safe_join([material_symbol('extension'), t('admin.gamepatch.title')]), nil, if: -> { current_user.can?(:manage_settings) && !self_destruct } do |s|
       s.item :gamepatch_dashboard, safe_join([material_symbol('speed'), t('admin.gamepatch.dashboard.title')]), admin_gamepatch_dashboard_path, highlights_on: %r{/admin/gamepatch$}
-      s.item :gamepatch_cards, safe_join([material_symbol('article'), t('admin.gamepatch.cards.title', default: 'Cards')]), admin_gamepatch_card_definitions_path, highlights_on: %r{/admin/gamepatch/card_definitions}
-      s.item :gamepatch_bots, safe_join([material_symbol('smart_toy'), t('admin.gamepatch.bots.title')]), admin_gamepatch_bots_path, highlights_on: %r{/admin/gamepatch/bots}
-      s.item :gamepatch_scenarios, safe_join([material_symbol('play_arrow'), t('admin.gamepatch.scenarios.title', default: 'Scenarios')]), admin_gamepatch_scenarios_path, highlights_on: %r{/admin/gamepatch/scenarios}
-      s.item :gamepatch_data, safe_join([material_symbol('database'), t('admin.gamepatch.data.title')]), admin_gamepatch_data_index_path, highlights_on: %r{/admin/gamepatch/data}
-      s.item :gamepatch_analytics, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_path, highlights_on: %r{/admin/gamepatch/analytics}
-      s.item :gamepatch_themes, safe_join([material_symbol('colors'), t('admin.gamepatch.themes.title', default: 'Card themes')]), admin_gamepatch_card_themes_path, highlights_on: %r{/admin/gamepatch/card_themes}
-      s.item :gamepatch_payments, safe_join([material_symbol('diamond'), t('admin.gamepatch.payments.title')]), admin_gamepatch_payments_path, highlights_on: %r{/admin/gamepatch/payments}
-      s.item :gamepatch_locales, safe_join([material_symbol('translate'), t('admin.gamepatch.locales.title', default: 'Locales')]), admin_gamepatch_locales_path, highlights_on: %r{/admin/gamepatch/locales}
-      s.item :gamepatch_invites, safe_join([material_symbol('link'), t('admin.gamepatch.invites.title', default: 'Invites')]), admin_gamepatch_invites_path, highlights_on: %r{/admin/gamepatch/invites}
-      s.item :gamepatch_settings, safe_join([material_symbol('tune'), t('admin.gamepatch.settings.title')]), admin_gamepatch_settings_path, highlights_on: %r{/admin/gamepatch/settings}
+
+      # Games: the content authors build — what players actually meet.
+      s.item :gamepatch_games, safe_join([material_symbol('play_arrow'), t('admin.gamepatch.groups.games', default: 'Games')]), nil do |g|
+        g.item :gamepatch_bots, safe_join([material_symbol('smart_toy'), t('admin.gamepatch.bots.title')]), admin_gamepatch_bots_path, highlights_on: %r{/admin/gamepatch/bots}
+        g.item :gamepatch_scenarios, safe_join([material_symbol('play_arrow'), t('admin.gamepatch.scenarios.title', default: 'Scenarios')]), admin_gamepatch_scenarios_path, highlights_on: %r{/admin/gamepatch/scenarios}
+        g.item :gamepatch_cards, safe_join([material_symbol('article'), t('admin.gamepatch.cards.title', default: 'Cards')]), admin_gamepatch_card_definitions_path, highlights_on: %r{/admin/gamepatch/card_definitions}
+        g.item :gamepatch_themes, safe_join([material_symbol('colors'), t('admin.gamepatch.themes.title', default: 'Card themes')]), admin_gamepatch_card_themes_path, highlights_on: %r{/admin/gamepatch/card_themes}
+      end
+
+      # People: how players arrive and what they pay.
+      s.item :gamepatch_people, safe_join([material_symbol('groups'), t('admin.gamepatch.groups.people', default: 'People')]), nil do |p|
+        p.item :gamepatch_invites, safe_join([material_symbol('link'), t('admin.gamepatch.invites.title', default: 'Invites')]), admin_gamepatch_invites_path, highlights_on: %r{/admin/gamepatch/invites}
+        p.item :gamepatch_payments, safe_join([material_symbol('diamond'), t('admin.gamepatch.payments.title')]), admin_gamepatch_payments_path, highlights_on: %r{/admin/gamepatch/payments}
+      end
+
+      # Insights: what happened during play.
+      s.item :gamepatch_insights, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.groups.insights', default: 'Insights')]), nil do |i|
+        i.item :gamepatch_analytics, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_path, highlights_on: %r{/admin/gamepatch/analytics}
+        i.item :gamepatch_experiments, safe_join([material_symbol('insert_chart'), t('admin.gamepatch.experiments.title', default: 'Experiments')]), admin_gamepatch_experiments_path, highlights_on: %r{/admin/gamepatch/experiments}
+        i.item :gamepatch_data, safe_join([material_symbol('database'), t('admin.gamepatch.data.title')]), admin_gamepatch_data_index_path, highlights_on: %r{/admin/gamepatch/data}
+      end
+
+      # Operations: how the engine itself is configured.
+      s.item :gamepatch_operations, safe_join([material_symbol('tune'), t('admin.gamepatch.groups.operations', default: 'Operations')]), nil do |o|
+        o.item :gamepatch_locales, safe_join([material_symbol('translate'), t('admin.gamepatch.locales.title', default: 'Locales')]), admin_gamepatch_locales_path, highlights_on: %r{/admin/gamepatch/locales}
+        o.item :gamepatch_webhooks, safe_join([material_symbol('cloud_sync'), t('admin.gamepatch.webhooks.title', default: 'Webhooks')]), admin_gamepatch_webhooks_path, highlights_on: %r{/admin/gamepatch/webhooks}
+        o.item :gamepatch_settings, safe_join([material_symbol('tune'), t('admin.gamepatch.settings.title')]), admin_gamepatch_settings_path, highlights_on: %r{/admin/gamepatch/settings}
+      end
     end
 
     n.item :sidekiq, safe_join([material_symbol('diamond'), 'Sidekiq']), sidekiq_path, link_html: { target: 'sidekiq' }, if: -> { current_user.can?(:view_devops) }

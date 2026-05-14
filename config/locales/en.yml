@@ -401,6 +401,11 @@ en:
       website: Website
     gamepatch:
       title: Gamepatch
+      groups:
+        games: Games
+        insights: Insights
+        operations: Operations
+        people: People
       analytics:
         title: Analytics
       bots:
@@ -411,6 +416,8 @@ en:
         title: Dashboard
       data:
         title: Data &amp; Backups
+      experiments:
+        title: Experiments
       invites:
         title: Invites
       locales:
@@ -423,6 +430,8 @@ en:
         title: Settings
       themes:
         title: Card themes
+      webhooks:
+        title: Webhooks
     disputes:
       appeals:
         empty: No appeals found.
