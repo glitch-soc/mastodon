@@ -150,12 +150,10 @@ jobs:
 
       - name: Load database schema
         run: |
-          # Install engine migrations into db/migrate (creates the
-          # gamepatch_* tables the Mention after_commit hook + serializer
-          # override need). Use db:migrate (not db:schema:load) so the
-          # newly-copied engine migrations actually run — schema.rb on the
-          # host does not contain gamepatch tables.
-          bin/rails gamepatch:install:migrations
+          # The gamepatch engine auto-appends its db/migrate path, so
+          # db:migrate runs both host and engine migrations. Don't call
+          # gamepatch:install:migrations — that copies the same migrations
+          # with new timestamps and they run twice.
           bin/rails db:create db:migrate db:seed
           bin/flatware fan bin/rails db:test:prepare
 
@@ -254,10 +252,8 @@ jobs:
 
       - name: Load database schema
         run: |
-          # Install engine migrations and run db:migrate (schema.rb on the
-          # host does not include gamepatch tables, so db:schema:load alone
-          # would leave the test DB without gamepatch_*).
-          bin/rails gamepatch:install:migrations
+          # The gamepatch engine auto-appends its db/migrate path, so
+          # db:migrate runs both host and engine migrations.
           ./bin/rails db:create db:migrate db:seed
 
       - name: Cache Playwright Chromium browser
@@ -394,10 +390,8 @@ jobs:
 
       - name: Load database schema
         run: |
-          # Install engine migrations and run db:migrate (schema.rb on the
-          # host does not include gamepatch tables, so db:schema:load alone
-          # would leave the test DB without gamepatch_*).
-          bin/rails gamepatch:install:migrations
+          # The gamepatch engine auto-appends its db/migrate path, so
+          # db:migrate runs both host and engine migrations.
           ./bin/rails db:create db:migrate db:seed
 
       - run: bin/rspec --tag search
