@@ -79,8 +79,6 @@ docker-compose.override.yml
 
 *storybook.log
 storybook-static
-gamepatch/
-gamepatch/
 
 # Allow frontend card runtime assets
 !app/javascript/mastodon/gamepatch/

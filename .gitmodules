@@ -1,0 +1,3 @@
+[submodule "gamepatch"]
+	path = gamepatch
+	url = https://github.com/DROG-group/tactcheck.git

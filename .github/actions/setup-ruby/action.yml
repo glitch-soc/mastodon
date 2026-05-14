@@ -16,6 +16,15 @@ runs:
         sudo apt-get update
         sudo apt-get install -y libicu-dev libidn11-dev libvips42 ${{ inputs.additional-system-dependencies }}
 
+    # The gamepatch engine lives in a submodule. Its Gemfile entry is
+    # conditional on the directory existing, so bundler resolution
+    # (run by setup-ruby below with bundler-cache: true) needs the
+    # submodule materialized first or it sees gamepatch as "deleted"
+    # vs the lockfile and refuses to reconcile under frozen mode.
+    - name: Initialize gamepatch submodule
+      shell: bash
+      run: git submodule update --init --recursive gamepatch
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
