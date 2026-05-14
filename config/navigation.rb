@@ -107,11 +107,14 @@ SimpleNavigation::Configuration.run do |navigation|
       s.item :gamepatch_insights, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.groups.insights', default: 'Insights')]), nil do |i|
         i.item :gamepatch_analytics, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_path, highlights_on: %r{/admin/gamepatch/analytics}
         i.item :gamepatch_experiments, safe_join([material_symbol('insert_chart'), t('admin.gamepatch.experiments.title', default: 'Experiments')]), admin_gamepatch_experiments_path, highlights_on: %r{/admin/gamepatch/experiments}
-        i.item :gamepatch_data, safe_join([material_symbol('database'), t('admin.gamepatch.data.title')]), admin_gamepatch_data_index_path, highlights_on: %r{/admin/gamepatch/data}
       end
 
-      # Operations: how the engine itself is configured.
+      # Operations: how the engine itself is run — imports, backups,
+      # webhook endpoints, locale catalog, settings. Data lives here
+      # (not under Insights) because it's data-lifecycle work, not
+      # analysis.
       s.item :gamepatch_operations, safe_join([material_symbol('tune'), t('admin.gamepatch.groups.operations', default: 'Operations')]), nil do |o|
+        o.item :gamepatch_data, safe_join([material_symbol('database'), t('admin.gamepatch.data.title')]), admin_gamepatch_data_index_path, highlights_on: %r{/admin/gamepatch/data}
         o.item :gamepatch_locales, safe_join([material_symbol('translate'), t('admin.gamepatch.locales.title', default: 'Locales')]), admin_gamepatch_locales_path, highlights_on: %r{/admin/gamepatch/locales}
         o.item :gamepatch_webhooks, safe_join([material_symbol('cloud_sync'), t('admin.gamepatch.webhooks.title', default: 'Webhooks')]), admin_gamepatch_webhooks_path, highlights_on: %r{/admin/gamepatch/webhooks}
         o.item :gamepatch_settings, safe_join([material_symbol('tune'), t('admin.gamepatch.settings.title')]), admin_gamepatch_settings_path, highlights_on: %r{/admin/gamepatch/settings}
