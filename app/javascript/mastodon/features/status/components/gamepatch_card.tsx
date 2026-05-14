@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import type { Map as ImmutableMap } from 'immutable';
 
-import { ensureGamepatchCard } from "gamepatch-card-runtime";
+import { ensureGamepatchCard } from 'gamepatch-card-runtime';
 ensureGamepatchCard();
 import 'mastodon/gamepatch/card.css';
 
@@ -54,10 +54,7 @@ export const GamepatchCard: React.FC<Props> = ({ payload }) => {
     () => safeStringify(payload.get('state')),
     [payload],
   );
-  const dataJson = useMemo(
-    () => safeStringify(payload.get('data')),
-    [payload],
-  );
+  const dataJson = useMemo(() => safeStringify(payload.get('data')), [payload]);
 
   return (
     <gamepatch-card

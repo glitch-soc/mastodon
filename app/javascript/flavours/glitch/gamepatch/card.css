@@ -395,7 +395,9 @@ gamepatch-card .gp-tabset-tab {
   font-family: var(--gp-font);
   cursor: pointer;
   white-space: nowrap;
-  transition: opacity 0.15s, border-color 0.15s;
+  transition:
+    opacity 0.15s,
+    border-color 0.15s;
 }
 
 gamepatch-card .gp-tabset-tab:hover {
@@ -605,7 +607,7 @@ gamepatch-card .gp-radio-option {
   cursor: pointer;
 }
 
-gamepatch-card .gp-radio-option input[type="radio"] {
+gamepatch-card .gp-radio-option input[type='radio'] {
   accent-color: var(--gp-colors-primary);
   width: 18px;
   height: 18px;

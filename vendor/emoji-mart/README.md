@@ -123,7 +123,6 @@ To use these data files (or any other custom data), use the `NimblePicker` compo
 ```js
 import data from 'emoji-mart/data/google.json'
 import { NimblePicker } from 'emoji-mart'
-
 ;<NimblePicker set="google" data={data} />
 ```
 

@@ -150,6 +150,11 @@ jobs:
 
       - name: Load database schema
         run: |
+          # Install engine migrations into db/migrate (creates the
+          # gamepatch_* tables the Mention after_commit hook + serializer
+          # override need). Without this, every spec that creates a status
+          # crashes when after_commit tries to query Gamepatch::Bot.active.
+          bin/rails gamepatch:install:migrations
           bin/rails db:setup
           bin/flatware fan bin/rails db:test:prepare
 
@@ -247,7 +252,9 @@ jobs:
         uses: ./.github/actions/setup-javascript
 
       - name: Load database schema
-        run: './bin/rails db:create db:schema:load db:seed'
+        run: |
+          bin/rails gamepatch:install:migrations
+          ./bin/rails db:create db:schema:load db:seed
 
       - name: Cache Playwright Chromium browser
         id: playwright-cache
@@ -382,7 +389,9 @@ jobs:
         uses: ./.github/actions/setup-javascript
 
       - name: Load database schema
-        run: './bin/rails db:create db:schema:load db:seed'
+        run: |
+          bin/rails gamepatch:install:migrations
+          ./bin/rails db:create db:schema:load db:seed
 
       - run: bin/rspec --tag search
 
