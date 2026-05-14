@@ -96,6 +96,7 @@ SimpleNavigation::Configuration.run do |navigation|
       s.item :gamepatch_themes, safe_join([material_symbol('colors'), t('admin.gamepatch.themes.title', default: 'Card themes')]), admin_gamepatch_card_themes_path, highlights_on: %r{/admin/gamepatch/card_themes}
       s.item :gamepatch_payments, safe_join([material_symbol('diamond'), t('admin.gamepatch.payments.title')]), admin_gamepatch_payments_path, highlights_on: %r{/admin/gamepatch/payments}
       s.item :gamepatch_locales, safe_join([material_symbol('translate'), t('admin.gamepatch.locales.title', default: 'Locales')]), admin_gamepatch_locales_path, highlights_on: %r{/admin/gamepatch/locales}
+      s.item :gamepatch_invites, safe_join([material_symbol('link'), t('admin.gamepatch.invites.title', default: 'Invites')]), admin_gamepatch_invites_path, highlights_on: %r{/admin/gamepatch/invites}
       s.item :gamepatch_settings, safe_join([material_symbol('tune'), t('admin.gamepatch.settings.title')]), admin_gamepatch_settings_path, highlights_on: %r{/admin/gamepatch/settings}
     end
 
