@@ -70,6 +70,14 @@ export const config: UserConfigFnPromise = async ({ mode, command }) => {
           __dirname,
           'gamepatch/app/javascript/gamepatch/widget_slot.css',
         ),
+        // Research instrument (scenario × Stroop interruption per cohort).
+        // The listener mounts a fixed-position overlay when the card
+        // runtime emits `gamepatch:research-stroop` on a /respond reply
+        // that flips stroop_due:true.
+        'gamepatch-research-listener': path.resolve(
+          __dirname,
+          'gamepatch/app/javascript/gamepatch/research/research_listener.tsx',
+        ),
       },
     },
     css: {

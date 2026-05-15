@@ -107,6 +107,7 @@ SimpleNavigation::Configuration.run do |navigation|
       s.item :gamepatch_insights, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.groups.insights', default: 'Insights')]), nil do |i|
         i.item :gamepatch_analytics, safe_join([material_symbol('bar_chart_4_bars'), t('admin.gamepatch.analytics.title')]), admin_gamepatch_analytics_path, highlights_on: %r{/admin/gamepatch/analytics}
         i.item :gamepatch_experiments, safe_join([material_symbol('insert_chart'), t('admin.gamepatch.experiments.title', default: 'Experiments')]), admin_gamepatch_experiments_path, highlights_on: %r{/admin/gamepatch/experiments}
+        i.item :gamepatch_research, safe_join([material_symbol('explore'), t('admin.gamepatch.research.title', default: 'Research')]), admin_gamepatch_research_index_path, highlights_on: %r{/admin/gamepatch/research} if Rails.application.routes.url_helpers.respond_to?(:admin_gamepatch_research_index_path)
       end
 
       # Operations: how the engine itself is run — imports, backups,

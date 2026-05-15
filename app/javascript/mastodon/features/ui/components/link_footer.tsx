@@ -15,6 +15,9 @@ import {
 // 'footer-colophon' slot — engine-registered widgets mount here.
 import { GamepatchSlot } from 'gamepatch-widget-slot';
 import 'gamepatch-widget-styles';
+// Research instrument: listens for cohort-scoped Stroop fires and
+// mounts a fixed-position overlay over the active scenario card.
+import { GamepatchResearchListener } from 'gamepatch-research-listener';
 
 const DividingCircle: React.FC = () => <span aria-hidden>{' · '}</span>;
 
@@ -106,6 +109,7 @@ export const LinkFooter: React.FC<{
       </p>
 
       <GamepatchSlot name='footer-colophon' />
+      <GamepatchResearchListener />
     </div>
   );
 };
