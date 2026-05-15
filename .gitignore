@@ -88,3 +88,4 @@ storybook-static
 
 # Gamepatch deploy backups (timestamped snapshot dirs)
 gamepatch_backups/
+.gstack/
