@@ -90,6 +90,10 @@ export const AccountHeader: React.FC<{
   const suspendedOrHidden = hidden || account.suspended;
   const isLocal = !account.acct.includes('@');
   const isMe = me && account.id === me;
+  const nonceElt: HTMLMetaElement | null = document.querySelector(
+    'meta[name=style-nonce]',
+  );
+  const nonce = nonceElt === null ? null : nonceElt.content;
 
   return (
     <div>
@@ -183,6 +187,11 @@ export const AccountHeader: React.FC<{
           content={isLocal && !account.noindex ? 'all' : 'noindex'}
         />
         <link rel='canonical' href={account.url} />
+        {account.account_css && nonce !== null && (
+          <style id={'account-css'} nonce={nonce}>
+            {account.account_css}
+          </style>
+        )}
       </Helmet>
     </div>
   );

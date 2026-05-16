@@ -117,6 +117,18 @@ export const messages = defineMessages({
     id: 'account_edit.advanced_settings.title',
     defaultMessage: 'Advanced settings',
   },
+  myspaceTitle: {
+    id: 'account_edit.myspace.title',
+    defaultMessage: 'MySpace Mode',
+  },
+  myspaceDescription: {
+    id: 'account_edit.myspace.subtitle',
+    defaultMessage: 'Custom CSS that is applied to your account page',
+  },
+  myspaceEditLabel: {
+    id: 'account_edit.myspace.edit_label',
+    defaultMessage: 'Edit CSS',
+  },
 });
 
 export const AccountEdit: FC = () => {
@@ -127,6 +139,7 @@ export const AccountEdit: FC = () => {
   const dispatch = useAppDispatch();
 
   const { profile, isPending } = useAppSelector((state) => state.profileEdit);
+  console.log(profile);
   useEffect(() => {
     void dispatch(fetchProfile());
   }, [dispatch]);
@@ -164,6 +177,9 @@ export const AccountEdit: FC = () => {
   }, [handleOpenModal]);
   const handleProfileDisplayEdit = useCallback(() => {
     handleOpenModal('ACCOUNT_EDIT_PROFILE_DISPLAY');
+  }, [handleOpenModal]);
+  const handleAccountCssEdit = useCallback(() => {
+    handleOpenModal('ACCOUNT_EDIT_CSS');
   }, [handleOpenModal]);
 
   const history = useHistory();
@@ -359,6 +375,22 @@ export const AccountEdit: FC = () => {
               />
             }
           />
+        </AccountEditSection>
+
+        <AccountEditSection
+          title={messages.myspaceTitle}
+          description={messages.myspaceDescription}
+          showDescription
+          buttons={
+            <EditButton
+              onClick={handleAccountCssEdit}
+              label={intl.formatMessage(messages.myspaceEditLabel)}
+            />
+          }
+        >
+          {profile.accountCss && (
+            <pre className={'account-css'}>{profile.accountCss}</pre>
+          )}
         </AccountEditSection>
       </CustomEmojiProvider>
     </AccountEditColumn>

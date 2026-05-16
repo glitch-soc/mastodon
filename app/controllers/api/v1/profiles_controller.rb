@@ -36,6 +36,7 @@ class Api::V1::ProfilesController < Api::BaseController
       :show_media,
       :show_media_replies,
       :show_featured,
+      :account_css,
       attribution_domains: [],
       fields_attributes: [:name, :value]
     )

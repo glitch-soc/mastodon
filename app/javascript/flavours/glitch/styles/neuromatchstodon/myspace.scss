@@ -1,6 +1,11 @@
 @use '../mastodon/variables' as *;
 
-#account_account_css {
+#account_account_css,
+.account-css {
   font-family: $font-monospace;
-  height: 15em;
+  overflow-x: auto;
+}
+
+#account_account_css {
+  min-height: 15em;
 }

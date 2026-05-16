@@ -11,7 +11,8 @@ class REST::ProfileSerializer < ActiveModel::Serializer
              :locked, :bot,
              :hide_collections, :discoverable, :indexable,
              :show_media, :show_media_replies, :show_featured,
-             :attribution_domains
+             :attribution_domains,
+             :account_css
 
   has_many :featured_tags, serializer: REST::FeaturedTagSerializer
 

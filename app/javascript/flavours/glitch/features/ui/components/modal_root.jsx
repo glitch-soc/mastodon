@@ -113,6 +113,7 @@ export const MODAL_COMPONENTS = {
   'ACCOUNT_EDIT_IMAGE_DELETE': accountEditModal('ImageDeleteModal'),
   'ACCOUNT_EDIT_IMAGE_UPLOAD': accountEditModal('ImageUploadModal'),
   'ACCOUNT_HIDE_FEATURED_TAB': () => import('@/flavours/glitch/features/ui/components/confirmation_modals/hide_featured_tab').then(module => ({ default: module.ConfirmHideFeaturedTabModal })),
+  'ACCOUNT_EDIT_CSS': accountEditModal('MyspaceModal'),
 };
 
 /** @arg {keyof import('@/flavours/glitch/features/account_edit/modals')} type */

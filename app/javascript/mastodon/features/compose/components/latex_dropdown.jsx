@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -11,6 +11,7 @@ import Overlay from 'react-overlays/Overlay';
 import { Icon } from 'flavours/glitch/components/icon';
 import FunctionsIcon from '@/material-icons/400-24px/functions.svg?react';
 import { assetHost } from 'flavours/glitch/utils/config';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 
 const messages = defineMessages({
   inline_short:  { id: 'latex.inline.short', defaultMessage: 'Inline' },

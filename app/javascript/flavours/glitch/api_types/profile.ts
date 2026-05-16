@@ -22,6 +22,7 @@ export interface ApiProfileJSON {
   show_featured: boolean;
   attribution_domains: string[];
   featured_tags: ApiFeaturedTagJSON[];
+  account_css: string;
 }
 
 export type ApiProfileUpdateParams = Partial<
@@ -39,6 +40,7 @@ export type ApiProfileUpdateParams = Partial<
     | 'show_media'
     | 'show_media_replies'
     | 'show_featured'
+    | 'account_css'
   >
 > & {
   attribution_domains?: string[];

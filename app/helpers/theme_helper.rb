@@ -14,7 +14,7 @@ module ThemeHelper
       end
     end
 
-    content_tag(:script, entry[:contents], type: 'text/javascript')
+    content_tag(:script, entry[:contents], type: 'text/javascript', nonce: request.content_security_policy_nonce)
   end
 
   def theme_style_tags(flavour_and_skin)
