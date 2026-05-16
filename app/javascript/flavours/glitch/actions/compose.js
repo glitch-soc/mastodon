@@ -6,8 +6,8 @@ import { throttle } from 'lodash';
 import api from 'flavours/glitch/api';
 import { browserHistory } from 'flavours/glitch/components/router';
 import { countableText } from 'flavours/glitch/features/compose/util/counter';
-import { search as emojiSearch } from 'flavours/glitch/features/emoji/emoji_mart_search_light';
 import { tagHistory } from 'flavours/glitch/settings';
+import { fetchCustomEmojiData } from '@/flavours/glitch/features/emoji/picker';
 import { recoverHashtags } from 'flavours/glitch/utils/hashtag';
 
 import { tex_to_unicode } from '../features/compose/util/autolatex/autolatex';
@@ -164,10 +164,11 @@ export function resetCompose() {
   };
 }
 
-export const focusCompose = (defaultText = '') => (dispatch, getState) => {
+export const focusCompose = (defaultText = '', caretStart = false) => (dispatch, getState) => {
   dispatch({
     type: COMPOSE_FOCUS,
     defaultText,
+    caretStart,
   });
 
   ensureComposeIsVisible(getState);
@@ -231,10 +232,6 @@ export function submitCompose(overridePrivacy = null, successCallback = undefine
       return;
     }
 
-    if (getState().getIn(['compose', 'advanced_options', 'do_not_federate'])) {
-      status = status + ' 👁️';
-    }
-
     dispatch(submitComposeRequest());
 
     // If we're editing a post with media attachments, those have not
@@ -265,6 +262,7 @@ export function submitCompose(overridePrivacy = null, successCallback = undefine
         status,
         spoiler_text,
         content_type: getState().getIn(['compose', 'content_type']),
+        local_only: getState().getIn(['compose', 'advanced_options', 'do_not_federate']),
         in_reply_to_id: getState().getIn(['compose', 'in_reply_to'], null),
         media_ids: media.map(item => item.get('id')),
         media_attributes,
@@ -602,7 +600,7 @@ export function clearComposeSuggestions() {
   };
 }
 
-const fetchComposeSuggestionsAccounts = throttle((dispatch, getState, token) => {
+const fetchComposeSuggestionsAccounts = throttle((dispatch, token) => {
   if (fetchComposeSuggestionsAccountsController) {
     fetchComposeSuggestionsAccountsController.abort();
   }
@@ -636,15 +634,15 @@ const fetchComposeSuggestionsLatex = (dispatch, getState, token) => {
   let brace = 0;
   for(let i=0;i<expression.length;i++) {
     switch(expression[i]) {
-    case '\\':
-      i += 1;
-      break;
-    case '{':
-      brace += 1;
-      break;
-    case '}':
-      brace -= 1;
-      break;
+      case '\\':
+        i += 1;
+        break;
+      case '{':
+        brace += 1;
+        break;
+      case '}':
+        brace -= 1;
+        break;
     }
   }
   for(;brace<0;brace++) {
@@ -659,12 +657,14 @@ const fetchComposeSuggestionsLatex = (dispatch, getState, token) => {
   dispatch(readyComposeSuggestionsLatex(token, results));
 };
 
-const fetchComposeSuggestionsEmojis = (dispatch, getState, token) => {
-  const results = emojiSearch(token.replace(':', ''), { maxResults: 5 });
+const fetchComposeSuggestionsEmojis = async (dispatch, token) => {
+  const custom = await fetchCustomEmojiData();
+  const { search } = await import('@/flavours/glitch/features/emoji/emoji_mart_search_light');
+  const results = search(token.replace(':', ''), { maxResults: 5, custom });
   dispatch(readyComposeSuggestionsEmojis(token, results));
 };
 
-const fetchComposeSuggestionsTags = throttle((dispatch, getState, token) => {
+const fetchComposeSuggestionsTags = throttle((dispatch, token) => {
   if (fetchComposeSuggestionsTagsController) {
     fetchComposeSuggestionsTagsController.abort();
   }
@@ -697,17 +697,17 @@ export function fetchComposeSuggestions(token) {
   return (dispatch, getState) => {
     switch (token[0]) {
     case ':':
-      fetchComposeSuggestionsEmojis(dispatch, getState, token);
+      void fetchComposeSuggestionsEmojis(dispatch, token);
       break;
     case '#':
     case '＃':
-      fetchComposeSuggestionsTags(dispatch, getState, token);
+      fetchComposeSuggestionsTags(dispatch, token);
       break;
     case '\\':
       fetchComposeSuggestionsLatex(dispatch, getState, token);
       break;
     default:
-      fetchComposeSuggestionsAccounts(dispatch, getState, token);
+      fetchComposeSuggestionsAccounts(dispatch, token);
       break;
     }
   };

@@ -2,6 +2,7 @@
 // See: https://github.com/nolanlawson/emoji-picker-element/blob/master/src/picker/utils/testColorEmojiSupported.js
 
 import { createAppSelector, useAppSelector } from '@/flavours/glitch/store';
+import { assetHost } from '@/flavours/glitch/utils/config';
 import { isDevelopment } from '@/flavours/glitch/utils/environment';
 import { isDarkMode } from '@/flavours/glitch/utils/theme';
 
@@ -29,6 +30,44 @@ export function useEmojiAppState(): EmojiAppState {
     locales: [locale],
     mode,
     darkTheme: isDarkMode(),
+    assetHost,
+  };
+}
+
+export function getEmojiAppState(): EmojiAppState {
+  const currentLocale = toSupportedLocale(document.documentElement.lang);
+
+  let emojiStyle = 'auto';
+  const initialStateText =
+    document.getElementById('initial-state')?.textContent;
+  if (initialStateText) {
+    try {
+      const state = JSON.parse(initialStateText) as unknown;
+      if (
+        state !== null &&
+        typeof state === 'object' &&
+        'meta' in state &&
+        state.meta !== null &&
+        typeof state.meta === 'object' &&
+        'emoji_style' in state.meta &&
+        typeof state.meta.emoji_style === 'string'
+      ) {
+        emojiStyle = state.meta.emoji_style;
+      }
+    } catch (err: unknown) {
+      console.warn(
+        'Failed to parse initial state for emoji, defaulting to auto. Error:',
+        err,
+      );
+    }
+  }
+
+  return {
+    currentLocale,
+    locales: [currentLocale],
+    mode: determineEmojiMode(emojiStyle),
+    darkTheme: isDarkMode(),
+    assetHost,
   };
 }
 

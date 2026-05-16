@@ -6,8 +6,8 @@ import { throttle } from 'lodash';
 import api from 'mastodon/api';
 import { browserHistory } from 'mastodon/components/router';
 import { countableText } from 'mastodon/features/compose/util/counter';
-import { search as emojiSearch } from 'mastodon/features/emoji/emoji_mart_search_light';
 import { tagHistory } from 'mastodon/settings';
+import { fetchCustomEmojiData } from '@/mastodon/features/emoji/picker';
 
 import { tex_to_unicode } from '../features/compose/util/autolatex/autolatex';
 
@@ -156,10 +156,11 @@ export function resetCompose() {
   };
 }
 
-export const focusCompose = (defaultText = '') => (dispatch, getState) => {
+export const focusCompose = (defaultText = '', caretStart = false) => (dispatch, getState) => {
   dispatch({
     type: COMPOSE_FOCUS,
     defaultText,
+    caretStart,
   });
 
   ensureComposeIsVisible(getState);
@@ -567,7 +568,7 @@ export function clearComposeSuggestions() {
   };
 }
 
-const fetchComposeSuggestionsAccounts = throttle((dispatch, getState, token) => {
+const fetchComposeSuggestionsAccounts = throttle((dispatch, token) => {
   if (fetchComposeSuggestionsAccountsController) {
     fetchComposeSuggestionsAccountsController.abort();
   }
@@ -594,12 +595,14 @@ const fetchComposeSuggestionsAccounts = throttle((dispatch, getState, token) => 
   });
 }, 200, { leading: true, trailing: true });
 
-const fetchComposeSuggestionsEmojis = (dispatch, getState, token) => {
-  const results = emojiSearch(token.replace(':', ''), { maxResults: 5 });
+const fetchComposeSuggestionsEmojis = async (dispatch, token) => {
+  const custom = await fetchCustomEmojiData();
+  const { search } = await import('@/mastodon/features/emoji/emoji_mart_search_light');
+  const results = search(token.replace(':', ''), { maxResults: 5, custom });
   dispatch(readyComposeSuggestionsEmojis(token, results));
 };
 
-const fetchComposeSuggestionsTags = throttle((dispatch, getState, token) => {
+const fetchComposeSuggestionsTags = throttle((dispatch, token) => {
   if (fetchComposeSuggestionsTagsController) {
     fetchComposeSuggestionsTagsController.abort();
   }
@@ -663,17 +666,17 @@ export function fetchComposeSuggestions(token) {
   return (dispatch, getState) => {
     switch (token[0]) {
     case ':':
-      fetchComposeSuggestionsEmojis(dispatch, getState, token);
+      void fetchComposeSuggestionsEmojis(dispatch, token);
       break;
     case '#':
     case '＃':
-      fetchComposeSuggestionsTags(dispatch, getState, token);
+      fetchComposeSuggestionsTags(dispatch, token);
       break;
     case '\\':
       fetchComposeSuggestionsLatex(dispatch, getState, token);
       break;
     default:
-      fetchComposeSuggestionsAccounts(dispatch, getState, token);
+      fetchComposeSuggestionsAccounts(dispatch, token);
       break;
     }
   };

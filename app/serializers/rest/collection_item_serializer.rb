@@ -1,13 +1,19 @@
 # frozen_string_literal: true
 
 class REST::CollectionItemSerializer < ActiveModel::Serializer
-  delegate :accepted?, to: :object
+  attributes :id, :state, :created_at
 
-  attributes :id, :position, :state
-
-  belongs_to :account, serializer: REST::AccountSerializer, if: :accepted?
+  attribute :account_id, if: :accepted_or_pending?
 
   def id
     object.id.to_s
+  end
+
+  def account_id
+    object.account_id.to_s
+  end
+
+  def accepted_or_pending?
+    object.pending? || object.accepted?
   end
 end

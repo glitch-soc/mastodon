@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
@@ -12,6 +12,7 @@ import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import illustration from 'flavours/glitch/images/logo_warn_glitch.svg';
 import { preferenceLink } from 'flavours/glitch/utils/backend_links';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 
 const messages = defineMessages({
   discardChanges: { id: 'confirmations.deprecated_settings.confirm', defaultMessage: 'Use Mastodon preferences' },

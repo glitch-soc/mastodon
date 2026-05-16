@@ -2,12 +2,13 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 
 //  Our imports
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { expandSpoilers } from 'flavours/glitch/initial_state';
 import { preferenceLink } from 'flavours/glitch/utils/backend_links';
 

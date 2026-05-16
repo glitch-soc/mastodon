@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { createRef } from 'react';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import classNames from 'classnames';
 
@@ -15,6 +15,7 @@ import { missingAltTextModal } from 'flavours/glitch/initial_state';
 import AutosuggestInput from 'flavours/glitch/components/autosuggest_input';
 import AutosuggestTextarea from 'flavours/glitch/components/autosuggest_textarea';
 import { Button } from 'flavours/glitch/components/button';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import EmojiPickerDropdown from '../containers/emoji_picker_dropdown_container';
 import LaTeXDropdown from '../containers/latex_dropdown_container';
 import PollButtonContainer from '../containers/poll_button_container';

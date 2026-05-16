@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 
 import { connect } from 'react-redux';
 
 import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { domain, localLiveFeedAccess } from 'flavours/glitch/initial_state';

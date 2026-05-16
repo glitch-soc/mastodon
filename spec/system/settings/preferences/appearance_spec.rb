@@ -13,8 +13,6 @@ RSpec.describe 'Settings preferences appearance page' do
     expect(page)
       .to have_private_cache_control
 
-    # TODO: glitch-soc's option is elsewhere
-    # select 'contrast', from: theme_selection_field
     check confirm_reblog_field
     uncheck confirm_delete_field
 

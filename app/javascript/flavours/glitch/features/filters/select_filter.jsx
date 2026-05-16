@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { connect } from 'react-redux';
 
@@ -9,6 +9,7 @@ import fuzzysort from 'fuzzysort';
 
 import AddIcon from '@/material-icons/400-24px/add.svg?react';
 import { Icon }  from 'flavours/glitch/components/icon';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { toServerSideType } from 'flavours/glitch/utils/filters';
 import { loupeIcon, deleteIcon } from 'flavours/glitch/utils/icons';
 

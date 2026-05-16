@@ -26,16 +26,19 @@ class Api::V1Alpha::CollectionsController < Api::BaseController
 
   def index
     cache_if_unauthenticated!
-    authorize Collection, :index?
+    authorize @account, :index_collections?
 
-    render json: @collections, each_serializer: REST::BaseCollectionSerializer
+    presenter = CollectionsPresenter.new(collections: @collections)
+    render json: presenter, serializer: REST::CollectionsWithAccountPreviewsSerializer
+  rescue Mastodon::NotPermittedError
+    render json: { collections: [], partial_accounts: [] }
   end
 
   def show
     cache_if_unauthenticated!
     authorize @collection, :show?
 
-    render json: @collection, serializer: REST::CollectionSerializer
+    render json: @collection, serializer: REST::CollectionWithAccountsSerializer
   end
 
   def create
@@ -43,21 +46,21 @@ class Api::V1Alpha::CollectionsController < Api::BaseController
 
     @collection = CreateCollectionService.new.call(collection_creation_params, current_user.account)
 
-    render json: @collection, serializer: REST::CollectionSerializer
+    render json: @collection, serializer: REST::CollectionSerializer, adapter: :json
   end
 
   def update
     authorize @collection, :update?
 
-    @collection.update!(collection_update_params) # TODO: Create a service for this to federate changes
+    UpdateCollectionService.new.call(@collection, collection_update_params)
 
-    render json: @collection, serializer: REST::CollectionSerializer
+    render json: @collection, serializer: REST::CollectionSerializer, adapter: :json
   end
 
   def destroy
     authorize @collection, :destroy?
 
-    @collection.destroy
+    DeleteCollectionService.new.call(@collection)
 
     head 200
   end
@@ -70,10 +73,12 @@ class Api::V1Alpha::CollectionsController < Api::BaseController
 
   def set_collections
     @collections = @account.collections
-                           .with_tag
-                           .order(created_at: :desc)
-                           .offset(offset_param)
-                           .limit(limit_param(DEFAULT_COLLECTIONS_LIMIT))
+      .with_tag
+      .preload(top_items: :account)
+      .order(created_at: :desc)
+      .offset(offset_param)
+      .limit(limit_param(DEFAULT_COLLECTIONS_LIMIT))
+    @collections = @collections.discoverable unless @account == current_account
   end
 
   def set_collection
@@ -81,11 +86,11 @@ class Api::V1Alpha::CollectionsController < Api::BaseController
   end
 
   def collection_creation_params
-    params.permit(:name, :description, :sensitive, :discoverable, :tag_name, account_ids: [])
+    params.permit(:name, :description, :language, :sensitive, :discoverable, :tag_name, account_ids: [])
   end
 
   def collection_update_params
-    params.permit(:name, :description, :sensitive, :discoverable, :tag_name)
+    params.permit(:name, :description, :language, :sensitive, :discoverable, :tag_name)
   end
 
   def check_feature_enabled

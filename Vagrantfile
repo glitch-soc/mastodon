@@ -29,7 +29,6 @@ sudo apt-get install \
   libpq-dev \
   libxml2-dev \
   libxslt1-dev \
-  imagemagick \
   nodejs \
   redis-server \
   redis-tools \
@@ -116,7 +115,7 @@ gem install bundler foreman
 bundle install
 
 # Install node modules
-sudo corepack enable
+sudo npm i -g corepack
 corepack prepare
 yarn install
 

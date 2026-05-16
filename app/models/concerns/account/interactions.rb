@@ -23,9 +23,6 @@ module Account::Interactions
     # Hashtag follows
     has_many :tag_follows, inverse_of: :account, dependent: :destroy
 
-    # Account notes
-    has_many :account_notes, dependent: :destroy
-
     # Block relationships
     with_options class_name: 'Block', dependent: :destroy do
       has_many :block_relationships, foreign_key: 'account_id', inverse_of: :account
@@ -48,7 +45,7 @@ module Account::Interactions
 
   def follow!(other_account, reblogs: nil, notify: nil, languages: nil, uri: nil, rate_limit: false, bypass_limit: false)
     rel = active_relationships.create_with(show_reblogs: reblogs.nil? || reblogs, notify: notify.nil? ? false : notify, languages: languages, uri: uri, rate_limit: rate_limit, bypass_follow_limit: bypass_limit)
-                              .find_or_create_by!(target_account: other_account)
+      .find_or_create_by!(target_account: other_account)
 
     rel.show_reblogs = reblogs   unless reblogs.nil?
     rel.notify       = notify    unless notify.nil?
@@ -62,7 +59,7 @@ module Account::Interactions
 
   def request_follow!(other_account, reblogs: nil, notify: nil, languages: nil, uri: nil, rate_limit: false, bypass_limit: false)
     rel = follow_requests.create_with(show_reblogs: reblogs.nil? || reblogs, notify: notify.nil? ? false : notify, uri: uri, languages: languages, rate_limit: rate_limit, bypass_follow_limit: bypass_limit)
-                         .find_or_create_by!(target_account: other_account)
+      .find_or_create_by!(target_account: other_account)
 
     rel.show_reblogs = reblogs   unless reblogs.nil?
     rel.notify       = notify    unless notify.nil?
@@ -76,7 +73,7 @@ module Account::Interactions
 
   def block!(other_account, uri: nil)
     block_relationships.create_with(uri: uri)
-                       .find_or_create_by!(target_account: other_account)
+      .find_or_create_by!(target_account: other_account)
   end
 
   def mute!(other_account, notifications: nil, duration: 0)
@@ -169,6 +166,13 @@ module Account::Interactions
     end
   end
 
+  def blocking_or_domain_blocking?(other_account)
+    return true if blocking?(other_account)
+    return false if other_account.domain.blank?
+
+    domain_blocking?(other_account.domain)
+  end
+
   def muting?(other_account)
     other_id = other_account.is_a?(Account) ? other_account.id : other_account
 
@@ -216,14 +220,14 @@ module Account::Interactions
 
   def followers_for_local_distribution
     followers.local
-             .joins(:user)
-             .merge(User.signed_in_recently)
+      .joins(:user)
+      .merge(User.signed_in_recently)
   end
 
   def lists_for_local_distribution
     scope = lists.joins(account: :user)
     scope.where.not(list_accounts: { follow_id: nil }).or(scope.where(account_id: id))
-         .merge(User.signed_in_recently)
+      .merge(User.signed_in_recently)
   end
 
   def remote_followers_hash(url)
@@ -232,7 +236,7 @@ module Account::Interactions
 
     Rails.cache.fetch("followers_hash:#{id}:#{url_prefix}/") do
       digest = "\x00" * 32
-      followers.where(Account.arel_table[:uri].matches("#{Account.sanitize_sql_like(url_prefix)}/%", false, true)).or(followers.where(uri: url_prefix)).pluck_each(:uri) do |uri|
+      followers.matches_uri_prefix(url_prefix).pluck_each(:uri) do |uri|
         Xorcist.xor!(digest, Digest::SHA256.digest(uri))
       end
       digest.unpack1('H*')

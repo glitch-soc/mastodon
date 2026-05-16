@@ -6,6 +6,7 @@ import type { Map, List } from 'immutable';
 import type { RenderSlideFn } from '@/flavours/glitch/components/carousel';
 import { Carousel } from '@/flavours/glitch/components/carousel';
 import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
+import { useCustomEmojis } from '@/flavours/glitch/hooks/useCustomEmojis';
 import { mascot } from '@/flavours/glitch/initial_state';
 import { createAppSelector, useAppSelector } from '@/flavours/glitch/store';
 import elephantUIPlane from '@/images/elephant_ui_plane.svg';
@@ -23,7 +24,7 @@ const announcementSelector = createAppSelector(
 
 export const Announcements: FC = () => {
   const announcements = useAppSelector(announcementSelector);
-  const emojis = useAppSelector((state) => state.custom_emojis);
+  const emojis = useCustomEmojis();
 
   const renderSlide: RenderSlideFn<{
     id: string;

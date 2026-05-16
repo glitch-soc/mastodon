@@ -25,6 +25,7 @@ class Form::AdminSettings
     hide_followers_count
     flavour_and_skin
     thumbnail
+    thumbnail_description
     mascot
     show_reblogs_in_public_timelines
     show_replies_in_public_timelines
@@ -52,6 +53,7 @@ class Form::AdminSettings
     remote_topic_feed_access
     landing_page
     wrapstodon
+    email_footer_text
   ).freeze
 
   INTEGER_KEYS = %i(
@@ -100,6 +102,8 @@ class Form::AdminSettings
     authorized_fetch: :authorized_fetch_mode?,
   }.freeze
 
+  UPLOAD_MIME_TYPES = %w(image/jpeg image/png image/gif image/webp).freeze
+
   DESCRIPTION_LIMIT = 200
   DOMAIN_BLOCK_AUDIENCES = %w(disabled users all).freeze
   REGISTRATION_MODES = %w(open approved none).freeze
@@ -122,6 +126,7 @@ class Form::AdminSettings
   validates :media_cache_retention_period, :content_cache_retention_period, :backups_retention_period, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@media_cache_retention_period) || defined?(@content_cache_retention_period) || defined?(@backups_retention_period) }
   validates :min_age, numericality: { only_integer: true }, allow_blank: true, if: -> { defined?(@min_age) }
   validates :site_short_description, length: { maximum: DESCRIPTION_LIMIT }, if: -> { defined?(@site_short_description) }
+  validates :thumbnail_description, length: { maximum: DESCRIPTION_LIMIT }, if: -> { defined?(@thumbnail_description) }
   validates :status_page_url, url: true, allow_blank: true
   validate :validate_site_uploads
   validates :landing_page, inclusion: { in: LANDING_PAGE }, if: -> { defined?(@landing_page) }

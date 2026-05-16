@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { FormattedMessage, defineMessages } from 'react-intl';
 
 import classNames from 'classnames';
 import { withRouter } from 'react-router-dom';
@@ -14,6 +14,7 @@ import PersonAddIcon from '@/material-icons/400-24px/person_add-fill.svg?react';
 import { Account } from 'flavours/glitch/components/account';
 import { LinkedDisplayName } from '@/flavours/glitch/components/display_name';
 import { Icon }  from 'flavours/glitch/components/icon';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { Hotkeys } from 'flavours/glitch/components/hotkeys';
 import { StatusQuoteManager } from 'flavours/glitch/components/status_quoted';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';

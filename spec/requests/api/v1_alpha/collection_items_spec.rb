@@ -26,6 +26,7 @@ RSpec.describe 'Api::V1Alpha::CollectionItems', feature: :collections do
           end.to change(collection.collection_items, :count).by(1)
 
           expect(response).to have_http_status(200)
+          expect(response.parsed_body).to have_key('collection_item')
         end
       end
 
@@ -93,6 +94,37 @@ RSpec.describe 'Api::V1Alpha::CollectionItems', feature: :collections do
 
     context 'when user is not the owner of the collection' do
       let(:collection) { Fabricate(:collection) }
+
+      it 'returns http forbidden' do
+        subject
+
+        expect(response).to have_http_status(403)
+      end
+    end
+  end
+
+  describe 'POST /api/v1_alpha/collections/:collection_id/items/:id/revoke' do
+    subject do
+      post "/api/v1_alpha/collections/#{collection.id}/items/#{item.id}/revoke", headers: headers
+    end
+
+    let(:collection) { Fabricate(:collection) }
+    let(:item) { Fabricate(:collection_item, collection:, account: user.account) }
+
+    it_behaves_like 'forbidden for wrong scope', 'read'
+
+    context 'when user is in item' do
+      it 'revokes the collection item and returns http success' do
+        subject
+
+        expect(item.reload).to be_revoked
+
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'when user is not in the item' do
+      let(:item) { Fabricate(:collection_item, collection:) }
 
       it 'returns http forbidden' do
         subject

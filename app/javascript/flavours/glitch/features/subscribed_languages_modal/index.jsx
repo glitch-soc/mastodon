@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { createSelector } from '@reduxjs/toolkit';
 import { is, List as ImmutableList, Set as ImmutableSet } from 'immutable';
@@ -12,6 +12,7 @@ import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { followAccount } from 'flavours/glitch/actions/accounts';
 import { Button } from 'flavours/glitch/components/button';
 import { IconButton } from 'flavours/glitch/components/icon_button';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import Option from 'flavours/glitch/features/report/components/option';
 import { languages as preloadedLanguages } from 'flavours/glitch/initial_state';
 

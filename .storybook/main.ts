@@ -3,7 +3,18 @@ import { resolve } from 'node:path';
 import type { StorybookConfig } from '@storybook/react-vite';
 
 const config: StorybookConfig = {
-  stories: ['../app/javascript/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  stories: [
+    {
+      directory: '../app/javascript/mastodon',
+      files: '**/*.stories.@(js|jsx|mjs|ts|tsx)',
+      titlePrefix: 'Vanilla',
+    },
+    {
+      directory: '../app/javascript/flavours/glitch',
+      files: '**/*.stories.@(js|jsx|mjs|ts|tsx)',
+      titlePrefix: 'Glitch',
+    },
+  ],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-a11y',

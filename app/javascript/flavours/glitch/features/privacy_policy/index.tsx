@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 
 import { apiGetPrivacyPolicy } from 'flavours/glitch/api/instance';
 import type { ApiPrivacyPolicyJSON } from 'flavours/glitch/api_types/instance';

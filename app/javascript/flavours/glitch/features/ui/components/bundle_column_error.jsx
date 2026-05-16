@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 import { Link } from 'react-router-dom';
 
 import { Button } from 'flavours/glitch/components/button';
 import Column from 'flavours/glitch/components/column';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { GIF } from 'flavours/glitch/components/gif';
 
 class CopyButton extends PureComponent {
@@ -98,7 +99,7 @@ class BundleColumnError extends PureComponent {
             <div className='error-column__message__actions'>
               {errorType === 'network' && <Button onClick={this.handleRetry}><FormattedMessage id='bundle_column_error.retry' defaultMessage='Try again' /></Button>}
               {errorType === 'error' && <CopyButton value={stacktrace}><FormattedMessage id='bundle_column_error.copy_stacktrace' defaultMessage='Copy error report' /></CopyButton>}
-              <Link to='/' className={classNames('button', { 'button-tertiary': errorType !== 'routing' })}><FormattedMessage id='bundle_column_error.return' defaultMessage='Go back home' /></Link>
+              <Link to='/' className={classNames('button', { 'button-secondary': errorType !== 'routing' })}><FormattedMessage id='bundle_column_error.return' defaultMessage='Go back home' /></Link>
             </div>
           </div>
         </div>

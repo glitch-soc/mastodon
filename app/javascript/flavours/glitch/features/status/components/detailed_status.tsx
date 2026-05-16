@@ -30,10 +30,13 @@ import StatusContent from 'flavours/glitch/components/status_content';
 import { QuotedStatus } from 'flavours/glitch/components/status_quoted';
 import { VisibilityIcon } from 'flavours/glitch/components/visibility_icon';
 import { Audio } from 'flavours/glitch/features/audio';
+import { CollectionPreviewCard } from 'flavours/glitch/features/collections/components/collection_preview_card';
 import scheduleIdleTask from 'flavours/glitch/features/ui/util/schedule_idle_task';
 import { Video } from 'flavours/glitch/features/video';
 import { useIdentity } from 'flavours/glitch/identity_context';
+import type { CollectionAttachment } from 'flavours/glitch/models/status';
 import { useAppSelector } from 'flavours/glitch/store';
+import { compareUrls } from 'flavours/glitch/utils/compare_urls';
 
 import Card from './card';
 
@@ -292,14 +295,34 @@ export const DetailedStatus: React.FC<{
       mediaIcons.push('video-camera');
     }
   } else if (status.get('card') && !status.get('quote')) {
-    media = (
-      <Card
-        key={`${status.get('id')}-${status.get('edited_at')}`}
-        sensitive={status.get('sensitive')}
-        card={status.get('card')}
-      />
-    );
+    const cardUrl: string = status.getIn(['card', 'url']);
+
+    const taggedCollection = status
+      .get('tagged_collections')
+      .find((item: CollectionAttachment) =>
+        compareUrls(item.get('url'), cardUrl),
+      );
+
+    if (taggedCollection) {
+      media = <CollectionPreviewCard collection={taggedCollection.toJS()} />;
+    } else {
+      media = (
+        <Card
+          key={`${status.get('id')}-${status.get('edited_at')}`}
+          sensitive={status.get('sensitive')}
+          card={status.get('card')}
+        />
+      );
+    }
+
     mediaIcons.push('link');
+  } else if (status.get('tagged_collections').size) {
+    const firstLinkedCollection = status.get('tagged_collections').first();
+    if (firstLinkedCollection) {
+      media = (
+        <CollectionPreviewCard collection={firstLinkedCollection.toJS()} />
+      );
+    }
   }
 
   if (status.get('poll')) {

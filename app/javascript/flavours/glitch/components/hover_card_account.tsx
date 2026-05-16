@@ -4,6 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { useFetchFamiliarFollowers } from '@/flavours/glitch/components/familiar_followers/use_fetch_familiar_followers';
 import { fetchAccount } from 'flavours/glitch/actions/accounts';
 import { AccountBio } from 'flavours/glitch/components/account_bio';
 import { AccountFields } from 'flavours/glitch/components/account_fields';
@@ -18,7 +19,6 @@ import { FollowButton } from 'flavours/glitch/components/follow_button';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { Permalink } from 'flavours/glitch/components/permalink';
 import { ShortNumber } from 'flavours/glitch/components/short_number';
-import { useFetchFamiliarFollowers } from 'flavours/glitch/features/account_timeline/hooks/familiar_followers';
 import { domain } from 'flavours/glitch/initial_state';
 import { getAccountHidden } from 'flavours/glitch/selectors/accounts';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
@@ -158,17 +158,19 @@ export const HoverCardAccount = forwardRef<
                 {(isMutual || isFollower) && (
                   <>
                     &middot;
-                    {isMutual ? (
-                      <FormattedMessage
-                        id='account.mutual'
-                        defaultMessage='You follow each other'
-                      />
-                    ) : (
-                      <FormattedMessage
-                        id='account.follows_you'
-                        defaultMessage='Follows you'
-                      />
-                    )}
+                    <span>
+                      {isMutual ? (
+                        <FormattedMessage
+                          id='account.mutual'
+                          defaultMessage='You follow each other'
+                        />
+                      ) : (
+                        <FormattedMessage
+                          id='account.follows_you'
+                          defaultMessage='Follows you'
+                        />
+                      )}
+                    </span>
                   </>
                 )}
               </div>

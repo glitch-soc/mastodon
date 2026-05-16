@@ -5,20 +5,20 @@
 # Table name: custom_emojis
 #
 #  id                           :bigint(8)        not null, primary key
-#  shortcode                    :string           default(""), not null
+#  disabled                     :boolean          default(FALSE), not null
 #  domain                       :string
-#  image_file_name              :string
 #  image_content_type           :string
+#  image_file_name              :string
 #  image_file_size              :integer
+#  image_remote_url             :string
+#  image_storage_schema_version :integer
 #  image_updated_at             :datetime
+#  shortcode                    :string           default(""), not null
+#  uri                          :string
+#  visible_in_picker            :boolean          default(TRUE), not null
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
-#  disabled                     :boolean          default(FALSE), not null
-#  uri                          :string
-#  image_remote_url             :string
-#  visible_in_picker            :boolean          default(TRUE), not null
 #  category_id                  :bigint(8)
-#  image_storage_schema_version :integer
 #
 
 class CustomEmoji < ApplicationRecord
@@ -27,6 +27,8 @@ class CustomEmoji < ApplicationRecord
   LOCAL_LIMIT = (ENV['MAX_EMOJI_SIZE'] || 256.kilobytes).to_i
   LIMIT       = [LOCAL_LIMIT, (ENV['MAX_REMOTE_EMOJI_SIZE'] || 256.kilobytes).to_i].max
   MINIMUM_SHORTCODE_SIZE = 2
+  MAX_SHORTCODE_SIZE = 128
+  MAX_FEDERATED_SHORTCODE_SIZE = 2048
 
   SHORTCODE_RE_FRAGMENT = '[a-zA-Z0-9_]{2,}'
 
@@ -48,7 +50,8 @@ class CustomEmoji < ApplicationRecord
   validates_attachment :image, content_type: { content_type: IMAGE_MIME_TYPES }, presence: true
   validates_attachment_size :image, less_than: LIMIT, unless: :local?
   validates_attachment_size :image, less_than: LOCAL_LIMIT, if: :local?
-  validates :shortcode, uniqueness: { scope: :domain }, format: { with: SHORTCODE_ONLY_RE }, length: { minimum: MINIMUM_SHORTCODE_SIZE }
+  validates :shortcode, uniqueness: { scope: :domain }, format: { with: SHORTCODE_ONLY_RE }, length: { minimum: MINIMUM_SHORTCODE_SIZE, maximum: MAX_FEDERATED_SHORTCODE_SIZE }
+  validates :shortcode, length: { maximum: MAX_SHORTCODE_SIZE }, if: :local?
 
   scope :local, -> { where(domain: nil) }
   scope :remote, -> { where.not(domain: nil) }

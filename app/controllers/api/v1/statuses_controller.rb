@@ -93,6 +93,7 @@ class Api::V1::StatusesController < Api::BaseController
       application: doorkeeper_token.application,
       poll: status_params[:poll],
       content_type: status_params[:content_type],
+      local_only: status_params[:local_only],
       allowed_mentions: status_params[:allowed_mentions],
       idempotency: request.headers['Idempotency-Key'],
       with_rate_limit: true
@@ -107,9 +108,7 @@ class Api::V1::StatusesController < Api::BaseController
     @status = Status.where(account: current_account).find(params[:id])
     authorize @status, :update?
 
-    UpdateStatusService.new.call(
-      @status,
-      current_account.id,
+    update_options = {
       text: status_params[:status],
       media_ids: status_params[:media_ids],
       media_attributes: status_params[:media_attributes],
@@ -117,9 +116,12 @@ class Api::V1::StatusesController < Api::BaseController
       language: status_params[:language],
       spoiler_text: status_params[:spoiler_text],
       poll: status_params[:poll],
-      quote_approval_policy: quote_approval_policy,
-      content_type: status_params[:content_type]
-    )
+      content_type: status_params[:content_type],
+    }
+
+    update_options[:quote_approval_policy] = quote_approval_policy if status_params[:quote_approval_policy].present?
+
+    UpdateStatusService.new.call(@status, current_account.id, update_options)
 
     render json: @status, serializer: REST::StatusSerializer
   end
@@ -128,6 +130,8 @@ class Api::V1::StatusesController < Api::BaseController
     @status = Status.where(account: current_account).find(params[:id])
     authorize @status, :destroy?
 
+    # JSON is generated before `discard_with_reblogs` in order to have the proper URL
+    # for media attachments, as it would otherwise redirect to the media proxy
     json = render_to_body json: @status, serializer: REST::StatusSerializer, source_requested: true
 
     @status.discard_with_reblogs
@@ -191,6 +195,7 @@ class Api::V1::StatusesController < Api::BaseController
       :language,
       :scheduled_at,
       :content_type,
+      :local_only,
       allowed_mentions: [],
       media_ids: [],
       media_attributes: [

@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 
 import { connect } from 'react-redux';
 
 import CampaignIcon from '@/material-icons/400-24px/campaign.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home-fill.svg?react';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { SymbolLogo } from 'flavours/glitch/components/logo';
 import { fetchAnnouncements, toggleShowAnnouncements } from 'flavours/glitch/actions/announcements';
 import { IconWithBadge } from 'flavours/glitch/components/icon_with_badge';

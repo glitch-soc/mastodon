@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { List as ImmutableList } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
 import { Button } from 'flavours/glitch/components/button';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 
 import Option from './components/option';
 

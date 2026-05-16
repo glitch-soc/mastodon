@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import classNames from 'classnames';
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 import { withRouter } from 'react-router-dom';
 import { difference } from 'lodash';
 
@@ -16,6 +16,7 @@ import VisibilityIcon from '@/material-icons/400-24px/visibility.svg?react';
 import VisibilityOffIcon from '@/material-icons/400-24px/visibility_off.svg?react';
 import { Hotkeys }  from 'flavours/glitch/components/hotkeys';
 import { Icon }  from 'flavours/glitch/components/icon';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { ScrollContainer } from 'flavours/glitch/containers/scroll_container';
 import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
@@ -71,7 +72,7 @@ const messages = defineMessages({
   hideAll: { id: 'status.show_less_all', defaultMessage: 'Show less for all' },
   statusTitleWithAttachments: { id: 'status.title.with_attachments', defaultMessage: '{user} posted {attachmentCount, plural, one {an attachment} other {# attachments}}' },
   detailedStatus: { id: 'status.detailed_status', defaultMessage: 'Detailed conversation view' },
-  tootHeading: { id: 'account.posts_with_replies', defaultMessage: 'Posts and replies' },
+  tootHeading: { id: 'account.filters.posts_replies', defaultMessage: 'Posts and replies' },
 });
 
 const makeMapStateToProps = () => {
@@ -160,8 +161,8 @@ class Status extends ImmutablePureComponent {
   };
 
   componentDidMount () {
-    attachFullscreenListener(this.onFullScreenChange);
     this.props.dispatch(fetchStatus(this.props.params.statusId, { forceFetch: true }));
+    attachFullscreenListener(this.onFullScreenChange);
   }
 
   static getDerivedStateFromProps(props, state) {
@@ -169,7 +170,6 @@ class Status extends ImmutablePureComponent {
     let updated = false;
 
     if (props.params.statusId && state.statusId !== props.params.statusId) {
-      props.dispatch(fetchStatus(props.params.statusId, { forceFetch: true }));
       update.threadExpanded = undefined;
       update.statusId = props.params.statusId;
       updated = true;
@@ -221,6 +221,7 @@ class Status extends ImmutablePureComponent {
       dispatch(openModal({
         modalType: 'INTERACTION',
         modalProps: {
+          intent: 'favourite',
           accountId: status.getIn(['account', 'id']),
           url: status.get('uri'),
         },
@@ -250,6 +251,7 @@ class Status extends ImmutablePureComponent {
       dispatch(openModal({
         modalType: 'INTERACTION',
         modalProps: {
+          intent: 'reply',
           accountId: status.getIn(['account', 'id']),
           url: status.get('uri'),
         },
@@ -267,6 +269,7 @@ class Status extends ImmutablePureComponent {
       dispatch(openModal({
         modalType: 'INTERACTION',
         modalProps: {
+          intent: 'reblog',
           accountId: status.getIn(['account', 'id']),
           url: status.get('uri'),
         },
@@ -286,7 +289,12 @@ class Status extends ImmutablePureComponent {
     const { dispatch, history } = this.props;
 
     const handleDeleteSuccess = () => {
-      history.push('/');
+      history.push('/', {
+        // Preventing the default "scroll to right" on
+        // location change in advanced UI to avoid conflict
+        // with the composer being focused
+        preventMultiColumnAutoScroll: true
+      });
     };
 
     if (!deleteModal) {
@@ -300,13 +308,13 @@ class Status extends ImmutablePureComponent {
           // Error handling - could show error message
         });
     } else {
-      dispatch(openModal({ 
-        modalType: 'CONFIRM_DELETE_STATUS', 
-        modalProps: { 
-          statusId: status.get('id'), 
+      dispatch(openModal({
+        modalType: 'CONFIRM_DELETE_STATUS',
+        modalProps: {
+          statusId: status.get('id'),
           withRedraft,
           onDeleteSuccess: handleDeleteSuccess
-        } 
+        }
       }));
     }
   };
@@ -511,18 +519,26 @@ class Status extends ImmutablePureComponent {
     this.statusNode = c;
   };
 
-  componentDidUpdate (prevProps) {
-    const { status, descendantsIds } = this.props;
+  componentDidUpdate(prevProps) {
+    const { status, descendantsIds, params } = this.props;
 
     const isSameStatus = status && (prevProps.status?.get('id') === status.get('id'));
 
     // Only highlight replies after the initial load
     if (prevProps.descendantsIds.length && isSameStatus) {
       const newRepliesIds = difference(descendantsIds, prevProps.descendantsIds);
-      
+
       if (newRepliesIds.length) {
         this.setState({newRepliesIds});
       }
+    }
+
+    if (params.statusId && prevProps.params.statusId !== params.statusId) {
+      this.props.dispatch(fetchStatus(params.statusId, { forceFetch: true }));
+    }
+
+    if (status && status.get('id') !== this.state.loadedStatusId) {
+      this.setState({ showMedia: defaultMediaVisibility(this.props.status), loadedStatusId: status.get('id') });
     }
   }
 
@@ -657,7 +673,7 @@ class Status extends ImmutablePureComponent {
             </Hotkeys>
 
             {descendants}
-            
+
             <RefreshController
               isLocal={isLocal}
               statusId={status.get('id')}

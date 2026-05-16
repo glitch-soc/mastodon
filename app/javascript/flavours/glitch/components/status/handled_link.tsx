@@ -4,7 +4,9 @@ import type { ComponentProps, FC } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
+import type { ApiCollectionJSON } from '@/flavours/glitch/api_types/collections';
 import type { ApiMentionJSON } from '@/flavours/glitch/api_types/statuses';
+import { getCollectionPath } from '@/flavours/glitch/features/collections/utils';
 import { useAppSelector } from '@/flavours/glitch/store';
 import type { OnElementHandler } from '@/flavours/glitch/utils/html';
 import { decode as decodeIDNA } from 'flavours/glitch/utils/idna';
@@ -15,6 +17,7 @@ export interface HandledLinkProps {
   prevText?: string;
   hashtagAccountId?: string;
   mention?: Pick<ApiMentionJSON, 'id' | 'acct' | 'username'>;
+  collection?: Pick<ApiCollectionJSON, 'id'>;
 }
 
 const textMatchesTarget = (text: string, origin: string, host: string) => {
@@ -111,6 +114,7 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
   prevText,
   hashtagAccountId,
   mention,
+  collection,
   className,
   children,
   ...props
@@ -176,6 +180,15 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
         to={`/@${mention.acct}`}
         title={`@${mention.acct}`}
         data-hover-card-account={mention.id}
+      >
+        {children}
+      </Link>
+    );
+  } else if (collection) {
+    return (
+      <Link
+        className={classNames(className)}
+        to={getCollectionPath(collection.id)}
       >
         {children}
       </Link>

@@ -1,62 +1,65 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import { useParams } from 'react-router';
+import { useHistory } from 'react-router';
 
 import { List as ImmutableList } from 'immutable';
 
-import { fetchEndorsedAccounts } from 'flavours/glitch/actions/accounts';
-import { fetchFeaturedTags } from 'flavours/glitch/actions/featured_tags';
-import { Account } from 'flavours/glitch/components/account';
-import { ColumnBackButton } from 'flavours/glitch/components/column_back_button';
-import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
-import { RemoteHint } from 'flavours/glitch/components/remote_hint';
-import { AccountHeader } from 'flavours/glitch/features/account_timeline/components/account_header';
-import BundleColumnError from 'flavours/glitch/features/ui/components/bundle_column_error';
-import Column from 'flavours/glitch/features/ui/components/column';
-import { useAccountId } from 'flavours/glitch/hooks/useAccountId';
-import { useAccountVisibility } from 'flavours/glitch/hooks/useAccountVisibility';
-import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
+import { fetchEndorsedAccounts } from '@/flavours/glitch/actions/accounts';
+import { AccountHeader } from '@/flavours/glitch/components/account_header';
+import { AccountListItem } from '@/flavours/glitch/components/account_list_item';
+import { ColumnBackButton } from '@/flavours/glitch/components/column_back_button';
+import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
+import { RemoteHint } from '@/flavours/glitch/components/remote_hint';
+import {
+  Article,
+  ItemList,
+  Scrollable,
+} from '@/flavours/glitch/components/scrollable_list/components';
+import type { TruncatedListItemInfo } from '@/flavours/glitch/components/truncated_list';
+import { TruncatedListItems } from '@/flavours/glitch/components/truncated_list';
+import BundleColumnError from '@/flavours/glitch/features/ui/components/bundle_column_error';
+import Column from '@/flavours/glitch/features/ui/components/column';
+import { useAccount } from '@/flavours/glitch/hooks/useAccount';
+import { useAccountId } from '@/flavours/glitch/hooks/useAccountId';
+import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
+import { me } from '@/flavours/glitch/initial_state';
+import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
+import AddIcon from '@/material-icons/400-24px/add.svg?react';
+
+import { CollectionListItem } from '../collections/components/collection_list_item';
+import { useCollectionsCreatedBy } from '../collections/overview/created_by_you';
+import { areCollectionsEnabled } from '../collections/utils';
 
 import { EmptyMessage } from './components/empty_message';
-import { FeaturedTag } from './components/featured_tag';
-import type { TagMap } from './components/featured_tag';
+import { Subheading, SubheadingLink } from './components/subheading';
 
-interface Params {
-  acct?: string;
-  id?: string;
-}
+const collectionsEnabled = areCollectionsEnabled();
 
 const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
   multiColumn,
 }) => {
   const accountId = useAccountId();
+  const account = useAccount(accountId);
   const { suspended, blockedBy, hidden } = useAccountVisibility(accountId);
   const forceEmptyState = suspended || blockedBy || hidden;
-  const { acct = '' } = useParams<Params>();
 
   const dispatch = useAppDispatch();
 
+  const history = useHistory();
+  useEffect(() => {
+    if (account && !account.show_featured) {
+      history.push(`/@${account.acct}`);
+    }
+  }, [account, history]);
+
   useEffect(() => {
     if (accountId) {
-      void dispatch(fetchFeaturedTags({ accountId }));
       void dispatch(fetchEndorsedAccounts({ accountId }));
     }
   }, [accountId, dispatch]);
 
-  const isLoading = useAppSelector(
-    (state) =>
-      !accountId ||
-      !!state.user_lists.getIn(['featured_tags', accountId, 'isLoading']),
-  );
-  const featuredTags = useAppSelector(
-    (state) =>
-      state.user_lists.getIn(
-        ['featured_tags', accountId, 'items'],
-        ImmutableList(),
-      ) as ImmutableList<TagMap>,
-  );
   const featuredAccountIds = useAppSelector(
     (state) =>
       state.user_lists.getIn(
@@ -64,6 +67,45 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
         ImmutableList(),
       ) as ImmutableList<string>,
   );
+  const { collections, status: collectionsLoadStatus } =
+    useCollectionsCreatedBy(accountId);
+
+  const { listedCollections = [], unlistedCollections = [] } = Object.groupBy(
+    collections,
+    (item) =>
+      item.discoverable && !!item.item_count
+        ? 'listedCollections'
+        : 'unlistedCollections',
+  );
+
+  const renderListItem = useCallback(
+    ({
+      item,
+      index,
+      totalListLength,
+      isLastElement,
+    }: TruncatedListItemInfo<(typeof listedCollections)[number]>) => (
+      <CollectionListItem
+        key={item.id}
+        collection={item}
+        withoutBorder={isLastElement}
+        withAuthorHandle={false}
+        positionInList={index}
+        listSize={totalListLength}
+      />
+    ),
+    [],
+  );
+
+  const hasCollections =
+    collectionsEnabled &&
+    collectionsLoadStatus === 'idle' &&
+    listedCollections.length > 0;
+
+  const hasFeaturedAccounts = !featuredAccountIds.isEmpty();
+
+  const isLoading =
+    !accountId || (collectionsEnabled && collectionsLoadStatus !== 'idle');
 
   if (accountId === null) {
     return <BundleColumnError multiColumn={multiColumn} errorType='routing' />;
@@ -79,7 +121,7 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
     );
   }
 
-  if (featuredTags.isEmpty() && featuredAccountIds.isEmpty()) {
+  if (!hasFeaturedAccounts && !hasCollections) {
     return (
       <AccountFeaturedWrapper accountId={accountId}>
         <EmptyMessage
@@ -97,38 +139,86 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
     <Column>
       <ColumnBackButton />
 
-      <div className='scrollable scrollable--flex'>
+      <Scrollable>
         {accountId && (
           <AccountHeader accountId={accountId} hideTabs={forceEmptyState} />
         )}
-        {!featuredTags.isEmpty() && (
-          <>
-            <h4 className='column-subheading'>
-              <FormattedMessage
-                id='account.featured.hashtags'
-                defaultMessage='Hashtags'
-              />
-            </h4>
-            {featuredTags.map((tag) => (
-              <FeaturedTag key={tag.get('id')} tag={tag} account={acct} />
-            ))}
-          </>
-        )}
         {!featuredAccountIds.isEmpty() && (
           <>
-            <h4 className='column-subheading'>
+            <Subheading as='h2'>
               <FormattedMessage
                 id='account.featured.accounts'
                 defaultMessage='Profiles'
               />
-            </h4>
-            {featuredAccountIds.map((featuredAccountId) => (
-              <Account key={featuredAccountId} id={featuredAccountId} />
-            ))}
+            </Subheading>
+            <ItemList>
+              {featuredAccountIds.map((featuredAccountId, index) => (
+                <Article
+                  focusable
+                  key={featuredAccountId}
+                  aria-posinset={index + 1}
+                  aria-setsize={featuredAccountIds.size}
+                >
+                  <AccountListItem accountId={featuredAccountId} />
+                </Article>
+              ))}
+            </ItemList>
+          </>
+        )}
+        {collectionsEnabled && (
+          <>
+            <Subheading as='header'>
+              <h2>
+                <FormattedMessage
+                  id='account.featured.collections'
+                  defaultMessage='Collections'
+                />
+              </h2>
+              {accountId === me && (
+                <SubheadingLink to='/collections/new' icon={AddIcon}>
+                  <FormattedMessage
+                    id='account.featured.new_collection'
+                    defaultMessage='New collection'
+                  />
+                </SubheadingLink>
+              )}
+            </Subheading>
+            {hasCollections ? (
+              <ItemList>
+                <TruncatedListItems
+                  visibleItems={listedCollections}
+                  truncatedItems={unlistedCollections}
+                  toggleButton={{
+                    title: (
+                      <FormattedMessage
+                        id='collections.unlisted_collections_with_count'
+                        defaultMessage='Unlisted collections ({count})'
+                        values={{ count: unlistedCollections.length }}
+                      />
+                    ),
+                    subtitle: (
+                      <FormattedMessage
+                        id='collections.unlisted_collections_description'
+                        defaultMessage='These don’t appear on your profile to others. Anyone with the link can discover them.'
+                      />
+                    ),
+                  }}
+                  renderListItem={renderListItem}
+                />
+              </ItemList>
+            ) : (
+              <EmptyMessage
+                withoutAddCollectionButton
+                blockedBy={blockedBy}
+                hidden={hidden}
+                suspended={suspended}
+                accountId={accountId}
+              />
+            )}
           </>
         )}
         <RemoteHint accountId={accountId} />
-      </div>
+      </Scrollable>
     </Column>
   );
 };

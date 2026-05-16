@@ -2,10 +2,11 @@ import { useEffect, useCallback, useState } from 'react';
 
 import { useIntl, defineMessages } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import type { Map as ImmutableMap, List as ImmutableList } from 'immutable';
+
+import { Helmet } from '@unhead/react/helmet';
 
 import elephantUIPlane from '@/images/elephant_ui_plane.svg';
 import EditIcon from '@/material-icons/400-24px/edit_square.svg?react';
@@ -220,7 +221,7 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
 
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- this is not a feature but a visual easter egg */}
             <div
-              className='drawer__inner__mastodon'
+              className='drawer__inner__mastodon with-zig-zag-decoration'
               onClick={handleCycleElefriend}
             >
               <img alt='' draggable='false' src={mascot ?? elephant} />

@@ -6,24 +6,6 @@ RSpec.describe ThemeHelper do
   describe 'theme_style_tags' do
     let(:result) { helper.theme_style_tags(theme) }
 
-    context 'when using "system" theme' do
-      let(:theme) { ['glitch', 'system'] }
-
-      it 'returns the mastodon-light and application stylesheets with correct color schemes' do
-        expect(html_links.first.attributes.symbolize_keys)
-          .to include(
-            # This is now identical to the default theme & will be unified very soon
-            href: have_attributes(value: match(/mastodon-light/)),
-            media: have_attributes(value: 'not all and (prefers-color-scheme: dark)')
-          )
-        expect(html_links.last.attributes.symbolize_keys)
-          .to include(
-            href: have_attributes(value: match(/default/)),
-            media: have_attributes(value: '(prefers-color-scheme: dark)')
-          )
-      end
-    end
-
     context 'when using "default" theme' do
       let(:theme) { ['glitch', 'default'] }
 
@@ -34,27 +16,15 @@ RSpec.describe ThemeHelper do
           )
       end
     end
-
-    context 'when using other theme' do
-      let(:theme) { ['glitch', 'contrast'] }
-
-      it 'returns the theme stylesheet without color scheme information' do
-        expect(html_links.first.attributes.symbolize_keys)
-          .to include(
-            href: have_attributes(value: match(/contrast/)),
-            media: have_attributes(value: 'all')
-          )
-      end
-    end
   end
 
   describe 'theme_color_tags' do
-    let(:result) { helper.theme_color_tags(theme) }
+    let(:result) { helper.theme_color_tags(color_scheme) }
 
     context 'when using system theme' do
-      let(:theme) { ['glitch', 'system'] }
+      let(:color_scheme) { 'auto' }
 
-      it 'returns the mastodon-light and default stylesheets with correct color schemes' do
+      it 'returns both color schemes with appropriate media queries' do
         expect(html_theme_colors.first.attributes.symbolize_keys)
           .to include(
             content: have_attributes(value: Themes::THEME_COLORS[:dark]),
@@ -68,10 +38,10 @@ RSpec.describe ThemeHelper do
       end
     end
 
-    context 'when using mastodon-light theme' do
-      let(:theme) { ['glitch', 'mastodon-light'] }
+    context 'when light color scheme' do
+      let(:color_scheme) { 'light' }
 
-      it 'returns the theme stylesheet without color scheme information' do
+      it 'returns the light color' do
         expect(html_theme_colors.first.attributes.symbolize_keys)
           .to include(
             content: have_attributes(value: Themes::THEME_COLORS[:light])
@@ -79,10 +49,10 @@ RSpec.describe ThemeHelper do
       end
     end
 
-    context 'when using other theme' do
-      let(:theme) { ['glitch', 'contrast'] }
+    context 'when using dark color scheme' do
+      let(:color_scheme) { 'dark' }
 
-      it 'returns the theme stylesheet without color scheme information' do
+      it 'returns the dark color' do
         expect(html_theme_colors.first.attributes.symbolize_keys)
           .to include(
             content: have_attributes(value: Themes::THEME_COLORS[:dark])
@@ -127,6 +97,63 @@ RSpec.describe ThemeHelper do
         expect(custom_stylesheet)
           .to be_blank
       end
+    end
+  end
+
+  describe '#current_theme' do
+    subject { helper.current_theme }
+
+    context 'when user is not signed in' do
+      context 'when theme was not changed in settings' do
+        it { is_expected.to eq(['glitch', 'default']) }
+      end
+
+      context 'when theme is changed in settings' do
+        before do
+          allow(Themes.instance).to receive(:skins_for).with('glitch').and_return(%w(default contrast))
+          Setting.skin = 'contrast'
+        end
+
+        it { is_expected.to eq(['glitch', 'contrast']) }
+      end
+
+      context 'when theme is changed to invalid value' do
+        before { Setting.skin = 'fakethemename' }
+
+        it { is_expected.to eq(['glitch', 'default']) }
+      end
+    end
+
+    context 'when user is signed in' do
+      before { allow(helper).to receive(:current_user).and_return(current_user) }
+
+      let(:current_user) { Fabricate :user }
+
+      context 'when user did not set theme' do
+        it { is_expected.to eq(['glitch', 'default']) }
+      end
+
+      context 'when user set theme' do
+        before { current_user.settings.update(skin: 'alternate', noindex: false) }
+
+        context 'when theme is not valid' do
+          it { is_expected.to eq(['glitch', 'default']) }
+        end
+      end
+    end
+  end
+
+  describe '#page_color_scheme' do
+    subject { helper.page_color_scheme }
+
+    context 'when force_color_scheme is present' do
+      before { helper.content_for(:force_color_scheme) { 'value' } }
+
+      it { is_expected.to eq('value') }
+    end
+
+    context 'when force_color_scheme is absent' do
+      it { is_expected.to eq('auto') }
     end
   end
 

@@ -1,6 +1,5 @@
 import { Provider } from 'react-redux';
 
-import { fetchCustomEmojis } from 'flavours/glitch/actions/custom_emojis';
 import { fetchServer } from 'flavours/glitch/actions/server';
 import { hydrateStore } from 'flavours/glitch/actions/store';
 import { Router } from 'flavours/glitch/components/router';
@@ -13,7 +12,6 @@ if (initialState) {
   store.dispatch(hydrateStore(initialState));
 }
 
-store.dispatch(fetchCustomEmojis());
 store.dispatch(fetchServer());
 
 const ComposeContainer = () => (

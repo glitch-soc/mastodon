@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "target": "esnext",
-    "module": "ES2022",
-    "moduleResolution": "bundler",
     "allowJs": true,
     "resolveJsonModule": true,
     "noEmit": true,
@@ -14,18 +11,17 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "types": ["vite/client", "vitest/globals"],
-    "baseUrl": "./",
     "incremental": true,
     "tsBuildInfoFile": "tmp/cache/tsconfig.tsbuildinfo",
     "paths": {
-      "@/*": ["app/javascript/*"],
-      "mastodon": ["app/javascript/mastodon"],
-      "mastodon/*": ["app/javascript/mastodon/*"],
-      "locales": ["app/javascript/locales"],
-      "flavours/glitch": ["app/javascript/flavours/glitch"],
-      "flavours/glitch/*": ["app/javascript/flavours/glitch/*"],
-      "images/*": ["app/javascript/images/*"],
-      "styles/*": ["app/javascript/styles/*"]
+      "@/*": ["./app/javascript/*"],
+      "mastodon": ["./app/javascript/mastodon"],
+      "mastodon/*": ["./app/javascript/mastodon/*"],
+      "locales": ["./app/javascript/locales"],
+      "flavours/glitch": ["./app/javascript/flavours/glitch"],
+      "flavours/glitch/*": ["./app/javascript/flavours/glitch/*"],
+      "images/*": ["./app/javascript/images/*"],
+      "styles/*": ["./app/javascript/styles/*"]
     },
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   },
