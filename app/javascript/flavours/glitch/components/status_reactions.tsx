@@ -12,7 +12,10 @@ import {
 } from '@/flavours/glitch/actions/interactions';
 import { AnimatedNumber } from '@/flavours/glitch/components/animated_number';
 import { Emoji } from '@/flavours/glitch/components/emoji';
-import { AnimateEmojiProvider } from '@/flavours/glitch/components/emoji/context';
+import {
+  AnimateEmojiProvider,
+  CustomEmojiProvider,
+} from '@/flavours/glitch/components/emoji/context';
 import { isUnicodeEmoji } from '@/flavours/glitch/features/emoji/utils';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
@@ -114,9 +117,11 @@ const Reaction: FC<{
       style={style}
     >
       <AnimateEmojiProvider>
-        <span className='reactions-bar__item__emoji'>
-          <Emoji code={code} customEmoji={custom} />
-        </span>
+        <CustomEmojiProvider emojis={custom}>
+          <span className='reactions-bar__item__emoji'>
+            <Emoji code={code} />
+          </span>
+        </CustomEmojiProvider>
       </AnimateEmojiProvider>
       <span className='reactions-bar__item__count'>
         <AnimatedNumber value={reaction.get('count') as number} />
