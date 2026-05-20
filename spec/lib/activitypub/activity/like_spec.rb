@@ -39,7 +39,7 @@ RSpec.describe ActivityPub::Activity::Like do
             '@context': 'https://www.w3.org/ns/activitystreams',
             id: 'foo',
             type: 'Like',
-            content: '😂',
+            content: content,
             actor: ActivityPub::TagManager.instance.uri_for(sender),
             object: ActivityPub::TagManager.instance.uri_for(status),
           }.with_indifferent_access
@@ -49,8 +49,28 @@ RSpec.describe ActivityPub::Activity::Like do
           subject.perform
         end
 
-        it 'creates a reaction from sender to status' do
-          expect(sender.reacted?(status, '😂')).to be true
+        context 'without presentation' do
+          let(:content) { '❤' }
+
+          it 'creates a reaction from sender to status' do
+            expect(sender.reacted?(status, '❤️')).to be true
+          end
+        end
+
+        context 'with explicit presentation' do
+          let(:content) { '❤️' }
+
+          it 'creates a reaction from sender to status' do
+            expect(sender.reacted?(status, '❤️')).to be true
+          end
+        end
+
+        context 'with implicit presentation' do
+          let(:content) { '😂' }
+
+          it 'creates a reaction from sender to status' do
+            expect(sender.reacted?(status, '😂')).to be true
+          end
         end
       end
 
