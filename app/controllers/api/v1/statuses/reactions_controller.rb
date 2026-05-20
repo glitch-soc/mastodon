@@ -6,16 +6,17 @@ class Api::V1::Statuses::ReactionsController < Api::V1::Statuses::BaseController
   skip_before_action :set_status, only: [:destroy]
 
   def create
-    ReactService.new.call(current_account, @status, params[:id])
+    ReactService.new.call(current_account, @status, Emoji.normalize(params[:id]))
     render json: @status, serializer: REST::StatusSerializer
   end
 
   def destroy
-    react = current_account.status_reactions.find_by(status_id: params[:status_id], name: params[:id])
+    name = Emoji.normalize(params[:id])
+    react = current_account.status_reactions.find_by(status_id: params[:status_id], name: name)
 
     if react
       @status = react.status
-      UnreactWorker.perform_async(current_account.id, @status.id, params[:id])
+      UnreactWorker.perform_async(current_account.id, @status.id, name)
     else
       @status = Status.find(params[:status_id])
       authorize @status, :show?
