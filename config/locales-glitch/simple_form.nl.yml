@@ -1,1 +1,26 @@
+---
 nl:
+  simple_form:
+    glitch_only: glitch-soc
+    hints:
+      defaults:
+        setting_default_content_type_html: Bij het schrijven van toots, ga ervan uit dat ze in HTML's geschreven zijn, tenzij anders opgegeven
+        setting_default_content_type_markdown: Bij het schrijven van toots, ga ervan uit dat erg gebruik gemaakt wordt van Markdown voor opmaak met rich text, maar niet als anders gespecificeerd
+        setting_default_content_type_plain: Bij het schrijven van toots, veronderstel dat ze platte tekst zijn zonder speciale opmaak, tenzij anders opgegeven (standaard Mastodon gedrag)
+        setting_default_language: De taal van je toots kan automatisch worden gedetecteerd, maar is niet altijd accuraat
+        setting_show_followers_count: Toon je aantal volgers op het profie. Als je dit verbergt, wordt deze informatie zelfs voor jezelf verborgen en sommige applicaties kunnen een negatief aantal volgers laten zien.
+        setting_skin: Past het thema toe op de huidige Mastodon smaak
+    labels:
+      defaults:
+        setting_default_content_type: Standaard formaat voor toots
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Markdown
+        setting_default_content_type_plain: Onopgemaakte tekst
+        setting_favourite_modal: Toon bevestigingsvenster voor je iets aan favorieten toevoegt (alleen van toepassing op Glitch smaak)
+        setting_show_followers_count: Toon het aantal volgers
+        setting_skin: Thema
+        setting_system_emoji_font: Gebruik het standaardlettertype je systeem voor emojis (alleen voor Glitch smaak)
+      notification_emails:
+        trending_link: Nieuwe trending link vereist beoordeling
+        trending_status: Nieuwe trending link vereist beoordeling
+        trending_tag: Nieuwe trending tag vereist beoordeling
