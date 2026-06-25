@@ -29,6 +29,7 @@ class Notification < ApplicationRecord
     'Follow' => :follow,
     'FollowRequest' => :follow_request,
     'Favourite' => :favourite,
+    'StatusReaction' => :reaction,
     'Poll' => :poll,
     'Quote' => :quote,
   }.freeze
@@ -58,6 +59,9 @@ class Notification < ApplicationRecord
     favourite: {
       filterable: true,
       baseline: true,
+    }.freeze,
+    reaction: {
+      filterable: true,
     }.freeze,
     poll: {
       filterable: false,
@@ -113,6 +117,7 @@ class Notification < ApplicationRecord
     mention: [mention: :status],
     quote: [quote: :status],
     favourite: [favourite: :status],
+    reaction: [status_reaction: :status],
     poll: [poll: :status],
     update: :status,
     quoted_update: :status,
@@ -129,6 +134,7 @@ class Notification < ApplicationRecord
     belongs_to :follow, inverse_of: :notification
     belongs_to :follow_request, inverse_of: :notification
     belongs_to :favourite, inverse_of: :notification
+    belongs_to :status_reaction, inverse_of: :notification
     belongs_to :poll, inverse_of: false
     belongs_to :report, inverse_of: false
     belongs_to :account_relationship_severance_event, inverse_of: false
@@ -155,6 +161,8 @@ class Notification < ApplicationRecord
       status&.reblog
     when :favourite
       favourite&.status
+    when :reaction
+      status_reaction&.status
     when :mention
       mention&.status
     when :quote
@@ -229,6 +237,8 @@ class Notification < ApplicationRecord
     end
   end
 
+  alias reaction status_reaction
+
   after_initialize :set_from_account
   before_validation :set_from_account
 
@@ -242,7 +252,7 @@ class Notification < ApplicationRecord
     case activity_type
     when 'Status'
       self.from_account_id = type == :quoted_update ? activity&.quote&.quoted_account_id : activity&.account_id
-    when 'Follow', 'Favourite', 'FollowRequest', 'Poll', 'Report', 'Quote', 'Collection'
+    when 'Follow', 'Favourite', 'StatusReaction', 'FollowRequest', 'Poll', 'Report', 'Quote', 'Collection'
       self.from_account_id = activity&.account_id
     when 'CollectionItem'
       self.from_account_id = activity&.collection&.account_id
