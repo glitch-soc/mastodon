@@ -5,7 +5,7 @@ ruby '>= 3.2.0', '< 3.5.0'
 
 gem 'propshaft'
 gem 'puma', '~> 7.0'
-gem 'rails', '~> 8.0'
+gem 'rails', '~> 8.0.4'
 gem 'thor', '~> 1.2'
 
 gem 'dotenv'
@@ -28,7 +28,7 @@ gem 'bootsnap', require: false
 gem 'browser'
 gem 'charlock_holmes', '~> 0.7.7'
 gem 'chewy', '~> 7.3'
-gem 'devise', '~> 4.9'
+gem 'devise', '~> 5.0'
 gem 'devise-two-factor'
 
 group :pam_authentication, optional: true do
@@ -71,6 +71,10 @@ gem 'oj', '~> 3.14'
 gem 'ox', '~> 2.14'
 gem 'parslet'
 gem 'premailer-rails'
+# Pin explicitly (transitive via premailer-rails) to stay within the 1.x
+# line while still resolving GHSA advisories fixed in 1.22.0; avoids an
+# unscoped jump to css_parser 2.x/3.x as part of a security-only update.
+gem 'css_parser', '~> 1.22'
 gem 'public_suffix', '~> 7.0'
 gem 'pundit', '~> 2.3'
 gem 'rack-attack', '~> 6.6'

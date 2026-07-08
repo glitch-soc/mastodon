@@ -1,0 +1,20 @@
+---
+# Advisories intentionally ignored by `bin/bundler-audit check --update`.
+#
+# Each entry MUST include a comment explaining why it's safe to ignore and
+# when it should be revisited. Do not add blanket ignores here - only
+# specific advisories with no available fix.
+ignore:
+  # webrick: "WEBrick reparses trailer" - no patched release exists yet
+  # (1.9.2 is still the latest version on rubygems.org as of 2026-07-08).
+  # webrick is pulled in transitively via `prometheus_exporter`, which is
+  # disabled by default (MASTODON_PROMETHEUS_EXPORTER_ENABLED). When the
+  # optional MASTODON_PROMETHEUS_EXPORTER_LOCAL mode is turned on,
+  # lib/mastodon/prometheus_exporter/local_server.rb does start a WEBrick-
+  # backed metrics server (default bind: localhost:9394), so this is not
+  # risk-free for deployments that enable local mode on a
+  # non-localhost bind - restrict MASTODON_PROMETHEUS_EXPORTER_HOST to a
+  # trusted/internal interface until webrick ships a fix. Revisit and
+  # remove this ignore entry once a patched webrick release exists.
+  - CVE-2026-38969
+  - GHSA-h4w6-wx8r-p68v
