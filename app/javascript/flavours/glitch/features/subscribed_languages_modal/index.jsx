@@ -15,16 +15,21 @@ import { IconButton } from 'flavours/glitch/components/icon_button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import Option from 'flavours/glitch/features/report/components/option';
 import { languages as preloadedLanguages } from 'flavours/glitch/initial_state';
+import { selectTimelinesByAccount } from '@/flavours/glitch/selectors/timelines';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
 });
 
-const getAccountLanguages = createSelector([
-  (state, accountId) => state.getIn(['timelines', `account:${accountId}`, 'items'], ImmutableList()),
-  state => state.get('statuses'),
-], (statusIds, statuses) =>
-  ImmutableSet(statusIds.map(statusId => statuses.get(statusId)).filter(status => !status.get('reblog')).map(status => status.get('language'))));
+const getAccountLanguages = createSelector(
+  [selectTimelinesByAccount, (state) => state.get('statuses')],
+  (timelines, statuses) => ImmutableSet(
+    timelines
+      .reduce((statusIds, timeline) => statusIds.concat(timeline.get('items')), ImmutableList())
+      .map(statusId => statuses.get(statusId))
+      .filter(status => !status.get('reblog'))
+      .map(status => status.get('language'))
+  ));
 
 const mapStateToProps = (state, { accountId }) => ({
   acct: state.getIn(['accounts', accountId, 'acct']),
@@ -37,7 +42,6 @@ const mapDispatchToProps = (dispatch, { accountId }) => ({
   onSubmit (languages) {
     dispatch(followAccount(accountId, { languages }));
   },
-
 });
 
 class SubscribedLanguagesModal extends ImmutablePureComponent {
