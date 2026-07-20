@@ -2569,12 +2569,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@formatjs/icu-messageformat-parser@npm:3.5.14":
-  version: 3.5.14
-  resolution: "@formatjs/icu-messageformat-parser@npm:3.5.14"
+"@formatjs/icu-messageformat-parser@npm:3.5.15":
+  version: 3.5.15
+  resolution: "@formatjs/icu-messageformat-parser@npm:3.5.15"
   dependencies:
     "@formatjs/icu-skeleton-parser": "npm:2.1.11"
-  checksum: 10c0/5cb5375fa41c0ec62dc414ba7b0740319eeb1550d5ad338cdcea0f3d8490b82d2f3114bc5a7e03b15ebe69afb426fb2ee1023cb4d9779636120eb00b7bd875f4
+  checksum: 10c0/f396742c2a5b25bd0499528528955c8ca6685f054a5339b8fddce982703b022d0bfa357239c9607938a0fa88fa9e267dec7fd2a744718715f1538450aca100a7
   languageName: node
   linkType: hard
 
@@ -2604,12 +2604,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@formatjs/intl-localematcher@npm:0.8.12":
-  version: 0.8.12
-  resolution: "@formatjs/intl-localematcher@npm:0.8.12"
+"@formatjs/intl-localematcher@npm:0.8.13":
+  version: 0.8.13
+  resolution: "@formatjs/intl-localematcher@npm:0.8.13"
   dependencies:
     "@formatjs/fast-memoize": "npm:3.1.7"
-  checksum: 10c0/2de705d6a800f2d406c7cffdb4c61bc81683cc2e96bb3f0d3a813d04879358a0601c06dc0bf38d8bb60a9ef5737384423773182327de5aadea1cce6375639247
+  checksum: 10c0/8b36937837751b71c4957cfbae6f515edc9faf2ae341de0529b444aa8e1cdee19f59dce1c7c8b30f315aff082fd97dc96f27ea4e2cbadafb3c1d34247244e664
   languageName: node
   linkType: hard
 
@@ -2623,31 +2623,31 @@ __metadata:
   linkType: hard
 
 "@formatjs/intl-pluralrules@npm:^6.0.0":
-  version: 6.3.12
-  resolution: "@formatjs/intl-pluralrules@npm:6.3.12"
+  version: 6.3.13
+  resolution: "@formatjs/intl-pluralrules@npm:6.3.13"
   dependencies:
     "@formatjs/bigdecimal": "npm:0.2.7"
-    "@formatjs/intl-localematcher": "npm:0.8.12"
-  checksum: 10c0/b54b94913707c2d7005f1895e08c87468ea4b64a03e7262df976b2e5adb35d1a6c7cc38f28b41580a330162074ff6ba60dc16db7dc7f4ec34e4e262e630df287
+    "@formatjs/intl-localematcher": "npm:0.8.13"
+  checksum: 10c0/7002a52e3d0d1126ef2e1703c0078dde2a33b162170d880da6f1aeae3e559487ec832761c115b76df2cbf7a4d1b40e648f0154b762b4acb9a78315a2990b4ea9
   languageName: node
   linkType: hard
 
-"@formatjs/intl@npm:4.1.16":
-  version: 4.1.16
-  resolution: "@formatjs/intl@npm:4.1.16"
+"@formatjs/intl@npm:4.1.17":
+  version: 4.1.17
+  resolution: "@formatjs/intl@npm:4.1.17"
   dependencies:
     "@formatjs/fast-memoize": "npm:3.1.7"
-    "@formatjs/icu-messageformat-parser": "npm:3.5.14"
-    intl-messageformat: "npm:11.2.11"
-  checksum: 10c0/1a8fcecb85bf9c563195104b6cfca5dd76f015f6a9d750de105e7d8f9405be1258131f09a1861c881c283133d0ff3c6aafaf17191bb233c5c2b8ec0dc6e7bbd7
+    "@formatjs/icu-messageformat-parser": "npm:3.5.15"
+    intl-messageformat: "npm:11.2.12"
+  checksum: 10c0/1a041f0ffb3fe24ffc32a6e23bd03da9a5293f559fe4a4b50fa20ea25a9bfe38c6d474a5517ea164c10528314c11538e50393c693e2342cd11f1db5d78db08d2
   languageName: node
   linkType: hard
 
-"@formatjs/ts-transformer@npm:4.4.16":
-  version: 4.4.16
-  resolution: "@formatjs/ts-transformer@npm:4.4.16"
+"@formatjs/ts-transformer@npm:4.4.17":
+  version: 4.4.17
+  resolution: "@formatjs/ts-transformer@npm:4.4.17"
   dependencies:
-    "@formatjs/icu-messageformat-parser": "npm:3.5.14"
+    "@formatjs/icu-messageformat-parser": "npm:3.5.15"
     "@types/babel__core": "npm:7"
     "@types/node": "npm:22 || 24"
     json-stable-stringify: "npm:1"
@@ -2657,7 +2657,7 @@ __metadata:
   peerDependenciesMeta:
     ts-jest:
       optional: true
-  checksum: 10c0/3b8067ddb76376dc739bd3cce1892da5d03617708bbf06d4722ed1266afa9d668e1cfb6441de375724b9d3d1f3c780232780e5e768460a846e15e9da469ea074
+  checksum: 10c0/a49ac01114e4092eae28954e10b184ae10a18c1f5c97e799bdcd09a3d87fbe289080f3bd4ebbbf9effbbf9483ddb532b77ff31a6f692adba4438d9ad1ae8ae19
   languageName: node
   linkType: hard
 
@@ -2679,12 +2679,12 @@ __metadata:
   linkType: hard
 
 "@formatjs/unplugin@npm:^1.1.5":
-  version: 1.2.1
-  resolution: "@formatjs/unplugin@npm:1.2.1"
+  version: 1.2.3
+  resolution: "@formatjs/unplugin@npm:1.2.3"
   dependencies:
     "@bazel/runfiles": "npm:6"
-    "@formatjs/icu-messageformat-parser": "npm:3.5.14"
-    "@formatjs/ts-transformer": "npm:4.4.16"
+    "@formatjs/icu-messageformat-parser": "npm:3.5.15"
+    "@formatjs/ts-transformer": "npm:4.4.17"
     "@types/node": "npm:22 || 24"
     decode-named-character-reference: "npm:1"
     magic-string: "npm:0"
@@ -2707,7 +2707,7 @@ __metadata:
       optional: true
     webpack:
       optional: true
-  checksum: 10c0/1222ad39f619293a836b7fef28b6f71db3657850549ef909dd840cfca5d9bc070c838e47b9ea7a5cd328e104c34ff0420c2aba2bec356e649284226bdfad3666
+  checksum: 10c0/c63a9077906af7d612e5d5a505947852e7bc90e62cf8455c510b68355b9d9a6f529b13e98dc71c6a682d7343b51be67624925a441cba86c0f21d48b28d8ab5e5
   languageName: node
   linkType: hard
 
@@ -3043,7 +3043,7 @@ __metadata:
     msw-storybook-addon: "npm:^2.0.6"
     oxfmt: "npm:^0.47.0"
     path-complete-extname: "npm:^1.0.0"
-    playwright: "npm:^1.60.0"
+    playwright: "npm:^1.61.1"
     postcss-preset-env: "npm:^11.0.0"
     prop-types: "npm:^15.8.1"
     punycode: "npm:^2.3.0"
@@ -5369,8 +5369,8 @@ __metadata:
   linkType: hard
 
 "@vitejs/plugin-legacy@npm:^8.0.0":
-  version: 8.2.0
-  resolution: "@vitejs/plugin-legacy@npm:8.2.0"
+  version: 8.2.1
+  resolution: "@vitejs/plugin-legacy@npm:8.2.1"
   dependencies:
     "@babel/core": "npm:^7.29.7"
     "@babel/plugin-transform-dynamic-import": "npm:^7.29.7"
@@ -5378,7 +5378,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.29.7"
     babel-plugin-polyfill-corejs3: "npm:^0.14.2"
     babel-plugin-polyfill-regenerator: "npm:^0.6.8"
-    browserslist: "npm:^4.28.4"
+    browserslist: "npm:^4.28.6"
     browserslist-to-esbuild: "npm:^2.1.1"
     core-js: "npm:^3.49.0"
     magic-string: "npm:^0.30.21"
@@ -5387,7 +5387,7 @@ __metadata:
   peerDependencies:
     terser: ^5.16.0
     vite: ^8.0.0
-  checksum: 10c0/1643b7b15c9231465c03445730ba4898be74aff539f834d683e6d107f94480581b7a2119a1d047f725dc92398280e5bb19b82a1c57962c93809f4470e29c75ce
+  checksum: 10c0/c9c65e1c89f93f22d34dccf27fbf2b7ed63be708819741eb4c8efe329911b8dd904d658e9ba7e287da6af7745bd87e870e4237e0b08a2a39c9628df0d3008e6c
   languageName: node
   linkType: hard
 
@@ -6187,18 +6187,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.24.0, browserslist@npm:^4.28.1, browserslist@npm:^4.28.2, browserslist@npm:^4.28.4":
-  version: 4.28.5
-  resolution: "browserslist@npm:4.28.5"
+"browserslist@npm:^4.24.0, browserslist@npm:^4.28.1, browserslist@npm:^4.28.2, browserslist@npm:^4.28.6":
+  version: 4.28.6
+  resolution: "browserslist@npm:4.28.6"
   dependencies:
     baseline-browser-mapping: "npm:^2.10.42"
-    caniuse-lite: "npm:^1.0.30001800"
-    electron-to-chromium: "npm:^1.5.387"
-    node-releases: "npm:^2.0.50"
+    caniuse-lite: "npm:^1.0.30001803"
+    electron-to-chromium: "npm:^1.5.389"
+    node-releases: "npm:^2.0.51"
     update-browserslist-db: "npm:^1.2.3"
   bin:
     browserslist: cli.js
-  checksum: 10c0/d6bb4ab286a7071db52cbeabd46ff816e09c9171d7e5da246f0b9489601ad3d4adb9fc3d14fa934a8646078f8a717507c0518a364128735a3b5a7875900b5a19
+  checksum: 10c0/259e3c2e0e59daf1fab0889303d397b35505c1c910e503a329990c4f6c0e589c0959fcd2627487311e4a94d7b9e2a9b1fa02875592f5c98b8e9e03e0ccd1e3ea
   languageName: node
   linkType: hard
 
@@ -6321,10 +6321,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001787, caniuse-lite@npm:^1.0.30001800":
-  version: 1.0.30001803
-  resolution: "caniuse-lite@npm:1.0.30001803"
-  checksum: 10c0/71586e9c84633cf766b208448eb76f860ec6e3befffc626d1f004e1902da063a7ab96cc94d1f4b36c0324e12997b3325a726de3287edfec91d0df495627a1d43
+"caniuse-lite@npm:^1.0.30001787, caniuse-lite@npm:^1.0.30001803":
+  version: 1.0.30001806
+  resolution: "caniuse-lite@npm:1.0.30001806"
+  checksum: 10c0/9442c8afff0968e9b2ce0104a7340c1ce4a5c09f469ccb9eef10d25712ea0afe542486e5318c697c70dd502f988cfc04eaa1c9438c92ac3bcf4d708a2a17bee1
   languageName: node
   linkType: hard
 
@@ -7142,10 +7142,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.5.387":
-  version: 1.5.389
-  resolution: "electron-to-chromium@npm:1.5.389"
-  checksum: 10c0/3681a3245fef5dfc8d9cdee231e80f8fe4fd7a87713d3a29a21ae2ec0cb6995cf14f3b3fd9e3fa8b483256e28ba2fa1daa9f23e93911a3a7241cd8f5daee9665
+"electron-to-chromium@npm:^1.5.389":
+  version: 1.5.392
+  resolution: "electron-to-chromium@npm:1.5.392"
+  checksum: 10c0/13b691fb97ef02f6c3da6fecb530d667a2c72c951aaca2c5c13271074d6e2f9a9bb23c84939a6b9274fef1611247f3a7affba7b3961d0bdc0324d59f97046269
   languageName: node
   linkType: hard
 
@@ -8987,13 +8987,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"intl-messageformat@npm:11.2.11, intl-messageformat@npm:^11.0.0":
-  version: 11.2.11
-  resolution: "intl-messageformat@npm:11.2.11"
+"intl-messageformat@npm:11.2.12, intl-messageformat@npm:^11.0.0":
+  version: 11.2.12
+  resolution: "intl-messageformat@npm:11.2.12"
   dependencies:
     "@formatjs/fast-memoize": "npm:3.1.7"
-    "@formatjs/icu-messageformat-parser": "npm:3.5.14"
-  checksum: 10c0/5c77af3dfc1a26f48d7cb3544d74299f6b5dd2ecac703bffff22ba2343cb87518a3a08ad9106a41a56e45e91831570b2da84f0c48f47fa7b250dc389b9bb8edf
+    "@formatjs/icu-messageformat-parser": "npm:3.5.15"
+  checksum: 10c0/8a6ef496bf857b5a1bfa667af775ab41cb78f71e24dfb83ef9b4095b9f807d6ec796392086b47ac003341e4413d87ce7b8af1f0b36717bb86714306b4ba425db
   languageName: node
   linkType: hard
 
@@ -10532,7 +10532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^2.0.50":
+"node-releases@npm:^2.0.51":
   version: 2.0.51
   resolution: "node-releases@npm:2.0.51"
   checksum: 10c0/6cf3fe1f9eabe02ce6de67e9db77b73edc9f5625003791e1f8f239f8e2a851450a5aeb1eff2cc43cfb26312e19b26bfe07626bf428479e6a76f56553fc6148da
@@ -11402,27 +11402,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.60.0":
-  version: 1.60.0
-  resolution: "playwright-core@npm:1.60.0"
+"playwright-core@npm:1.61.1":
+  version: 1.61.1
+  resolution: "playwright-core@npm:1.61.1"
   bin:
     playwright-core: cli.js
-  checksum: 10c0/99ccd43923b6e9355e0723b7fe221e6326efd4687f8dafff951313662aea11db51f542a9c2122c704c445fb9baae1c9ec9fa6f895126bbddd9fe92313f6942c9
+  checksum: 10c0/c28896ba82a602182e240ed4f9c467fb0dd9cb57d510f8aba9f25183fe1cde3a0105725a29baffa4157fe885bbb11e228032a2aad0424111584fde45303f07bd
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.60.0":
-  version: 1.60.0
-  resolution: "playwright@npm:1.60.0"
+"playwright@npm:^1.61.1":
+  version: 1.61.1
+  resolution: "playwright@npm:1.61.1"
   dependencies:
     fsevents: "npm:2.3.2"
-    playwright-core: "npm:1.60.0"
+    playwright-core: "npm:1.61.1"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 10c0/714ad76d85b4865d7e43c0012f9039800c1485373388973ed39d79339cee5ad467052d1e2f1eaeca107a1cb6e65342186a8578a4c3504853d84c3a691250d5db
+  checksum: 10c0/cea1bc4d2a64ec3ef683891606774029da7b8a8036ed98332565cec2f8e89549ca1fab9a89fbfba4e08e27e0d7e7d148031e965af66d5ff97bb3c34058cfcad0
   languageName: node
   linkType: hard
 
@@ -11915,14 +11915,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.0.0, postcss@npm:^8.4.35, postcss@npm:^8.5.13, postcss@npm:^8.5.16":
-  version: 8.5.16
-  resolution: "postcss@npm:8.5.16"
+"postcss@npm:^8.0.0, postcss@npm:^8.4.35, postcss@npm:^8.5.13, postcss@npm:^8.5.17":
+  version: 8.5.19
+  resolution: "postcss@npm:8.5.19"
   dependencies:
     nanoid: "npm:^3.3.12"
     picocolors: "npm:^1.1.1"
     source-map-js: "npm:^1.2.1"
-  checksum: 10c0/625de7a02f662f3a340964d14b487bd5097adf16f5f171e257d19005ba37aea8768ee446557500e88e91ca46b4d14d6cb4a0bf033c6ec0c8c0b660d85719f1ef
+  checksum: 10c0/302af9e4dfa8cce4f43af1798576b3a77ab7b23abac5522328c6c7a830d49b31281cba9d6071e478e6970a05ef82346d1570b8fbffae912f26a4f1a1a07f0a44
   languageName: node
   linkType: hard
 
@@ -12198,16 +12198,16 @@ __metadata:
   linkType: hard
 
 "react-intl@npm:^10.0.0":
-  version: 10.1.16
-  resolution: "react-intl@npm:10.1.16"
+  version: 10.1.18
+  resolution: "react-intl@npm:10.1.18"
   dependencies:
-    "@formatjs/icu-messageformat-parser": "npm:3.5.14"
-    "@formatjs/intl": "npm:4.1.16"
-    intl-messageformat: "npm:11.2.11"
+    "@formatjs/icu-messageformat-parser": "npm:3.5.15"
+    "@formatjs/intl": "npm:4.1.17"
+    intl-messageformat: "npm:11.2.12"
   peerDependencies:
     "@types/react": ">=18.0.0"
     react: ">=18.0.0"
-  checksum: 10c0/2456747fb846b61efe43b9936e0b13a84ac33cd2785d273dc89b28e4c6a25c5e727c0b73916bd5f8c5620d27ed9de9a03492fe5735dc329fe239991a4b931eef
+  checksum: 10c0/6f9a4dc5628aa63f3e84c73078b279c1e04925fb5ed72072f83648e4ee4d71cc6cc7af151976d7191ac21e30d9cbef543a96211a6f7de1de762832fd43f64e30
   languageName: node
   linkType: hard
 
@@ -12710,7 +12710,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rolldown@npm:~1.1.4":
+"rolldown@npm:~1.1.5":
   version: 1.1.5
   resolution: "rolldown@npm:1.1.5"
   dependencies:
@@ -14731,14 +14731,14 @@ __metadata:
   linkType: hard
 
 "vite@npm:^6.0.0 || ^7.0.0 || ^8.0.0, vite@npm:^8.0.0":
-  version: 8.1.4
-  resolution: "vite@npm:8.1.4"
+  version: 8.1.5
+  resolution: "vite@npm:8.1.5"
   dependencies:
     fsevents: "npm:~2.3.3"
     lightningcss: "npm:^1.32.0"
     picomatch: "npm:^4.0.5"
-    postcss: "npm:^8.5.16"
-    rolldown: "npm:~1.1.4"
+    postcss: "npm:^8.5.17"
+    rolldown: "npm:~1.1.5"
     tinyglobby: "npm:^0.2.17"
   peerDependencies:
     "@types/node": ^20.19.0 || >=22.12.0
@@ -14783,7 +14783,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/4262cdd0dd00ca99b00a8aef91fc00e58b66e80b54adbef49353bfbbae7342c2d6ddf1180351956086ff53ad186bec03784f57b96e36ab4dad1246547236d79b
+  checksum: 10c0/3231e24dd4394d0bc8b4f0f5d6d6a2eda8737e5053042892b4163564456a03d67f953c4c7498621f9517eebc30a492ea136c728a767a122eb84bf6d7cf60e1e6
   languageName: node
   linkType: hard
 
