@@ -101,7 +101,7 @@ export const ColumnSettingsGroup: FC<{ label: ReactNode; type: string }> = ({
     <section role='group' aria-labelledby={`notifications-${type}`}>
       <h3 id={`notifications-${type}`}>{label}</h3>
 
-      <div className='column-settings__row'>
+      <div className='column-settings__pillbar'>
         <PillBarButton
           disabled={!browserPermission}
           prefix='notifications_desktop'
