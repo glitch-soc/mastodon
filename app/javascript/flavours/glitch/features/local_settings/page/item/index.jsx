@@ -33,8 +33,10 @@ export default class LocalSettingsPageItem extends PureComponent {
     else onChange(item, target.checked);
   };
 
+  noop = () => {};
+
   render () {
-    const { handleChange } = this;
+    const { handleChange, noop } = this;
     const { settings, item, id, inputProps, options, children, dependsOn, dependsOnNot, placeholder, disabled } = this.props;
     let enabled = !disabled;
 
@@ -60,8 +62,8 @@ export default class LocalSettingsPageItem extends PureComponent {
               name={id}
               id={optionId}
               value={opt.value}
-              onBlur={handleChange}
-              onChange={handleChange}
+              onClick={handleChange}
+              onChange={noop}
               checked={currentValue === opt.value}
               disabled={!enabled}
               {...inputProps}
