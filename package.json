@@ -121,6 +121,7 @@
     "tesseract.js": "^7.0.0",
     "tiny-queue": "^0.2.1",
     "twitter-text": "3.1.0",
+    "type-fest": "^5.8.0",
     "use-debounce": "^10.0.0",
     "vite": "^8.0.0",
     "vite-plugin-manifest-sri": "^0.2.0",
@@ -157,7 +158,7 @@
     "@types/redux-immutable": "^4.0.3",
     "@types/requestidlecallback": "^0.3.5",
     "@vitest/browser": "^4.1.0",
-    "@vitest/browser-playwright": "^4.1.7",
+    "@vitest/browser-playwright": "^4.1.10",
     "@vitest/coverage-v8": "^4.1.0",
     "@vitest/ui": "^4.1.0",
     "chromatic": "^17.0.0",
@@ -186,7 +187,7 @@
     "typescript": "~6.0.0",
     "typescript-eslint": "^8.55.0",
     "typescript-plugin-css-modules": "^5.2.0",
-    "vitest": "^4.1.7"
+    "vitest": "^4.1.10"
   },
   "resolutions": {
     "@types/react": "^18.2.7",
