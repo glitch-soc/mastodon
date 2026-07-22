@@ -147,7 +147,7 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
   end
 
   def virtual_attachments
-    object.ordered_media_attachments
+    object.ordered_media_attachments + [object.preview_card].compact
   end
 
   def virtual_tags
@@ -262,6 +262,18 @@ class ActivityPub::NoteSerializer < ActivityPub::Serializer
         automaticApproval: approved_uris,
       },
     }
+  end
+
+  class PreviewCardSerializer < ActivityPub::Serializer
+    attributes :type, :href
+
+    def type
+      'Link'
+    end
+
+    def href
+      object.original_url.presence || object.url
+    end
   end
 
   class MediaAttachmentSerializer < ActivityPub::Serializer
