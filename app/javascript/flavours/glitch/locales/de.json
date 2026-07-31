@@ -55,6 +55,8 @@
   "settings.content_warnings_unfold_opts": "Optionen zum automatischen Ausklappen",
   "settings.deprecated_setting": "Diese Einstellung wird nun von Mastodons {settings_page_link} gesteuert",
   "settings.enable_content_warnings_auto_unfold": "Inhaltswarnungen automatisch ausklappen",
+  "settings.fullwidth_view": "Spalten auf volle Breite ausweiten (nur im Desktop-Modus)",
+  "settings.fullwidth_view_hint": "Weitet die Spalten aus, um den gesamten Platz auszunutzen.",
   "settings.general": "Allgemein",
   "settings.hicolor_privacy_icons": "Eingefärbte Privatsphäre-Symbole",
   "settings.hicolor_privacy_icons.hint": "Zeige Privatsphäre-Symbole in hellen und leicht zu unterscheidenden Farben",
