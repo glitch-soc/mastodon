@@ -212,20 +212,10 @@ async function findEntrypoints() {
     sw: path.resolve(jsRoot, 'mastodon/service_worker/sw.ts'),
   };
 
-  // First, JS entrypoints
-  const jsEntrypointsDir = path.resolve(jsRoot, 'entrypoints');
-  const jsEntrypoints = await readdir(jsEntrypointsDir, {
-    withFileTypes: true,
-  });
-  const jsExtTest = /\.[jt]sx?$/;
-  for (const file of jsEntrypoints) {
-    if (file.isFile() && jsExtTest.test(file.name)) {
-      entrypoints[file.name.replace(jsExtTest, '')] = path.resolve(
-        jsEntrypointsDir,
-        file.name,
-      );
-    }
-  }
+  // Upstream adds files from `app/javascript/entrypoints` in there.
+  // In glitch-soc, `GlitchThemes` is taking care of that, so remove the
+  // upstream code to prevent processing the same file twice, which results
+  // in weird import cycles in the manifest.
 
   // Next, SCSS entrypoints
   const scssEntrypointsDir = path.resolve(jsRoot, 'styles/entrypoints');
