@@ -5,6 +5,12 @@ ja:
       batch_copy_error: '選択したいくつかの絵文字のコピー中にエラーが発生しました: %{message}'
       batch_error: 'エラーが発生しました: %{message}'
     settings:
+      captcha_enabled:
+        desc_html: |-
+          これはhCaptchaからの外部スクリプトに依存しており、セキュリティやプライバシー上の懸念となり得ます。
+          さらに、<strong>この方法では、一部の人々（特に障害のある方）にとって登録プロセスが著しく利用しにくくなる可能性があります</strong>。
+          これらの理由から、承認制や招待制といった代替手段を検討することをお勧めします。
+        title: 新規ユーザーのアカウント承認にCHAPCHAを要求する
       flavour_and_skin:
         title: フレーバーとスキン
       hide_followers_count:
@@ -29,6 +35,10 @@ ja:
     localization:
       glitch_guide_link: https://crowdin.com/project/glitch-soc
       glitch_guide_link_text: そしてglitch-socへも同様に！
+  auth:
+    captcha_confirmation:
+      hint_html: あと一歩です！アカウントを承認するには、このサーバーでCAPTCHAを解いていただく必要があります。アカウントの確定に関してご質問やサポートが必要な場合は、<a href="/about/more">サーバー管理者にご連絡ください</a>。
+      title: ユーザー認証
   generic:
     use_this: これを使う
   settings:

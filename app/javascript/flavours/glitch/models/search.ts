@@ -1,5 +1,6 @@
-import type { ApiSearchResultsJSON } from 'flavours/glitch/api_types/search';
-import type { ApiHashtagJSON } from 'flavours/glitch/api_types/tags';
+import type { ApiCollectionJSON } from '@/flavours/glitch/api_types/collections';
+import type { ApiSearchResultsJSON } from '@/flavours/glitch/api_types/search';
+import type { ApiHashtagJSON } from '@/flavours/glitch/api_types/tags';
 
 export type SearchType = 'account' | 'hashtag' | 'accounts' | 'statuses';
 
@@ -12,10 +13,12 @@ export interface SearchResults {
   accounts: string[];
   statuses: string[];
   hashtags: ApiHashtagJSON[];
+  collections: ApiCollectionJSON[];
 }
 
 export const createSearchResults = (serverJSON: ApiSearchResultsJSON) => ({
   accounts: serverJSON.accounts.map((account) => account.id),
   statuses: serverJSON.statuses.map((status) => status.id),
   hashtags: serverJSON.hashtags,
+  collections: serverJSON.collections,
 });

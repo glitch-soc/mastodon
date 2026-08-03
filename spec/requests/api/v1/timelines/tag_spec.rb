@@ -14,7 +14,8 @@ RSpec.describe 'Tag' do
     end
 
     before do
-      Setting.timeline_preview = true
+      Setting.local_topic_feed_access = 'public'
+      Setting.remote_topic_feed_access = 'public'
     end
 
     shared_examples 'a successful request to the tag timeline' do
@@ -103,7 +104,7 @@ RSpec.describe 'Tag' do
 
     context 'when the instance does not allow public preview' do
       before do
-        Form::AdminSettings.new(timeline_preview: false).save
+        Form::AdminSettings.new(local_topic_feed_access: 'authenticated', remote_topic_feed_access: 'authenticated').save
       end
 
       it_behaves_like 'forbidden for wrong scope', 'profile'

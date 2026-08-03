@@ -3,9 +3,9 @@ import { useCallback, useEffect, useRef } from 'react';
 
 import { defineMessages, useIntl } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
-
 import { List as ImmutableList } from 'immutable';
+
+import { Helmet } from '@unhead/react/helmet';
 
 import PeopleIcon from '@/material-icons/400-24px/group.svg?react';
 import {
@@ -24,7 +24,7 @@ import { ColumnHeader } from 'flavours/glitch/components/column_header';
 import { LoadMore } from 'flavours/glitch/components/load_more';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { RadioButton } from 'flavours/glitch/components/radio_button';
-import ScrollContainer from 'flavours/glitch/containers/scroll_container';
+import { ScrollContainer } from 'flavours/glitch/containers/scroll_container';
 import { useSearchParam } from 'flavours/glitch/hooks/useSearchParam';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
@@ -85,6 +85,9 @@ export const Directory: React.FC<{
   const isLoading = useAppSelector(
     (state) =>
       state.user_lists.getIn(['directory', 'isLoading'], true) as boolean,
+  );
+  const hasMore = useAppSelector(
+    (state) => !!state.user_lists.getIn(['directory', 'next']),
   );
 
   useEffect(() => {
@@ -185,7 +188,7 @@ export const Directory: React.FC<{
 
       <LoadMore
         onClick={handleLoadMore}
-        visible={!initialLoad}
+        visible={!initialLoad && hasMore}
         loading={isLoading}
       />
     </div>
@@ -209,7 +212,6 @@ export const Directory: React.FC<{
       />
 
       {multiColumn && !pinned ? (
-        // @ts-expect-error ScrollContainer is not properly typed yet
         <ScrollContainer scrollKey='directory'>
           {scrollableArea}
         </ScrollContainer>

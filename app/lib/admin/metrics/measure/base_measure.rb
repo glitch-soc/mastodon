@@ -12,10 +12,12 @@ class Admin::Metrics::Measure::BaseMeasure
   alias loaded? loaded
 
   def initialize(start_at, end_at, params)
-    @start_at = start_at&.to_datetime
-    @end_at   = end_at&.to_datetime
+    @start_at = start_at.to_datetime
+    @end_at   = end_at.to_datetime
     @params   = params
     @loaded   = false
+
+    @start_at = [@start_at, @end_at - 2.years].max
   end
 
   def cache_key
@@ -94,7 +96,7 @@ class Admin::Metrics::Measure::BaseMeasure
   end
 
   def length_of_period
-    @length_of_period ||= @end_at - @start_at
+    @length_of_period ||= @end_at.to_date - @start_at.to_date
   end
 
   def params
@@ -103,5 +105,17 @@ class Admin::Metrics::Measure::BaseMeasure
 
   def canonicalized_params
     params.to_h.to_a.sort_by { |k, _v| k.to_s }.map { |k, v| "#{k}=#{v}" }.join(';')
+  end
+
+  def earliest_status_id
+    snowflake_id(@start_at.beginning_of_day)
+  end
+
+  def latest_status_id
+    snowflake_id(@end_at.end_of_day)
+  end
+
+  def snowflake_id(datetime)
+    Mastodon::Snowflake.id_at(datetime, with_random: false)
   end
 end

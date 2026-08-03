@@ -10,10 +10,14 @@ import {
   insertEmojiCompose,
   uploadCompose,
 } from 'flavours/glitch/actions/compose';
+import { pasteLinkCompose, PRIVATE_QUOTE_MODAL_ID } from 'flavours/glitch/actions/compose_typed';
 import { openModal } from 'flavours/glitch/actions/modal';
+import { me } from 'flavours/glitch/initial_state';
 import { privacyPreference } from 'flavours/glitch/utils/privacy_preference';
 
 import ComposeForm from '../components/compose_form';
+
+const urlLikeRegex = /^https?:\/\/[^\s]+\/[^\s]+$/i;
 
 const sideArmPrivacy = state => {
   const inReplyTo = state.getIn(['compose', 'in_reply_to']);
@@ -30,6 +34,23 @@ const sideArmPrivacy = state => {
     break;
   }
   return sideArmPrivacy || sideArmBasePrivacy;
+};
+
+const processPasteOrDrop = (transfer, e, dispatch) => {
+  if (transfer && transfer.files.length === 1) {
+    dispatch(uploadCompose(transfer.files));
+    e.preventDefault();
+  } else if (transfer && transfer.files.length === 0) {
+    const data = transfer.getData('text/plain');
+    if (!data.match(urlLikeRegex)) return;
+
+    try {
+      const url = new URL(data);
+      dispatch(pasteLinkCompose({ url }));
+    } catch {
+      return;
+    }
+  }
 };
 
 const mapStateToProps = state => ({
@@ -49,27 +70,41 @@ const mapStateToProps = state => ({
   isUploading: state.getIn(['compose', 'is_uploading']),
   anyMedia: state.getIn(['compose', 'media_attachments']).size > 0,
   missingAltText: state.getIn(['compose', 'media_attachments']).some(media => ['image', 'gifv'].includes(media.get('type')) && (media.get('description') ?? '').length === 0),
+  quoteToPrivate:
+    !!state.getIn(['compose', 'quoted_status_id'])
+    && state.getIn(['compose', 'privacy']) === 'private'
+    && state.getIn(['statuses', state.getIn(['compose', 'quoted_status_id']), 'account']) !== me
+    && !state.getIn(['settings', 'dismissed_banners', PRIVATE_QUOTE_MODAL_ID]),
   isInReply: state.getIn(['compose', 'in_reply_to']) !== null,
   lang: state.getIn(['compose', 'language']),
   sideArm: sideArmPrivacy(state),
   media: state.getIn(['compose', 'media_attachments']),
-  maxChars: state.getIn(['server', 'server', 'configuration', 'statuses', 'max_characters'], 500),
+  maxChars: state.getIn(['server', 'server', 'item', 'configuration', 'statuses', 'max_characters'], 500),
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch, props) => ({
 
   onChange (text) {
     dispatch(changeCompose(text));
   },
 
-  onSubmit (missingAltText, overridePrivacy = null) {
+  onSubmit ({ missingAltText, quoteToPrivate, overridePrivacy }) {
     if (missingAltText) {
       dispatch(openModal({
         modalType: 'CONFIRM_MISSING_ALT_TEXT',
         modalProps: { overridePrivacy },
       }));
+    } else if (quoteToPrivate) {
+      dispatch(openModal({
+        modalType: 'CONFIRM_PRIVATE_QUOTE_NOTIFY',
+        modalProps: {},
+      }));
     } else {
-      dispatch(submitCompose(overridePrivacy));
+      dispatch(submitCompose((status) => {
+        if (props.redirectOnSuccess) {
+          window.location.assign(status.url);
+        }
+      }, overridePrivacy));
     }
   },
 
@@ -89,8 +124,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(changeComposeSpoilerText(checked));
   },
 
-  onPaste (files) {
-    dispatch(uploadCompose(files));
+  onPaste (e) {
+    processPasteOrDrop(e.clipboardData, e, dispatch);
+  },
+
+  onDrop (e) {
+    processPasteOrDrop(e.dataTransfer, e, dispatch);
   },
 
   onPickEmoji (position, data, needsSpace) {

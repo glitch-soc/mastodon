@@ -1,1 +1,42 @@
+---
 nl:
+  admin:
+    custom_emojis:
+      batch_copy_error: 'Er is een fout opgetreden bij het kopiëren van een deel van de geselecteerde emoji: %{message}'
+      batch_error: 'Er is een fout opgetreden: %{message}'
+    settings:
+      captcha_enabled:
+        desc_html: Dit is afhankelijk van externe scripts van hCaptcha, wat veiligheids- en privacyrisico's met zich mee kan brengen. Bovendien kan <strong>dit het registratieproces aanzienlijk minder toegankelijk maken voor sommige (vooral gehandicapte) mensen</strong>. Om deze redenen kun je het beste alternatieve maatregelen overwegen, zoals registratie op basis van goedkeuring of op uitnodiging.
+        title: Nieuwe gebruikers moeten een CAPTCHA op lossen om hun account te bevestigen
+      flavour_and_skin:
+        title: Smaak en thema
+      hide_followers_count:
+        desc_html: Laat geen aantallen volgers zien op gebruikersprofielen
+        title: Verberg aantal volgers
+      other:
+        preamble: Diverse glitch-soc instellingen die niet in andere categorieën passen.
+        title: Andere
+      outgoing_spoilers:
+        desc_html: Voeg bij het federeren van toots deze inhoudswaarschuwing toe aan toots die er geen hebben. Het is handig als je server gespecialiseerd is in inhoud die andere servers misschien onder een Content Warning willen hebben. Media wordt ook als gevoelig gemarkeerd.
+        title: Inhoudswaarschuwing voor uitgaande toots
+      show_reblogs_in_public_timelines:
+        desc_html: Openbare boosts van openbare toots tonen in lokale en openbare tijdlijnen.
+        title: Boosts in openbare tijdlijnen tonen
+      show_replies_in_public_timelines:
+        desc_html: Naast openbare zelfantwoorden (threads), toon ook openbare antwoorden in lokale en openbare tijdlijnen.
+        title: Toon antwoorden in openbare tijdlijnen
+      trending_status_cw:
+        desc_html: Wanneer trending berichten zijn ingeschakeld, kunnen berichten met inhoudsmeldingen daarvoor in aanmerking komen. Wijzigingen aan deze instelling worden niet met terugwerkende kracht uitgevoerd.
+        title: Sta toe dat berichten met inhoudswaarschuwingen trending kunnen worden
+  appearance:
+    localization:
+      glitch_guide_link: https://crowdin.com/project/glitch-soc
+      glitch_guide_link_text: En dit geld ook voor glitch-soc!
+  auth:
+    captcha_confirmation:
+      hint_html: Nog maar één stap! Om je account te bevestigen vereist deze server dat je een CAPTCHA oplost. Je kunt <a href="/about/more">contact opnemen met de serverbeheerder</a> als je vragen heeft of hulp nodig heeft bij het bevestigen van je account.
+      title: Gebruikersverificatie
+  generic:
+    use_this: Gebruik dit
+  settings:
+    flavours: Smaken

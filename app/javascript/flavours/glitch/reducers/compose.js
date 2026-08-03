@@ -1,6 +1,15 @@
 import { Map as ImmutableMap, List as ImmutableList, OrderedSet as ImmutableOrderedSet, fromJS } from 'immutable';
 
-import { changeUploadCompose } from 'flavours/glitch/actions/compose_typed';
+import {
+  changeComposeVisibility,
+  changeUploadCompose,
+  quoteCompose,
+  quoteComposeCancel,
+  setComposeQuotePolicy,
+  pasteLinkCompose,
+  cancelPasteLinkCompose,
+  setDragUploadEnabled,
+} from '@/flavours/glitch/actions/compose_typed';
 import { timelineDelete } from 'flavours/glitch/actions/timelines_typed';
 
 import {
@@ -34,7 +43,6 @@ import {
   COMPOSE_SENSITIVITY_CHANGE,
   COMPOSE_SPOILERNESS_CHANGE,
   COMPOSE_SPOILER_TEXT_CHANGE,
-  COMPOSE_VISIBILITY_CHANGE,
   COMPOSE_LANGUAGE_CHANGE,
   COMPOSE_COMPOSING_CHANGE,
   COMPOSE_CONTENT_TYPE_CHANGE,
@@ -79,6 +87,7 @@ const initialState = ImmutableMap({
   is_submitting: false,
   is_changing_upload: false,
   is_uploading: false,
+  isDragDisabled: false,
   should_redirect_to_compose_page: false,
   progress: 0,
   isUploadingThumbnail: false,
@@ -109,6 +118,12 @@ const initialState = ImmutableMap({
     adaptiveStroke: true,
     smoothing: false,
   }),
+
+  // Quotes
+  quoted_status_id: null,
+  quote_policy: 'public',
+  default_quote_policy: 'public', // Set in hydration.
+  fetching_link: null,
 });
 
 const initialPoll = ImmutableMap({
@@ -169,6 +184,9 @@ function clearAll(state) {
     map.set('progress', 0);
     map.set('poll', null);
     map.set('idempotencyKey', uuid());
+    map.set('quoted_status_id', null);
+    map.set('quote_policy', state.get('default_quote_policy'));
+    map.set('isDragDisabled', false);
   });
 }
 
@@ -198,6 +216,7 @@ function continueThread (state, status) {
     map.set('focusDate', new Date());
     map.set('caretPosition', null);
     map.set('preselectDate', new Date());
+    map.set('quoted_status_id', null);
   });
 }
 
@@ -218,6 +237,10 @@ function appendMedia(state, media, file) {
 
     if (prevSize === 0 && (state.get('default_sensitive') || state.get('spoiler'))) {
       map.set('sensitive', true);
+
+      if (state.get('default_sensitive')) {
+        map.set('spoiler', true);
+      }
     }
   });
 }
@@ -379,7 +402,11 @@ const calculateProgress = (loaded, total) => Math.min(Math.round((loaded / total
 
 /** @type {import('@reduxjs/toolkit').Reducer<typeof initialState>} */
 export const composeReducer = (state = initialState, action) => {
-  if (changeUploadCompose.fulfilled.match(action)) {
+  if (changeComposeVisibility.match(action)) {
+    return state
+      .set('privacy', action.payload)
+      .set('idempotencyKey', uuid());
+  } else if (changeUploadCompose.fulfilled.match(action)) {
     return state
       .set('is_changing_upload', false)
       .update('media_attachments', list => list.map(item => {
@@ -393,11 +420,40 @@ export const composeReducer = (state = initialState, action) => {
     return state.set('is_changing_upload', true);
   } else if (changeUploadCompose.rejected.match(action)) {
     return state.set('is_changing_upload', false);
+  } else if (quoteCompose.match(action)) {
+    const status = action.payload;
+    const isDirect = state.get('privacy') === 'direct';
+    return state
+      .set('quoted_status_id', isDirect ? null : status.get('id'))
+      .update('spoiler', spoiler => (spoiler) || !!status.get('spoiler_text'))
+      .update('spoiler_text', (spoiler_text) => spoiler_text || status.get('spoiler_text'))
+      .update('privacy', (visibility) => {
+        if (['public', 'unlisted'].includes(visibility) && status.get('visibility') === 'private') {
+          return 'private';
+        }
+        return visibility;
+      }).update('advanced_options',
+        map => map.merge(new ImmutableMap({ do_not_federate: !!status.get('local_only') })),
+      );
+  } else if (quoteComposeCancel.match(action)) {
+    return state.set('quoted_status_id', null);
+  } else if (setComposeQuotePolicy.match(action)) {
+    return state.set('quote_policy', action.payload);
+  } else if (pasteLinkCompose.pending.match(action)) {
+    return state.set('fetching_link', action.meta.requestId);
+  } else if (pasteLinkCompose.fulfilled.match(action) || pasteLinkCompose.rejected.match(action)) {
+    return action.meta.requestId === state.get('fetching_link') ? state.set('fetching_link', null) : state;
+  } else if (cancelPasteLinkCompose.match(action)) {
+    return state.set('fetching_link', null);
+  } else if (setDragUploadEnabled.match(action)) {
+    return state.set('isDragDisabled', !action.payload);
   }
 
   switch(action.type) {
   case STORE_HYDRATE:
-    return hydrate(state, action.state.get('compose'));
+    if (action.state.get('compose'))
+      return hydrate(state, action.state.get('compose'));
+    return state;
   case COMPOSE_MOUNT:
     return state
       .set('mounted', state.get('mounted') + 1)
@@ -431,17 +487,13 @@ export const composeReducer = (state = initialState, action) => {
       map.set('spoiler', !state.get('spoiler'));
       map.set('idempotencyKey', uuid());
 
-      if (state.get('media_attachments').size >= 1 && !state.get('default_sensitive')) {
+      if (state.get('media_attachments').size >= 1) {
         map.set('sensitive', !state.get('spoiler'));
       }
     });
   case COMPOSE_SPOILER_TEXT_CHANGE:
     return state
       .set('spoiler_text', action.text)
-      .set('idempotencyKey', uuid());
-  case COMPOSE_VISIBILITY_CHANGE:
-    return state
-      .set('privacy', action.value)
       .set('idempotencyKey', uuid());
   case COMPOSE_CONTENT_TYPE_CHANGE:
     return state
@@ -467,6 +519,7 @@ export const composeReducer = (state = initialState, action) => {
       map.set('caretPosition', null);
       map.set('preselectDate', new Date());
       map.set('idempotencyKey', uuid());
+      map.set('quoted_status_id', null);
 
       map.update('media_attachments', list => list.filter(media => media.get('unattached')));
 
@@ -588,7 +641,6 @@ export const composeReducer = (state = initialState, action) => {
   case REDRAFT: {
     const do_not_federate = !!action.status.get('local_only');
     let text = action.raw_text || unescapeHTML(expandMentions(action.status));
-    if (do_not_federate) text = text.replace(/ ?👁\ufe0f?\u200b?$/, '');
     return state.withMutations(map => {
       map.set('text', text);
       map.set('content_type', action.content_type || 'text/plain');
@@ -605,6 +657,9 @@ export const composeReducer = (state = initialState, action) => {
         map => map.merge(new ImmutableMap({ do_not_federate })),
       );
       map.set('id', null);
+      map.set('quoted_status_id', action.quoted_status_id);
+      // Mastodon-authored posts can be expected to have at most one automatic approval policy
+      map.set('quote_policy', action.status.getIn(['quote_approval', 'automatic', 0]) || 'nobody');
 
       if (action.status.get('spoiler_text').length > 0) {
         map.set('spoiler', true);
@@ -619,8 +674,13 @@ export const composeReducer = (state = initialState, action) => {
       }
 
       if (action.status.get('poll')) {
+        let options = ImmutableList(action.status.get('poll').options.map(x => x.title));
+        if (options.size < action.maxOptions) {
+          options = options.push('');
+        }
+
         map.set('poll', ImmutableMap({
-          options: ImmutableList(action.status.get('poll').options.map(x => x.title)),
+          options: options,
           multiple: action.status.get('poll').multiple,
           expires_in: expiresInFromExpiresAt(action.status.get('poll').expires_at),
         }));
@@ -640,6 +700,9 @@ export const composeReducer = (state = initialState, action) => {
       map.set('idempotencyKey', uuid());
       map.set('sensitive', action.status.get('sensitive'));
       map.set('language', action.status.get('language'));
+      map.set('quoted_status_id', action.status.getIn(['quote', 'quoted_status'], null));
+      // Mastodon-authored posts can be expected to have at most one automatic approval policy
+      map.set('quote_policy', action.status.getIn(['quote_approval', 'automatic', 0]) || 'nobody');
 
       if (action.spoiler_text.length > 0) {
         map.set('spoiler', true);
@@ -650,8 +713,13 @@ export const composeReducer = (state = initialState, action) => {
       }
 
       if (action.status.get('poll')) {
+        let options = ImmutableList(action.status.get('poll').options.map(x => x.title));
+        if (options.size < action.maxOptions) {
+          options = options.push('');
+        }
+
         map.set('poll', ImmutableMap({
-          options: ImmutableList(action.status.get('poll').options.map(x => x.title)),
+          options: options,
           multiple: action.status.get('poll').multiple,
           expires_in: expiresInFromExpiresAt(action.status.get('poll').expires_at),
         }));
@@ -668,7 +736,10 @@ export const composeReducer = (state = initialState, action) => {
   case COMPOSE_LANGUAGE_CHANGE:
     return state.set('language', action.language);
   case COMPOSE_FOCUS:
-    return state.set('focusDate', new Date()).update('text', text => text.length > 0 ? text : action.defaultText);
+    return state
+      .set('focusDate', new Date())
+      .update('text', text => text.length > 0 ? text : action.defaultText)
+      .update('caretPosition', position => action.caretStart ? 0 : position);
   case COMPOSE_CHANGE_MEDIA_ORDER:
     return state.update('media_attachments', list => {
       const indexA = list.findIndex(x => x.get('id') === action.a);

@@ -34,11 +34,11 @@ module ApplicationHelper
     Setting.registrations_mode == 'none'
   end
 
-  def available_sign_up_path
+  def available_sign_up_url
     if closed_registrations? || omniauth_only?
-      'https://joinmastodon.org/#getting-started'
+      'https://joinmastodon.org/'
     else
-      ENV.fetch('SSO_ACCOUNT_SIGN_UP', new_user_registration_path)
+      ENV.fetch('SSO_ACCOUNT_SIGN_UP', new_user_registration_url)
     end
   end
 
@@ -66,7 +66,7 @@ module ApplicationHelper
 
   def provider_sign_in_link(provider)
     label = Devise.omniauth_configs[provider]&.strategy&.display_name.presence || I18n.t("auth.providers.#{provider}", default: provider.to_s.chomp('_oauth2').capitalize)
-    link_to label, omniauth_authorize_path(:user, provider), class: "button button-#{provider}", method: :post
+    link_to label, omniauth_authorize_path(:user, provider), class: "btn button-#{provider}", method: :post
   end
 
   def locale_direction
@@ -102,7 +102,18 @@ module ApplicationHelper
     policy(record).public_send(:"#{action}?")
   end
 
+  def conditional_link_to(condition, name, options = {}, html_options = {}, &block)
+    if condition && !current_page?(block_given? ? name : options)
+      link_to(name, options, html_options, &block)
+    elsif block_given?
+      content_tag(:span, options, html_options, &block)
+    else
+      content_tag(:span, name, html_options)
+    end
+  end
+
   def material_symbol(icon, attributes = {})
+    whitespace = attributes.delete(:whitespace) { true }
     safe_join(
       [
         inline_svg_tag(
@@ -111,9 +122,13 @@ module ApplicationHelper
           role: :img,
           data: attributes[:data]
         ),
-        ' ',
+        whitespace ? ' ' : '',
       ]
     )
+  end
+
+  def emptyphaunt
+    inline_svg_tag 'elephant_ui.svg'
   end
 
   def check_icon
@@ -142,15 +157,33 @@ module ApplicationHelper
     tag.meta(content: content, property: property)
   end
 
-  def body_classes
+  def html_attributes
+    base = {
+      lang: I18n.locale,
+      class: html_classes,
+      'data-contrast': contrast.parameterize,
+      'data-color-scheme': page_color_scheme.parameterize,
+      'data-user-flavour': current_flavour.parameterize,
+    }
+
+    base[:'data-system-theme'] = 'true' if page_color_scheme == 'auto'
+
+    base
+  end
+
+  def html_classes
     output = []
-    output << content_for(:body_classes)
-    output << "flavour-#{current_flavour.parameterize}"
-    output << "skin-#{current_skin.parameterize}"
+    output << content_for(:html_classes)
     output << 'system-font' if current_account&.user&.setting_system_font_ui
     output << 'custom-scrollbars' unless current_account&.user&.setting_system_scrollbars_ui
     output << (current_account&.user&.setting_reduce_motion ? 'reduce-motion' : 'no-reduce-motion')
     output << 'rtl' if locale_direction == 'rtl'
+    output.compact_blank.join(' ')
+  end
+
+  def body_classes
+    output = []
+    output << content_for(:body_classes)
     output.compact_blank.join(' ')
   end
 
@@ -234,6 +267,10 @@ module ApplicationHelper
     tag.input(type: :text, maxlength: 999, spellcheck: false, readonly: true, **options)
   end
 
+  def recent_tag_users(tag)
+    tag.statuses.public_visibility.joins(:account).merge(Account.without_suspended.without_silenced).includes(:account).limit(3).map(&:account)
+  end
+
   def recent_tag_usage(tag)
     people = tag.history.aggregate(2.days.ago.to_date..Time.zone.today).accounts
     I18n.t 'user_mailer.welcome.hashtags_recent_count', people: number_with_delimiter(people), count: people
@@ -247,9 +284,13 @@ module ApplicationHelper
     'https://play.google.com/store/apps/details?id=org.joinmastodon.android'
   end
 
+  def within_authorization_flow?
+    session[:user_return_to].present? && Rails.application.routes.recognize_path(session[:user_return_to])[:controller] == 'oauth/authorizations'
+  end
+
   # glitch-soc addition to handle the multiple flavors
-  def flavoured_vite_typescript_tag(pack_name, **)
-    vite_typescript_tag("#{Themes.instance.flavour(current_flavour)['pack_directory'].delete_prefix('app/javascript/')}/#{pack_name}", **)
+  def flavoured_vite_typescript_tag(pack_name, flavour: nil, **)
+    vite_typescript_tag("#{Themes.instance.flavour(flavour || current_flavour)['pack_directory'].delete_prefix('app/javascript/')}/#{pack_name}", **)
   end
 
   private

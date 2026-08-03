@@ -38,7 +38,7 @@ class Api::V1::AccountsController < Api::BaseController
 
     headers.merge!(response.headers)
 
-    self.response_body = Oj.dump(response.body)
+    self.response_body = response.body.to_json
     self.status        = response.status
   rescue ActiveRecord::RecordInvalid => e
     render json: ValidationErrorFormatter.new(e, 'account.username': :username, 'invite_request.text': :reason).as_json, status: 422
@@ -84,7 +84,7 @@ class Api::V1::AccountsController < Api::BaseController
   private
 
   def set_account
-    @account = Account.find(params[:id])
+    @account = Account.without_requested_deletion.find(params[:id])
   end
 
   def set_accounts

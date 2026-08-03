@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
@@ -10,6 +10,7 @@ import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { IconButton } from 'flavours/glitch/components/icon_button';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { Permalink } from 'flavours/glitch/components/permalink';
 
 const messages = defineMessages({

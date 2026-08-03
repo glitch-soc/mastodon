@@ -37,7 +37,8 @@ RSpec.describe 'Public' do
       let(:expected_statuses) { [local_status, remote_status, media_status] }
 
       before do
-        Setting.timeline_preview = true
+        Setting.local_live_feed_access = 'public'
+        Setting.remote_live_feed_access = 'public'
       end
 
       it_behaves_like 'forbidden for wrong scope', 'profile'
@@ -102,7 +103,7 @@ RSpec.describe 'Public' do
 
     context 'when the instance does not allow public preview' do
       before do
-        Form::AdminSettings.new(timeline_preview: false).save
+        Form::AdminSettings.new(local_live_feed_access: 'authenticated', remote_live_feed_access: 'authenticated').save
       end
 
       it_behaves_like 'forbidden for wrong scope', 'profile'

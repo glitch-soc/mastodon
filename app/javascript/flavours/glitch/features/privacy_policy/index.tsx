@@ -2,13 +2,16 @@ import { useState, useEffect } from 'react';
 
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 
+import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
 import { apiGetPrivacyPolicy } from 'flavours/glitch/api/instance';
 import type { ApiPrivacyPolicyJSON } from 'flavours/glitch/api_types/instance';
 import { Column } from 'flavours/glitch/components/column';
 import { FormattedDateWrapper } from 'flavours/glitch/components/formatted_date';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
+
+import { getColumnSkipLinkId } from '../ui/components/skip_links';
 
 const messages = defineMessages({
   title: { id: 'privacy_policy.title', defaultMessage: 'Privacy Policy' },
@@ -40,12 +43,12 @@ const PrivacyPolicy: React.FC<{
     >
       <div className='scrollable privacy-policy'>
         <div className='column-title'>
-          <h3>
+          <NavigationFocusTarget as='h1' id={getColumnSkipLinkId(1)}>
             <FormattedMessage
               id='privacy_policy.title'
               defaultMessage='Privacy Policy'
             />
-          </h3>
+          </NavigationFocusTarget>
           <p>
             <FormattedMessage
               id='privacy_policy.last_updated'

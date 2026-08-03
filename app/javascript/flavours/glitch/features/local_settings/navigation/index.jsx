@@ -2,7 +2,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { injectIntl, defineMessages } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import EditIcon from '@/material-icons/400-24px/edit.svg?react';
@@ -10,6 +10,7 @@ import ImageIcon from '@/material-icons/400-24px/image.svg?react';
 import ManufacturingIcon from '@/material-icons/400-24px/manufacturing.svg?react';
 import SettingsIcon from '@/material-icons/400-24px/settings-fill.svg?react';
 import WarningIcon from '@/material-icons/400-24px/warning.svg?react';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { preferencesLink } from 'flavours/glitch/utils/backend_links';
 
 import LocalSettingsNavigationItem from './item';

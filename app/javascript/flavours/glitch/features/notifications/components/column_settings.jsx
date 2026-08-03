@@ -13,6 +13,7 @@ import GrantPermissionButton from './grant_permission_button';
 import PillBarButton from './pill_bar_button';
 import { PolicyControls } from './policy_controls';
 import SettingToggle from './setting_toggle';
+import { ColumnSettingsGroup } from './column_settings_group';
 
 class ColumnSettings extends PureComponent {
   static propTypes = {
@@ -147,6 +148,17 @@ class ColumnSettings extends PureComponent {
           </div>
         </section>
 
+        <section role='group' aria-labelledby='notifications-quote'>
+          <h3 id='notifications-quote'><FormattedMessage id='notifications.column_settings.quote' defaultMessage='Quotes:' /></h3>
+
+          <div className='column-settings__pillbar'>
+            <PillBarButton disabled={browserPermission === 'denied'} prefix='notifications_desktop' settings={settings} settingPath={['alerts', 'quote']} onChange={onChange} label={alertStr} />
+            {showPushSettings && <PillBarButton prefix='notifications_push' settings={pushSettings} settingPath={['alerts', 'quote']} onChange={this.onPushChange} label={pushStr} />}
+            <PillBarButton prefix='notifications' settings={settings} settingPath={['shows', 'quote']} onChange={onChange} label={showStr} />
+            <PillBarButton prefix='notifications' settings={settings} settingPath={['sounds', 'quote']} onChange={onChange} label={soundStr} />
+          </div>
+        </section>
+
         <section role='group' aria-labelledby='notifications-poll'>
           <h3 id='notifications-poll'><FormattedMessage id='notifications.column_settings.poll' defaultMessage='Poll results:' /></h3>
 
@@ -179,6 +191,11 @@ class ColumnSettings extends PureComponent {
             <PillBarButton prefix='notifications' settings={settings} settingPath={['sounds', 'update']} onChange={onChange} label={soundStr} />
           </div>
         </section>
+
+        <ColumnSettingsGroup
+          type="collections"
+          label={<FormattedMessage id='notifications.column_settings.collections' defaultMessage='Collections:' />}
+        />
 
         {((this.props.identity.permissions & PERMISSION_MANAGE_USERS) === PERMISSION_MANAGE_USERS) && (
           <section role='group' aria-labelledby='notifications-admin-sign-up'>

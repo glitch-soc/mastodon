@@ -38,7 +38,7 @@ class AdvancedTextFormatter < TextFormatter
 
   # Differs from TextFormatter by not messing with newline after parsing
   def to_s
-    return ''.html_safe if text.blank?
+    return add_quote_fallback('').html_safe if text.blank? # rubocop:disable Rails/OutputSafety
 
     html = rewrite do |entity|
       if entity[:url]
@@ -49,6 +49,8 @@ class AdvancedTextFormatter < TextFormatter
         link_to_mention(entity)
       end
     end
+
+    html = add_quote_fallback(html) if options[:quoted_status].present?
 
     html.html_safe # rubocop:disable Rails/OutputSafety
   end

@@ -5,7 +5,7 @@ import ModalContainer from 'flavours/glitch/features/ui/containers/modal_contain
 
 const Compose = () => (
   <>
-    <ComposeFormContainer autoFocus withoutNavigation />
+    <ComposeFormContainer autoFocus withoutNavigation redirectOnSuccess />
     <AlertsController />
     <ModalContainer />
     <LoadingBarContainer className='loading-bar' />

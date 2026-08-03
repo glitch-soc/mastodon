@@ -52,6 +52,9 @@ export const searchReducer = createReducer(initialState, (builder) => {
       hashtags: state.results
         ? [...state.results.hashtags, ...results.hashtags]
         : results.hashtags,
+      collections: state.results
+        ? [...state.results.collections, ...results.collections]
+        : results.collections,
     };
     state.loading = false;
   });
@@ -65,6 +68,9 @@ export const searchReducer = createReducer(initialState, (builder) => {
     (state, action) => {
       state.type = action.meta.arg.type;
       state.loading = true;
+      if (action.type === submitSearch.pending.type) {
+        state.results = undefined;
+      }
     },
   );
 

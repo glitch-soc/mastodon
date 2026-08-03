@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { defineMessages, injectIntl } from 'react-intl';
+import { defineMessages } from 'react-intl';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
@@ -8,10 +8,12 @@ import ImmutablePureComponent from 'react-immutable-pure-component';
 import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 
-import { Avatar } from '../../../components/avatar';
-import { DisplayName } from '../../../components/display_name';
-import { IconButton } from '../../../components/icon_button';
-import { Permalink } from '../../../components/permalink';
+import { AccountBio } from '@/flavours/glitch/components/account_bio';
+import { Avatar } from '@/flavours/glitch/components/avatar';
+import { DisplayName } from '@/flavours/glitch/components/display_name';
+import { IconButton } from '@/flavours/glitch/components/icon_button';
+import { injectIntl } from '@/flavours/glitch/components/intl';
+import { Permalink } from '@/flavours/glitch/components/permalink';
 
 const messages = defineMessages({
   authorize: { id: 'follow_request.authorize', defaultMessage: 'Authorize' },
@@ -29,7 +31,6 @@ class AccountAuthorize extends ImmutablePureComponent {
 
   render () {
     const { intl, account, onAuthorize, onReject } = this.props;
-    const content = { __html: account.get('note_emojified') };
 
     return (
       <div className='account-authorize__wrapper'>
@@ -39,7 +40,7 @@ class AccountAuthorize extends ImmutablePureComponent {
             <DisplayName account={account} />
           </Permalink>
 
-          <div className='account__header__content translate' dangerouslySetInnerHTML={content} />
+          <AccountBio accountId={account.id} />
         </div>
 
         <div className='account--panel'>

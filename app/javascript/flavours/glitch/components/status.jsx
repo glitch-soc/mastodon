@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
 
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
 
-import { HotKeys } from 'react-hotkeys';
-
+import { Hotkeys } from 'flavours/glitch/components/hotkeys';
 import { ContentWarning } from 'flavours/glitch/components/content_warning';
 import { PictureInPicturePlaceholder } from 'flavours/glitch/components/picture_in_picture_placeholder';
 import { autoUnfoldCW } from 'flavours/glitch/utils/content_warning';
@@ -22,21 +21,28 @@ import { MediaGallery, Video, Audio } from '../features/ui/util/async-components
 import { SensitiveMediaContext } from '../features/ui/util/sensitive_media_context';
 import { displayMedia } from '../initial_state';
 
+import { injectIntl } from './intl';
 import AttachmentList from './attachment_list';
-import { Avatar } from './avatar';
-import { AvatarOverlay } from './avatar_overlay';
-import { DisplayName } from './display_name';
+import { StatusHeader } from './status/header'
 import { getHashtagBarForStatus } from './hashtag_bar';
 import { MentionsPlaceholder } from './mentions_placeholder';
-import { Permalink } from './permalink';
 import StatusActionBar from './status_action_bar';
 import StatusContent from './status_content';
 import StatusIcons from './status_icons';
 import StatusPrepend from './status_prepend';
+import { CollectionPreviewCard } from '../features/collections/components/collection_preview_card';
+import { compareUrls } from '../utils/compare_urls';
+import { FOCUS_TARGET } from './navigation_focus_target';
 
 const domParser = new DOMParser();
 
-export const textForScreenReader = (intl, status, rebloggedByText = false, expanded = false) => {
+const messages = defineMessages({
+  quote_noun: { id: 'status.quote_noun', defaultMessage: 'Quote', description: 'Quote as a noun' },
+  contains_quote: { id: 'status.contains_quote', defaultMessage: 'Contains quote' },
+  quote_cancel: { id: 'status.quote.cancel', defaultMessage: 'Cancel quote' },
+});
+
+export const textForScreenReader = ({intl, status, rebloggedByText = false, isQuote = false, expanded = false}) => {
   const displayName = status.getIn(['account', 'display_name']);
 
   const spoilerText = status.getIn(['translation', 'spoiler_text']) || status.get('spoiler_text');
@@ -44,15 +50,14 @@ export const textForScreenReader = (intl, status, rebloggedByText = false, expan
   const contentText = domParser.parseFromString(contentHtml, 'text/html').documentElement.textContent;
 
   const values = [
+    isQuote ? intl.formatMessage(messages.quote_noun) : undefined,
     displayName.length === 0 ? status.getIn(['account', 'acct']).split('@')[0] : displayName,
     spoilerText && !expanded ? spoilerText : contentText,
+    !!status.get('quote') ? intl.formatMessage(messages.contains_quote) : undefined,
     intl.formatDate(status.get('created_at'), { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' }),
     status.getIn(['account', 'acct']),
-  ];
-
-  if (rebloggedByText) {
-    values.push(rebloggedByText);
-  }
+    rebloggedByText,
+  ].filter(val => !!val);
 
   return values.join(', ');
 };
@@ -90,6 +95,7 @@ class Status extends ImmutablePureComponent {
     onReply: PropTypes.func,
     onFavourite: PropTypes.func,
     onReblog: PropTypes.func,
+    onQuote: PropTypes.func,
     onBookmark: PropTypes.func,
     onDelete: PropTypes.func,
     onDirect: PropTypes.func,
@@ -108,11 +114,12 @@ class Status extends ImmutablePureComponent {
     muted: PropTypes.bool,
     hidden: PropTypes.bool,
     unread: PropTypes.bool,
+    featured: PropTypes.bool,
+    showActions: PropTypes.bool,
     prepend: PropTypes.string,
     withDismiss: PropTypes.bool,
-    onMoveUp: PropTypes.func,
-    onMoveDown: PropTypes.func,
     isQuotedPost: PropTypes.bool,
+    shouldHighlightOnMount: PropTypes.bool,
     getScrollPosition: PropTypes.func,
     updateScrollBottom: PropTypes.func,
     expanded: PropTypes.bool,
@@ -123,11 +130,14 @@ class Status extends ImmutablePureComponent {
     skipPrepend: PropTypes.bool,
     avatarSize: PropTypes.number,
     deployPictureInPicture: PropTypes.func,
+    unfocusable: PropTypes.bool,
+    headerRenderFn: PropTypes.func,
     settings: ImmutablePropTypes.map.isRequired,
     pictureInPicture: ImmutablePropTypes.contains({
       inUse: PropTypes.bool,
       available: PropTypes.bool,
     }),
+    contextType: PropTypes.string,
     ...WithOptionalRouterPropTypes,
   };
 
@@ -152,6 +162,7 @@ class Status extends ImmutablePureComponent {
     'expanded',
     'unread',
     'pictureInPicture',
+    'headerRenderFn',
     'previousId',
     'nextInReplyToId',
     'rootId',
@@ -350,6 +361,10 @@ class Status extends ImmutablePureComponent {
     this.props.onBookmark(this.props.status, e);
   };
 
+  handleHotkeyQuote = () => {
+    this.props.onQuote(this._properStatus());
+  };
+
   handleHotkeyMention = e => {
     e.preventDefault();
     this.props.onMention(this.props.status.get('account'));
@@ -378,9 +393,9 @@ class Status extends ImmutablePureComponent {
       window.open(path, '_blank', 'noopener');
     } else {
       if (history.location.pathname.replace('/deck/', '/') === path) {
-        history.replace(path);
+        history.replace(path, {focusTarget: FOCUS_TARGET.POST});
       } else {
-        history.push(path);
+        history.push(path, {focusTarget: FOCUS_TARGET.POST});
       }
     }
   };
@@ -398,14 +413,6 @@ class Status extends ImmutablePureComponent {
     }
 
     history.push(`/@${status.getIn(['account', 'acct'])}`);
-  };
-
-  handleHotkeyMoveUp = e => {
-    this.props.onMoveUp(this.props.containerId || this.props.id, e.target.getAttribute('data-featured'));
-  };
-
-  handleHotkeyMoveDown = e => {
-    this.props.onMoveDown(this.props.containerId || this.props.id, e.target.getAttribute('data-featured'));
   };
 
   handleHotkeyToggleSensitive = () => {
@@ -446,26 +453,39 @@ class Status extends ImmutablePureComponent {
   }
 
   render () {
-    const { intl, hidden, featured, unfocusable, unread, pictureInPicture, previousId, nextInReplyToId, rootId, skipPrepend, avatarSize = 46, children } = this.props;
+    const {
+      intl,
+      hidden,
+      featured,
+      unfocusable,
+      unread,
+      showActions = true,
+      isQuotedPost = false,
+      pictureInPicture,
+      previousId,
+      nextInReplyToId,
+      rootId,
+      skipPrepend,
+      avatarSize = 46,
+      children,
+    } = this.props;
 
+    // glitch-soc-specific
     const {
       status,
       account,
       settings,
       muted,
-      intersectionObserverWrapper,
       onOpenVideo,
       onOpenMedia,
       notification,
       history,
-      isQuotedPost,
       ...other
     } = this.props;
     let attachments = null;
 
     let media = [];
     let mediaIcons = [];
-    let statusAvatar;
 
     if (status === null) {
       return null;
@@ -478,11 +498,10 @@ class Status extends ImmutablePureComponent {
       reply: this.handleHotkeyReply,
       favourite: this.handleHotkeyFavourite,
       boost: this.handleHotkeyBoost,
+      quote: this.handleHotkeyQuote,
       mention: this.handleHotkeyMention,
       open: this.handleHotkeyOpen,
       openProfile: this.handleHotkeyOpenProfile,
-      moveUp: this.handleHotkeyMoveUp,
-      moveDown: this.handleHotkeyMoveDown,
       toggleHidden: this.handleExpandedToggle,
       bookmark: this.handleHotkeyBookmark,
       toggleSensitive: this.handleHotkeyToggleSensitive,
@@ -499,13 +518,13 @@ class Status extends ImmutablePureComponent {
 
     if (hidden) {
       return (
-        <HotKeys handlers={handlers} tabIndex={unfocusable ? null : -1}>
+        <Hotkeys handlers={handlers} focusable={!unfocusable}>
           <div ref={this.handleRef} className='status focusable' tabIndex={unfocusable ? null : 0}>
             <span>{status.getIn(['account', 'display_name']) || status.getIn(['account', 'username'])}</span>
             {status.get('spoiler_text').length > 0 && (<span>{status.get('spoiler_text')}</span>)}
             {expanded && <span>{status.get('content')}</span>}
           </div>
-        </HotKeys>
+        </Hotkeys>
       );
     }
 
@@ -516,7 +535,7 @@ class Status extends ImmutablePureComponent {
       };
 
       return (
-        <HotKeys handlers={minHandlers} tabIndex={unfocusable ? null : -1}>
+        <Hotkeys handlers={minHandlers} focusable={!unfocusable}>
           <div className='status__wrapper status__wrapper--filtered focusable' tabIndex={unfocusable ? null : 0} ref={this.handleRef}>
             <FormattedMessage id='status.filtered' defaultMessage='Filtered' />: {matchedFilters.join(', ')}.
             {' '}
@@ -524,7 +543,7 @@ class Status extends ImmutablePureComponent {
               <FormattedMessage id='status.show_filter_reason' defaultMessage='Show anyway' />
             </button>
           </div>
-        </HotKeys>
+        </Hotkeys>
       );
     }
 
@@ -549,7 +568,7 @@ class Status extends ImmutablePureComponent {
         );
       } else if (['image', 'gifv', 'unknown'].includes(status.getIn(['media_attachments', 0, 'type'])) || status.get('media_attachments').size > 1) {
         media.push(
-          <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery}>
+          <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery} key='gallery'>
             {Component => (
               <Component
                 media={attachments}
@@ -574,7 +593,7 @@ class Status extends ImmutablePureComponent {
         const description = attachment.getIn(['translation', 'description']) || attachment.get('description');
 
         media.push(
-          <Bundle fetchComponent={Audio} loading={this.renderLoadingAudioPlayer} >
+          <Bundle fetchComponent={Audio} loading={this.renderLoadingAudioPlayer} key='audio'>
             {Component => (
               <Component
                 src={attachment.get('url')}
@@ -601,7 +620,7 @@ class Status extends ImmutablePureComponent {
         const description = attachment.getIn(['translation', 'description']) || attachment.get('description');
 
         media.push(
-          <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} >
+          <Bundle fetchComponent={Video} loading={this.renderLoadingVideoPlayer} key='video'>
             {Component => (<Component
               preview={attachment.get('preview_url')}
               frameRate={attachment.getIn(['meta', 'original', 'frame_rate'])}
@@ -626,14 +645,30 @@ class Status extends ImmutablePureComponent {
         mediaIcons.push('video-camera');
       }
     } else if (status.get('card') && settings.get('inline_preview_cards') && !this.props.muted && !status.get('quote')) {
-      media.push(
-        <Card
-          onOpenMedia={this.handleOpenMedia}
-          card={status.get('card')}
-          sensitive={status.get('sensitive')}
-        />,
-      );
+      const cardUrl = status.getIn(['card', 'url']);
+
+      const taggedCollection = (
+        status.get('tagged_collections')
+      ).find((item) => compareUrls(item.get('url'), cardUrl));
+      if (taggedCollection) {
+        media.push(<CollectionPreviewCard collection={taggedCollection.toJS()} headingLevel='h2' />);
+      } else {
+        media.push(
+          <Card
+            key={`${status.get('id')}-${status.get('edited_at')}`}
+            card={status.get('card')}
+            sensitive={status.get('sensitive')}
+          />,
+        );
+      }
       mediaIcons.push('link');
+    } else if (status.get('tagged_collections').size && !status.get('quote') && settings.get('inline_preview_cards') && !this.props.muted) {
+      const firstLinkedCollection = status.get('tagged_collections').first();
+      if (firstLinkedCollection) {
+        media = (
+          <CollectionPreviewCard collection={firstLinkedCollection.toJS()} headingLevel='h2' />
+        );
+      }
     }
 
     if (status.get('poll')) {
@@ -669,22 +704,34 @@ class Status extends ImmutablePureComponent {
       rebloggedByText = intl.formatMessage({ id: 'status.reblogged_by', defaultMessage: '{name} boosted' }, { name: account.get('acct') });
     }
 
-    if (account === undefined || account === null) {
-      statusAvatar = <Avatar account={status.get('account')} size={avatarSize} />;
-    } else {
-      statusAvatar = <AvatarOverlay account={status.get('account')} friend={account} />;
-    }
-
     const {statusContentProps, hashtagBar} = getHashtagBarForStatus(status);
 
+    const header = this.props.headerRenderFn
+      ? this.props.headerRenderFn({ statusId: status.get('id'), account, avatarSize, messages, onHeaderClick: this.handleHeaderClick, featured })
+      : (
+        <StatusHeader
+          statusId={status.get('id')}
+          account={account}
+          avatarSize={avatarSize}
+          onHeaderClick={this.handleHeaderClick}
+          contentBeforeDate={
+            <StatusIcons
+              status={status}
+              mediaIcons={mediaIcons}
+              settings={settings.get('status_icons')}
+            />
+          }
+        />
+      );
+
     return (
-      <HotKeys handlers={handlers} tabIndex={unfocusable ? null : -1}>
+      <Hotkeys handlers={handlers} focusable={!unfocusable}>
         <div
-          className={classNames('status__wrapper', 'focusable', `status__wrapper-${status.get('visibility')}`, { 'status__wrapper-reply': !!status.get('in_reply_to_id'), unread })}
+          className={classNames('status__wrapper', 'focusable', `status__wrapper-${status.get('visibility')}`, { 'status__wrapper-reply': !!status.get('in_reply_to_id'), 'status__wrapper--in-thread': !!rootId, unread })}
           {...selectorAttribs}
           tabIndex={unfocusable ? null : 0}
           data-featured={featured ? 'true' : null}
-          aria-label={textForScreenReader(intl, status, rebloggedByText, !status.get('hidden'))}
+          aria-label={textForScreenReader({intl, status, rebloggedByText, isQuote: isQuotedPost, expanded: !status.get('hidden')})}
           ref={this.handleRef}
           data-nosnippet={status.getIn(['account', 'noindex'], true) || undefined}
         >
@@ -700,30 +747,16 @@ class Status extends ImmutablePureComponent {
                 muted: this.props.muted,
                 'status--is-quote': isQuotedPost,
                 'status--has-quote': !!status.get('quote'),
+                'status--highlighted-entry': this.props.shouldHighlightOnMount,
               })
             }
             data-id={status.get('id')}
           >
             {(connectReply || connectUp || connectToRoot) && <div className={classNames('status__line', { 'status__line--full': connectReply, 'status__line--first': !status.get('in_reply_to_id') && !connectToRoot })} />}
 
-            {(!muted) && (
-              <header onClick={this.handleHeaderClick} onAuxClick={this.handleHeaderClick} className='status__info'>
-                <Permalink href={status.getIn(['account', 'url'])} to={`/@${status.getIn(['account', 'acct'])}`} title={status.getIn(['account', 'acct'])} data-hover-card-account={status.getIn(['account', 'id'])} className='status__display-name'>
-                  <div className='status__avatar'>
-                    {statusAvatar}
-                  </div>
+            {(!muted) && header}
 
-                  <DisplayName account={status.get('account')} />
-                </Permalink>
-                <StatusIcons
-                  status={status}
-                  mediaIcons={mediaIcons}
-                  settings={settings.get('status_icons')}
-                />
-              </header>
-            )}
-
-            {status.get('spoiler_text').length > 0 && <ContentWarning text={status.getIn(['translation', 'spoilerHtml']) || status.get('spoilerHtml')} expanded={expanded} onClick={this.handleExpandedToggle} icons={mediaIcons} />}
+            <ContentWarning statusId={status.get('id')} expanded={expanded} onClick={this.handleExpandedToggle} icons={mediaIcons} />
 
             {expanded && (
               <>
@@ -734,8 +767,6 @@ class Status extends ImmutablePureComponent {
                   collapsible
                   media={media}
                   onCollapsedToggle={this.handleCollapsedToggle}
-                  tagLinks={settings.get('tag_misleading_links')}
-                  rewriteMentions={settings.get('rewrite_mentions')}
                   {...statusContentProps}
                 />
 
@@ -749,7 +780,7 @@ class Status extends ImmutablePureComponent {
             {/* This is a glitch-soc addition to have a placeholder */}
             {!expanded && <MentionsPlaceholder status={status} />}
 
-            {!isQuotedPost &&
+            {(showActions && !isQuotedPost) &&
               <StatusActionBar
                 status={status}
                 account={status.get('account')}
@@ -760,7 +791,7 @@ class Status extends ImmutablePureComponent {
             }
           </div>
         </div>
-      </HotKeys>
+      </Hotkeys>
     );
   }
 

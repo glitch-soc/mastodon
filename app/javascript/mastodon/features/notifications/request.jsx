@@ -3,7 +3,7 @@ import { useRef, useCallback, useEffect } from 'react';
 
 import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -30,21 +30,6 @@ const messages = defineMessages({
   accept: { id: 'notification_requests.accept', defaultMessage: 'Accept' },
   dismiss: { id: 'notification_requests.dismiss', defaultMessage: 'Dismiss' },
 });
-
-const selectChild = (ref, index, alignTop) => {
-  const container = ref.current.node;
-  const element = container.querySelector(`article:nth-of-type(${index + 1}) .focusable`);
-
-  if (element) {
-    if (alignTop && container.scrollTop > element.offsetTop) {
-      element.scrollIntoView(true);
-    } else if (!alignTop && container.scrollTop + container.clientHeight < element.offsetTop + element.offsetHeight) {
-      element.scrollIntoView(false);
-    }
-
-    element.focus();
-  }
-};
 
 export const NotificationRequest = ({ multiColumn, params: { id } }) => {
   const columnRef = useRef();
@@ -73,16 +58,6 @@ export const NotificationRequest = ({ multiColumn, params: { id } }) => {
   const handleAccept = useCallback(() => {
     dispatch(acceptNotificationRequest({ id }));
   }, [dispatch, id]);
-
-  const handleMoveUp = useCallback(id => {
-    const elementIndex = notifications.findIndex(item => item !== null && item.get('id') === id) - 1;
-    selectChild(columnRef, elementIndex, true);
-  }, [columnRef, notifications]);
-
-  const handleMoveDown = useCallback(id => {
-    const elementIndex = notifications.findIndex(item => item !== null && item.get('id') === id) + 1;
-    selectChild(columnRef, elementIndex, false);
-  }, [columnRef, notifications]);
 
   useEffect(() => {
     dispatch(fetchNotificationRequest({ id }));
@@ -146,8 +121,6 @@ export const NotificationRequest = ({ multiColumn, params: { id } }) => {
               key={item.get('id')}
               notification={item}
               accountId={item.get('account')}
-              onMoveUp={handleMoveUp}
-              onMoveDown={handleMoveDown}
             />
           ))}
         </ScrollableList>

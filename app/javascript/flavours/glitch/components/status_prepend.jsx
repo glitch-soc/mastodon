@@ -7,6 +7,7 @@ import { FormattedMessage } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
 import EditIcon from '@/material-icons/400-24px/edit.svg?react';
+import FormatQuoteIcon from '@/material-icons/400-24px/format_quote-fill.svg?react';
 import HomeIcon from '@/material-icons/400-24px/home-fill.svg?react';
 import InsertChartIcon from '@/material-icons/400-24px/insert_chart.svg?react';
 import PushPinIcon from '@/material-icons/400-24px/push_pin.svg?react';
@@ -15,7 +16,7 @@ import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
 import { me } from 'flavours/glitch/initial_state';
 
-import { Permalink } from './permalink';
+import { LinkedDisplayName } from './display_name';
 
 export default class StatusPrepend extends PureComponent {
 
@@ -29,20 +30,12 @@ export default class StatusPrepend extends PureComponent {
   Message = () => {
     const { type, account } = this.props;
     let link = (
-      <Permalink
-        to={`/@${account.get('acct')}`}
-        href={account.get('url')}
-        className='status__display-name'
-        data-hover-card-account={account.get('id')}
-      >
-        <bdi>
-          <strong
-            dangerouslySetInnerHTML={{
-              __html : account.get('display_name_html') || account.get('username'),
-            }}
-          />
-        </bdi>
-      </Permalink>
+      <LinkedDisplayName
+        displayProps={{
+          account: account,
+          variant: 'simple'
+        }}
+      />
     );
     switch (type) {
     case 'reblogged_by':
@@ -101,6 +94,22 @@ export default class StatusPrepend extends PureComponent {
           values={{ name: link }}
         />
       );
+    case 'quoted_update':
+      return (
+        <FormattedMessage
+          id='notification.quoted_update'
+          defaultMessage='{name} edited a post you have quoted'
+          values={{ name: link }}
+        />
+      );
+    case 'quote':
+      return (
+        <FormattedMessage
+          id='notification.label.quote'
+          defaultMessage='{name} quoted your post'
+          values={{ name: link }}
+        />
+      );
     }
     return null;
   };
@@ -134,9 +143,13 @@ export default class StatusPrepend extends PureComponent {
       iconComponent = HomeIcon;
       break;
     case 'update':
+    case 'quoted_update':
       iconId = 'pencil';
       iconComponent = EditIcon;
       break;
+    case 'quote':
+      iconId = 'quote';
+      iconComponent = FormatQuoteIcon;
     }
 
     return !type ? null : (
@@ -148,7 +161,9 @@ export default class StatusPrepend extends PureComponent {
             icon={iconComponent}
           />
         </div>
-        <Message />
+        <span>
+          <Message />
+        </span>
         {children}
       </aside>
     );

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { defineMessages, FormattedMessage, injectIntl } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 import { Redirect, Route, withRouter } from 'react-router-dom';
@@ -10,13 +10,15 @@ import { connect } from 'react-redux';
 
 import Favico from 'favico.js';
 import { debounce } from 'lodash';
-import { HotKeys } from 'react-hotkeys';
 
+import { scrollRight } from '../../scroll';
 import { focusApp, unfocusApp, changeLayout } from 'flavours/glitch/actions/app';
 import { synchronouslySubmitMarkers, submitMarkers, fetchMarkers } from 'flavours/glitch/actions/markers';
 import { fetchNotifications } from 'flavours/glitch/actions/notification_groups';
 import { INTRODUCTION_VERSION } from 'flavours/glitch/actions/onboarding';
 import { AlertsController } from 'flavours/glitch/components/alerts_controller';
+import { injectIntl } from '@/flavours/glitch/components/intl';
+import { Hotkeys } from 'flavours/glitch/components/hotkeys';
 import { HoverCardController } from 'flavours/glitch/components/hover_card_controller';
 import { Permalink } from 'flavours/glitch/components/permalink';
 import { PictureInPicture } from 'flavours/glitch/features/picture_in_picture';
@@ -24,18 +26,19 @@ import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity
 import { layoutFromWindow } from 'flavours/glitch/is_mobile';
 import { selectUnreadNotificationGroupsCount } from 'flavours/glitch/selectors/notifications';
 import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
+import { checkAnnualReport } from '@/flavours/glitch/reducers/slices/annual_report';
 
 import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
-import initialState, { me, owner, singleUserMode, trendsEnabled, trendsAsLanding, disableHoverCards } from '../../initial_state';
+import { initialState, me, owner, singleUserMode, trendsEnabled, landingPage, localLiveFeedAccess, disableHoverCards, domain } from '../../initial_state';
 
 import BundleColumnError from './components/bundle_column_error';
 import { NavigationBar } from './components/navigation_bar';
 import { UploadArea } from './components/upload_area';
 import { HashtagMenuController } from './components/hashtag_menu_controller';
-import ColumnsAreaContainer from './containers/columns_area_container';
+import { ColumnsArea } from './components/columns_area';
 import LoadingBarContainer from './containers/loading_bar_container';
 import ModalContainer from './containers/modal_container';
 import {
@@ -65,6 +68,9 @@ import {
   Lists,
   ListEdit,
   ListMembers,
+  Collections,
+  CollectionDetail,
+  CollectionsEditor,
   Blocks,
   DomainBlocks,
   Mutes,
@@ -78,13 +84,19 @@ import {
   PrivacyPolicy,
   TermsOfService,
   AccountFeatured,
+  AccountEdit,
+  AccountEditFeaturedTags,
+  Quotes,
 } from './util/async-components';
 import { ColumnsContextProvider } from './util/columns_context';
+import { focusColumn, getFocusedItemIndex, focusItemSibling, focusFirstItem, getFocusedColumnIndex } from './util/focusUtils';
 import { WrappedSwitch, WrappedRoute } from './util/react_router_helpers';
+import { CustomHomepage } from 'flavours/glitch/features/custom_homepage';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
 import '../../components/status';
+import { getNavigationSkipLinkId, SkipLinks } from './components/skip_links';
 
 const messages = defineMessages({
   beforeUnload: { id: 'ui.beforeunload', defaultMessage: 'Your draft will be lost if you leave Mastodon.' },
@@ -92,9 +104,12 @@ const messages = defineMessages({
 
 const mapStateToProps = state => ({
   layout: state.getIn(['meta', 'layout']),
-  hasComposingText: state.getIn(['compose', 'text']).trim().length !== 0,
-  hasMediaAttachments: state.getIn(['compose', 'media_attachments']).size > 0,
-  canUploadMore: !state.getIn(['compose', 'media_attachments']).some(x => ['audio', 'video'].includes(x.get('type'))) && state.getIn(['compose', 'media_attachments']).size < 4,
+  hasComposingContents: state.getIn(['compose', 'text']).trim().length !== 0 || state.getIn(['compose', 'media_attachments']).size > 0 || state.getIn(['compose', 'poll']) !== null || state.getIn(['compose', 'quoted_status_id']) !== null,
+  canUploadMore:
+    !state.getIn(['compose', 'media_attachments']).some(x => ['audio', 'video'].includes(x.get('type')))
+    && state.getIn(['compose', 'media_attachments']).size < state.getIn(['server', 'server', 'item', 'configuration', 'statuses', 'max_media_attachments']),
+  isUploadEnabled:
+    state.getIn(['compose', 'isDragDisabled']) !== true,
   isWide: state.getIn(['local_settings', 'stretch']),
   fullWidthColumns: state.getIn(['local_settings', 'fullwidth_columns']),
   unreadNotifications: selectUnreadNotificationGroupsCount(state),
@@ -106,64 +121,42 @@ const mapStateToProps = state => ({
   username: state.getIn(['accounts', me, 'username']),
 });
 
-const keyMap = {
-  help: '?',
-  new: 'n',
-  search: ['s', '/'],
-  forceNew: 'option+n',
-  toggleComposeSpoilers: 'option+x',
-  focusColumn: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-  reply: 'r',
-  favourite: 'f',
-  boost: 'b',
-  mention: 'm',
-  open: ['enter', 'o'],
-  openProfile: 'p',
-  moveDown: ['down', 'j'],
-  moveUp: ['up', 'k'],
-  back: 'backspace',
-  goToHome: 'g h',
-  goToNotifications: 'g n',
-  goToLocal: 'g l',
-  goToFederated: 'g t',
-  goToDirect: 'g d',
-  goToStart: 'g s',
-  goToFavourites: 'g f',
-  goToPinned: 'g p',
-  goToProfile: 'g u',
-  goToBlocked: 'g b',
-  goToMuted: 'g m',
-  goToRequests: 'g r',
-  toggleHidden: 'x',
-  bookmark: 'd',
-  toggleSensitive: 'h',
-  openMedia: 'e',
-  onTranslate: 't',
-};
-
 class SwitchingColumnsArea extends PureComponent {
   static propTypes = {
     identity: identityContextPropShape,
     children: PropTypes.node,
     location: PropTypes.object,
     singleColumn: PropTypes.bool,
+    layout: PropTypes.string.isRequired,
     forceOnboarding: PropTypes.bool,
   };
 
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     document.body.classList.toggle('layout-single-column', this.props.singleColumn);
     document.body.classList.toggle('layout-multiple-columns', !this.props.singleColumn);
   }
 
   componentDidUpdate (prevProps) {
     if (![this.props.location.pathname, '/'].includes(prevProps.location.pathname)) {
-      this.node.handleChildrenContentChange();
+      this.handleChildrenContentChange();
     }
 
     if (prevProps.singleColumn !== this.props.singleColumn) {
       document.body.classList.toggle('layout-single-column', this.props.singleColumn);
       document.body.classList.toggle('layout-multiple-columns', !this.props.singleColumn);
     }
+  }
+
+  handleChildrenContentChange() {
+    const {preventMultiColumnAutoScroll} = this.props.location.state ?? {};
+
+    if (!this.props.singleColumn && !preventMultiColumnAutoScroll) {
+      const isRtlLayout = document.getElementsByTagName('body')[0]
+        ?.classList.contains('rtl');
+  	  const modifier = isRtlLayout ? -1 : 1;
+
+  	  scrollRight(this.node, (this.node.scrollWidth - window.innerWidth) * modifier);
+  	}
   }
 
   setRef = c => {
@@ -177,29 +170,32 @@ class SwitchingColumnsArea extends PureComponent {
     const { signedIn } = this.props.identity;
     const pathName = this.props.location.pathname;
 
-    let redirect;
-
+    let rootRedirect;
     if (signedIn) {
       if (forceOnboarding) {
-        redirect = <Redirect from='/' to='/start' exact />;
+        rootRedirect = '/start';
       } else if (singleColumn) {
-        redirect = <Redirect from='/' to='/home' exact />;
+        rootRedirect = '/home';
       } else {
-        redirect = <Redirect from='/' to='/deck/getting-started' exact />;
+        rootRedirect = '/deck/getting-started';
       }
     } else if (singleUserMode && owner && initialState?.accounts[owner]) {
-      redirect = <Redirect from='/' to={`/@${initialState.accounts[owner].username}`} exact />;
-    } else if (trendsEnabled && trendsAsLanding) {
-      redirect = <Redirect from='/' to='/explore' exact />;
+      rootRedirect = `/@${initialState.accounts[owner].username}`;
+    } else if (trendsEnabled && landingPage === 'trends') {
+      rootRedirect = '/explore';
+    } else if (localLiveFeedAccess === 'public' && landingPage === 'local_feed') {
+      rootRedirect = '/public/local';
+    } else if (landingPage === 'overview') {
+      rootRedirect = '/overview';
     } else {
-      redirect = <Redirect from='/' to='/about' exact />;
+      rootRedirect = '/about';
     }
 
     return (
       <ColumnsContextProvider multiColumn={!singleColumn}>
-        <ColumnsAreaContainer ref={this.setRef} singleColumn={singleColumn}>
+        <ColumnsArea ref={this.setRef} singleColumn={singleColumn} domain={domain} minimalShell={!signedIn && landingPage === 'overview' && pathName.startsWith('/overview')}>
           <WrappedSwitch>
-            {redirect}
+            <Redirect from='/' to={{pathname: rootRedirect, state: {...this.props.location.state, focusTarget: false}}} exact />
 
             {singleColumn ? <Redirect from='/deck' to='/home' exact /> : null}
             {singleColumn && pathName.startsWith('/deck/') ? <Redirect from={pathName} to={{...this.props.location, pathname: pathName.slice(5)}} /> : null}
@@ -234,15 +230,21 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/bookmarks' component={BookmarkedStatuses} content={children} />
             <WrappedRoute path='/pinned' component={PinnedStatuses} content={children} />
 
-            <WrappedRoute path={['/start', '/start/profile']} exact component={OnboardingProfile} content={children} />
-            <WrappedRoute path='/start/follows' component={OnboardingFollows} content={children} />
+            <WrappedRoute path='/start/profile' exact component={OnboardingProfile} content={children} />
+            <WrappedRoute path={['/start', '/start/follows']} exact component={OnboardingFollows} content={children} />
             <WrappedRoute path='/directory' component={Directory} content={children} />
             <WrappedRoute path='/explore' component={Explore} content={children} />
             <WrappedRoute path='/search' component={Search} content={children} />
             <WrappedRoute path={['/publish', '/statuses/new']} component={Compose} content={children} />
 
+            <WrappedRoute path='/profile/edit' component={AccountEdit} content={children} />
+            <WrappedRoute path='/profile/featured_tags' component={AccountEditFeaturedTags} content={children} />
+
             <WrappedRoute path={['/@:acct', '/accounts/:id']} exact component={AccountTimeline} content={children} />
             <WrappedRoute path={['/@:acct/featured', '/accounts/:id/featured']} component={AccountFeatured} content={children} />
+            <WrappedRoute path={['/@:acct/collections']} component={Collections} content={children} key='collections-list' />
+            <WrappedRoute path={['/collections/new', '/collections/:id/edit']} component={CollectionsEditor} content={children} key='collections-editor' />
+            <WrappedRoute path='/collections/:id' component={CollectionDetail} content={children} key='collections-detail' />
             <WrappedRoute path='/@:acct/tagged/:tagged?' exact component={AccountTimeline} content={children} />
             <WrappedRoute path={['/@:acct/with_replies', '/accounts/:id/with_replies']} component={AccountTimeline} content={children} componentParams={{ withReplies: true }} />
             <WrappedRoute path={['/accounts/:id/followers', '/users/:acct/followers', '/@:acct/followers']} component={Followers} content={children} />
@@ -251,6 +253,7 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/@:acct/:statusId' exact component={Status} content={children} />
             <WrappedRoute path='/@:acct/:statusId/reblogs' component={Reblogs} content={children} />
             <WrappedRoute path='/@:acct/:statusId/favourites' component={Favourites} content={children} />
+            <WrappedRoute path='/@:acct/:statusId/quotes' component={Quotes} content={children} />
 
             {/* Legacy routes, cannot be easily factored with other routes because they share a param name */}
             <WrappedRoute path='/timelines/tag/:id' component={HashtagTimeline} content={children} />
@@ -266,9 +269,10 @@ class SwitchingColumnsArea extends PureComponent {
             <WrappedRoute path='/mutes' component={Mutes} content={children} />
             <WrappedRoute path='/lists' component={Lists} content={children} />
 
+            <Route path='/overview' component={CustomHomepage} />
             <Route component={BundleColumnError} />
           </WrappedSwitch>
-        </ColumnsAreaContainer>
+        </ColumnsArea>
       </ColumnsContextProvider>
     );
   }
@@ -284,8 +288,7 @@ class UI extends PureComponent {
     fullWidthColumns: PropTypes.bool,
     systemFontUi: PropTypes.bool,
     isComposing: PropTypes.bool,
-    hasComposingText: PropTypes.bool,
-    hasMediaAttachments: PropTypes.bool,
+    hasComposingContents: PropTypes.bool,
     canUploadMore: PropTypes.bool,
     intl: PropTypes.object.isRequired,
     unreadNotifications: PropTypes.number,
@@ -304,11 +307,11 @@ class UI extends PureComponent {
   };
 
   handleBeforeUnload = e => {
-    const { intl, dispatch, hasComposingText, hasMediaAttachments } = this.props;
+    const { intl, dispatch, hasComposingContents } = this.props;
 
     dispatch(synchronouslySubmitMarkers());
 
-    if (hasComposingText || hasMediaAttachments) {
+    if (hasComposingContents) {
       // Setting returnValue to any string causes confirmation dialog.
       // Many browsers no longer display this text to users,
       // but we set user-friendly message for other browsers, e.g. Edge.
@@ -327,6 +330,9 @@ class UI extends PureComponent {
   };
 
   handleDragEnter = (e) => {
+    if (!this.props.isUploadEnabled) {
+      return;
+    }
     e.preventDefault();
 
     if (!this.dragTargets) {
@@ -343,6 +349,9 @@ class UI extends PureComponent {
   };
 
   handleDragOver = (e) => {
+    if (!this.props.isUploadEnabled) {
+      return;
+    }
     if (this.dataTransferIsText(e.dataTransfer)) return false;
 
     e.preventDefault();
@@ -358,6 +367,9 @@ class UI extends PureComponent {
   };
 
   handleDrop = (e) => {
+    if (!this.props.isUploadEnabled) {
+      return;
+    }
     if (this.dataTransferIsText(e.dataTransfer)) return;
 
     e.preventDefault();
@@ -416,6 +428,10 @@ class UI extends PureComponent {
     }
   };
 
+  handleDonate = () => {
+    location.href = 'https://joinmastodon.org/sponsors#donate'
+  }
+
   componentDidMount () {
     const { signedIn } = this.props.identity;
 
@@ -426,7 +442,6 @@ class UI extends PureComponent {
     document.addEventListener('dragover', this.handleDragOver, false);
     document.addEventListener('drop', this.handleDrop, false);
     document.addEventListener('dragleave', this.handleDragLeave, false);
-    document.addEventListener('dragend', this.handleDragEnd, false);
 
     if ('serviceWorker' in  navigator) {
       navigator.serviceWorker.addEventListener('message', this.handleServiceWorkerPostMessage);
@@ -439,13 +454,10 @@ class UI extends PureComponent {
       this.props.dispatch(expandHomeTimeline());
       this.props.dispatch(fetchNotifications());
       this.props.dispatch(fetchServerTranslationLanguages());
+      this.props.dispatch(checkAnnualReport());
 
       setTimeout(() => this.props.dispatch(fetchServer()), 3000);
     }
-
-    this.hotkeys.__mousetrap__.stopCallback = (e, element) => {
-      return ['TEXTAREA', 'SELECT', 'INPUT'].includes(element.tagName);
-    };
 
     if (typeof document.hidden !== 'undefined') { // Opera 12.10 and Firefox 18 and later support
       this.visibilityHiddenProp = 'hidden';
@@ -489,7 +501,6 @@ class UI extends PureComponent {
     document.removeEventListener('dragover', this.handleDragOver);
     document.removeEventListener('drop', this.handleDrop);
     document.removeEventListener('dragleave', this.handleDragLeave);
-    document.removeEventListener('dragend', this.handleDragEnd);
   }
 
   setRef = c => {
@@ -527,20 +538,32 @@ class UI extends PureComponent {
   };
 
   handleHotkeyFocusColumn = e => {
-    const index  = (e.key * 1) + 1; // First child is drawer, skip that
-    const column = this.node.querySelector(`.column:nth-child(${index})`);
-    if (!column) return;
-    const container = column.querySelector('.scrollable');
+    focusColumn(e.key * 1);
+  };
 
-    if (container) {
-      const status = container.querySelector('.focusable');
+  handleHotkeyLoadMore = () => {
+    document.querySelector('.load-more')?.focus();
+  };
 
-      if (status) {
-        if (container.scrollTop > status.offsetTop) {
-          status.scrollIntoView(true);
-        }
-        status.focus();
-      }
+  handleMoveToTop = () => {
+    focusFirstItem();
+  };
+
+  handleMoveUp = () => {
+    const currentItemIndex = getFocusedItemIndex();
+    if (currentItemIndex === -1) {
+      return focusColumn(getFocusedColumnIndex());
+    } else {
+      return focusItemSibling(currentItemIndex, -1);
+    }
+  };
+
+  handleMoveDown = () => {
+    const currentItemIndex = getFocusedItemIndex();
+    if (currentItemIndex === -1) {
+      return focusColumn(getFocusedColumnIndex());
+    } else {
+      return focusItemSibling(currentItemIndex, 1);
     }
   };
 
@@ -556,10 +579,6 @@ class UI extends PureComponent {
     }
   };
 
-  setHotkeysRef = c => {
-    this.hotkeys = c;
-  };
-
   handleHotkeyToggleHelp = () => {
     if (this.props.location.pathname === '/keyboard-shortcuts') {
       this.props.history.goBack();
@@ -570,6 +589,10 @@ class UI extends PureComponent {
 
   handleHotkeyGoToHome = () => {
     this.props.history.push('/home');
+  };
+
+  handleHotkeyGoToExplore = () => {
+    this.props.history.push('/explore');
   };
 
   handleHotkeyGoToNotifications = () => {
@@ -590,6 +613,14 @@ class UI extends PureComponent {
 
   handleHotkeyGoToStart = () => {
     this.props.history.push('/getting-started');
+    // Set focus to the navigation after a timeout
+    // to allow for it to be displayed first
+    setTimeout(() => {
+      const navbarSkipTarget = document.querySelector(
+        `#${getNavigationSkipLinkId()}`,
+      );
+      navbarSkipTarget?.focus();
+    }, 0);
   };
 
   handleHotkeyGoToFavourites = () => {
@@ -634,8 +665,13 @@ class UI extends PureComponent {
       forceNew: this.handleHotkeyForceNew,
       toggleComposeSpoilers: this.handleHotkeyToggleComposeSpoilers,
       focusColumn: this.handleHotkeyFocusColumn,
+      focusLoadMore: this.handleHotkeyLoadMore,
+      moveDown: this.handleMoveDown,
+      moveUp: this.handleMoveUp,
+      moveToTop: this.handleMoveToTop,
       back: this.handleHotkeyBack,
       goToHome: this.handleHotkeyGoToHome,
+      goToExplore: this.handleHotkeyGoToExplore,
       goToNotifications: this.handleHotkeyGoToNotifications,
       goToLocal: this.handleHotkeyGoToLocal,
       goToFederated: this.handleHotkeyGoToFederated,
@@ -647,11 +683,21 @@ class UI extends PureComponent {
       goToBlocked: this.handleHotkeyGoToBlocked,
       goToMuted: this.handleHotkeyGoToMuted,
       goToRequests: this.handleHotkeyGoToRequests,
+      cheat: this.handleDonate,
     };
 
+    const minimalShell = !this.props.identity.signedIn && landingPage === 'overview' && location.pathname.startsWith('/overview');
+
     return (
-      <HotKeys keyMap={keyMap} handlers={handlers} ref={this.setHotkeysRef} attach={window} focused>
+      <Hotkeys global handlers={handlers}>
         <div className={className} ref={this.setRef}>
+          {!minimalShell && (
+            <SkipLinks
+              multiColumn={layout === 'multi-column'}
+              onFocusGettingStartedColumn={this.handleHotkeyGoToStart}
+            />
+          )}
+
           {moved && (<div className='flash-message alert'>
             <FormattedMessage
               id='moved_to_warning'
@@ -664,11 +710,17 @@ class UI extends PureComponent {
             />
           </div>)}
 
-          <SwitchingColumnsArea identity={this.props.identity} location={location} singleColumn={layout === 'mobile' || layout === 'single-column'} forceOnboarding={firstLaunch && newAccount}>
+          <SwitchingColumnsArea
+            identity={this.props.identity}
+            location={location}
+            singleColumn={layout === 'mobile' || layout === 'single-column'}
+            layout={layout}
+            forceOnboarding={firstLaunch && newAccount}
+          >
             {children}
           </SwitchingColumnsArea>
 
-          <NavigationBar />
+          {!minimalShell && <NavigationBar />}
           {layout !== 'mobile' && <PictureInPicture />}
           <AlertsController />
           {!disableHoverCards && <HoverCardController />}
@@ -677,7 +729,7 @@ class UI extends PureComponent {
           <ModalContainer />
           <UploadArea active={draggingOver} onClose={this.closeUploadModal} />
         </div>
-      </HotKeys>
+      </Hotkeys>
     );
   }
 

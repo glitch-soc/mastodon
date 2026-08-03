@@ -5,6 +5,7 @@ import { useRouteMatch, NavLink } from 'react-router-dom';
 
 import { Icon } from 'flavours/glitch/components/icon';
 import type { IconProp } from 'flavours/glitch/components/icon';
+import type { MastodonLocationDescriptor } from 'flavours/glitch/components/router';
 
 export const ColumnLink: React.FC<{
   icon: React.ReactNode;
@@ -13,7 +14,7 @@ export const ColumnLink: React.FC<{
   activeIconComponent?: IconProp;
   isActive?: (match: unknown, location: { pathname: string }) => boolean;
   text: string;
-  to?: string;
+  to?: MastodonLocationDescriptor;
   onClick?: MouseEventHandler;
   href?: string;
   method?: string;
@@ -35,7 +36,9 @@ export const ColumnLink: React.FC<{
   transparent,
   ...other
 }) => {
-  const match = useRouteMatch(to ?? '');
+  const match = useRouteMatch(
+    (typeof to === 'string' ? to : to?.pathname) ?? '',
+  );
   const className = classNames('column-link', {
     'column-link--transparent': transparent,
   });

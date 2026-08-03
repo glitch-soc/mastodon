@@ -12,7 +12,7 @@ class Export
   def to_bookmarks_csv
     CSV.generate do |csv|
       account.bookmarks.includes(:status).reorder(id: :desc).each do |bookmark|
-        csv << [ActivityPub::TagManager.instance.uri_for(bookmark.status)]
+        csv << [ActivityPub::TagManager.instance.uri_for(bookmark.status)] if bookmark.status.present?
       end
     end
   end
@@ -53,6 +53,23 @@ class Export
         csv << [domain]
       end
     end
+  end
+
+  def to_custom_filters_json
+    data_collection = { custom_filters: [] }
+    account.custom_filters.includes(:keywords, :statuses).order(:phrase).each do |filter|
+      keywords_attributes = filter.keywords.map { |k| { keyword: k.keyword, whole_word: k.whole_word } }
+
+      data_collection[:custom_filters] << {
+        title: filter.title,
+        expires_at: filter.expires_at,
+        context: filter.context,
+        action: filter.action,
+        keywords_attributes: keywords_attributes,
+        statuses: filter.statuses.map { |s| ActivityPub::TagManager.instance.uri_for(s.status) },
+      }
+    end
+    JSON.generate(data_collection)
   end
 
   private

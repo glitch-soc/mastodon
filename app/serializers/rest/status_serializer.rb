@@ -8,7 +8,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
   attributes :id, :created_at, :in_reply_to_id, :in_reply_to_account_id,
              :sensitive, :spoiler_text, :visibility, :language,
              :uri, :url, :replies_count, :reblogs_count,
-             :favourites_count, :edited_at
+             :favourites_count, :quotes_count, :edited_at
 
   attribute :favourited, if: :current_user?
   attribute :reblogged, if: :current_user?
@@ -30,10 +30,14 @@ class REST::StatusSerializer < ActiveModel::Serializer
   has_many :ordered_mentions, key: :mentions
   has_many :tags
   has_many :emojis, serializer: REST::CustomEmojiSerializer
+  has_many :tagged_collections, serializer: REST::CollectionSerializer
 
+  # Due to a ActiveModel::Serializer quirk, if you change any of the following, have a look at
+  # updating `app/serializers/rest/shallow_status_serializer.rb` as well
   has_one :quote, key: :quote, serializer: REST::QuoteSerializer
   has_one :preview_card, key: :card, serializer: REST::PreviewCardSerializer
   has_one :preloadable_poll, key: :poll, serializer: REST::PollSerializer
+  has_one :quote_approval
 
   delegate :local?, to: :object
 
@@ -100,6 +104,10 @@ class REST::StatusSerializer < ActiveModel::Serializer
     object.untrusted_favourites_count || relationships&.attributes_map&.dig(object.id, :favourites_count) || object.favourites_count
   end
 
+  def quotes_count
+    relationships&.attributes_map&.dig(object.id, :quotes_count) || object.quotes_count
+  end
+
   def favourited
     if relationships
       relationships.favourites_map[object.id] || false
@@ -152,7 +160,7 @@ class REST::StatusSerializer < ActiveModel::Serializer
     current_user? &&
       current_user.account_id == object.account_id &&
       !object.reblog? &&
-      %w(public unlisted private).include?(object.visibility)
+      StatusRelationshipsPresenter::PINNABLE_VISIBILITIES.include?(object.visibility)
   end
 
   def source_requested?
@@ -161,6 +169,18 @@ class REST::StatusSerializer < ActiveModel::Serializer
 
   def ordered_mentions
     object.active_mentions.to_a.sort_by(&:id)
+  end
+
+  def tagged_collections
+    object.tagged_objects.filter_map { |tagged_object| tagged_object.object if tagged_object.ap_type == 'FeaturedCollection' }
+  end
+
+  def quote_approval
+    {
+      automatic: object.proper.quote_policy_as_keys(:automatic),
+      manual: object.proper.quote_policy_as_keys(:manual),
+      current_user: object.proper.quote_policy_for_account(current_user&.account),
+    }
   end
 
   private
@@ -197,13 +217,5 @@ class REST::StatusSerializer < ActiveModel::Serializer
     end
   end
 
-  class TagSerializer < ActiveModel::Serializer
-    include RoutingHelper
-
-    attributes :name, :url
-
-    def url
-      tag_url(object)
-    end
-  end
+  class TagSerializer < REST::ShallowTagSerializer; end
 end

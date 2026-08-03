@@ -72,7 +72,7 @@ export const FavouriteModal: React.FC<{
         <div className='safety-action-modal__actions'>
           <div className='spacer' />
 
-          <button onClick={handleCancel} className='link-button'>
+          <button onClick={handleCancel} className='link-button' type='button'>
             <FormattedMessage
               id='confirmation_modal.cancel'
               defaultMessage='Cancel'

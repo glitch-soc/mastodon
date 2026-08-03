@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
-
+import { Helmet } from '@unhead/react/helmet';
 import { isEqual } from 'lodash';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -99,29 +98,6 @@ export const Notifications: React.FC<{
 
   const columnRef = useRef<ColumnRef>(null);
 
-  const selectChild = useCallback((index: number, alignTop: boolean) => {
-    const container = columnRef.current?.node as HTMLElement | undefined;
-
-    if (!container) return;
-
-    const element = container.querySelector<HTMLElement>(
-      `article:nth-of-type(${index + 1}) .focusable`,
-    );
-
-    if (element) {
-      if (alignTop && container.scrollTop > element.offsetTop) {
-        element.scrollIntoView(true);
-      } else if (
-        !alignTop &&
-        container.scrollTop + container.clientHeight <
-          element.offsetTop + element.offsetHeight
-      ) {
-        element.scrollIntoView(false);
-      }
-      element.focus();
-    }
-  }, []);
-
   // Keep track of mounted components for unread notification handling
   useEffect(() => {
     void dispatch(mountNotifications());
@@ -187,28 +163,6 @@ export const Notifications: React.FC<{
     columnRef.current?.scrollTop();
   }, []);
 
-  const handleMoveUp = useCallback(
-    (id: string) => {
-      const elementIndex =
-        notifications.findIndex(
-          (item) => item.type !== 'gap' && item.group_key === id,
-        ) - 1;
-      selectChild(elementIndex, true);
-    },
-    [notifications, selectChild],
-  );
-
-  const handleMoveDown = useCallback(
-    (id: string) => {
-      const elementIndex =
-        notifications.findIndex(
-          (item) => item.type !== 'gap' && item.group_key === id,
-        ) + 1;
-      selectChild(elementIndex, false);
-    },
-    [notifications, selectChild],
-  );
-
   const handleMarkAsRead = useCallback(() => {
     dispatch(markNotificationsAsRead());
     void dispatch(submitMarkers({ immediate: true }));
@@ -241,8 +195,6 @@ export const Notifications: React.FC<{
         <NotificationGroup
           key={item.group_key}
           notificationGroupId={item.group_key}
-          onMoveUp={handleMoveUp}
-          onMoveDown={handleMoveDown}
           unread={
             lastReadId !== '0' &&
             !!item.page_max_id &&
@@ -251,15 +203,7 @@ export const Notifications: React.FC<{
         />
       ),
     );
-  }, [
-    notifications,
-    isLoading,
-    hasMore,
-    lastReadId,
-    handleLoadGap,
-    handleMoveUp,
-    handleMoveDown,
-  ]);
+  }, [notifications, isLoading, hasMore, lastReadId, handleLoadGap]);
 
   const prepend = (
     <>
@@ -300,6 +244,7 @@ export const Notifications: React.FC<{
           title={intl.formatMessage(messages.markAsRead)}
           onClick={handleMarkAsRead}
           className='column-header__button'
+          type='button'
         >
           <Icon id='done-all' icon={DoneAllIcon} />
         </button>

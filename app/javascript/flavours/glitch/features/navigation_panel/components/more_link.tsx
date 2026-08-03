@@ -53,16 +53,22 @@ export const MoreLink: React.FC = () => {
 
   const menu = useMemo(() => {
     const arr: MenuItem[] = [
-      { text: intl.formatMessage(messages.filters), href: '/filters' },
-      { text: intl.formatMessage(messages.mutes), to: '/mutes' },
-      { text: intl.formatMessage(messages.blocks), to: '/blocks' },
       {
-        text: intl.formatMessage(messages.domainBlocks),
-        to: '/domain_blocks',
+        href: '/filters',
+        text: intl.formatMessage(messages.filters),
       },
-    ];
-
-    arr.push(
+      {
+        to: '/mutes',
+        text: intl.formatMessage(messages.mutes),
+      },
+      {
+        to: '/blocks',
+        text: intl.formatMessage(messages.blocks),
+      },
+      {
+        to: '/domain_blocks',
+        text: intl.formatMessage(messages.domainBlocks),
+      },
       null,
       {
         href: '/settings/privacy',
@@ -80,7 +86,7 @@ export const MoreLink: React.FC = () => {
         href: '/settings/export',
         text: intl.formatMessage(messages.importExport),
       },
-    );
+    ];
 
     if (canManageReports(permissions)) {
       arr.push(null, {
@@ -109,8 +115,8 @@ export const MoreLink: React.FC = () => {
   }, [intl, dispatch, permissions]);
 
   return (
-    <Dropdown items={menu}>
-      <button className='column-link column-link--transparent'>
+    <Dropdown items={menu} placement='bottom-start'>
+      <button className='column-link column-link--transparent' type='button'>
         <Icon id='' icon={MoreHorizIcon} className='column-link__icon' />
 
         <FormattedMessage id='navigation_bar.more' defaultMessage='More' />

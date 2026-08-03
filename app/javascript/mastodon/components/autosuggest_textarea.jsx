@@ -5,38 +5,15 @@ import classNames from 'classnames';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 
-import Overlay from 'react-overlays/Overlay';
 import Textarea from 'react-textarea-autosize';
 
 import AutosuggestAccountContainer from '../features/compose/containers/autosuggest_account_container';
 
-import AutosuggestEmoji from './autosuggest_emoji';
+import { AutosuggestEmoji } from './autosuggest_emoji';
 import { AutosuggestHashtag } from './autosuggest_hashtag';
-
-const textAtCursorMatchesToken = (str, caretPosition) => {
-  let word;
-
-  let left  = str.slice(0, caretPosition).search(/\S+$/);
-  let right = str.slice(caretPosition).search(/\s/);
-
-  if (right < 0) {
-    word = str.slice(left);
-  } else {
-    word = str.slice(left, right + caretPosition);
-  }
-
-  if (!word || word.trim().length < 3 || ['@', ':', '#'].indexOf(word[0]) === -1) {
-    return [null, null];
-  }
-
-  word = word.trim().toLowerCase();
-
-  if (word.length > 0) {
-    return [left + 1, word];
-  } else {
-    return [null, null];
-  }
-};
+import { LocalCustomEmojiProvider } from './emoji/context';
+import { textAtCursorMatchesToken } from './autosuggest/utils';
+import { Popover } from './popover';
 
 const AutosuggestTextarea = forwardRef(({
   value,
@@ -50,18 +27,21 @@ const AutosuggestTextarea = forwardRef(({
   onKeyUp,
   onKeyDown,
   onPaste,
+  onDrop,
   onFocus,
   autoFocus = true,
   lang,
+  className,
 }, textareaRef) => {
 
   const [suggestionsHidden, setSuggestionsHidden] = useState(true);
   const [selectedSuggestion, setSelectedSuggestion] = useState(0);
+  const [textareaElement, setTextareaElement] = useState(null);
   const lastTokenRef = useRef(null);
   const tokenStartRef = useRef(0);
 
   const handleChange = useCallback((e) => {
-    const [ tokenStart, token ] = textAtCursorMatchesToken(e.target.value, e.target.selectionStart);
+    const [ tokenStart, token ] = textAtCursorMatchesToken(e.target.value, e.target.selectionStart, ['@', '＠', ':', '#', '＃']);
 
     if (token !== null && lastTokenRef.current !== token) {
       tokenStartRef.current = tokenStart;
@@ -131,7 +111,7 @@ const AutosuggestTextarea = forwardRef(({
     onKeyDown(e);
   }, [disabled, suggestions, suggestionsHidden, selectedSuggestion, setSelectedSuggestion, setSuggestionsHidden, onSuggestionSelected, onKeyDown]);
 
-  const handleBlur = useCallback(() => {
+  const closeMenu = useCallback(() => {
     setSuggestionsHidden(true);
   }, [setSuggestionsHidden]);
 
@@ -149,11 +129,14 @@ const AutosuggestTextarea = forwardRef(({
   }, [suggestions, onSuggestionSelected, textareaRef]);
 
   const handlePaste = useCallback((e) => {
-    if (e.clipboardData && e.clipboardData.files.length === 1) {
-      onPaste(e.clipboardData.files);
-      e.preventDefault();
-    }
+    onPaste(e);
   }, [onPaste]);
+
+  const handleDrop = useCallback((e) => {
+    if (onDrop) {
+      onDrop(e);
+    }
+  }, [onDrop]);
 
   // Show the suggestions again whenever they change and the textarea is focused
   useEffect(() => {
@@ -170,7 +153,7 @@ const AutosuggestTextarea = forwardRef(({
     }
   }, [lang]);
 
-  const renderSuggestion = (suggestion, i) => {
+  const renderSuggestion = useCallback((suggestion, i) => {
     let inner, key;
 
     if (suggestion.type === 'emoji') {
@@ -189,12 +172,17 @@ const AutosuggestTextarea = forwardRef(({
         {inner}
       </div>
     );
-  };
+  }, [selectedSuggestion, handleSuggestionClick]);
+
+  const handleRef = useCallback((element) => {
+    textareaRef.current = element;
+    setTextareaElement(element);
+  }, []);
 
   return (
-    <div className='autosuggest-textarea'>
+    <div className={classNames('autosuggest-textarea', className)}>
       <Textarea
-        ref={textareaRef}
+        ref={handleRef}
         className='autosuggest-textarea__textarea'
         disabled={disabled}
         placeholder={placeholder}
@@ -204,23 +192,31 @@ const AutosuggestTextarea = forwardRef(({
         onKeyDown={handleKeyDown}
         onKeyUp={onKeyUp}
         onFocus={handleFocus}
-        onBlur={handleBlur}
+        onBlur={closeMenu}
         onPaste={handlePaste}
+        onDrop={handleDrop}
         dir='auto'
         aria-autocomplete='list'
         aria-label={placeholder}
         lang={lang}
       />
 
-      <Overlay show={!(suggestionsHidden || suggestions.isEmpty())} offset={[0, 0]} placement='bottom' target={textareaRef} popperConfig={{ strategy: 'fixed' }}>
-        {({ props }) => (
-          <div {...props}>
-            <div className='autosuggest-textarea__suggestions' style={{ width: textareaRef.current?.clientWidth }}>
-              {suggestions.map(renderSuggestion)}
+      <LocalCustomEmojiProvider>
+        <Popover
+          matchReferenceWidth
+          isOpen={!(suggestionsHidden || suggestions.isEmpty())}
+          onClose={closeMenu}
+          reference={textareaElement}
+        >
+          {({ props }) => (
+            <div {...props}>
+              <div className='autosuggest-textarea__suggestions' style={{ width: textareaElement?.clientWidth }}>
+                {suggestions.map(renderSuggestion)}
+              </div>
             </div>
-          </div>
-        )}
-      </Overlay>
+          )}
+        </Popover>
+      </LocalCustomEmojiProvider>
     </div>
   );
 });
@@ -237,6 +233,7 @@ AutosuggestTextarea.propTypes = {
   onKeyUp: PropTypes.func,
   onKeyDown: PropTypes.func,
   onPaste: PropTypes.func.isRequired,
+  onDrop: PropTypes.func,
   onFocus:PropTypes.func,
   autoFocus: PropTypes.bool,
   lang: PropTypes.string,

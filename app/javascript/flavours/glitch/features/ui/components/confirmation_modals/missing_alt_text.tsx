@@ -66,7 +66,7 @@ export const ConfirmMissingAltTextModal: React.FC<
   }, [dispatch, mediaId]);
 
   const handleSecondary = useCallback(() => {
-    dispatch(submitCompose(overridePrivacy));
+    dispatch(submitCompose(undefined, overridePrivacy));
   }, [dispatch, overridePrivacy]);
 
   return (

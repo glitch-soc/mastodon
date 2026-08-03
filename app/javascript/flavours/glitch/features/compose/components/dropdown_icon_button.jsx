@@ -1,17 +1,14 @@
 import PropTypes from 'prop-types';
-import { useCallback, useState, useRef } from 'react';
-
-import Overlay from 'react-overlays/Overlay';
+import { useCallback, useState } from 'react';
 
 import { DropdownSelector } from 'flavours/glitch/components/dropdown_selector';
 import { IconButton } from 'flavours/glitch/components/icon_button';
+import { Popover } from 'flavours/glitch/components/popover';
 
 export const DropdownIconButton = ({ value, disabled, icon, onChange, iconComponent, title, options }) => {
-  const containerRef = useRef(null);
-
   const [activeElement, setActiveElement] = useState(null);
   const [open, setOpen] = useState(false);
-  const [placement, setPlacement] = useState('bottom');
+  const [containerElement, setContainerElement] = useState(null);
 
   const handleToggle = useCallback(() => {
     if (open && activeElement) {
@@ -31,12 +28,8 @@ export const DropdownIconButton = ({ value, disabled, icon, onChange, iconCompon
     setOpen(false);
   }, [open, setOpen, activeElement, setActiveElement]);
 
-  const handleOverlayEnter = useCallback((state) => {
-    setPlacement(state.placement);
-  }, [setPlacement]);
-
   return (
-    <div ref={containerRef}>
+    <div ref={setContainerElement}>
       <IconButton
         disabled={disabled}
         icon={icon}
@@ -48,7 +41,12 @@ export const DropdownIconButton = ({ value, disabled, icon, onChange, iconCompon
         inverted
       />
 
-      <Overlay show={open} offset={[5, 5]} placement={placement} flip target={containerRef} popperConfig={{ strategy: 'fixed', onFirstUpdate: handleOverlayEnter }}>
+      <Popover
+        isOpen={open}
+        offset={5}
+        reference={containerElement}
+        onClose={handleClose}
+      >
         {({ props, placement }) => (
           <div {...props}>
             <div className={`dropdown-animation privacy-dropdown__dropdown ${placement}`}>
@@ -61,7 +59,7 @@ export const DropdownIconButton = ({ value, disabled, icon, onChange, iconCompon
             </div>
           </div>
         )}
-      </Overlay>
+      </Popover>
     </div>
   );
 };

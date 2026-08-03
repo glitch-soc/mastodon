@@ -63,7 +63,11 @@ export const ActionBar: React.FC<{ account: Account }> = ({ account }) => {
             className='account__action-bar__tab'
             to={`/@${account.get('acct')}`}
           >
-            <FormattedMessage id='account.posts' defaultMessage='Posts' />
+            <FormattedMessage
+              id='account.posts'
+              defaultMessage='Posts'
+              tagName='span'
+            />
             <strong>
               <FormattedNumber value={account.get('statuses_count')} />
             </strong>
@@ -75,7 +79,11 @@ export const ActionBar: React.FC<{ account: Account }> = ({ account }) => {
             className='account__action-bar__tab'
             to={`/@${account.get('acct')}/following`}
           >
-            <FormattedMessage id='account.follows' defaultMessage='Follows' />
+            <FormattedMessage
+              id='account.follows'
+              defaultMessage='Follows'
+              tagName='span'
+            />
             <strong>
               <FormattedNumber value={account.get('following_count')} />
             </strong>
@@ -90,6 +98,7 @@ export const ActionBar: React.FC<{ account: Account }> = ({ account }) => {
             <FormattedMessage
               id='account.followers'
               defaultMessage='Followers'
+              tagName='span'
             />
             <strong>
               {account.get('followers_count') < 0 ? (

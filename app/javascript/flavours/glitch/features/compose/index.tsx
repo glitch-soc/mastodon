@@ -2,10 +2,11 @@ import { useEffect, useCallback, useState } from 'react';
 
 import { useIntl, defineMessages } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 import type { Map as ImmutableMap, List as ImmutableList } from 'immutable';
+
+import { Helmet } from '@unhead/react/helmet';
 
 import elephantUIPlane from '@/images/elephant_ui_plane.svg';
 import EditIcon from '@/material-icons/400-24px/edit_square.svg?react';
@@ -55,14 +56,16 @@ type ColumnMap = ImmutableMap<'id' | 'uuid' | 'params', string>;
 const glitchProbability = 1 - 0.0420215528;
 const totalElefriends = 3;
 
+const pickRandomFriend = () =>
+  Math.random() < glitchProbability
+    ? Math.floor(Math.random() * totalElefriends)
+    : totalElefriends;
+
 const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
   const columns = useAppSelector(
-    (state) =>
-      (state.settings as ImmutableMap<string, unknown>).get(
-        'columns',
-      ) as ImmutableList<ColumnMap>,
+    (state) => state.settings.get('columns') as ImmutableList<ColumnMap>,
   );
   const unreadNotifications = useAppSelector(
     (state) => state.notifications.get('unread', 0) as number,
@@ -75,11 +78,7 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
         false,
       ) as boolean,
   );
-  const [elefriend, setElefriend] = useState(
-    Math.random() < glitchProbability
-      ? Math.floor(Math.random() * totalElefriends)
-      : totalElefriends,
-  );
+  const [elefriend, setElefriend] = useState(pickRandomFriend());
 
   useEffect(() => {
     dispatch(mountCompose());
@@ -131,12 +130,11 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
 
   if (multiColumn) {
     return (
-      <div
-        className='drawer'
-        role='region'
-        aria-label={intl.formatMessage(navbarMessages.publish)}
-      >
-        <nav className='drawer__header'>
+      <div className='drawer'>
+        <nav
+          className='drawer__header'
+          aria-label={intl.formatMessage(navbarMessages.advancedUiQuickLinks)}
+        >
           <Link
             to='/getting-started'
             className='drawer__tab'
@@ -213,13 +211,17 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
 
         <Search singleColumn={false} />
 
-        <div className='drawer__pager'>
+        <div
+          className='drawer__pager'
+          role='region'
+          aria-label={intl.formatMessage(navbarMessages.publish)}
+        >
           <div className='drawer__inner'>
             <ComposeFormContainer />
 
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- this is not a feature but a visual easter egg */}
             <div
-              className='drawer__inner__mastodon'
+              className='drawer__inner__mastodon with-zig-zag-decoration'
               onClick={handleCycleElefriend}
             >
               <img alt='' draggable='false' src={mascot ?? elephant} />
@@ -244,7 +246,11 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
       />
 
       <div className='scrollable'>
-        <ComposeFormContainer />
+        <ComposeFormContainer
+          // This is fine on this single-purpose view
+          // eslint-disable-next-line jsx-a11y/no-autofocus
+          autoFocus
+        />
       </div>
 
       <Helmet>

@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 
-import { defineMessages, injectIntl, FormattedMessage } from 'react-intl';
+import { defineMessages, FormattedMessage } from 'react-intl';
 
-import { Helmet } from 'react-helmet';
+import { Helmet } from '@unhead/react/helmet';
 
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import ImmutablePureComponent from 'react-immutable-pure-component';
@@ -16,6 +16,7 @@ import { fetchFavourites, expandFavourites } from 'flavours/glitch/actions/inter
 import { Account } from 'flavours/glitch/components/account';
 import ColumnHeader from 'flavours/glitch/components/column_header';
 import { Icon }  from 'flavours/glitch/components/icon';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import Column from 'flavours/glitch/features/ui/components/column';
@@ -43,7 +44,7 @@ class Favourites extends ImmutablePureComponent {
     intl: PropTypes.object.isRequired,
   };
 
-  UNSAFE_componentWillMount () {
+  componentDidMount () {
     if (!this.props.accountIds) {
       this.props.dispatch(fetchFavourites(this.props.params.statusId));
     }

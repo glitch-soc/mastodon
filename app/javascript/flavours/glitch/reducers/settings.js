@@ -37,10 +37,12 @@ const initialState = ImmutableMap({
       follow_request: false,
       favourite: false,
       reblog: false,
+      quote: false,
       mention: false,
       poll: false,
       status: false,
       update: false,
+      collections: false,
       'admin.sign_up': false,
       'admin.report': false,
     }),
@@ -60,10 +62,12 @@ const initialState = ImmutableMap({
       follow_request: false,
       favourite: true,
       reblog: true,
+      quote: true,
       mention: true,
       poll: true,
       status: true,
       update: true,
+      collections: true,
       'admin.sign_up': true,
       'admin.report': true,
     }),
@@ -73,10 +77,12 @@ const initialState = ImmutableMap({
       follow_request: false,
       favourite: true,
       reblog: true,
+      quote: true,
       mention: true,
       poll: true,
       status: true,
       update: true,
+      collections: true,
       'admin.sign_up': true,
       'admin.report': true,
     }),
@@ -121,6 +127,8 @@ const initialState = ImmutableMap({
     'explore/links': false,
     'explore/statuses': false,
     'explore/tags': false,
+    'notifications/remove_quote_hint': false,
+    'quote/quiet_post_hint': false,
   }),
 });
 
@@ -164,6 +172,7 @@ const updateFrequentLanguages = (state, language) => state.update('frequentlyUse
 
 const filterDeadListColumns = (state, listId) => state.update('columns', columns => columns.filterNot(column => column.get('id') === 'LIST' && column.get('params').get('id') === listId));
 
+/** @type {import('@reduxjs/toolkit').Reducer<ImmutableMap<string, unknown>>} */
 export default function settings(state = initialState, action) {
   switch(action.type) {
   case STORE_HYDRATE:

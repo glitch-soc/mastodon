@@ -2,8 +2,9 @@ import { FormattedMessage } from 'react-intl';
 
 import ReplyIcon from '@/material-icons/400-24px/reply.svg?react';
 import { Icon } from 'flavours/glitch/components/icon';
-import { DisplayedName } from 'flavours/glitch/features/notifications_v2/components/displayed_name';
 import { useAppSelector } from 'flavours/glitch/store';
+
+import { LinkedDisplayName } from './display_name';
 
 export const StatusThreadLabel: React.FC<{
   accountId: string;
@@ -27,7 +28,13 @@ export const StatusThreadLabel: React.FC<{
       <FormattedMessage
         id='status.replied_to'
         defaultMessage='Replied to {name}'
-        values={{ name: <DisplayedName accountIds={[inReplyToAccountId]} /> }}
+        values={{
+          name: (
+            <LinkedDisplayName
+              displayProps={{ account: inReplyToAccount, variant: 'simple' }}
+            />
+          ),
+        }}
       />
     );
   } else {
@@ -44,7 +51,7 @@ export const StatusThreadLabel: React.FC<{
       <div className='status__prepend__icon'>
         <Icon id='reply' icon={ReplyIcon} />
       </div>
-      {label}
+      <span>{label}</span>
     </div>
   );
 };

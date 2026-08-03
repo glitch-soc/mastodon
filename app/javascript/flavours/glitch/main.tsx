@@ -1,15 +1,16 @@
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { Globals } from '@react-spring/web';
 
+import * as perf from '@/flavours/glitch/utils/performance';
 import { setupBrowserNotifications } from 'flavours/glitch/actions/notifications';
 import Mastodon from 'flavours/glitch/containers/mastodon';
 import { me, reduceMotion } from 'flavours/glitch/initial_state';
-import * as perf from 'flavours/glitch/performance';
 import ready from 'flavours/glitch/ready';
 import { store } from 'flavours/glitch/store';
 
-import { isProduction, isDevelopment } from './utils/environment';
+import { isDevelopment, isProduction } from './utils/environment';
 
 function main() {
   perf.start('main()');
@@ -29,34 +30,41 @@ function main() {
       });
     }
 
+    const { initializeEmoji } = await import('./features/emoji/index');
+    await initializeEmoji();
+
     const root = createRoot(mountNode);
-    root.render(<Mastodon {...props} />);
+    root.render(
+      <StrictMode>
+        <Mastodon {...props} />
+      </StrictMode>,
+    );
     store.dispatch(setupBrowserNotifications());
 
-    if (isProduction() && me && 'serviceWorker' in navigator) {
-      const { Workbox } = await import('workbox-window');
-      const wb = new Workbox(
-        isDevelopment() ? '/packs-dev/dev-sw.js?dev-sw' : '/sw.js',
-        { type: 'module', scope: '/' },
-      );
-      let registration;
-
-      try {
-        registration = await wb.register();
-      } catch (err) {
-        console.error(err);
+    if (
+      me &&
+      'serviceWorker' in navigator &&
+      (isDevelopment() || isProduction()) // Disallow testing environment
+    ) {
+      let swPath = '/sw.js';
+      if (isDevelopment()) {
+        const { default: swDevUrl } =
+          await import('@/flavours/glitch/service_worker/sw?url');
+        swPath = swDevUrl;
       }
 
-      if (
-        registration &&
-        'Notification' in window &&
-        Notification.permission === 'granted'
-      ) {
-        const registerPushNotifications = await import(
-          'flavours/glitch/actions/push_notifications'
-        );
+      await navigator.serviceWorker.register(swPath, {
+        scope: '/',
+        type: 'module',
+      });
 
-        store.dispatch(registerPushNotifications.register());
+      if (isProduction()) {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          const registerPushNotifications =
+            await import('flavours/glitch/actions/push_notifications');
+
+          store.dispatch(registerPushNotifications.register());
+        }
       }
     }
 
