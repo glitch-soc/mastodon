@@ -288,6 +288,7 @@ class Account < ApplicationRecord
 
   def trendable?
     boolean_with_default('trendable', Setting.trendable_by_default)
+  end
 
   def deleted?
     requested_deletion_at.present? && !instance_actor?
