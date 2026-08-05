@@ -569,8 +569,8 @@ export const DetailedStatus: React.FC<{
               />
             </a>
 
-            {visibilityLink}
             {localOnlyLink}
+            {visibilityLink}
             {applicationLink}
           </div>
 
