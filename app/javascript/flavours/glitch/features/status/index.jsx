@@ -483,10 +483,6 @@ class Status extends ImmutablePureComponent {
     this.handleTranslate(this.props.status);
   };
 
-  handleHeaderClick = () => {
-    this.column.scrollTop();
-  };
-
   renderChildren (list, ancestors) {
     const { params: { statusId } } = this.props;
 
@@ -510,10 +506,6 @@ class Status extends ImmutablePureComponent {
 
   setContainerRef = c => {
     this.node = c;
-  };
-
-  setColumnRef = c => {
-    this.column = c;
   };
 
   setStatusRef = c => {
@@ -613,14 +605,14 @@ class Status extends ImmutablePureComponent {
     };
 
     return (
-      <Column bindToDocument={!multiColumn} ref={this.setColumnRef} label={intl.formatMessage(messages.detailedStatus)}>
+      <Column bindToDocument={!multiColumn} label={intl.formatMessage(messages.detailedStatus)}>
         <ColumnHeader
           icon='comment'
           iconComponent={ChatIcon}
           title={intl.formatMessage(messages.tootHeading)}
-          onClick={this.handleHeaderClick}
           showBackButton
           multiColumn={multiColumn}
+          scrollTopOnClick
           extraButton={(
             <button type='button' className='column-header__button' title={intl.formatMessage(!isExpanded ? messages.revealAll : messages.hideAll)} aria-label={intl.formatMessage(!isExpanded ? messages.revealAll : messages.hideAll)} onClick={this.handleToggleAll}><Icon id={!isExpanded ? 'eye' : 'eye-slash'} icon={isExpanded ? VisibilityIcon : VisibilityOffIcon} /></button>
           )}
