@@ -17,6 +17,8 @@ import {
   unbookmark,
   pin,
   unpin,
+  addReaction,
+  removeReaction,
 } from 'flavours/glitch/actions/interactions';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { initMuteModal } from 'flavours/glitch/actions/mutes';
@@ -109,6 +111,14 @@ const mapDispatchToProps = (dispatch, { contextType }) => ({
     } else {
       dispatch(pin(status));
     }
+  },
+
+  onReactionAdd (statusId, name, url) {
+    dispatch(addReaction(statusId, name, url));
+  },
+
+  onReactionRemove (statusId, name) {
+    dispatch(removeReaction(statusId, name));
   },
 
   onEmbed (status) {
