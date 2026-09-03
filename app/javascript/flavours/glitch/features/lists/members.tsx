@@ -7,8 +7,10 @@ import { useParams, Link } from 'react-router-dom';
 import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader } from '@/flavours/glitch/components/column/header';
+import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { ColumnSearchHeader } from '@/flavours/glitch/components/column/search_header';
+import { ColumnHeader } from '@/flavours/glitch/components/column_header';
+import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
 import SquigglyArrow from '@/svg-icons/squiggly_arrow.svg?react';
 import { fetchRelationships } from 'flavours/glitch/actions/accounts';
@@ -33,7 +35,7 @@ import { useSearchAccounts } from 'flavours/glitch/hooks/useSearchAccounts';
 import { me } from 'flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
-export const messages = defineMessages({
+const messagesLegacy = defineMessages({
   manageMembers: {
     id: 'column.list_members',
     defaultMessage: 'Manage list members',
@@ -47,6 +49,21 @@ export const messages = defineMessages({
   remove: { id: 'lists.remove_member', defaultMessage: 'Remove' },
   back: { id: 'column_back_button.label', defaultMessage: 'Back' },
 });
+
+const messagesRedesign = defineMessages({
+  manageMembers: {
+    id: 'custom_feeds.manage_accounts_title',
+    defaultMessage: 'Manage Feed Members',
+  },
+  enterSearch: {
+    id: 'custom_feeds.add_to_feed',
+    defaultMessage: 'Add to feed',
+  },
+});
+
+const messages = isRedesignEnabled()
+  ? { ...messagesLegacy, ...messagesRedesign }
+  : messagesLegacy;
 
 type Mode = 'remove' | 'add';
 
@@ -232,13 +249,20 @@ const ListMembers: React.FC<{
       bindToDocument={!multiColumn}
       label={intl.formatMessage(messages.manageMembers)}
     >
-      <ColumnHeader
-        title={intl.formatMessage(messages.manageMembers)}
-        icon='list-ul'
-        iconComponent={ListAltIcon}
-        multiColumn={multiColumn}
-        showBackButton
-      />
+      {isRedesignEnabled() ? (
+        <ColumnHeader
+          withBackButton
+          title={intl.formatMessage(messages.manageMembers)}
+        />
+      ) : (
+        <LegacyColumnHeader
+          title={intl.formatMessage(messages.manageMembers)}
+          icon='list-ul'
+          iconComponent={ListAltIcon}
+          multiColumn={multiColumn}
+          showBackButton
+        />
+      )}
 
       <ColumnSearchHeader
         placeholder={intl.formatMessage(messages.placeholder)}
