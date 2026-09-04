@@ -208,7 +208,7 @@ const Firehose = ({ feedType, multiColumn }) => {
 
   return (
     <Column bindToDocument={!multiColumn} label={intl.formatMessage(messages.title)}>
-      {isRedesignEnabled ? (
+      {isRedesignEnabled() ? (
         <ColumnHeader
           title={intl.formatMessage(messages.title_redesign)}
           withBackButton={multiColumn && 'auto'}

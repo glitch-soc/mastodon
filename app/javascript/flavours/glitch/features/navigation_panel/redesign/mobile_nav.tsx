@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
@@ -9,7 +9,6 @@ import {
   ChatCircleIcon,
   HouseIcon,
   MagnifyingGlassIcon,
-  HamburgerIcon,
 } from '@phosphor-icons/react';
 import { animated, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
@@ -19,7 +18,6 @@ import {
   openNavigation,
 } from '@/flavours/glitch/actions/navigation';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { ComposeRedesignButton } from '@/flavours/glitch/features/compose/redesign/trigger';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
@@ -32,18 +30,12 @@ import classes from './mobile_nav.module.scss';
 import { MobileNavLink } from './navigation_link';
 
 export const RedesignMobileNavigation: React.FC = () => {
-  const dispatch = useAppDispatch();
-
   const { accountId, signedIn } = useIdentity();
   const account = useAccount(accountId);
 
   const notificationsCount = useAppSelector(
     selectUnreadNotificationGroupsCount,
   );
-
-  const handleOpenNavigation = useCallback(() => {
-    dispatch(openNavigation());
-  }, [dispatch]);
 
   if (!signedIn) {
     return null;
@@ -92,13 +84,6 @@ export const RedesignMobileNavigation: React.FC = () => {
           </MobileNavLink>
         </ul>
         <ComposeRedesignButton inline />
-        <IconButton // Silly placeholder – will be replaced with button in column header
-          icon={HamburgerIcon}
-          variant='solid'
-          onClick={handleOpenNavigation}
-        >
-          Menu
-        </IconButton>
       </nav>
       <SlideOutNavigation />
     </>

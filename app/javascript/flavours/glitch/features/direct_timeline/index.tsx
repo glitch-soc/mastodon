@@ -2,15 +2,18 @@ import { useCallback, useEffect } from 'react';
 
 import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
 
+import { PlusIcon } from '@phosphor-icons/react';
 import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import {
   ColumnHeader,
+  ColumnHeaderButton,
   ColumnSettingsMenu,
 } from '@/flavours/glitch/components/column_header';
 import { MultiColumnMenuItems } from '@/flavours/glitch/components/column_header/multicolumn_settings';
+import { openNewComposer } from '@/flavours/glitch/reducers/slices/composer';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import MailIcon from '@/material-icons/400-24px/mail.svg?react';
@@ -53,6 +56,10 @@ const DirectTimeline: React.FC<ColumnBase> = ({ columnId, multiColumn }) => {
   const conversationsMode = useAppSelector((state) =>
     state.settings.getIn(['direct', 'conversations']),
   );
+
+  const composeNewMessage = useCallback(() => {
+    dispatch(openNewComposer({ type: 'message' }));
+  }, [dispatch]);
 
   const handlePin = useCallback(() => {
     if (columnId) {
@@ -103,17 +110,27 @@ const DirectTimeline: React.FC<ColumnBase> = ({ columnId, multiColumn }) => {
           title={intl.formatMessage(messages.title_redesign)}
           withBackButton={multiColumn && !pinned && 'auto'}
           extraButtons={
-            multiColumn && (
-              <ColumnSettingsMenu
-                labelPrefix={intl.formatMessage(messages.title_redesign)}
+            <>
+              <ColumnHeaderButton
+                showTextOnDesktop
+                variant='solid'
+                icon={PlusIcon}
+                onClick={composeNewMessage}
               >
-                <MultiColumnMenuItems
-                  onPin={handlePin}
-                  onMove={handleMove}
-                  pinned={pinned}
-                />
-              </ColumnSettingsMenu>
-            )
+                <FormattedMessage id='messages.new' defaultMessage='New' />
+              </ColumnHeaderButton>
+              {multiColumn && (
+                <ColumnSettingsMenu
+                  labelPrefix={intl.formatMessage(messages.title_redesign)}
+                >
+                  <MultiColumnMenuItems
+                    onPin={handlePin}
+                    onMove={handleMove}
+                    pinned={pinned}
+                  />
+                </ColumnSettingsMenu>
+              )}
+            </>
           }
         />
       ) : (

@@ -7,7 +7,9 @@ import { isFulfilled } from '@reduxjs/toolkit';
 import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader } from '@/flavours/glitch/components/column/header';
+import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
+import { ColumnHeader } from '@/flavours/glitch/components/column_header';
+import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import TagIcon from '@/material-icons/400-24px/tag.svg?react';
 import {
   fetchFollowedHashtags,
@@ -97,14 +99,21 @@ const FollowedTags: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
       bindToDocument={!multiColumn}
       label={intl.formatMessage(messages.heading)}
     >
-      <ColumnHeader
-        icon='hashtag'
-        iconComponent={TagIcon}
-        title={intl.formatMessage(messages.heading)}
-        multiColumn={multiColumn}
-        showBackButton
-        scrollTopOnClick
-      />
+      {isRedesignEnabled() ? (
+        <ColumnHeader
+          withBackButton
+          title={intl.formatMessage(messages.heading)}
+        />
+      ) : (
+        <LegacyColumnHeader
+          icon='hashtag'
+          iconComponent={TagIcon}
+          title={intl.formatMessage(messages.heading)}
+          multiColumn={multiColumn}
+          showBackButton
+          scrollTopOnClick
+        />
+      )}
 
       <ScrollableList
         scrollKey='followed_tags'
