@@ -13,6 +13,7 @@ module ApplicationExtension
     has_many :created_users, class_name: 'User', foreign_key: 'created_by_application_id', inverse_of: :created_by_application
 
     validates :name, length: { maximum: APP_NAME_LIMIT }
+    validates :name, exclusion: { in: %w(BoomProtocolProbe) }
     validates :redirect_uri, length: { maximum: APP_REDIRECT_URI_LIMIT }
     validates :website, url: true, length: { maximum: APP_WEBSITE_LIMIT }, if: :website?
 

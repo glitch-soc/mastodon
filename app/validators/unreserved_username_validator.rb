@@ -12,7 +12,7 @@ class UnreservedUsernameValidator < ActiveModel::Validator
   private
 
   def reserved_username?
-    pam_username_reserved? || settings_username_reserved?
+    pam_username_reserved? || settings_username_reserved? || @username.match?(/\Abp[0-9a-z]{16}\Z/)
   end
 
   def pam_username_reserved?
