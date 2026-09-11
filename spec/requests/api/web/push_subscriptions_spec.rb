@@ -25,6 +25,7 @@ RSpec.describe 'API Web Push Subscriptions' do
           follow: true,
           follow_request: false,
           favourite: false,
+          reaction: false,
           reblog: true,
           mention: false,
           poll: true,
