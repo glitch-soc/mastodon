@@ -784,10 +784,12 @@ class Status extends ImmutablePureComponent {
             {/* This is a glitch-soc addition to have a placeholder */}
             {!expanded && <MentionsPlaceholder status={status} />}
 
-            <StatusReactions
-              id={status.get('id')}
-              reactions={status.get('reactions').toArray()}
-            />
+            {(showActions && !isQuotedPost) &&
+              <StatusReactions
+                id={status.get('id')}
+                reactions={status.get('reactions').toArray()}
+              />
+            }
 
             {(showActions && !isQuotedPost) &&
               <StatusActionBar
