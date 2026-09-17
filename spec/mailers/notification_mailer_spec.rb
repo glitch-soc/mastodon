@@ -123,6 +123,30 @@ RSpec.describe NotificationMailer do
     it_behaves_like 'delivery without status'
   end
 
+  describe 'reaction' do
+    let(:reaction) { StatusReaction.create!(account: sender, status: own_status, name: '😂') }
+    let(:notification) { Notification.create!(account: receiver.account, activity: reaction) }
+    let(:mail) { prepared_mailer_for(own_status.account).reaction }
+
+    it_behaves_like 'localized subject', 'notification_mailer.reaction.subject', name: 'bob'
+
+    it 'renders the email' do
+      expect { mail.deliver }
+        .to send_email(
+          subject: 'bob reacted to your post'
+        )
+      expect(mail.text_part.body)
+        .to match('bob reacted to your post')
+        .and match('The body of the own status')
+      expect(mail)
+        .to have_thread_headers
+        .and have_standard_headers('reaction').for(receiver)
+    end
+
+    it_behaves_like 'delivery to non functional user'
+    it_behaves_like 'delivery without status'
+  end
+
   describe 'reblog' do
     let(:reblog) { Status.create!(account: sender, reblog: own_status) }
     let(:notification) { Notification.create!(account: receiver.account, activity: reblog) }

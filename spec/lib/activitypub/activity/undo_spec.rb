@@ -9,7 +9,15 @@ RSpec.describe ActivityPub::Activity::Undo do
 
   let(:json) do
     {
-      '@context': 'https://www.w3.org/ns/activitystreams',
+      '@context': [
+        'https://www.w3.org/ns/activitystreams',
+        {
+          toot: 'http://joinmastodon.org/ns#',
+          Emoji: 'toot:Emoji',
+          litepub: 'http://litepub.social/ns#',
+          EmojiReact: 'litepub:EmojiReact',
+        },
+      ],
       id: 'foo',
       type: 'Undo',
       actor: ActivityPub::TagManager.instance.uri_for(sender),
@@ -158,22 +166,103 @@ RSpec.describe ActivityPub::Activity::Undo do
     context 'with Like' do
       let(:status) { Fabricate(:status) }
 
-      let(:object_json) do
-        {
-          id: 'bar',
-          type: 'Like',
-          actor: ActivityPub::TagManager.instance.uri_for(sender),
-          object: ActivityPub::TagManager.instance.uri_for(status),
-        }
+      context 'without content' do
+        let(:object_json) do
+          {
+            id: 'bar',
+            type: 'Like',
+            actor: ActivityPub::TagManager.instance.uri_for(sender),
+            object: ActivityPub::TagManager.instance.uri_for(status),
+          }
+        end
+
+        before do
+          Fabricate(:favourite, account: sender, status: status)
+        end
+
+        it 'deletes favourite from sender to status' do
+          subject.perform
+          expect(sender.favourited?(status)).to be false
+        end
       end
 
-      before do
-        Fabricate(:favourite, account: sender, status: status)
+      context 'with content' do
+        let(:object_json) do
+          {
+            id: 'bar',
+            type: 'Like',
+            content: '😂',
+            actor: ActivityPub::TagManager.instance.uri_for(sender),
+            object: ActivityPub::TagManager.instance.uri_for(status),
+          }
+        end
+
+        before do
+          Fabricate(:status_reaction, account: sender, status: status, name: '😂')
+        end
+
+        it 'deletes reaction from sender to status' do
+          subject.perform
+          expect(sender.reacted?(status, '😂')).to be false
+        end
+      end
+    end
+
+    context 'with EmojiReact' do
+      let(:status) { Fabricate(:status) }
+
+      context 'with unicode emoji' do
+        let(:object_json) do
+          {
+            id: 'bar',
+            type: 'EmojiReact',
+            content: '😂',
+            actor: ActivityPub::TagManager.instance.uri_for(sender),
+            object: ActivityPub::TagManager.instance.uri_for(status),
+          }
+        end
+
+        before do
+          Fabricate(:status_reaction, account: sender, status: status, name: '😂')
+        end
+
+        it 'deletes reaction from sender to status' do
+          subject.perform
+          expect(sender.reacted?(status, '😂')).to be false
+        end
       end
 
-      it 'deletes favourite from sender to status' do
-        subject.perform
-        expect(sender.favourited?(status)).to be false
+      context 'with custom emoji' do
+        let(:emoji) { Fabricate(:custom_emoji, shortcode: 'coolcat', domain: 'example.com') }
+        let(:object_json) do
+          {
+            id: 'bar',
+            type: 'EmojiReact',
+            content: ':coolcat:',
+            tag: [
+              {
+                type: 'Emoji',
+                icon: {
+                  url: 'http://example.com/emoji.png',
+                },
+                name: 'coolcat',
+              },
+            ],
+            actor: ActivityPub::TagManager.instance.uri_for(sender),
+            object: ActivityPub::TagManager.instance.uri_for(status),
+          }
+        end
+
+        before do
+          stub_request(:get, 'http://example.com/emoji.png').to_return(body: attachment_fixture('emojo.png'))
+
+          Fabricate(:status_reaction, account: sender, status: status, name: 'coolcat', custom_emoji: emoji)
+        end
+
+        it 'deletes reaction from sender to status' do
+          subject.perform
+          expect(sender.reacted?(status, 'coolcat', emoji)).to be false
+        end
       end
     end
   end
