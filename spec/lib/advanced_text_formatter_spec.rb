@@ -75,6 +75,15 @@ RSpec.describe AdvancedTextFormatter do
         it 'creates a mention link' do
           expect(subject).to include '<a href="https://cb6e6126.ngrok.io/@alice" class="u-url mention">@<span>alice</span></a></span>'
         end
+
+        context 'when username contains underscores' do
+          let(:preloaded_accounts) { [Fabricate(:account, username: '_bob_')] }
+          let(:text) { '@_bob_' }
+
+          it 'creates a mention link' do
+            expect(subject).to include '<a href="https://cb6e6126.ngrok.io/@_bob_" class="u-url mention">@<span>_bob_</span></a></span>'
+          end
+        end
       end
 
       context 'with text containing unlinkable mentions' do
@@ -269,6 +278,14 @@ RSpec.describe AdvancedTextFormatter do
 
         it 'creates a hashtag link' do
           expect(subject).to include '/tags/hashtag%E3%82%BF%E3%82%B0" class="mention hashtag" rel="tag">#<span>hashtagタグ</span></a>'
+        end
+      end
+
+      context 'with text containing a hashtag with underscores' do
+        let(:text) { '#_hashtag_' }
+
+        it 'creates a hashtag link' do
+          expect(subject).to include '/tags/_hashtag_" class="mention hashtag" rel="tag">#<span>_hashtag_</span></a>'
         end
       end
 
