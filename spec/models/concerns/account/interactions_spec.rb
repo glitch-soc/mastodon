@@ -772,6 +772,10 @@ RSpec.describe Account::Interactions do
       it 'does mute reblogs' do
         expect(me.muting_reblogs?(you)).to be(true)
       end
+
+      it 'adds me to the collection of accounts that are boost muted' do
+        expect(me.excluded_boosts_from_timeline_account_ids).to include(you.id)
+      end
     end
 
     context 'with the reblogs option set to true' do
@@ -781,6 +785,20 @@ RSpec.describe Account::Interactions do
 
       it 'does not mute reblogs' do
         expect(me.muting_reblogs?(you)).to be(false)
+      end
+    end
+
+    context 'when toggling the reblogs option' do
+      before do
+        me.follow!(you)
+      end
+
+      it 'evicts the cache of boost muted accounts' do
+        expect(me.excluded_boosts_from_timeline_account_ids).to be_empty
+        me.follow!(you, reblogs: false)
+        expect(me.excluded_boosts_from_timeline_account_ids).to include(you.id)
+        me.follow!(you, reblogs: true)
+        expect(me.excluded_boosts_from_timeline_account_ids).to be_empty
       end
     end
   end
