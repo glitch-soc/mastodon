@@ -9074,6 +9074,7 @@ noscript {
   bottom: 20px;
   inset-inline-end: 20px;
   width: 300px;
+  z-index: 100;
   background-color: var(--color-bg-primary);
   box-shadow: var(--dropdown-shadow);
 
@@ -11384,10 +11385,14 @@ noscript {
 }
 
 .column-footer {
-  padding: 16px;
   position: sticky;
   bottom: 0;
+  padding: 16px;
   background: var(--color-bg-primary);
+
+  @media (width <= $mobile-menu-breakpoint) {
+    padding-bottom: calc(16px + var(--mobile-bottom-nav-height, 0));
+  }
 }
 
 .lists-scrollable {
