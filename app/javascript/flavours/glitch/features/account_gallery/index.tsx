@@ -8,11 +8,14 @@ import { openModal } from '@/flavours/glitch/actions/modal';
 import { expandAccountMediaTimeline } from '@/flavours/glitch/actions/timelines';
 import { AccountHeader } from '@/flavours/glitch/components/account_header';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader } from '@/flavours/glitch/components/column/header';
+import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
+import { ColumnHeader } from '@/flavours/glitch/components/column_header';
+import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { LimitedAccountHint } from '@/flavours/glitch/components/limited_account_hint';
 import { RemoteHint } from '@/flavours/glitch/components/remote_hint';
 import ScrollableList from '@/flavours/glitch/components/scrollable_list';
 import { BundleColumnError } from '@/flavours/glitch/features/ui/components/bundle_column_error';
+import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useAccountId } from '@/flavours/glitch/hooks/useAccountId';
 import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
 import type { MediaAttachment } from '@/flavours/glitch/models/media_attachment';
@@ -21,6 +24,7 @@ import {
   useAppDispatch,
   createAppSelector,
 } from '@/flavours/glitch/store';
+import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import PersonIcon from '@/material-icons/400-24px/person.svg?react';
 
 import { MediaItem } from './components/media_item';
@@ -102,6 +106,7 @@ export const AccountGallery: React.FC<{
   const intl = useIntl();
   const dispatch = useAppDispatch();
   const accountId = useAccountId();
+  const account = useAccount(accountId);
   const {
     isLoading,
     items: attachments,
@@ -217,13 +222,20 @@ export const AccountGallery: React.FC<{
 
   return (
     <Column>
-      <ColumnHeader
-        icon='user-circle'
-        iconComponent={PersonIcon}
-        title={intl.formatMessage(messages.profile)}
-        showBackButton
-        scrollTopOnClick
-      />
+      {isRedesignEnabled() ? (
+        <ColumnHeader
+          withBackButton
+          title={<DisplayNameSimple account={account} />}
+        />
+      ) : (
+        <LegacyColumnHeader
+          icon='user-circle'
+          iconComponent={PersonIcon}
+          title={intl.formatMessage(messages.profile)}
+          showBackButton
+          scrollTopOnClick
+        />
+      )}
 
       <ScrollableList
         className='account-gallery__container'

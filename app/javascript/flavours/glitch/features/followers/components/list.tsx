@@ -3,12 +3,14 @@ import type { FC, ReactNode } from 'react';
 
 import { AccountListItem } from '@/flavours/glitch/components/account_list_item';
 import { Column } from '@/flavours/glitch/components/column';
+import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
 import ScrollableList from '@/flavours/glitch/components/scrollable_list';
 import { BundleColumnError } from '@/flavours/glitch/features/ui/components/bundle_column_error';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
 import { useLayout } from '@/flavours/glitch/hooks/useLayout';
+import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 import { ProfileColumnHeader } from '../../account/components/profile_column_header';
 
@@ -24,6 +26,7 @@ interface AccountListProps {
   accountId?: string | null;
   append?: ReactNode;
   emptyMessage: ReactNode;
+  title: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
   list?: AccountList | null;
@@ -37,6 +40,7 @@ export const AccountList: FC<AccountListProps> = ({
   accountId,
   append,
   emptyMessage,
+  title,
   header,
   footer,
   list,
@@ -98,7 +102,11 @@ export const AccountList: FC<AccountListProps> = ({
 
   return (
     <Column>
-      <ProfileColumnHeader multiColumn={multiColumn} />
+      {isRedesignEnabled() ? (
+        <ColumnHeader withBackButton title={title} />
+      ) : (
+        <ProfileColumnHeader multiColumn={multiColumn} />
+      )}
 
       <ScrollableList
         scrollKey={scrollKey}
