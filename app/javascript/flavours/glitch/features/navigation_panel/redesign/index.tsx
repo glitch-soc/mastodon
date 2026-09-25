@@ -2,6 +2,8 @@ import { useCallback, useEffect } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
+import type { Map as ImmutableMap } from 'immutable';
+
 import {
   PenNibIcon,
   HouseIcon,
@@ -13,6 +15,7 @@ import {
   PlusIcon,
 } from '@phosphor-icons/react';
 
+import { fetchFollowRequests } from '@/flavours/glitch/actions/accounts';
 import { fetchLists } from '@/flavours/glitch/actions/lists';
 import { closeNavigation } from '@/flavours/glitch/actions/navigation';
 import { fetchFollowedHashtags } from '@/flavours/glitch/actions/tags_typed';
@@ -78,13 +81,39 @@ function useFollowedHashtags() {
   return { followedHashtags: tags };
 }
 
+export function useFollowRequestsCount({
+  fetch = true,
+}: { fetch?: boolean } = {}) {
+  const followRequestsCount = useAppSelector(
+    (state) =>
+      (
+        state.user_lists.getIn(['follow_requests', 'items']) as
+          | ImmutableMap<string, unknown>
+          | undefined
+      )?.size ?? 0,
+  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (fetch) {
+      dispatch(fetchFollowRequests());
+    }
+  }, [dispatch, fetch]);
+
+  return followRequestsCount;
+}
+
 export function useNotificationsCount() {
   const unreadNotificationsCount = useAppSelector(
     selectUnreadNotificationGroupsCount,
   );
+  const followRequestsCount = useFollowRequestsCount();
+
   const { unreadAnnouncementCount } = useHasAnnouncements();
 
-  return unreadNotificationsCount + unreadAnnouncementCount;
+  return (
+    unreadNotificationsCount + followRequestsCount + unreadAnnouncementCount
+  );
 }
 
 const isFediverseFeedsLinkActive = (
