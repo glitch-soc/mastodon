@@ -9,6 +9,7 @@ import {
   expandFollowers,
   fetchFollowers,
 } from '@/flavours/glitch/actions/accounts';
+import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useAccountId } from '@/flavours/glitch/hooks/useAccountId';
 import { useRelationship } from '@/flavours/glitch/hooks/useRelationship';
@@ -74,6 +75,12 @@ const Followers: FC = () => {
 
   return (
     <AccountList
+      title={
+        <FormattedMessage
+          {...titleText}
+          values={{ name: <DisplayNameSimple account={account} /> }}
+        />
+      }
       accountId={accountId}
       header={
         accountId && (

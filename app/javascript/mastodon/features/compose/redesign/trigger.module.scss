@@ -1,12 +1,24 @@
 @use '@/styles/mastodon/variables';
 
-.button {
-  &:not(.buttonInline) {
+.buttonWrapper {
+  position: relative;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: all 200ms ease-out;
+  }
+
+  &:not(.buttonWrapperInline) {
     position: fixed;
     bottom: var(--space-4);
     right: var(--space-4);
     z-index: 2;
   }
+}
+
+.buttonWrapperHidden {
+  transform: translateX(calc(100% + var(--space-4)));
+  opacity: 0;
+  transition-timing-function: ease-in;
 }
 
 .composer,
@@ -35,6 +47,18 @@
     width: calc(100vw - var(--space-4) * 2);
     max-width: 500px;
     margin: var(--space-4);
+  }
+
+  @media (width < #{variables.$mobile-menu-breakpoint}) {
+    // Add a backdrop for the mobile composer to cover up the page
+    // behind the composer that can be visible on Safari iOS
+    &::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-color: var(--color-bg-primary);
+    }
   }
 }
 

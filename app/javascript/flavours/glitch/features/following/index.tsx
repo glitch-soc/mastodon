@@ -9,6 +9,7 @@ import {
   expandFollowing,
   fetchFollowing,
 } from '@/flavours/glitch/actions/accounts';
+import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useAccountId } from '@/flavours/glitch/hooks/useAccountId';
 import { useRelationship } from '@/flavours/glitch/hooks/useRelationship';
@@ -76,6 +77,12 @@ const Followers: FC = () => {
   const domain = account?.acct.split('@')[1];
   return (
     <AccountList
+      title={
+        <FormattedMessage
+          {...titleText}
+          values={{ name: <DisplayNameSimple account={account} /> }}
+        />
+      }
       accountId={accountId}
       append={domain && <RemoteHint domain={domain} url={account.url} />}
       emptyMessage={<EmptyMessage account={account} />}
