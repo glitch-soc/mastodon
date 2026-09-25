@@ -2,13 +2,16 @@ import { useCallback } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { messages as columnHeaderMessages } from '@/flavours/glitch/components/column/header';
+import { GearIcon } from '@phosphor-icons/react';
+
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { useAppDispatch } from '@/flavours/glitch/store';
+import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import UnfoldMoreIcon from '@/material-icons/400-24px/unfold_more.svg?react';
 import { requestBrowserPermission } from 'flavours/glitch/actions/notifications';
 import { changeSetting } from 'flavours/glitch/actions/settings';
-import { Button } from 'flavours/glitch/components/button';
+import { Button as LegacyButton } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { IconButton } from 'flavours/glitch/components/icon_button';
 
@@ -53,19 +56,31 @@ const NotificationsPermissionBanner: React.FC = () => {
             icon: (
               <Icon
                 id='sliders'
-                icon={UnfoldMoreIcon}
-                aria-label={intl.formatMessage(columnHeaderMessages.show)}
+                icon={isRedesignEnabled() ? GearIcon : UnfoldMoreIcon}
+                aria-label={intl.formatMessage({
+                  id: 'notifications.settings',
+                  defaultMessage: 'Notification Settings',
+                })}
               />
             ),
           }}
         />
       </p>
-      <Button onClick={handleClick}>
-        <FormattedMessage
-          id='notifications_permission_banner.enable'
-          defaultMessage='Enable desktop notifications'
-        />
-      </Button>
+      {isRedesignEnabled() ? (
+        <Button onClick={handleClick} variant='solid' size='sm'>
+          <FormattedMessage
+            id='notifications_permission_banner.enable'
+            defaultMessage='Enable desktop notifications'
+          />
+        </Button>
+      ) : (
+        <LegacyButton onClick={handleClick}>
+          <FormattedMessage
+            id='notifications_permission_banner.enable'
+            defaultMessage='Enable desktop notifications'
+          />
+        </LegacyButton>
+      )}
     </div>
   );
 };
