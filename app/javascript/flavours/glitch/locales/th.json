@@ -1,5 +1,8 @@
 {
   "account.follows": "ติดตาม",
+  "column_header.profile": "โปรไฟล์",
+  "settings.close": "ปิด",
   "settings.content_warnings": "Content warnings",
+  "settings.general": "ทั่วไป",
   "settings.preferences": "Preferences"
 }
