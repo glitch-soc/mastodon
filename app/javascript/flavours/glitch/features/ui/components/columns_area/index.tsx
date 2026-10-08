@@ -1,8 +1,10 @@
 import classNames from 'classnames';
 
+import { Search } from '@/flavours/glitch/features/compose/components/search';
 import { ComposeRedesignButton } from '@/flavours/glitch/features/compose/redesign/trigger';
 import { RedesignNavigationPanel } from '@/flavours/glitch/features/navigation_panel/redesign';
 import { RedesignMobileNavigation } from '@/flavours/glitch/features/navigation_panel/redesign/mobile_nav';
+import { isLayoutWithSearchEnabled } from '@/flavours/glitch/utils/environment';
 import { Footer } from 'flavours/glitch/features/custom_homepage/components/footer';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
@@ -41,6 +43,12 @@ export const ColumnsArea: React.FC<{
         {isMobile ? <RedesignMobileNavigation /> : <ComposeRedesignButton />}
 
         <main className={classes.main}>{children}</main>
+
+        {isLayoutWithSearchEnabled() && (
+          <div className={classes.searchWrapper}>
+            <Search singleColumn context='sidebar' />
+          </div>
+        )}
       </div>
     );
   }
