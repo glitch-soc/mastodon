@@ -47,7 +47,6 @@ import ModalContainer from './containers/modal_container';
 import {
   Compose,
   Status,
-  GettingStarted,
   KeyboardShortcuts,
   Firehose,
   AccountTimeline,
@@ -221,7 +220,6 @@ class SwitchingColumnsArea extends PureComponent {
               : null
             }
 
-            <WrappedRoute path='/getting-started' component={GettingStarted} content={children} />
             <WrappedRoute path='/keyboard-shortcuts' component={KeyboardShortcuts} content={children} />
             <WrappedRoute path='/about' component={About} content={children} />
             <WrappedRoute path='/privacy-policy' component={PrivacyPolicy} content={children} />
@@ -725,13 +723,7 @@ class UI extends PureComponent {
     return (
       <Hotkeys global handlers={handlers}>
         <div className={className} ref={this.setRef}>
-          {!minimalShell && (
-            <SkipLinks
-              // TODO: Remove these props & related methods when isRedesignEnabled() flag is removed
-              multiColumn={layout === 'multi-column'}
-              onFocusGettingStartedColumn={this.handleHotkeyGoToStart}
-            />
-          )}
+          {!minimalShell && <SkipLinks />}
 
           {moved && (<div className='flash-message alert'>
             <FormattedMessage

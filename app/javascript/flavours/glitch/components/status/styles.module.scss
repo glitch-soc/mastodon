@@ -120,6 +120,7 @@
   position: relative;
   overflow: clip;
   border-radius: var(--radius-2);
+  margin-inline: -2px;
 
   &.isFiltered {
     display: none;
@@ -166,24 +167,6 @@
   }
 }
 
-.variantPage .content {
-  @include mixins.type-body-lg;
-}
-
-.contentImage {
-  border-radius: var(--radius-4);
-  position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  overflow: hidden;
-}
-
-.contentBlurHash {
-  width: 100%;
-  height: 100%;
-}
-
 .hashtagsWrapper,
 .hashtags {
   display: flex;
@@ -192,10 +175,22 @@
 }
 
 .hashtagsWrapper {
-  padding: var(--space-1) 0;
+  // Account for the 2px from the padding/margin in children
+  padding: calc(var(--space-1) - 2px) 0;
+
+  button:focus-visible {
+    outline-offset: 0;
+  }
+
+  > button {
+    // Ensure the +1 button is the same size as the hashtags buttons
+    margin-block: 2px;
+  }
 }
 
 .hashtags {
+  // Add padding for outline
+  padding: 2px;
   overflow: hidden;
   position: relative;
 
@@ -249,6 +244,10 @@
 
 .actions {
   display: flex;
+
+  > button {
+    font-variant-numeric: tabular-nums;
+  }
 
   > button:not(:hover, :active, [aria-pressed='true'], [aria-expanded='true']) {
     opacity: 0.7;

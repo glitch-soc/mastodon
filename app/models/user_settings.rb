@@ -19,6 +19,7 @@ class UserSettings
   setting :default_content_type, default: 'text/plain'
   setting :hide_followers_count, default: false
   setting :default_quote_policy, default: 'public', in: %w(public followers nobody)
+  setting :default_spoiler_field, default: false
   setting :email_subscriptions, default: false
   setting :display_own_boosts, default: false
   setting :display_own_posts, default: true

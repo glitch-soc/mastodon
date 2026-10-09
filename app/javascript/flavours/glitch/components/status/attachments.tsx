@@ -18,6 +18,7 @@ import { CollectionPreviewCard } from '@/flavours/glitch/features/collections/co
 import MediaCard from '@/flavours/glitch/features/status/components/card';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useExpandedStatus } from '@/flavours/glitch/hooks/useStatus';
+import { useToggle } from '@/flavours/glitch/hooks/useToggle';
 import { displayMedia } from '@/flavours/glitch/initial_state';
 import type {
   CardShape,
@@ -33,6 +34,7 @@ import { compareUrls } from '@/flavours/glitch/utils/compare_urls';
 import { decodeIDNA } from '@/flavours/glitch/utils/links';
 
 import { Avatar } from '../avatar';
+import { Blurhash } from '../blurhash';
 import { Button } from '../button/redesign';
 import { Card, CardActions, CardBody, CardTitle } from '../card';
 import { DisplayName } from '../display_name';
@@ -415,7 +417,7 @@ const LinkCard: React.FC<{ card: CardShape; status: ExpandedStatusShape }> = ({
     .filter((id): id is string => !!id);
 
   return (
-    <Card>
+    <Card image={card.image && <LinkCardImage card={card} />}>
       <CardTitle
         afterContent={
           card.published_at && (
@@ -458,6 +460,20 @@ const LinkCard: React.FC<{ card: CardShape; status: ExpandedStatusShape }> = ({
         </CardActions>
       )}
     </Card>
+  );
+};
+
+const LinkCardImage: React.FC<{ card: CardShape }> = ({ card }) => {
+  const [loaded, { onTrue: onLoad }] = useToggle();
+  if (!card.image) {
+    return null;
+  }
+
+  return (
+    <>
+      <img src={card.image} alt={card.image_description} onLoad={onLoad} />
+      {!loaded && card.blurhash && <Blurhash hash={card.blurhash} />}
+    </>
   );
 };
 
