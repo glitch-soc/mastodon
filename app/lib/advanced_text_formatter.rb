@@ -100,6 +100,8 @@ class AdvancedTextFormatter < TextFormatter
   private
 
   def format_markdown(html)
+    # Force escape underscores in mentions, custom emojis and hashtags before formatting
+    html = html.gsub(/#{Account::MENTION_RE}|#{CustomEmoji::SCAN_RE}|#{Tag::HASHTAG_RE}/o) { |re| re.gsub('_', '\\_') }
     html = markdown_formatter.render(html)
     html.delete("\r").delete("\n")
   end
