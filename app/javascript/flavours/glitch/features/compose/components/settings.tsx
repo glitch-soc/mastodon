@@ -9,6 +9,7 @@ import type { ApiQuotePolicy } from '@/flavours/glitch/api_types/quotes';
 import { IconButton } from '@/flavours/glitch/components/button';
 import {
   Menu,
+  MenuItemDivider,
   MenuItemGroup,
   MenuItemRadio,
   MenuList,
@@ -19,6 +20,7 @@ import {
   useAppSelector,
 } from '@/flavours/glitch/store/typed_functions';
 
+import { GlitchSettings } from './glitch_settings';
 import { selectComposePrivacy, selectComposeQuotePolicy } from './selectors';
 
 export const ComposeSettingsMenu: React.FC = () => {
@@ -36,6 +38,10 @@ export const ComposeSettingsMenu: React.FC = () => {
 
       <MenuList maxWidth={310} placement='bottom-end' strategy='fixed'>
         <ComposeSettingsInnerMenu />
+
+        <MenuItemDivider />
+
+        <GlitchSettings />
       </MenuList>
     </Menu>
   );
