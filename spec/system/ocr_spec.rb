@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'OCR', :attachment_processing, :inline_jobs, :js, :streaming, feature: :redesign do
+RSpec.describe 'OCR', :attachment_processing, :inline_jobs, :js, :streaming do
   include ProfileStories
 
   let(:email)               { 'test@example.com' }
