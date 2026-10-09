@@ -339,6 +339,8 @@ export const submitComposer = createAppThunk(
 
     const { compose, meta, statuses, server, settings } = getState();
 
+    const threadedMode = !!compose.getIn(['advanced_options', 'threaded_mode']);
+
     const text =
       (compose.get('text') as string) + (compose.get('spoiler_text') as string);
 
@@ -408,7 +410,11 @@ export const submitComposer = createAppThunk(
             window.location.assign(status.url);
           }
 
-          dispatch(resetComposer());
+          if (threadedMode) {
+            dispatch(replyComposeById({ statusId: status.id }));
+          } else {
+            dispatch(resetComposer());
+          }
         }),
       );
     }
