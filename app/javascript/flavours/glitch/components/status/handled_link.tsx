@@ -93,7 +93,7 @@ export const isLinkMisleading = (link: HTMLAnchorElement) => {
 
 export const tagMisleadingLink = (link: HTMLAnchorElement) => {
   try {
-    if (isLinkMisleading(link)) {
+    if (isLinkMisleading(link) && !link.dataset.tagged) {
       const url = new URL(link.href);
       const tag = document.createElement('span');
       tag.classList.add('link-origin-tag');
@@ -109,6 +109,7 @@ export const tagMisleadingLink = (link: HTMLAnchorElement) => {
       }
       link.insertAdjacentText('beforeend', ' ');
       link.insertAdjacentElement('beforeend', tag);
+      link.dataset.tagged = 'true';
     }
   } catch (e) {
     // The URL is invalid, remove the href just to be safe
@@ -236,13 +237,12 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
     <Tooltip text={href}>
       {({ getTooltipProps }) => (
         <a
-          {...mergeProps(props, getTooltipProps())}
+          {...mergeProps(props, getTooltipProps({ ref: linkRef }))}
           href={href}
           className={classNames('unhandled-link', className)}
           target='_blank'
           rel='noopener'
           translate='no'
-          ref={linkRef}
         >
           {children}
         </a>
