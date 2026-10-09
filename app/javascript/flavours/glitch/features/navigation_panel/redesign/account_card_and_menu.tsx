@@ -16,6 +16,7 @@ import {
   SignOutIcon,
   MastodonLogoIcon,
   GithubLogoIcon,
+  SlidersHorizontalIcon,
 } from '@phosphor-icons/react';
 
 import { openModal } from '@/flavours/glitch/actions/modal';
@@ -98,6 +99,10 @@ export const AccountMenuItems: React.FC<{
     dispatch(openModal({ modalType: 'CONFIRM_LOG_OUT', modalProps: {} }));
   }, [dispatch]);
 
+  const handleSettingsClick = useCallback(() => {
+    dispatch(openModal({ modalType: 'SETTINGS', modalProps: {} }));
+  }, [dispatch]);
+
   if (!accountId) {
     return null;
   }
@@ -121,6 +126,13 @@ export const AccountMenuItems: React.FC<{
       <MenuItemLink as='a' href='/settings/preferences' icon={GearIcon}>
         <FormattedMessage id='tabs_bar.settings' defaultMessage='Settings' />
       </MenuItemLink>
+
+      <MenuItem onClick={handleSettingsClick} icon={SlidersHorizontalIcon}>
+        <FormattedMessage
+          id='navigation_bar.glitch_settings'
+          defaultMessage='glitch-soc settings'
+        />
+      </MenuItem>
 
       <MenuItemDivider />
 

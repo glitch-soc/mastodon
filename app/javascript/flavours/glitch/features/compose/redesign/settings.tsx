@@ -2,11 +2,19 @@ import { useCallback } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import { EyeSlashIcon, GearIcon, WarningIcon } from '@phosphor-icons/react';
+import {
+  MarkdownLogoIcon,
+  EyeSlashIcon,
+  GearIcon,
+  WarningIcon,
+  WifiSlashIcon,
+} from '@phosphor-icons/react';
 
 import {
   changeComposeSensitivity,
   changeComposeSpoilerness,
+  changeComposeContentType,
+  changeComposeAdvancedOption,
 } from '@/flavours/glitch/actions/compose';
 import { setComposeQuotePolicy } from '@/flavours/glitch/actions/compose_typed';
 import type { ApiQuotePolicy } from '@/flavours/glitch/api_types/quotes';
@@ -77,6 +85,24 @@ const ComposeSettingsInnerMenu: React.FC = () => {
   const onMediaSensitiveChange = useCallback(() => {
     dispatch(changeComposeSensitivity());
   }, [dispatch]);
+
+  // glitch-soc additions
+  const contentType = useAppSelector((state) =>
+    state.compose.get('content_type'),
+  );
+  const localOnly = useAppSelector(
+    (state) => !!state.compose.getIn(['advanced_options', 'do_not_federate']),
+  );
+  const onMarkdownChange = useCallback(() => {
+    dispatch(
+      changeComposeContentType(
+        contentType === 'text/plain' ? 'text/markdown' : 'text/plain',
+      ),
+    );
+  }, [contentType, dispatch]);
+  const onLocalOnlyChange = useCallback(() => {
+    dispatch(changeComposeAdvancedOption('do_not_federate', !localOnly));
+  }, [localOnly, dispatch]);
 
   return (
     <>
@@ -175,6 +201,44 @@ const ComposeSettingsInnerMenu: React.FC = () => {
           <FormattedMessage
             id='compose.blur_media'
             defaultMessage='Blur media'
+          />
+        </MenuItemCheckbox>
+      </MenuItemGroup>
+
+      <MenuItemDivider />
+
+      <MenuItemGroup
+        label={
+          <FormattedMessage
+            id='compose.glitch_settings.label'
+            defaultMessage='glitch-soc settings'
+          />
+        }
+      >
+        <MenuItemCheckbox
+          name='markdown_formatting'
+          value='on'
+          checked={contentType === 'text/markdown'}
+          onChange={onMarkdownChange}
+          keepMenuOpenOnClick
+          icon={MarkdownLogoIcon}
+        >
+          <FormattedMessage
+            id='compose.glitch.use_markdown'
+            defaultMessage='Use Markdown formatting'
+          />
+        </MenuItemCheckbox>
+        <MenuItemCheckbox
+          name='local_only'
+          value='on'
+          checked={localOnly}
+          onChange={onLocalOnlyChange}
+          keepMenuOpenOnClick
+          icon={WifiSlashIcon}
+        >
+          <FormattedMessage
+            id='compose.glitch.local_only'
+            defaultMessage='This server only'
           />
         </MenuItemCheckbox>
       </MenuItemGroup>
