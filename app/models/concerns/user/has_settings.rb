@@ -79,12 +79,20 @@ module User::HasSettings
     settings['skin']
   end
 
+  def setting_theme_color
+    settings['web.theme_color']
+  end
+
   def setting_color_scheme
     settings['web.color_scheme']
   end
 
   def setting_contrast
     settings['web.contrast']
+  end
+
+  def setting_density
+    settings['web.density']
   end
 
   def setting_display_media
@@ -149,6 +157,10 @@ module User::HasSettings
 
   def setting_default_quote_policy
     settings['default_quote_policy'] || 'public'
+  end
+
+  def setting_default_spoiler_field
+    settings['default_spoiler_field']
   end
 
   def allows_report_emails?

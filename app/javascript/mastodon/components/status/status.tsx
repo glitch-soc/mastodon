@@ -149,6 +149,7 @@ export const StatusRedesign: React.FC<StatusRedesignProps> = ({
     muted,
     unfocusable,
     'data-id': id,
+    'data-variant': variant,
     handlers: hotkeyHandlers,
   };
 
@@ -173,6 +174,7 @@ export const StatusRedesign: React.FC<StatusRedesignProps> = ({
       <StatusHotkeys
         {...hotkeysProps}
         onClick={onOpenClick}
+        onAuxClick={onOpenClick}
         className={classNames(
           classes.root,
           variant === 'feed' && classes.variantFeed,
@@ -229,7 +231,6 @@ export const StatusRedesign: React.FC<StatusRedesignProps> = ({
             onReadMore={onOpenCallback}
             onTranslate={onTranslate}
             collapsible={variant !== 'page'}
-            className={classNames(variant === 'page' && classes.content)}
           >
             {!!status.poll && (
               <Poll
@@ -256,9 +257,9 @@ export const StatusRedesign: React.FC<StatusRedesignProps> = ({
             {showActions && !isQuotedPost && (
               <StatusActionBar
                 statusId={status.id}
+                reblogId={parent?.id}
                 withDismiss={withDismiss}
                 withCounters={withCounters}
-                onlyResponses={variant === 'page'}
               />
             )}
 
@@ -327,11 +328,11 @@ function contextToVariant(contextType?: StatusContextType): StatusVariant {
   switch (contextType) {
     case 'composer':
     case 'detailed':
-    case undefined:
       return 'page';
     case 'thread':
       return 'thread';
     case 'notifications':
+    case undefined:
     default:
       return 'feed';
   }

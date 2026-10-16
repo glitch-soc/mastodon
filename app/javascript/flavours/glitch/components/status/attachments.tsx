@@ -11,6 +11,8 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { fromJS } from 'immutable';
+
 import { openModal } from '@/flavours/glitch/actions/modal';
 import type { DeployPictureInPictureCallback } from '@/flavours/glitch/actions/picture_in_picture';
 import { deployPictureInPicture } from '@/flavours/glitch/actions/picture_in_picture';
@@ -18,6 +20,7 @@ import { CollectionPreviewCard } from '@/flavours/glitch/features/collections/co
 import MediaCard from '@/flavours/glitch/features/status/components/card';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useExpandedStatus } from '@/flavours/glitch/hooks/useStatus';
+import { useToggle } from '@/flavours/glitch/hooks/useToggle';
 import { displayMedia } from '@/flavours/glitch/initial_state';
 import type {
   CardShape,
@@ -33,8 +36,15 @@ import { compareUrls } from '@/flavours/glitch/utils/compare_urls';
 import { decodeIDNA } from '@/flavours/glitch/utils/links';
 
 import { Avatar } from '../avatar';
+import { Blurhash } from '../blurhash';
 import { Button } from '../button/redesign';
-import { Card, CardActions, CardBody, CardTitle } from '../card';
+import {
+  Card,
+  CardActions,
+  CardBody,
+  CardTitle,
+  PrimaryCardLink,
+} from '../card';
 import { DisplayName } from '../display_name';
 import { RelativeTimestamp } from '../relative_timestamp';
 
@@ -207,7 +217,7 @@ const MediaAttachments: React.FC<{
           modalProps: {
             statusId,
             options,
-            media: attachment,
+            media: fromJS(attachment),
             lang: language,
           },
         }),
@@ -344,7 +354,10 @@ const MediaAttachmentWrapper: React.FC<{
       className={classes.galleryWrapper}
     >
       {!visible && !statusHidden && (
-        <div className={classes.gallerySpoiler}>
+        <div
+          className={classes.gallerySpoiler}
+          data-interactive-post-content='true'
+        >
           {mediaFilters.length > 0 && (
             <FormattedMessage
               id='filter_warning.matches_filter'
@@ -403,19 +416,12 @@ const LinkCard: React.FC<{ card: CardShape; status: ExpandedStatusShape }> = ({
 
   const providerUrl = new URL(card.provider_url || card.url);
 
-  const cardLinkProps = {
-    as: 'a',
-    href: card.url,
-    target: '_blank',
-    rel: 'noopener',
-  } as const;
-
   const authors = card.authors
     .map(({ accountId }) => accountId)
     .filter((id): id is string => !!id);
 
   return (
-    <Card>
+    <Card image={card.image && <LinkCardImage card={card} />}>
       <CardTitle
         afterContent={
           card.published_at && (
@@ -434,11 +440,13 @@ const LinkCard: React.FC<{ card: CardShape; status: ExpandedStatusShape }> = ({
             decodeIDNA(providerUrl.host)}
         </a>
       </CardTitle>
-      <CardBody {...cardLinkProps}>{card.title}</CardBody>
+      <CardBody>
+        <PrimaryCardLink href={card.url} target='_blank' rel='noopener'>
+          {card.title}
+        </PrimaryCardLink>
+      </CardBody>
       {card.description && (
-        <CardBody {...cardLinkProps} isDescription>
-          {card.description}
-        </CardBody>
+        <CardBody isDescription>{card.description}</CardBody>
       )}
 
       {authors.length > 0 && (
@@ -458,6 +466,20 @@ const LinkCard: React.FC<{ card: CardShape; status: ExpandedStatusShape }> = ({
         </CardActions>
       )}
     </Card>
+  );
+};
+
+const LinkCardImage: React.FC<{ card: CardShape }> = ({ card }) => {
+  const [loaded, { onTrue: onLoad }] = useToggle();
+  if (!card.image) {
+    return null;
+  }
+
+  return (
+    <>
+      <img src={card.image} alt={card.image_description} onLoad={onLoad} />
+      {!loaded && card.blurhash && <Blurhash hash={card.blurhash} />}
+    </>
   );
 };
 

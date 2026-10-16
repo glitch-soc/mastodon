@@ -157,14 +157,18 @@ module ApplicationHelper
     tag.meta(content: content, property: property)
   end
 
-  def html_attributes
+  def html_attributes(theme: nil)
+    theme ||= current_theme
+
     base = {
       lang: I18n.locale,
       class: html_classes,
+      'data-user-flavour': current_flavour.parameterize,
       'data-contrast': contrast.parameterize,
       'data-color-scheme': page_color_scheme.parameterize,
-      'data-user-flavour': current_flavour.parameterize,
-    }
+      'data-density': density.parameterize,
+      'data-theme-color': page_theme_color(theme)&.parameterize,
+    }.compact
 
     base[:'data-system-theme'] = 'true' if page_color_scheme == 'auto'
 
