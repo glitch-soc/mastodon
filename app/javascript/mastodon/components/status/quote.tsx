@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -28,6 +28,7 @@ import {
   getAccountHidden as selectAccountHidden,
   selectPlainAccount,
 } from '@/mastodon/selectors/accounts';
+import { selectStatusFilters } from '@/mastodon/selectors/filters';
 import {
   selectAccountStatus,
   selectStatusLoadingState,
@@ -37,7 +38,7 @@ import { useAppDispatch, useAppSelector } from '@/mastodon/store';
 import { Avatar } from '../avatar';
 import { Button } from '../button/redesign';
 import { Card, CardBody, CardTitle } from '../card';
-import { LinkedDisplayName } from '../display_name';
+import { DisplayName } from '../display_name';
 import { DisplayNameSimple } from '../display_name/simple';
 import { EmojiHTML } from '../emoji/html';
 import { Icon } from '../icon';
@@ -45,9 +46,14 @@ import { PopoverMenuCard } from '../menu/card';
 import { RelativeTimestamp } from '../relative_timestamp';
 import { Skeleton } from '../skeleton';
 
-import { onStatusLinksDisabled } from './hooks';
+import {
+  onStatusLinksDisabled,
+  useStatusContext,
+  useStatusHandlers,
+} from './hooks';
 import { StatusImage } from './image';
 import classes from './quote.module.scss';
+import { accountStatusLinkProps } from './utils';
 
 type StatusQuoteProps = TQuotedStatus & { parentId: string };
 
@@ -56,7 +62,7 @@ export const StatusQuote: React.FC<StatusQuoteProps> = (props) => {
 
   if (quoteError) {
     return (
-      <Card>
+      <Card unclickable>
         <CardBody className={classNames(classes.body, classes.error)} noClamp>
           {quoteError}
         </CardBody>
@@ -99,8 +105,15 @@ export const QuotedStatus: React.FC<{
   id: string;
   clamp?: boolean;
   onDelete?: () => void;
-}> = ({ id, clamp, onDelete }) => {
+  disableOpen?: boolean;
+}> = ({ id, clamp, onDelete, disableOpen = false }) => {
   const status = useAppSelector((state) => selectAccountStatus(state, id));
+  const { contextType } = useStatusContext();
+
+  const { onOpenClick } = useStatusHandlers({
+    status,
+    contextType,
+  });
 
   if (!status) {
     return null;
@@ -109,34 +122,51 @@ export const QuotedStatus: React.FC<{
   const statusTo = `/@${status.account.acct}/${status.id}`;
 
   return (
-    <Card onDelete={onDelete}>
+    <Card
+      onDelete={onDelete}
+      onClick={!disableOpen ? onOpenClick : undefined}
+      onAuxClick={!disableOpen ? onOpenClick : undefined}
+      unclickable={disableOpen}
+    >
       <CardTitle
         className={classes.title}
         image={
-          <Avatar
-            account={status.account}
-            className={classes.accountLink}
-            withLink
-          />
+          !disableOpen ? (
+            <Link
+              {...accountStatusLinkProps(status.account)}
+              role='presentation'
+              tabIndex={-1}
+              className={classes.accountLink}
+            >
+              <Avatar account={status.account} />
+            </Link>
+          ) : (
+            <Avatar account={status.account} />
+          )
         }
         afterContent={
-          <Link to={statusTo}>
+          !disableOpen ? (
+            <Link to={statusTo}>
+              <RelativeTimestamp timestamp={status.created_at} />
+            </Link>
+          ) : (
             <RelativeTimestamp timestamp={status.created_at} />
-          </Link>
+          )
         }
       >
-        <LinkedDisplayName
-          displayProps={{ account: status.account, variant: 'noDomain' }}
-          className={classes.accountLink}
-        />
+        {!disableOpen ? (
+          <Link
+            {...accountStatusLinkProps(status.account)}
+            className={classes.accountLink}
+          >
+            <DisplayName account={status.account} variant='noDomain' />
+          </Link>
+        ) : (
+          <DisplayName account={status.account} variant='noDomain' />
+        )}
       </CardTitle>
 
-      <CardBody
-        className={classes.body}
-        as={Link}
-        to={statusTo}
-        noClamp={!clamp}
-      >
+      <CardBody className={classes.body} noClamp={!clamp}>
         <QuotedStatusBody status={status} />
       </CardBody>
 
@@ -165,7 +195,7 @@ const QuotedStatusBody: React.FC<{
     > => attachment.type === 'gifv' || attachment.type === 'image',
   );
   const duration = useMemo(() => {
-    const duration = mainAttachment?.meta.original.duration;
+    const duration = mainAttachment?.meta?.original.duration;
     if (!duration) {
       return '';
     }
@@ -181,7 +211,7 @@ const QuotedStatusBody: React.FC<{
     const seconds = totalSeconds % 60;
 
     return formatter.format({ hours, minutes, seconds });
-  }, [mainAttachment?.meta.original.duration]);
+  }, [mainAttachment?.meta?.original.duration]);
   const sensitive = status.sensitive;
 
   const poll = useAppSelector((state) => state.polls[status.poll ?? '']);
@@ -356,9 +386,14 @@ function useQuoteError({
   state: quoteState,
   parentId,
 }: StatusQuoteProps) {
+  const { contextType } = useStatusContext();
   const { state: loadingState, status: quote } = useAppSelector((state) =>
-    selectStatusLoadingState(state, { statusId: quoteId }),
+    selectStatusLoadingState(state, { statusId: quoteId, contextType }),
   );
+  const { filters, filterAction } = useAppSelector((state) =>
+    selectStatusFilters(state, { statusId: quoteId, contextType }),
+  );
+
   const accountId = quote?.account.id;
   const account = useAppSelector((state) =>
     selectPlainAccount(state, accountId),
@@ -397,6 +432,9 @@ function useQuoteError({
       );
     }
   }, [shouldFetchQuote, dispatch, quoteId, parentId]);
+
+  const intl = useIntl();
+  const filterNames = intl.formatList(filters.map(({ title }) => title));
 
   if (quoteState === 'pending') {
     return (
@@ -441,8 +479,9 @@ function useQuoteError({
   if (loadingState === 'filtered') {
     message = (
       <FormattedMessage
-        id='status.quote_error.filtered'
-        defaultMessage='Hidden due to one of your filters'
+        id='status.quote_error.filtered_details'
+        defaultMessage='Hidden due to your filter “{filters}”'
+        values={{ filters: filterNames }}
       />
     );
   } else if (quoteState === 'revoked') {
@@ -450,6 +489,15 @@ function useQuoteError({
       <FormattedMessage
         id='status.quote_error.revoked'
         defaultMessage='Post removed by author'
+      />
+    );
+  } else if (filterAction === 'warn' && !revealed) {
+    action = onRevealQuote;
+    message = (
+      <FormattedMessage
+        id='status.quote_error.filtered_details'
+        defaultMessage='Hidden due to your filter “{filters}”'
+        values={{ filters: filterNames }}
       />
     );
   } else if (

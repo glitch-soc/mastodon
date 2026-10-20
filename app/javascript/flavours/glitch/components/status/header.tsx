@@ -16,7 +16,7 @@ import { RelativeTimestamp } from '../relative_timestamp';
 import { Skeleton } from '../skeleton';
 
 import classes from './header.module.scss';
-import { statusLink } from './utils';
+import { accountStatusLinkProps, statusLink } from './utils';
 
 interface StatusRedesignHeaderProps {
   status: Pick<
@@ -40,16 +40,7 @@ export const StatusRedesignHeader: React.FC<StatusRedesignHeaderProps> = ({
   );
 
   const handleId = useId();
-  const accountLinkProps = {
-    to: {
-      pathname: `/@${account.acct}`,
-      state: { reference: 'status' },
-    },
-    title: `@${account.acct}`,
-    'data-id': account.id,
-    'data-hover-card-account': account.id,
-    'data-hover-card-reference': 'status',
-  };
+  const accountLinkProps = accountStatusLinkProps(account);
 
   let displayName = (
     <Link
@@ -102,7 +93,13 @@ export const StatusRedesignHeader: React.FC<StatusRedesignHeaderProps> = ({
   }
 
   return (
-    <header className={classNames(className, classes.root)}>
+    <header
+      className={classNames(
+        className,
+        classes.root,
+        !!children && classes.hasExtra,
+      )}
+    >
       <Link
         {...accountLinkProps}
         role='presentation'
@@ -112,7 +109,7 @@ export const StatusRedesignHeader: React.FC<StatusRedesignHeaderProps> = ({
         <Avatar account={account} size={null} />
       </Link>
 
-      <div>
+      <div className={classes.contents}>
         <p className={classes.name}>
           {displayName}
           &bull;

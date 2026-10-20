@@ -18,7 +18,6 @@ import type { OnSuggestionSelect } from '@/flavours/glitch/components/autosugges
 import { useAutosuggestFloatingMenu } from '@/flavours/glitch/components/autosuggest/hooks';
 import { AutosuggestMenu } from '@/flavours/glitch/components/autosuggest/list';
 import { TextArea } from '@/flavours/glitch/components/form_fields';
-import { normalizeKey } from '@/flavours/glitch/components/hotkeys/utils';
 import { useScrollSensor } from '@/flavours/glitch/hooks/useScrollSensor';
 import {
   clearComposerErrors,
@@ -123,7 +122,6 @@ export const ComposeTextarea: React.FC<ComposeTextareaProps> = ({
 
   const {
     onTextChange,
-    focus,
     mirror,
     sourceProps: fullSourceProps,
     suggestProps,
@@ -148,27 +146,6 @@ export const ComposeTextarea: React.FC<ComposeTextareaProps> = ({
     },
     [dispatch, onTextChange],
   );
-
-  const onKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> =
-    useCallback(
-      (event) => {
-        const key = normalizeKey(event.key);
-
-        if (key === 'escape') {
-          event.preventDefault();
-          // Dismiss the suggestions if we're displaying any.
-          if (suggestions.length > 0) {
-            onSuggestionClear();
-          } else {
-            // Otherwise lose focus on the textarea.
-            event.currentTarget.blur();
-          }
-        } else if (key === 'down') {
-          focus(event);
-        }
-      },
-      [onSuggestionClear, suggestions.length, focus],
-    );
 
   const onPasteOrDrop = useCallback(
     (event: React.ClipboardEvent | React.DragEvent) => {
@@ -210,7 +187,6 @@ export const ComposeTextarea: React.FC<ComposeTextareaProps> = ({
             : messages.placeholder,
         )}
         disabled={disabled || isSubmitting}
-        onKeyDown={onKeyDown}
         onDrop={onPasteOrDrop}
         onPaste={onPasteOrDrop}
         onChange={onChange}

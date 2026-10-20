@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { lazy, PureComponent, Suspense } from 'react';
+import { PureComponent } from 'react';
 
 import { defineMessages, FormattedMessage } from 'react-intl';
 
@@ -47,7 +47,6 @@ import ModalContainer from './containers/modal_container';
 import {
   Compose,
   Status,
-  GettingStarted,
   KeyboardShortcuts,
   Firehose,
   AccountTimeline,
@@ -75,7 +74,6 @@ import {
   CollectionDetail,
   CollectionsEditor,
   Blocks,
-  DomainBlocks,
   Mutes,
   Directory,
   OnboardingProfile,
@@ -221,7 +219,6 @@ class SwitchingColumnsArea extends PureComponent {
               : null
             }
 
-            <WrappedRoute path='/getting-started' component={GettingStarted} content={children} />
             <WrappedRoute path='/keyboard-shortcuts' component={KeyboardShortcuts} content={children} />
             <WrappedRoute path='/about' component={About} content={children} />
             <WrappedRoute path='/privacy-policy' component={PrivacyPolicy} content={children} />
@@ -281,7 +278,7 @@ class SwitchingColumnsArea extends PureComponent {
 
             <WrappedRoute path='/follow_requests' component={FollowRequests} content={children} />
             <WrappedRoute path='/blocks' component={Blocks} content={children} />
-            <WrappedRoute path='/domain_blocks' component={DomainBlocks} content={children} />
+            <Redirect from='/domain_blocks' to='/blocks/domains' />
             <WrappedRoute path='/followed_tags' component={FollowedTags} content={children} />
             <WrappedRoute path='/mutes' component={Mutes} content={children} />
             <WrappedRoute path='/lists' component={Lists} content={children} />
@@ -586,9 +583,7 @@ class UI extends PureComponent {
   handleMoveUp = () => {
     const currentItemIndex = getFocusedItemIndex();
     if (currentItemIndex === -1) {
-      return isRedesignEnabled()
-        ? focusFirstVisibleItemInColumn(getFocusedColumnIndex())
-        : focusColumn(getFocusedColumnIndex);
+      return focusFirstVisibleItemInColumn(getFocusedColumnIndex());
     } else {
       return focusItemSibling(currentItemIndex, -1);
     }
@@ -597,9 +592,7 @@ class UI extends PureComponent {
   handleMoveDown = () => {
     const currentItemIndex = getFocusedItemIndex();
     if (currentItemIndex === -1) {
-      return isRedesignEnabled()
-        ? focusFirstVisibleItemInColumn(getFocusedColumnIndex())
-        : focusColumn(getFocusedColumnIndex);
+      return focusFirstVisibleItemInColumn(getFocusedColumnIndex());
     } else {
       return focusItemSibling(currentItemIndex, 1);
     }
@@ -725,13 +718,7 @@ class UI extends PureComponent {
     return (
       <Hotkeys global handlers={handlers}>
         <div className={className} ref={this.setRef}>
-          {!minimalShell && (
-            <SkipLinks
-              // TODO: Remove these props & related methods when isRedesignEnabled() flag is removed
-              multiColumn={layout === 'multi-column'}
-              onFocusGettingStartedColumn={this.handleHotkeyGoToStart}
-            />
-          )}
+          {!minimalShell && <SkipLinks />}
 
           {moved && (<div className='flash-message alert'>
             <FormattedMessage

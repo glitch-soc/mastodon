@@ -4,6 +4,8 @@ import type { ComponentProps, FC } from 'react';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
+import { mergeProps } from '@react-aria/utils';
+
 import type { ApiMentionJSON } from '@/flavours/glitch/api_types/statuses';
 import { getCollectionPath } from '@/flavours/glitch/features/collections/utils';
 import { useAppSelector } from '@/flavours/glitch/store';
@@ -13,6 +15,7 @@ import { decodeIDNA } from 'flavours/glitch/utils/links';
 
 import { HashtagMenu } from '../hashtag_menu';
 import { MenuTriggerText } from '../menu';
+import { Tooltip } from '../tooltip';
 
 import classes from './handled_link.module.scss';
 
@@ -90,7 +93,7 @@ export const isLinkMisleading = (link: HTMLAnchorElement) => {
 
 export const tagMisleadingLink = (link: HTMLAnchorElement) => {
   try {
-    if (isLinkMisleading(link)) {
+    if (isLinkMisleading(link) && !link.dataset.tagged) {
       const url = new URL(link.href);
       const tag = document.createElement('span');
       tag.classList.add('link-origin-tag');
@@ -106,6 +109,7 @@ export const tagMisleadingLink = (link: HTMLAnchorElement) => {
       }
       link.insertAdjacentText('beforeend', ' ');
       link.insertAdjacentElement('beforeend', tag);
+      link.dataset.tagged = 'true';
     }
   } catch (e) {
     // The URL is invalid, remove the href just to be safe
@@ -215,25 +219,35 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
   // Non-absolute paths treated as internal links. This shouldn't happen, but just in case.
   if (href.startsWith('/')) {
     return (
-      <Link className={classNames('unhandled-link', className)} to={href}>
-        {children}
-      </Link>
+      <Tooltip text={href}>
+        {({ getTooltipProps }) => (
+          <Link
+            {...getTooltipProps()}
+            className={classNames('unhandled-link', className)}
+            to={href}
+          >
+            {children}
+          </Link>
+        )}
+      </Tooltip>
     );
   }
 
   return (
-    <a
-      {...props}
-      href={href}
-      title={href}
-      className={classNames('unhandled-link', className)}
-      target='_blank'
-      rel='noopener'
-      translate='no'
-      ref={linkRef}
-    >
-      {children}
-    </a>
+    <Tooltip text={href}>
+      {({ getTooltipProps }) => (
+        <a
+          {...mergeProps(props, getTooltipProps({ ref: linkRef }))}
+          href={href}
+          className={classNames('unhandled-link', className)}
+          target='_blank'
+          rel='noopener'
+          translate='no'
+        >
+          {children}
+        </a>
+      )}
+    </Tooltip>
   );
 };
 
