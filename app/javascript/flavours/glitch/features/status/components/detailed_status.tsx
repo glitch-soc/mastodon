@@ -41,7 +41,7 @@ import type { CollectionAttachment } from 'flavours/glitch/models/status';
 import { useAppSelector } from 'flavours/glitch/store';
 import { compareUrls } from 'flavours/glitch/utils/compare_urls';
 
-import Card from './card';
+import { Card } from './card';
 
 const messages = defineMessages({
   localOnly: {

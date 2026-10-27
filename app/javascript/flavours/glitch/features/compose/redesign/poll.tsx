@@ -20,10 +20,8 @@ import {
   Button,
   buttonClasses,
 } from '@/flavours/glitch/components/button/redesign';
-import {
-  ToggleField,
-  TextInput,
-} from '@/flavours/glitch/components/form_fields/redesign';
+import { ToggleField } from '@/flavours/glitch/components/form_fields';
+import { TextInput } from '@/flavours/glitch/components/form_fields/redesign';
 import { useAppSelector, useAppDispatch } from '@/flavours/glitch/store';
 import { DAY, HOUR, MINUTE } from '@/flavours/glitch/utils/time';
 
