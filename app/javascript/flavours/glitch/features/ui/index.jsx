@@ -29,13 +29,13 @@ import { WithRouterPropTypes } from 'flavours/glitch/utils/react_router';
 import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { checkAnnualReport } from '@/flavours/glitch/reducers/slices/annual_report';
 
-import { uploadCompose, resetCompose, changeComposeSpoilerness } from '../../actions/compose';
+import { uploadCompose, resetCompose } from '../../actions/compose';
 import { clearHeight } from '../../actions/height_cache';
 import { fetchServer, fetchServerTranslationLanguages } from '../../actions/server';
 import { expandHomeTimeline } from '../../actions/timelines';
 import { initialState, forceSingleColumn, me, owner, singleUserMode, trendsEnabled, landingPage, localLiveFeedAccess, disableHoverCards, domain } from '../../initial_state';
 
-import { openNewComposer } from '@/flavours/glitch/reducers/slices/composer';
+import { openNewComposer, toggleContentWarning } from '@/flavours/glitch/reducers/slices/composer';
 
 import { BundleColumnError } from './components/bundle_column_error';
 import { NavigationBar } from './components/navigation_bar';
@@ -565,7 +565,7 @@ class UI extends PureComponent {
 
   handleHotkeyToggleComposeSpoilers = e => {
     e.preventDefault();
-    this.props.dispatch(changeComposeSpoilerness());
+    this.props.dispatch(toggleContentWarning());
   };
 
   handleHotkeyFocusColumn = e => {

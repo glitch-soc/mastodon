@@ -24,7 +24,7 @@ import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
 import classes from './attachments.module.scss';
 import type { ComposeAttachment } from './selectors';
-import { selectComposeAttachment } from './selectors';
+import { selectComposeAttachment, selectComposeSensitive } from './selectors';
 
 export const ComposeUpload: React.FC<{
   id?: string;
@@ -34,7 +34,7 @@ export const ComposeUpload: React.FC<{
   const attachment = useAppSelector((state) =>
     selectComposeAttachment(state, id),
   );
-  const sensitive = useAppSelector((state) => !!state.compose.get('spoiler'));
+  const { mediaSensitive } = useAppSelector(selectComposeSensitive);
 
   const dispatch = useAppDispatch();
 
@@ -64,9 +64,9 @@ export const ComposeUpload: React.FC<{
     <StatusImage
       attachment={attachment}
       className={classNames(className, classes.mediaUpload)}
-      sensitive={sensitive}
+      sensitive={mediaSensitive}
     >
-      {sensitive && attachment.blurhash && (
+      {mediaSensitive && attachment.blurhash && (
         <Blurhash hash={attachment.blurhash} className={classes.blurHash} />
       )}
 
