@@ -4572,7 +4572,7 @@ a.status-card {
 }
 
 .load-gap {
-  border-bottom: 1px solid var(--color-border-primary);
+  border-bottom: var(--border-thin);
 }
 
 .timeline-hint {
@@ -4601,7 +4601,7 @@ a.status-card {
   }
 
   &--with-descendants {
-    border-top: 1px solid var(--color-border-primary);
+    border-top: var(--border-thin);
   }
 }
 
