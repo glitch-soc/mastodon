@@ -21,7 +21,7 @@ import {
   ClosedRegistrationsModal,
   IgnoreNotificationsModal,
   AnnualReportModal,
-} from 'flavours/glitch/features/ui/util/async-components';
+} from '@/flavours/glitch/features/ui/util/async-components';
 
 import { ActionsModal } from './actions_modal';
 import AudioModal from './audio_modal';

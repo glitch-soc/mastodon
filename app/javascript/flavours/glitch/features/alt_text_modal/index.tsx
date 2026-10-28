@@ -16,6 +16,7 @@ import { useSpring, animated } from '@react-spring/web';
 import Textarea from 'react-textarea-autosize';
 import { length } from 'stringz';
 
+import { Tesseract as fetchTesseract } from '@/flavours/glitch/features/ui/util/async-components';
 import { showAlertForError } from 'flavours/glitch/actions/alerts';
 import { uploadThumbnail } from 'flavours/glitch/actions/compose';
 import { changeUploadCompose } from 'flavours/glitch/actions/compose_typed';
@@ -26,7 +27,6 @@ import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_foc
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import { Audio } from 'flavours/glitch/features/audio';
 import { CharacterCounter } from 'flavours/glitch/features/compose/components/character_counter';
-import { Tesseract as fetchTesseract } from 'flavours/glitch/features/ui/util/async-components';
 import { Video, getPointerPosition } from 'flavours/glitch/features/video';
 import { me } from 'flavours/glitch/initial_state';
 import type { MediaAttachment } from 'flavours/glitch/models/media_attachment';
