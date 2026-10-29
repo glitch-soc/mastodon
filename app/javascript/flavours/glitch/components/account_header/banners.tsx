@@ -3,21 +3,20 @@ import type { FC, ReactElement, ReactNode } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
+import { CheckIcon, XIcon } from '@phosphor-icons/react';
+
 import {
   authorizeFollowRequest,
   rejectFollowRequest,
 } from '@/flavours/glitch/actions/accounts';
+import { AvatarOverlay } from '@/flavours/glitch/components/avatar_overlay';
+import { Button } from '@/flavours/glitch/components/button/redesign';
+import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
 import { useRelationship } from '@/flavours/glitch/hooks/useRelationship';
 import type { Account } from '@/flavours/glitch/models/account';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import CheckIcon from '@/material-icons/400-24px/check.svg?react';
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 
-import { AvatarOverlay } from '../avatar_overlay';
-import { Button } from '../button';
-import { DisplayName } from '../display_name';
-import { Icon } from '../icon';
 import { Permalink } from '../permalink';
 
 import classes from './styles.module.scss';
@@ -79,16 +78,14 @@ const FollowRequestNote: FC<{ account: Account }> = ({ account }) => {
       </MessageText>
 
       <div className={classes.bannerActions}>
-        <Button secondary onClick={handleAuthorize}>
-          <Icon id='check' icon={CheckIcon} />
+        <Button onClick={handleAuthorize} leadingIcon={CheckIcon} size='sm'>
           <FormattedMessage
             id='follow_request.authorize'
             defaultMessage='Authorize'
           />
         </Button>
 
-        <Button secondary onClick={handleReject}>
-          <Icon id='times' icon={CloseIcon} />
+        <Button onClick={handleReject} leadingIcon={XIcon} size='sm'>
           <FormattedMessage
             id='follow_request.reject'
             defaultMessage='Reject'
