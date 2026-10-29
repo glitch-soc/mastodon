@@ -18,8 +18,9 @@ import { Popover } from '@/flavours/glitch/components/popover';
 import { useToggle } from '@/flavours/glitch/hooks/useToggle';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
+import classes from '../styles.module.scss';
+
 import { PER_LINE, selectFrequentlyUsedEmoji } from './selectors';
-import classes from './styles.module.scss';
 
 export type OnEmojiPick = (emoji: EmojiData) => void;
 

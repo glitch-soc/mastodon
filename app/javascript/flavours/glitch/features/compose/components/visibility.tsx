@@ -26,8 +26,9 @@ import {
 import { Tooltip } from '@/flavours/glitch/components/tooltip';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
+import classes from '../styles.module.scss';
+
 import { selectComposePrivacy } from './selectors';
-import classes from './styles.module.scss';
 
 export const ComposeVisibility: React.FC<{ className?: string }> = ({
   className,

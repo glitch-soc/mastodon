@@ -25,8 +25,12 @@ import {
 import { useSortableList } from '@/flavours/glitch/components/sortable_list/hooks';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
+import {
+  selectComposeAttachment,
+  selectComposeAttachments,
+} from '../components/selectors';
+
 import classes from './modals.module.scss';
-import { selectComposeAttachment, selectComposeAttachments } from './selectors';
 
 const messages = defineMessages({
   screenReaderInstructions: {

@@ -6,8 +6,8 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
+import { Search } from '@/flavours/glitch/components/search';
 import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import { Search } from 'flavours/glitch/features/compose/components/search';
 import { useIdentity } from 'flavours/glitch/identity_context';
 
 import Links from './links';

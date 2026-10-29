@@ -9,7 +9,7 @@ import { statusLink } from '@/flavours/glitch/components/status/utils';
 import { selectAccountStatus } from '@/flavours/glitch/selectors/statuses';
 import { useAppSelector } from '@/flavours/glitch/store';
 
-import classes from './styles.module.scss';
+import classes from '../styles.module.scss';
 
 export const ComposeReply: React.FC = () => {
   const replyId = useAppSelector(

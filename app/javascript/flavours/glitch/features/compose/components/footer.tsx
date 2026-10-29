@@ -22,6 +22,8 @@ import {
   useAppSelector,
 } from '@/flavours/glitch/store';
 
+import classes from '../styles.module.scss';
+
 import type { OnEmojiPick } from './emoji';
 import { ComposeEmojiButton } from './emoji';
 import {
@@ -30,7 +32,6 @@ import {
   selectComposeHasAttachments,
   selectComposeType,
 } from './selectors';
-import classes from './styles.module.scss';
 
 export const ComposeFooter: React.FC<{ onEmojiPick: OnEmojiPick }> = ({
   onEmojiPick,

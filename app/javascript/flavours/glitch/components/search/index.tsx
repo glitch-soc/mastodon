@@ -39,7 +39,7 @@ import type { RecentSearch, SearchType } from 'flavours/glitch/models/search';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
 import { HASHTAG_REGEX } from 'flavours/glitch/utils/hashtags';
 
-import classes from './search.module.scss';
+import classes from './styles.module.scss';
 
 const messages = defineMessages({
   placeholder: { id: 'search.placeholder', defaultMessage: 'Search' },

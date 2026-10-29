@@ -22,7 +22,7 @@ import {
 } from '@/flavours/glitch/components/modal_shell/redesign';
 import { StatusBoostIcon } from '@/flavours/glitch/components/status/icons';
 import { QuotedStatus } from '@/flavours/glitch/components/status/quote';
-import { ComposeVisibilityButtonText } from '@/flavours/glitch/features/compose/redesign/visibility';
+import { ComposeVisibilityButtonText } from '@/flavours/glitch/features/compose/components/visibility';
 import { useStatus } from '@/flavours/glitch/hooks/useStatus';
 import type { StatusVisibility } from '@/flavours/glitch/models/status';
 import { useAppSelector } from '@/flavours/glitch/store';

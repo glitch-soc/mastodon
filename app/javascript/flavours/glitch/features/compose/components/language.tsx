@@ -14,8 +14,9 @@ import { useToggle } from '@/flavours/glitch/hooks/useToggle';
 import { languages as initialStateLanguages } from '@/flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
+import classes from '../styles.module.scss';
+
 import { useLanguageList } from './hooks';
-import classes from './styles.module.scss';
 
 const messages = defineMessages({
   searchPlaceholder: {

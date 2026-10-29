@@ -8,7 +8,6 @@ import {
 } from '@/flavours/glitch/api/interactions';
 import { browserHistory } from '@/flavours/glitch/components/router';
 import type { StatusContextType } from '@/flavours/glitch/components/status/types';
-import type { VisibilityModalCallback } from '@/flavours/glitch/features/ui/components/visibility_modal';
 import type {
   StatusShape,
   StatusVisibility,
@@ -38,7 +37,6 @@ import {
   deleteStatus,
   editStatus,
   muteStatus,
-  setStatusQuotePolicy,
   translateStatus,
   undoStatusTranslation,
   unmuteStatus,
@@ -48,7 +46,6 @@ export type StatusInteractionIntent =
   | 'bookmark'
   | 'copy'
   | 'delete'
-  | 'editQuotePolicy'
   | 'edit'
   | 'embed'
   | 'favourite'
@@ -190,19 +187,6 @@ export const statusInteraction = createAppThunk(
         }
         return;
       }
-      case 'editQuotePolicy':
-        dispatch(
-          openModal({
-            modalType: 'COMPOSE_PRIVACY',
-            modalProps: {
-              statusId,
-              onChange: ((_, policy) => {
-                void dispatch(setStatusQuotePolicy({ statusId, policy }));
-              }) satisfies VisibilityModalCallback,
-            },
-          }),
-        );
-        return;
       case 'embed':
         dispatch(
           openModal({
