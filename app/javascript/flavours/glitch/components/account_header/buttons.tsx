@@ -11,7 +11,6 @@ import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useFollowReference } from '@/flavours/glitch/hooks/useFollowReference';
 import { getAccountHidden } from '@/flavours/glitch/selectors/accounts';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 import { Button, IconButton } from '../button/redesign';
 import { CopyIconButton } from '../copy_button';
@@ -97,10 +96,10 @@ const AccountButtonsOther: FC<
     <>
       {!isFollowing && !isMovedAndUnfollowedAccount && (
         <FollowButton
-          compact={isRedesignEnabled()}
           accountId={accountId}
           className={classes.followButton}
           withUnmute={false}
+          size='sm'
           labelLength='long'
           reference={reference}
         />
