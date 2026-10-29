@@ -4,6 +4,7 @@ import { useCallback, useEffect, useId } from 'react';
 import classNames from 'classnames';
 
 import { insertEmojiCompose } from '@/flavours/glitch/actions/compose';
+import type { OnEmojiPick } from '@/flavours/glitch/components/emoji/picker';
 import { normalizeKey } from '@/flavours/glitch/components/hotkeys/utils';
 import {
   closeComposer,
@@ -14,7 +15,6 @@ import {
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
 import { ComposeAttachments } from './components/attachments';
-import type { OnEmojiPick } from './components/emoji';
 import { ComposeFooter } from './components/footer';
 import { ComposeFormHeader } from './components/header';
 import { ComposeHints } from './components/hints';
