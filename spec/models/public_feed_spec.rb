@@ -584,5 +584,59 @@ RSpec.describe PublicFeed do
         end
       end
     end
+
+    context 'with with_reblogs true' do
+      subject { described_class.new(viewer, with_reblogs: true).get(20).map(&:id) }
+
+      let!(:viewer)  { Fabricate(:account, domain: nil) }
+      let!(:booster) { Fabricate(:account, domain: nil) }
+      let!(:boosted) { Fabricate(:account, domain: nil) }
+      let!(:status) { Fabricate(:status, account: boosted) }
+      let!(:boost) { Fabricate(:status, account: booster, reblog_of_id: status.id) }
+
+      shared_examples 'shows boost' do
+        it 'shows boosts in public feeds' do
+          expect(subject).to include(boost.id)
+        end
+      end
+
+      shared_examples 'does not show boost' do
+        it 'does not show boosts in public feeds' do
+          expect(subject).to_not include(boost.id)
+        end
+      end
+
+      it_behaves_like 'shows boost'
+
+      context 'with a local_only option set' do
+        subject { described_class.new(viewer, with_reblogs: true, local: true).get(20).map(&:id) }
+
+        context 'with a remote booster' do
+          let!(:booster) { Fabricate(:account, domain: 'other.net') }
+
+          it_behaves_like 'does not show boost'
+        end
+
+        context 'with a remote status' do
+          let!(:boosted) { Fabricate(:account, domain: 'other.net') }
+
+          it_behaves_like 'shows boost'
+
+          context 'with a remote booster' do
+            let!(:booster) { Fabricate(:account, domain: 'other.net') }
+
+            it_behaves_like 'does not show boost'
+          end
+        end
+
+        context 'when hiding boosts from a followed account' do
+          before do
+            Fabricate(:follow, account: viewer, target_account: booster, show_reblogs: false)
+          end
+
+          it_behaves_like 'does not show boost'
+        end
+      end
+    end
   end
 end
