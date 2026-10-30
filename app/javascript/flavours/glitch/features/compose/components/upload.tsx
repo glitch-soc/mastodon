@@ -14,7 +14,6 @@ import {
 import { undoUploadCompose } from '@/flavours/glitch/actions/compose';
 import { openModal } from '@/flavours/glitch/actions/modal';
 import type { ApiAudioAttachmentJSON } from '@/flavours/glitch/api_types/media_attachments';
-import { Blurhash } from '@/flavours/glitch/components/blurhash';
 import {
   Button,
   IconButton,
@@ -66,10 +65,6 @@ export const ComposeUpload: React.FC<{
       className={classNames(className, classes.mediaUpload)}
       sensitive={mediaSensitive}
     >
-      {mediaSensitive && attachment.blurhash && (
-        <Blurhash hash={attachment.blurhash} className={classes.blurHash} />
-      )}
-
       <Button
         contrastOnMedia
         size='sm'
