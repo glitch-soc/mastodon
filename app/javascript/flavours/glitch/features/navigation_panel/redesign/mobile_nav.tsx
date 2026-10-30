@@ -26,7 +26,7 @@ import {
 } from '@/flavours/glitch/components/button/redesign';
 import { Menu, MenuList, MenuTrigger } from '@/flavours/glitch/components/menu';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
-import { ComposeRedesignButton } from '@/flavours/glitch/features/compose/redesign/trigger';
+import { ComposeButton } from '@/flavours/glitch/features/compose/trigger';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
@@ -124,7 +124,7 @@ export const RedesignMobileNavigation: React.FC = () => {
               </MenuList>
             </Menu>
           </ul>
-          <ComposeRedesignButton inline />
+          <ComposeButton inline />
         </nav>
       ) : (
         // Logged out state:

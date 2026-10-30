@@ -4,8 +4,9 @@ import { defineMessages, useIntl, FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { DotsThreeIcon } from '@phosphor-icons/react';
+
 import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
-import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import {
   blockAccount,
   unblockAccount,
@@ -21,10 +22,8 @@ import { initMuteModal } from 'flavours/glitch/actions/mutes';
 import { apiFollowAccount } from 'flavours/glitch/api/accounts';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { VerifiedBadge } from 'flavours/glitch/components/badge';
-import { Button } from 'flavours/glitch/components/button';
 import { FollowersCounter } from 'flavours/glitch/components/counters';
 import { DisplayName } from 'flavours/glitch/components/display_name';
-import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
 import { FollowButton } from 'flavours/glitch/components/follow_button';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 import { ShortNumber } from 'flavours/glitch/components/short_number';
@@ -34,6 +33,8 @@ import { me } from 'flavours/glitch/initial_state';
 import type { MenuItem } from 'flavours/glitch/models/dropdown_menu';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
 
+import { IconButton, Button } from '../button/redesign';
+import { LegacyDropdownMenuItems, Menu, MenuList, MenuTrigger } from '../menu';
 import { Permalink } from '../permalink';
 
 const messages = defineMessages({
@@ -245,35 +246,35 @@ export const Account: React.FC<AccountProps> = ({
 
   if (menu.length > 0 && withMenu) {
     dropdown = (
-      <Dropdown
-        items={menu}
-        icon='ellipsis-h'
-        iconComponent={MoreHorizIcon}
-        title={intl.formatMessage(messages.more)}
-      />
+      <Menu>
+        <MenuTrigger as={IconButton} icon={DotsThreeIcon} size='sm'>
+          {intl.formatMessage(messages.more)}
+        </MenuTrigger>
+        <MenuList>
+          <LegacyDropdownMenuItems items={menu} />
+        </MenuList>
+      </Menu>
     );
   }
 
   if (defaultAction === 'block') {
     button = (
-      <Button
-        text={intl.formatMessage(
+      <Button onClick={handleBlock} size='sm'>
+        {intl.formatMessage(
           relationship?.blocking ? messages.unblock : messages.block,
         )}
-        onClick={handleBlock}
-      />
+      </Button>
     );
   } else if (defaultAction === 'mute') {
     button = (
-      <Button
-        text={intl.formatMessage(
+      <Button onClick={handleMute} size='sm'>
+        {intl.formatMessage(
           relationship?.muting ? messages.unmute : messages.mute,
         )}
-        onClick={handleMute}
-      />
+      </Button>
     );
   } else {
-    button = <FollowButton accountId={id} reference={reference} />;
+    button = <FollowButton accountId={id} reference={reference} size='sm' />;
   }
 
   let muteTimeRemaining: React.ReactNode;

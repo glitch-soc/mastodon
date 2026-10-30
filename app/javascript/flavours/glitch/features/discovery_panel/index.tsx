@@ -1,6 +1,6 @@
 import { useRouteMatch } from 'react-router';
 
-import { Search } from '@/flavours/glitch/features/compose/components/search';
+import { Search } from '@/flavours/glitch/components/search';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import { includeMultiColumnPaths } from '@/flavours/glitch/utils/react_router';
 

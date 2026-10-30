@@ -13,11 +13,13 @@ import {
 import type { ApiAnnouncementReactionJSON } from '@/flavours/glitch/api_types/announcements';
 import { AnimatedNumber } from '@/flavours/glitch/components/animated_number';
 import { Emoji } from '@/flavours/glitch/components/emoji';
-import { Icon } from '@/flavours/glitch/components/icon';
-import EmojiPickerDropdown from '@/flavours/glitch/features/compose/containers/emoji_picker_dropdown_container';
+import type { OnEmojiPick } from '@/flavours/glitch/components/emoji/picker';
+import {
+  EmojiPickerButton,
+  emojiToString,
+} from '@/flavours/glitch/components/emoji/picker';
 import { isUnicodeEmoji } from '@/flavours/glitch/features/emoji/utils';
 import { useAppDispatch } from '@/flavours/glitch/store';
-import AddIcon from '@/material-icons/400-24px/add.svg?react';
 
 export const ReactionsBar: FC<{
   reactions: ApiAnnouncementReactionJSON[];
@@ -29,9 +31,9 @@ export const ReactionsBar: FC<{
   );
 
   const dispatch = useAppDispatch();
-  const handleEmojiPick = useCallback(
-    (emoji: { native: string }) => {
-      dispatch(addReaction(id, emoji.native.replaceAll(/:/g, '')));
+  const handleEmojiPick: OnEmojiPick = useCallback(
+    (emoji) => {
+      dispatch(addReaction(id, emojiToString(emoji).replaceAll(/:/g, '')));
     },
     [dispatch, id],
   );
@@ -65,10 +67,7 @@ export const ReactionsBar: FC<{
       ))}
 
       {visibleReactions.length < 8 && (
-        <EmojiPickerDropdown
-          onPickEmoji={handleEmojiPick}
-          button={<Icon id='plus' icon={AddIcon} />}
-        />
+        <EmojiPickerButton onPick={handleEmojiPick} placement='bottom-start' />
       )}
     </div>
   );

@@ -1,13 +1,12 @@
 import { AlertsController } from '@/flavours/glitch/components/alerts_controller';
+import { ComposeForm } from '@/flavours/glitch/features/compose/form';
 import LoadingBarContainer from '@/flavours/glitch/features/ui/containers/loading_bar_container';
 import ModalContainer from '@/flavours/glitch/features/ui/containers/modal_container';
-
-import { RedesignComposeForm } from '../../compose/redesign';
 
 export const Compose: React.FC = () => {
   return (
     <>
-      <RedesignComposeForm autoFocus headless redirectOnSuccess />
+      <ComposeForm autoFocus headless redirectOnSuccess />
       <AlertsController />
       <ModalContainer />
       <LoadingBarContainer className='loading-bar' />

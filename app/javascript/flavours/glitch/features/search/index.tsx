@@ -12,6 +12,7 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
+import { Search } from '@/flavours/glitch/components/search';
 import { submitSearch, expandSearch } from 'flavours/glitch/actions/search';
 import type { ApiSearchType } from 'flavours/glitch/api_types/search';
 import { Account } from 'flavours/glitch/components/account';
@@ -19,7 +20,6 @@ import { CompatibilityHashtag as Hashtag } from 'flavours/glitch/components/hash
 import { Icon } from 'flavours/glitch/components/icon';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import { Status } from 'flavours/glitch/components/status';
-import { Search } from 'flavours/glitch/features/compose/components/search';
 import { useSearchParam } from 'flavours/glitch/hooks/useSearchParam';
 import type { Hashtag as HashtagType } from 'flavours/glitch/models/tags';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
