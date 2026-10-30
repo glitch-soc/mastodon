@@ -16,6 +16,8 @@ import { useSpring, animated } from '@react-spring/web';
 import Textarea from 'react-textarea-autosize';
 import { length } from 'stringz';
 
+import { CharacterCounter } from '@/flavours/glitch/components/character_counter';
+import { Tesseract as fetchTesseract } from '@/flavours/glitch/features/ui/util/async-components';
 import { showAlertForError } from 'flavours/glitch/actions/alerts';
 import { uploadThumbnail } from 'flavours/glitch/actions/compose';
 import { changeUploadCompose } from 'flavours/glitch/actions/compose_typed';
@@ -25,8 +27,6 @@ import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import { Audio } from 'flavours/glitch/features/audio';
-import { CharacterCounter } from 'flavours/glitch/features/compose/components/character_counter';
-import { Tesseract as fetchTesseract } from 'flavours/glitch/features/ui/util/async-components';
 import { Video, getPointerPosition } from 'flavours/glitch/features/video';
 import { me } from 'flavours/glitch/initial_state';
 import type { MediaAttachment } from 'flavours/glitch/models/media_attachment';
@@ -418,8 +418,8 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
             className='dialog-modal__header__title'
           >
             <FormattedMessage
-              id='alt_text_modal.add_alt_text'
-              defaultMessage='Add alt text'
+              id='account_edit.image_alt_modal.edit_title'
+              defaultMessage='Edit alt text'
             />
           </NavigationFocusTarget>
 
@@ -485,8 +485,8 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
 
               <div className='input__toolbar'>
                 <CharacterCounter
-                  max={MAX_LENGTH}
-                  text={isDetecting ? '' : description}
+                  maxLength={MAX_LENGTH}
+                  currentString={isDetecting ? '' : description}
                 />
 
                 <div className='spacer' />
