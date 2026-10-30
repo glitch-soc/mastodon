@@ -9,6 +9,7 @@ import type {
   ApiVideoAttachmentJSON,
 } from '@/flavours/glitch/api_types/media_attachments';
 import { Blurhash } from '@/flavours/glitch/components/blurhash';
+import { useBlurhash } from '@/flavours/glitch/initial_state';
 import type { MediaAttachmentShape } from '@/flavours/glitch/models/status';
 import { useAppDispatch } from '@/flavours/glitch/store';
 import type { PolymorphicProps } from '@/types/polymorphic';
@@ -75,7 +76,11 @@ export const StatusImage = <As extends React.ElementType = 'div'>({
       data-color-scheme='dark'
     >
       {sensitive && attachment.blurhash && (
-        <Blurhash hash={attachment.blurhash} className={classes.blurHash} />
+        <Blurhash
+          hash={attachment.blurhash}
+          className={classes.blurHash}
+          dummy={!useBlurhash}
+        />
       )}
 
       {children}
