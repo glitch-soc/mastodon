@@ -1,1 +1,26 @@
+---
 eo:
+  simple_form:
+    glitch_only: glitch-soc
+    hints:
+      defaults:
+        setting_default_content_type_html: Dum skribado de afiŝoj, implicite legi ilin per HTML-formato, krome se specifita alie
+        setting_default_content_type_markdown: Dum skribado de afiŝoj, implicite legi ilin per Markdown-formato, krome se specifita alie
+        setting_default_content_type_plain: Dum skribado de afiŝoj, implicite legi ilin kiel senformata teksto, krome se specifita alie (defaŭlta konduto de Mastodon)
+        setting_default_language: Lingvo de viaj afiŝoj povas esti aŭtomate detektita, sed ĝi ne estas ĉiam preciza
+        setting_show_followers_count: Montri nombron de viaj sekvantoj sur via profilo. Se vi kaŝas nombron de viaj sekvantoj, ĝi estos kaŝita eĉ por vi mem, kaj iuj aplikaĵoj povas montri negativan nombron de sekvantoj.
+        setting_skin: Ŝanĝas aspekton de elektita etoso de Mastodon
+    labels:
+      defaults:
+        setting_default_content_type: Implicita formato por afiŝoj
+        setting_default_content_type_html: HTML
+        setting_default_content_type_markdown: Markdown
+        setting_default_content_type_plain: Plata teksto
+        setting_favourite_modal: Montri konfirman dialogon antaŭ ŝatado (nur por gustumo Glitch)
+        setting_show_followers_count: Montri nombron de sekvantoj
+        setting_skin: Etoso
+        setting_system_emoji_font: Uzi implicitan tiparon de operaciumo por emoĝioj (nur por gustumo Glitch)
+      notification_emails:
+        trending_link: Nova furora ligilo bezonas revizion
+        trending_status: Nova furora afiŝo bezonas revizion
+        trending_tag: Nova furora kradvorto bezonas revizion
