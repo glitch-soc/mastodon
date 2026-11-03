@@ -30,7 +30,7 @@ class CustomEmoji < ApplicationRecord
   MAX_SHORTCODE_SIZE = 128
   MAX_FEDERATED_SHORTCODE_SIZE = 2048
 
-  SHORTCODE_RE_FRAGMENT = '[a-zA-Z0-9_]{2,}'
+  SHORTCODE_RE_FRAGMENT = '(([[:alnum:]])|_){2,}'
 
   SCAN_RE = /(?<=[^[:alnum:]:]|\n|^)
     :(#{SHORTCODE_RE_FRAGMENT}):
