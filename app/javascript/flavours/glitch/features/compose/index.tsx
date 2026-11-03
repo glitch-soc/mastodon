@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState, Suspense, lazy } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 
 import { useIntl, defineMessages } from 'react-intl';
 
@@ -11,7 +11,7 @@ import { Helmet } from '@unhead/react/helmet';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
-import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
+import { Search } from '@/flavours/glitch/components/search';
 import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import elephantUIPlane from '@/images/elephant_ui_plane.svg';
 import EditIcon from '@/material-icons/400-24px/edit_square.svg?react';
@@ -33,8 +33,7 @@ import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 import { messages as navbarMessages } from '../ui/components/navigation_bar';
 
-import { Search } from './components/search';
-import ComposeFormContainer from './containers/compose_form_container';
+import { ComposeForm } from './form';
 
 const messages = defineMessages({
   live_feed_public: {
@@ -219,7 +218,7 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
           aria-label={intl.formatMessage(navbarMessages.publish)}
         >
           <div className='drawer__inner'>
-            <ComposeFormContainer />
+            <ComposeForm headless />
 
             {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events -- this is not a feature but a visual easter egg */}
             <div
@@ -255,13 +254,7 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
       )}
 
       <div className='scrollable scrollable--flex'>
-        {isRedesignEnabled() ? (
-          <Suspense fallback={<LoadingIndicator />}>
-            <ComposeLazyForm autoFocus headless />
-          </Suspense>
-        ) : (
-          <ComposeFormContainer autoFocus />
-        )}
+        <ComposeForm autoFocus headless />
       </div>
 
       <Helmet>
@@ -270,12 +263,6 @@ const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
     </Column>
   );
 };
-
-const ComposeLazyForm = lazy(() =>
-  import('./redesign/index').then(({ RedesignComposeForm }) => ({
-    default: RedesignComposeForm,
-  })),
-);
 
 // eslint-disable-next-line import/no-default-export
 export default Compose;

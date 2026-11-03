@@ -9,7 +9,7 @@ import type { ModalType } from '@/flavours/glitch/actions/modal';
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { AccountBio } from '@/flavours/glitch/components/account_bio';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { Button } from '@/flavours/glitch/components/button';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { DismissibleCallout } from '@/flavours/glitch/components/callout/dismissible';
 import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
 import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
@@ -265,6 +265,7 @@ export const AccountEdit: FC = () => {
                 <Button
                   className={classes.editButton}
                   onClick={handleCustomFieldReorder}
+                  size='sm'
                 >
                   <FormattedMessage
                     id='account_edit.custom_fields.reorder_button'
@@ -296,7 +297,10 @@ export const AccountEdit: FC = () => {
           <Button
             onClick={handleCustomFieldsVerifiedHelp}
             className={classes.verifiedLinkHelpButton}
-            plain
+            variant='ghost'
+            color='neutral'
+            size='sm'
+            clipPadding
           >
             <FormattedMessage
               id='account_edit.custom_fields.verified_hint'
@@ -339,6 +343,7 @@ export const AccountEdit: FC = () => {
             <Button
               className={classes.editButton}
               onClick={handleProfileDisplayEdit}
+              size='sm'
             >
               <FormattedMessage
                 id='account_edit.profile_tab.button_label'

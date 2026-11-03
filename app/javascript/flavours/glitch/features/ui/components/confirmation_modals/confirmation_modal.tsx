@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
-import { Button } from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button/redesign';
 import {
   ModalShell,
   ModalShellActions,
@@ -94,26 +94,21 @@ export const ConfirmationModal: React.FC<
       </ModalShellBody>
 
       <ModalShellActions>
-        <button onClick={onClose} className='link-button' type='button'>
+        <Button onClick={onClose}>
           {cancel ?? (
             <FormattedMessage
               id='confirmation_modal.cancel'
               defaultMessage='Cancel'
             />
           )}
-        </button>
+        </Button>
 
         {secondary && (
           <>
             <div className='spacer' />
-            <button
-              onClick={handleSecondary}
-              className='link-button'
-              type='button'
-              disabled={disabled}
-            >
+            <Button onClick={handleSecondary} disabled={disabled}>
               {secondary}
-            </button>
+            </Button>
           </>
         )}
 
@@ -122,6 +117,8 @@ export const ConfirmationModal: React.FC<
           loading={updating}
           disabled={disabled}
           autoFocus={!noFocusButton}
+          variant='solid'
+          color='accent'
         >
           {confirm}
         </Button>

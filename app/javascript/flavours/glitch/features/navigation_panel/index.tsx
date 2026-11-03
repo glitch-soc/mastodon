@@ -11,6 +11,7 @@ import type { Map as ImmutableMap } from 'immutable';
 import { animated, useSpring } from '@react-spring/web';
 import { useDrag } from '@use-gesture/react';
 
+import { Search } from '@/flavours/glitch/components/search';
 import {
   StatusBookmarkActiveIcon,
   StatusBookmarkIcon,
@@ -41,7 +42,6 @@ import {
 } from 'flavours/glitch/actions/navigation';
 import { Account } from 'flavours/glitch/components/account';
 import { IconWithBadge } from 'flavours/glitch/components/icon_with_badge';
-import { Search } from 'flavours/glitch/features/compose/components/search';
 import { ColumnLink } from 'flavours/glitch/features/ui/components/column_link';
 import { getNavigationSkipLinkId } from 'flavours/glitch/features/ui/components/skip_links';
 import { useBreakpoint } from 'flavours/glitch/features/ui/hooks/useBreakpoint';

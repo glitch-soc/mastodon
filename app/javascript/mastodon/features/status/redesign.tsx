@@ -23,6 +23,7 @@ import {
   FOCUS_TARGET,
   NavigationFocusTarget,
 } from '@/mastodon/components/navigation_focus_target';
+import { Scrollable } from '@/mastodon/components/scrollable_list/components';
 import {
   useStatusMenuActions,
   useTextForScreenReader,
@@ -33,7 +34,6 @@ import {
 } from '@/mastodon/components/status/icons';
 import { StatusRedesign as Status } from '@/mastodon/components/status/status';
 import { ScrollContainer } from '@/mastodon/containers/scroll_container';
-import type { ShouldUpdateScrollFn } from '@/mastodon/containers/scroll_container/default_should_update_scroll';
 import { useExpandedStatus } from '@/mastodon/hooks/useStatus';
 import type { ExpandedStatusShape } from '@/mastodon/models/status';
 import {
@@ -108,12 +108,18 @@ export const StatusPage: React.FC = () => {
 
   const screenReaderText = useTextForScreenReader({ statusId });
 
-  // Scroll into view when the main status changes or ancestors change.
-  const statusFocusRef = useRef<HTMLDivElement>(null);
+  // Set initial scroll position once the main post and its ancestors have loaded.
+  // (If there are no ancestors, there's no need to scroll.)
+  // Subsequent in-thread post navigation is handled by NavigationFocusTarget.
+  const mainStatusRef = useRef<HTMLDivElement>(null);
+  const preventInitialPageScrollRef = useRef(false);
   const hasStatus = !!status;
   const lastScrolledRef = useRef<{ statusId: string; ancestors: number }>(null);
   useEffect(() => {
-    const node = statusFocusRef.current;
+    if (preventInitialPageScrollRef.current) {
+      return;
+    }
+    const node = mainStatusRef.current;
     if (!node) {
       lastScrolledRef.current = null;
       return;
@@ -126,25 +132,11 @@ export const StatusPage: React.FC = () => {
     lastScrolledRef.current = { statusId, ancestors: ancestorIds.length };
   }, [statusId, ancestorIds.length, isLoading, hasStatus]);
 
-  const shouldUpdateScroll: ShouldUpdateScrollFn = useCallback(
-    (prevLocation, location) => {
-      // Do not change scroll when opening a modal
-      if (
-        location.state?.mastodonModalKey !==
-        prevLocation?.state?.mastodonModalKey
-      ) {
-        return false;
-      }
-
-      // Scroll to focused post if it is loaded
-      if (statusFocusRef.current) {
-        return [0, statusFocusRef.current.offsetTop];
-      }
-
-      return false;
-    },
-    [],
-  );
+  // If focus & scroll position was handled by NavigationFocusTarget,
+  // we prevent it in the effect above
+  const onAfterNavigationFocus = useCallback((wasFocusSet: boolean) => {
+    preventInitialPageScrollRef.current = wasFocusSet;
+  }, []);
 
   const handleBookmarkClick = useCallback(() => {
     dispatch(
@@ -156,7 +148,7 @@ export const StatusPage: React.FC = () => {
     );
   }, [dispatch, statusId]);
 
-  if (isLoading) {
+  if (!hasStatus && isLoading) {
     return (
       <Column>
         <LoadingIndicator />
@@ -164,7 +156,7 @@ export const StatusPage: React.FC = () => {
     );
   }
 
-  if (!status) {
+  if (!hasStatus) {
     return <BundleColumnError multiColumn={multiColumn} errorType='routing' />;
   }
 
@@ -252,37 +244,33 @@ export const StatusPage: React.FC = () => {
         }
       />
 
-      <ScrollContainer
-        scrollKey='thread'
-        shouldUpdateScroll={shouldUpdateScroll}
-      >
-        <div
-          className={classNames('item-list scrollable', {
-            fullscreen,
-          })}
-        >
+      <ScrollContainer scrollKey='thread'>
+        <Scrollable className={classNames({ fullscreen })}>
           {
             // Length needs to be greater than 1, as ancestorIds includes the current root ID.
             ancestorIds.length > 1 && (
-              <div className={classes.thread}>
+              <div className={classNames(classes.thread, 'item-list')}>
                 <StatusRelativeList statusIds={ancestorIds} rootId={statusId} />
               </div>
             )
           }
 
           <NavigationFocusTarget
+            scrollIntoViewOnFocus
+            key={statusId}
             as='div'
             focusTargetName={FOCUS_TARGET.POST}
-            className={classes.mainStatus}
+            className={classNames('item-list', classes.mainStatus)}
             tabIndex={0}
-            ref={statusFocusRef}
+            ref={mainStatusRef}
+            onAfterFocus={onAfterNavigationFocus}
             aria-label={screenReaderText}
           >
             <Status id={statusId} contextType='detailed' />
           </NavigationFocusTarget>
 
           {descendantIds.length > 0 && (
-            <div className={classes.thread}>
+            <div className={classNames(classes.thread, 'item-list')}>
               <StatusRelativeList
                 statusIds={descendantIds}
                 rootId={statusId}
@@ -310,7 +298,7 @@ export const StatusPage: React.FC = () => {
             statusId={status.id}
             statusCreatedAt={status.created_at}
           />
-        </div>
+        </Scrollable>
       </ScrollContainer>
 
       <Helmet>
@@ -328,7 +316,11 @@ export const StatusPage: React.FC = () => {
 const StatusMenuItems: React.FC<{ status: ExpandedStatusShape }> = ({
   status,
 }) => {
-  const menu = useStatusMenuActions({ status, contextType: 'detailed' });
+  const menu = useStatusMenuActions({
+    status,
+    reblogStatus: null, // Boosts are only shown in feeds
+    contextType: 'detailed',
+  });
 
   return <LegacyDropdownMenuItems items={menu} />;
 };

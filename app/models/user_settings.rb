@@ -19,6 +19,7 @@ class UserSettings
   setting :default_content_type, default: 'text/plain'
   setting :hide_followers_count, default: false
   setting :default_quote_policy, default: 'public', in: %w(public followers nobody)
+  setting :default_spoiler_field, default: false
   setting :email_subscriptions, default: false
   setting :display_own_boosts, default: false
   setting :display_own_posts, default: true
@@ -47,6 +48,7 @@ class UserSettings
     setting :emoji_style, default: 'auto', in: %w(auto native twemoji)
     setting :color_scheme, default: 'auto', in: %w(auto light dark)
     setting :contrast, default: 'auto', in: %w(auto high)
+    setting :theme_color, default: 'indigo' # TODO: dynamic inclusion checking?
   end
 
   namespace :notification_emails do
@@ -64,6 +66,7 @@ class UserSettings
     setting :appeal, default: true
     setting :software_updates, default: 'critical', in: %w(none critical patch all)
     setting :end_of_support, default: true
+    setting :moderation_suggestions, default: true
   end
 
   namespace :interactions do

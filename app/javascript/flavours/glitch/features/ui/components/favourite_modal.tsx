@@ -4,10 +4,10 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { QuotedStatus } from '@/flavours/glitch/components/status/quote';
 import StarIcon from '@/material-icons/400-24px/star.svg?react';
 import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
-import { EmbeddedStatus } from 'flavours/glitch/features/notifications_v2/components/embedded_status';
 import type { Status } from 'flavours/glitch/models/status';
 
 const messages = defineMessages({
@@ -64,7 +64,7 @@ export const FavouriteModal: React.FC<{
         </div>
 
         <div className='safety-action-modal__status'>
-          <EmbeddedStatus statusId={statusId} />
+          <QuotedStatus id={statusId} disableOpen />
         </div>
       </div>
 
