@@ -21,7 +21,6 @@ import { QuotedStatus } from '@/flavours/glitch/components/status/legacy/quoted'
 import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import HomeIcon from '@/material-icons/400-24px/home.svg?react';
 import { AnimatedNumber } from 'flavours/glitch/components/animated_number';
-import AttachmentList from 'flavours/glitch/components/attachment_list';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { EditedTimestamp } from 'flavours/glitch/components/edited_timestamp';
@@ -222,14 +221,6 @@ export const DetailedStatus: React.FC<{
     mediaIcons.push('video-camera');
   } else if (status.get('media_attachments').size > 0) {
     if (
-      status
-        .get('media_attachments')
-        .some(
-          (item: Immutable.Map<string, any>) => item.get('type') === 'unknown',
-        )
-    ) {
-      media = <AttachmentList media={status.get('media_attachments')} />;
-    } else if (
       ['image', 'gifv', 'unknown'].includes(
         status.getIn(['media_attachments', 0, 'type']) as string,
       ) ||
