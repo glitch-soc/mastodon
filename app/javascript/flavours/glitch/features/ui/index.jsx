@@ -95,7 +95,7 @@ import { CustomHomepage } from 'flavours/glitch/features/custom_homepage';
 
 // Dummy import, to make sure that <Status /> ends up in the application bundle.
 // Without this it ends up in ~8 very commonly used bundles.
-import '../../components/status/legacy/status';
+import '../../components/status';
 import { getNavigationSkipLinkId, SkipLinks } from './components/skip_links';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef } from 'react';
-import type { ComponentProps, FC } from 'react';
 
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { mergeProps } from '@react-aria/utils';
 import type { ApiMentionJSON } from '@/flavours/glitch/api_types/statuses';
 import { getCollectionPath } from '@/flavours/glitch/features/collections/utils';
 import { useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import type { OnElementHandler } from '@/flavours/glitch/utils/html';
 import { decodeIDNA } from 'flavours/glitch/utils/links';
 
@@ -117,7 +115,9 @@ export const tagMisleadingLink = (link: HTMLAnchorElement) => {
   }
 };
 
-export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
+export const HandledLink: React.FC<
+  HandledLinkProps & React.ComponentProps<'a'>
+> = ({
   href,
   text,
   prevText,
@@ -152,28 +152,15 @@ export const HandledLink: FC<HandledLinkProps & ComponentProps<'a'>> = ({
   ) {
     const hashtag = text.slice(1).trim();
 
-    if (isRedesignEnabled()) {
-      return (
-        <HashtagMenu tagId={hashtag} accountId={hashtagAccountId}>
-          <MenuTriggerText
-            className={classes.hashtag}
-            href={`/tags/${encodeURIComponent(hashtag)}`}
-          >
-            {children}
-          </MenuTriggerText>
-        </HashtagMenu>
-      );
-    }
-
     return (
-      <Link
-        className={classNames('mention hashtag', className)}
-        to={`/tags/${encodeURIComponent(hashtag)}`}
-        rel='tag'
-        data-menu-hashtag={hashtagAccountId}
-      >
-        {children}
-      </Link>
+      <HashtagMenu tagId={hashtag} accountId={hashtagAccountId}>
+        <MenuTriggerText
+          className={classes.hashtag}
+          href={`/tags/${encodeURIComponent(hashtag)}`}
+        >
+          {children}
+        </MenuTriggerText>
+      </HashtagMenu>
     );
   } else if (mention) {
     // glitch-soc feature to rewrite mentions
