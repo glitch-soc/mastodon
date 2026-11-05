@@ -2,29 +2,29 @@ import { useCallback, useMemo, useRef } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { PendingBadge } from '@/flavours/glitch/components/badge';
-import { SelectField } from '@/flavours/glitch/components/form_fields';
-import { useSearchParam } from '@/flavours/glitch/hooks/useSearchParam';
-import VisibilityOffIcon from '@/material-icons/400-24px/visibility_off.svg?react';
 import type {
   ApiCollectionJSON,
   CollectionAccountItem,
-} from 'flavours/glitch/api_types/collections';
-import type { RenderButtonOptions } from 'flavours/glitch/components/account_list_item';
+} from '@/flavours/glitch/api_types/collections';
+import type { RenderButtonOptions } from '@/flavours/glitch/components/account_list_item';
 import {
   AccountListItem,
   AccountListItemFollowButton,
-} from 'flavours/glitch/components/account_list_item';
-import { Button } from 'flavours/glitch/components/button';
+} from '@/flavours/glitch/components/account_list_item';
+import { PendingBadge } from '@/flavours/glitch/components/badge';
+import { Button } from '@/flavours/glitch/components/button/redesign';
+import { SelectField } from '@/flavours/glitch/components/form_fields';
 import {
   Article,
   ItemList,
-} from 'flavours/glitch/components/scrollable_list/components';
-import type { TruncatedListItemInfo } from 'flavours/glitch/components/truncated_list';
-import { TruncatedListItems } from 'flavours/glitch/components/truncated_list';
-import { me } from 'flavours/glitch/initial_state';
-import type { Account } from 'flavours/glitch/models/account';
-import { createAppSelector, useAppSelector } from 'flavours/glitch/store';
+} from '@/flavours/glitch/components/scrollable_list/components';
+import type { TruncatedListItemInfo } from '@/flavours/glitch/components/truncated_list';
+import { TruncatedListItems } from '@/flavours/glitch/components/truncated_list';
+import { useSearchParam } from '@/flavours/glitch/hooks/useSearchParam';
+import { me } from '@/flavours/glitch/initial_state';
+import type { Account } from '@/flavours/glitch/models/account';
+import { createAppSelector, useAppSelector } from '@/flavours/glitch/store';
+import VisibilityOffIcon from '@/material-icons/400-24px/visibility_off.svg?react';
 
 import { useConfirmRevoke } from './revoke_collection_inclusion_modal';
 import classes from './styles.module.scss';
@@ -159,7 +159,7 @@ export const CollectionAccountsList: React.FC<{
 
       if (accountId === me) {
         return (
-          <Button secondary compact onClick={confirmRevoke}>
+          <Button size='sm' onClick={confirmRevoke}>
             <FormattedMessage
               id='collections.detail.revoke_inclusion'
               defaultMessage='Remove me'

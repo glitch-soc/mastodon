@@ -4,10 +4,9 @@ import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 
 import { isFulfilled } from '@reduxjs/toolkit';
 
+import { RssSimpleIcon, XIcon } from '@phosphor-icons/react';
+
 import { Toggle } from '@/flavours/glitch/components/form_fields';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
-import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
 import { fetchLists } from 'flavours/glitch/actions/lists';
 import { createList } from 'flavours/glitch/actions/lists_typed';
 import {
@@ -16,18 +15,13 @@ import {
   apiRemoveAccountFromList,
 } from 'flavours/glitch/api/lists';
 import type { ApiListJSON } from 'flavours/glitch/api_types/lists';
-import { Button } from 'flavours/glitch/components/button';
+import { Button, IconButton } from 'flavours/glitch/components/button/redesign';
 import { Icon } from 'flavours/glitch/components/icon';
-import { IconButton } from 'flavours/glitch/components/icon_button';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { getOrderedLists } from 'flavours/glitch/selectors/lists';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 const messages = defineMessages({
-  newList: {
-    id: 'lists.new_list_name',
-    defaultMessage: 'New list name',
-  },
   newFeed: {
     id: 'custom_feeds.new_feed_name',
     defaultMessage: 'New feed name',
@@ -60,7 +54,7 @@ const ListItem: React.FC<{
   return (
     <label className='lists__item' htmlFor={uniqueId}>
       <div className='lists__item__title'>
-        <Icon id='list-ul' icon={ListAltIcon} />
+        <Icon id='list-ul' icon={RssSimpleIcon} />
         <span>{title}</span>
       </div>
 
@@ -101,7 +95,7 @@ const NewListItem: React.FC<{
   return (
     <form className='lists__item' onSubmit={handleSubmit}>
       <label className='lists__item__title'>
-        <Icon id='list-ul' icon={ListAltIcon} />
+        <Icon id='list-ul' icon={RssSimpleIcon} />
 
         <input
           type='text'
@@ -109,13 +103,13 @@ const NewListItem: React.FC<{
           onChange={handleChange}
           maxLength={30}
           required
-          placeholder={intl.formatMessage(
-            isRedesignEnabled() ? messages.newFeed : messages.newList,
-          )}
+          placeholder={intl.formatMessage(messages.newFeed)}
         />
       </label>
 
-      <Button text={intl.formatMessage(messages.createList)} type='submit' />
+      <Button type='submit' variant='solid' color='accent' size='sm'>
+        {intl.formatMessage(messages.createList)}
+      </Button>
     </form>
   );
 };
@@ -184,26 +178,20 @@ const ListAdder: React.FC<{
       <div className='dialog-modal__header'>
         <IconButton
           className='dialog-modal__header__close'
-          title={intl.formatMessage(messages.close)}
-          icon='times'
-          iconComponent={CloseIcon}
+          icon={XIcon}
           onClick={onClose}
-        />
+          size='sm'
+          variant='ghost'
+        >
+          {intl.formatMessage(messages.close)}
+        </IconButton>
 
         <NavigationFocusTarget as='h1' className='dialog-modal__header__title'>
-          {isRedesignEnabled() ? (
-            <FormattedMessage
-              id='custom_feeds.add_to_feeds'
-              defaultMessage='Add {name} to custom feeds'
-              values={{ name: <strong>@{account?.acct}</strong> }}
-            />
-          ) : (
-            <FormattedMessage
-              id='lists.add_to_lists'
-              defaultMessage='Add {name} to lists'
-              values={{ name: <strong>@{account?.acct}</strong> }}
-            />
-          )}
+          <FormattedMessage
+            id='custom_feeds.add_to_feeds'
+            defaultMessage='Add {name} to custom feeds'
+            values={{ name: <strong>@{account?.acct}</strong> }}
+          />
         </NavigationFocusTarget>
       </div>
 

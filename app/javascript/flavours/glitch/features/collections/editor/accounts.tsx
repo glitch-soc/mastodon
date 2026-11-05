@@ -12,7 +12,7 @@ import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
 import { AccountListItem } from 'flavours/glitch/components/account_list_item';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { PendingBadge } from 'flavours/glitch/components/badge';
-import { Button } from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button/redesign';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { useAccountHandle } from 'flavours/glitch/components/display_name/default';
 import { EmptyState } from 'flavours/glitch/components/empty_state';
@@ -60,7 +60,7 @@ const AddedAccountItem: React.FC<{
 
   const renderButton = useCallback(
     () => (
-      <Button compact secondary onClick={handleRemoveAccount}>
+      <Button size='sm' onClick={handleRemoveAccount}>
         <FormattedMessage
           id='collections.remove_account'
           defaultMessage='Remove'
@@ -460,7 +460,7 @@ export const CollectionAccounts: React.FC<{
       </FormStack>
       {!isEditMode && hasItems && (
         <div className={classes.stickyFooter}>
-          <Button type='submit'>
+          <Button type='submit' variant='solid' color='accent'>
             {id ? (
               <FormattedMessage id='lists.save' defaultMessage='Save' />
             ) : (

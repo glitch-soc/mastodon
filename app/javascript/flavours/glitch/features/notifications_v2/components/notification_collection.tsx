@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { Button } from '@/flavours/glitch/components/button';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { LinkedDisplayName } from '@/flavours/glitch/components/display_name';
 import { Icon } from '@/flavours/glitch/components/icon';
 import { CollectionMenu } from '@/flavours/glitch/features/collections/components/collection_menu';
@@ -85,12 +85,7 @@ export const NotificationCollection: React.FC<{
         <CollectionPreviewCard collection={collection} />
 
         <div className={classes.actions}>
-          <Button
-            compact
-            secondary
-            className='button--destructive'
-            onClick={confirmRevoke}
-          >
+          <Button size='sm' onClick={confirmRevoke}>
             <FormattedMessage
               id='collections.detail.revoke_inclusion'
               defaultMessage='Remove me'

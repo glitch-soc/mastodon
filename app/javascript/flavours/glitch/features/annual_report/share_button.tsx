@@ -6,7 +6,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { showAlert } from '@/flavours/glitch/actions/alerts';
 import { resetCompose, focusCompose } from '@/flavours/glitch/actions/compose';
 import { closeModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import type { AnnualReport as AnnualReportData } from '@/flavours/glitch/models/annual_report';
 import { useAppDispatch } from '@/flavours/glitch/store';
 
@@ -79,18 +79,14 @@ export const ShareButton: FC<{ report: AnnualReportData }> = ({ report }) => {
 
   return (
     <div className={styles.shareButtonWrapper}>
-      <Button
-        text={intl.formatMessage(messages.share_on_mastodon)}
-        onClick={handleShareClick}
-      />
-      <Button
-        plain
-        className={styles.secondaryShareButton}
-        text={intl.formatMessage(
+      <Button onClick={handleShareClick} variant='solid' color='accent'>
+        {intl.formatMessage(messages.share_on_mastodon)}
+      </Button>
+      <Button color='accent' onClick={handleSecondaryShare}>
+        {intl.formatMessage(
           supportsNativeShare ? messages.share_elsewhere : messages.copy_link,
         )}
-        onClick={handleSecondaryShare}
-      />
+      </Button>
     </div>
   );
 };

@@ -3,10 +3,9 @@ import { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { revealAccount } from '@/flavours/glitch/actions/accounts_typed';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { domain } from '@/flavours/glitch/initial_state';
 import { useAppDispatch } from '@/flavours/glitch/store';
-
-import { Button } from './button';
 
 export const LimitedAccountHint: React.FC<{ accountId: string }> = ({
   accountId,

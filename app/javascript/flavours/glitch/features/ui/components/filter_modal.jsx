@@ -5,7 +5,6 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { ImmutablePureComponent } from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { fetchFilters, createFilter, createFilterStatus } from 'flavours/glitch/actions/filters';
 import { fetchStatus } from 'flavours/glitch/actions/statuses';
 import { IconButton } from 'flavours/glitch/components/button/redesign';

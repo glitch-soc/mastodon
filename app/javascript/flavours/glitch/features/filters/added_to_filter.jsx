@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import { Button } from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button/redesign';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { toServerSideType } from 'flavours/glitch/utils/filters';
 
@@ -98,7 +98,7 @@ class AddedToFilter extends PureComponent {
         <div className='flex-spacer' />
 
         <div className='report-dialog-modal__actions'>
-          <Button onClick={this.handleCloseClick}><FormattedMessage id='report.close' defaultMessage='Done' /></Button>
+          <Button variant='solid' color='accent' onClick={this.handleCloseClick}><FormattedMessage id='report.close' defaultMessage='Done' /></Button>
         </div>
       </>
     );

@@ -12,25 +12,27 @@ import { defineMessage, FormattedMessage, useIntl } from 'react-intl';
 
 import type { Map as ImmutableMap } from 'immutable';
 
+import { XIcon } from '@phosphor-icons/react';
 import type { Merge } from 'type-fest';
 
-import CancelFillIcon from '@/material-icons/400-24px/cancel-fill.svg?react';
-import { fetchRelationships } from 'flavours/glitch/actions/accounts';
-import { revealAccount } from 'flavours/glitch/actions/accounts_typed';
-import { fetchStatus } from 'flavours/glitch/actions/statuses';
-import { LearnMoreLink } from 'flavours/glitch/components/learn_more_link';
-import { domain } from 'flavours/glitch/initial_state';
-import type { Account } from 'flavours/glitch/models/account';
-import type { Status } from 'flavours/glitch/models/status';
-import { makeGetStatusWithExtraInfo } from 'flavours/glitch/selectors';
-import { getAccountHidden } from 'flavours/glitch/selectors/accounts';
-import type { RootState } from 'flavours/glitch/store';
-import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
+import { fetchRelationships } from '@/flavours/glitch/actions/accounts';
+import { revealAccount } from '@/flavours/glitch/actions/accounts_typed';
+import { fetchStatus } from '@/flavours/glitch/actions/statuses';
+import {
+  Button,
+  IconButton,
+} from '@/flavours/glitch/components/button/redesign';
+import { LearnMoreLink } from '@/flavours/glitch/components/learn_more_link';
+import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
+import { domain } from '@/flavours/glitch/initial_state';
+import type { Account } from '@/flavours/glitch/models/account';
+import type { Status } from '@/flavours/glitch/models/status';
+import { makeGetStatusWithExtraInfo } from '@/flavours/glitch/selectors';
+import { getAccountHidden } from '@/flavours/glitch/selectors/accounts';
+import type { RootState } from '@/flavours/glitch/store';
+import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
 import { isRedesignEnabled } from '../../../utils/environment';
-import { Button } from '../../button';
-import { IconButton } from '../../icon_button';
-import { LoadingIndicator } from '../../loading_indicator';
 import { TypedStatusContainer } from '../types';
 import type { StatusContainerProps, StatusContextType } from '../types';
 
@@ -246,10 +248,10 @@ export const QuotedStatus: React.FC<QuotedStatusProps> = ({
             <IconButton
               onClick={onQuoteCancel}
               className='status__quote-cancel'
-              title={intl.formatMessage(quoteCancelMessage)}
-              icon='cancel-fill'
-              iconComponent={CancelFillIcon}
-            />
+              icon={XIcon}
+            >
+              {intl.formatMessage(quoteCancelMessage)}
+            </IconButton>
           )
         }
       />
@@ -331,7 +333,7 @@ export const QuotedStatus: React.FC<QuotedStatusProps> = ({
       <div className='status__quote status__quote--error'>
         {quoteError}
         {hasRemoveButton && (
-          <Button compact plain onClick={onQuoteCancel}>
+          <Button size='sm' variant='ghost' onClick={onQuoteCancel}>
             <FormattedMessage
               id='status.remove_quote'
               defaultMessage='Remove'

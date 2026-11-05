@@ -19,7 +19,7 @@ import type {
   ApiCreateCollectionPayload,
   ApiUpdateCollectionPayload,
 } from 'flavours/glitch/api_types/collections';
-import { Button } from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button/redesign';
 import {
   CheckboxField,
   ComboboxField,
@@ -299,7 +299,7 @@ export const CollectionDetails: React.FC = () => {
       </FormStack>
 
       <div className={classes.stickyFooter}>
-        <Button type='submit'>
+        <Button type='submit' variant='solid' color='accent'>
           {id ? (
             <FormattedMessage id='lists.save' defaultMessage='Save' />
           ) : (

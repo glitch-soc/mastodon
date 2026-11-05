@@ -2,14 +2,20 @@ import { useCallback, useMemo } from 'react';
 
 import { defineMessages, useIntl } from 'react-intl';
 
+import { DotsThreeVerticalIcon } from '@phosphor-icons/react';
+
 import { showAlert } from '@/flavours/glitch/actions/alerts';
 import { initBlockModal } from '@/flavours/glitch/actions/blocks';
+import {
+  LegacyDropdownMenuItems,
+  Menu,
+  MenuList,
+  MenuTrigger,
+} from '@/flavours/glitch/components/menu';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
-import MoreVertIcon from '@/material-icons/400-24px/more_vert.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
 import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
-import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
-import { IconButton } from 'flavours/glitch/components/icon_button';
+import { IconButton } from 'flavours/glitch/components/button/redesign';
 import { me } from 'flavours/glitch/initial_state';
 import type { MenuItem } from 'flavours/glitch/models/dropdown_menu';
 import { useAppDispatch } from 'flavours/glitch/store';
@@ -207,13 +213,18 @@ export const CollectionMenu: React.FC<{
   ]);
 
   return (
-    <Dropdown scrollKey='collections' items={menu}>
-      <IconButton
-        icon='menu-icon'
-        iconComponent={MoreVertIcon}
-        title={intl.formatMessage(messages.more)}
+    <Menu>
+      <MenuTrigger
+        as={IconButton}
+        icon={DotsThreeVerticalIcon}
+        size={context === 'collection' ? 'md' : 'sm'}
         className={className}
-      />
-    </Dropdown>
+      >
+        {intl.formatMessage(messages.more)}
+      </MenuTrigger>
+      <MenuList>
+        <LegacyDropdownMenuItems items={menu} />
+      </MenuList>
+    </Menu>
   );
 };

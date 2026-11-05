@@ -4,20 +4,23 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { useLocation } from 'react-router';
 
-import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
-import { me } from '@/flavours/glitch/initial_state';
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
-import { focusCompose } from 'flavours/glitch/actions/compose';
-import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
-import { Button } from 'flavours/glitch/components/button';
-import { CopyLinkField } from 'flavours/glitch/components/form_fields';
-import { IconButton } from 'flavours/glitch/components/icon_button';
+import { XIcon } from '@phosphor-icons/react';
+
+import { focusCompose } from '@/flavours/glitch/actions/compose';
+import type { ApiCollectionJSON } from '@/flavours/glitch/api_types/collections';
+import {
+  Button,
+  IconButton,
+} from '@/flavours/glitch/components/button/redesign';
+import { CopyLinkField } from '@/flavours/glitch/components/form_fields';
 import {
   ModalShell,
   ModalShellActions,
   ModalShellBody,
-} from 'flavours/glitch/components/modal_shell';
-import { useAppDispatch } from 'flavours/glitch/store';
+} from '@/flavours/glitch/components/modal_shell';
+import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
+import { me } from '@/flavours/glitch/initial_state';
+import { useAppDispatch } from '@/flavours/glitch/store';
 
 import { CollectionPreviewCard } from './collection_preview_card';
 import classes from './share_modal.module.scss';
@@ -81,15 +84,15 @@ export const CollectionShareModal: React.FC<{
         </NavigationFocusTarget>
 
         <IconButton
-          title={intl.formatMessage({
+          icon={XIcon}
+          className={classes.closeButtonDesktop}
+          onClick={onClose}
+        >
+          {intl.formatMessage({
             id: 'lightbox.close',
             defaultMessage: 'Close',
           })}
-          iconComponent={CloseIcon}
-          icon='close'
-          className={classes.closeButtonDesktop}
-          onClick={onClose}
-        />
+        </IconButton>
 
         <div className={classes.preview}>
           <CollectionPreviewCard collection={collection} headingLevel='h2' />
@@ -106,14 +109,14 @@ export const CollectionShareModal: React.FC<{
 
       <ModalShellActions className={classes.actions}>
         <div className={classes.shareButtonWrapper}>
-          <Button secondary onClick={handleShareViaPost}>
+          <Button onClick={handleShareViaPost} variant='solid' color='accent'>
             <FormattedMessage
               id='collection.share_modal.share_via_post'
               defaultMessage='Post on Mastodon'
             />
           </Button>
           {'share' in navigator && (
-            <Button secondary onClick={handleShareOnDevice}>
+            <Button onClick={handleShareOnDevice}>
               <FormattedMessage
                 id='collection.share_modal.share_via_system'
                 defaultMessage='Share to…'
@@ -122,7 +125,11 @@ export const CollectionShareModal: React.FC<{
           )}
         </div>
 
-        <Button plain onClick={onClose} className={classes.closeButtonMobile}>
+        <Button
+          variant='ghost'
+          onClick={onClose}
+          className={classes.closeButtonMobile}
+        >
           <FormattedMessage id='lightbox.close' defaultMessage='Close' />
         </Button>
       </ModalShellActions>

@@ -2,11 +2,10 @@ import { useState, useCallback, useId } from 'react';
 
 import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 
-import classNames from 'classnames';
+import { QuestionIcon } from '@phosphor-icons/react';
 
+import { IconButton } from '@/flavours/glitch/components/button/redesign';
 import { Popover } from '@/flavours/glitch/components/popover';
-import QuestionMarkIcon from '@/material-icons/400-24px/question_mark.svg?react';
-import { Icon } from 'flavours/glitch/components/icon';
 import { useSelectableClick } from 'flavours/glitch/hooks/useSelectableClick';
 
 const messages = defineMessages({
@@ -27,17 +26,16 @@ export const InfoButton: React.FC = () => {
 
   return (
     <>
-      <button
-        type='button'
-        className={classNames('help-button', { active: open })}
+      <IconButton
         ref={setTrigger}
         onClick={handleClick}
+        icon={QuestionIcon}
+        size='sm'
         aria-expanded={open}
         aria-controls={accessibilityId}
-        aria-label={intl.formatMessage(messages.help)}
       >
-        <Icon id='' icon={QuestionMarkIcon} />
-      </button>
+        {intl.formatMessage(messages.help)}
+      </IconButton>
 
       <Popover
         isOpen={open}

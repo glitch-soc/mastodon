@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import classNames from 'classnames';
 
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { Button } from '@/flavours/glitch/components/button';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { me } from '@/flavours/glitch/initial_state';
 import type { Account } from '@/flavours/glitch/models/account';
@@ -211,7 +211,7 @@ export const Archetype: React.FC<{
         </p>
       </div>
       {!isRevealed && (
-        <Button onClick={reveal}>
+        <Button onClick={reveal} variant='solid' color='accent'>
           <FormattedMessage
             id='annual_report.summary.archetype.reveal'
             defaultMessage='Reveal my archetype'

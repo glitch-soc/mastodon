@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { showAlertForError } from 'flavours/glitch/actions/alerts';
 import api from 'flavours/glitch/api';
-import { Button } from 'flavours/glitch/components/button';
+import { Button } from 'flavours/glitch/components/button/redesign';
 import { CopyPasteText } from 'flavours/glitch/components/copy_paste_text';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { useAppDispatch } from 'flavours/glitch/store';
@@ -74,13 +74,13 @@ const EmbedModal: React.FC<{
   return (
     <div className='modal-root__modal dialog-modal'>
       <div className='dialog-modal__header'>
-        <Button onClick={onClose}>
+        <Button onClick={onClose} variant='solid' color='accent'>
           <FormattedMessage id='report.close' defaultMessage='Done' />
         </Button>
         <NavigationFocusTarget as='h1' className='dialog-modal__header__title'>
           <FormattedMessage id='status.embed' defaultMessage='Get embed code' />
         </NavigationFocusTarget>
-        <Button secondary onClick={onClose}>
+        <Button onClick={onClose}>
           <FormattedMessage
             id='confirmation_modal.cancel'
             defaultMessage='Cancel'
