@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
-import { useLocation } from 'react-router';
 
 import {
   BellIcon,
@@ -28,6 +27,7 @@ import { Menu, MenuList, MenuTrigger } from '@/flavours/glitch/components/menu';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { ComposeButton } from '@/flavours/glitch/features/compose/trigger';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
+import { useCloseOnHistoryBack } from '@/flavours/glitch/hooks/useCloseOnHistoryBack';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
   registrationsOpen,
@@ -164,14 +164,9 @@ const MENU_WIDTH = 320;
 
 const SlideOutNavigation: React.FC = () => {
   const dispatch = useAppDispatch();
-  const location = useLocation();
   const overlayRef = useRef<HTMLDivElement>(null);
 
   const isOpen = useAppSelector((state) => state.navigation.open);
-
-  useEffect(() => {
-    dispatch(closeNavigation());
-  }, [dispatch, location]);
 
   useEffect(() => {
     const handleDocumentClick = (e: MouseEvent) => {
@@ -266,6 +261,15 @@ const SlideOutNavigation: React.FC = () => {
       previouslyFocusedElementRef.current?.focus();
     }
   }, [isOpen]);
+
+  useCloseOnHistoryBack(
+    () => {
+      dispatch(closeNavigation());
+    },
+    {
+      active: isOpen,
+    },
+  );
 
   return (
     <div
