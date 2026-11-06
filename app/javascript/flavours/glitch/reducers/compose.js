@@ -542,6 +542,7 @@ export const composeReducer = (state = initialState, action) => {
       map.set('idempotencyKey', uuid());
     });
   case COMPOSE_SPOILER_TEXT_CHANGE:
+    if (!state.get('spoiler')) return state;
     return state
       .set('spoiler_text', action.text)
       .set('idempotencyKey', uuid());
@@ -580,39 +581,24 @@ export const composeReducer = (state = initialState, action) => {
       }
 
       if (action.status.get('spoiler_text').length > 0) {
-        let spoiler_text = action.status.get('spoiler_text');
-        if (action.prependCWRe && !spoiler_text.match(/^re[: ]/i)) {
-          spoiler_text = 're: '.concat(spoiler_text);
-        }
         map.set('spoiler', true);
-        map.set('spoiler_text', spoiler_text);
+        map.set('spoiler_text', action.status.get('spoiler_text'));
+
+        if (map.get('media_attachments').size >= 1) {
+          map.set('sensitive', true);
+        }
       } else {
         map.set('spoiler', false);
         map.set('spoiler_text', '');
       }
     });
-  case COMPOSE_REPLY_CANCEL:
-    state = state.setIn(['advanced_options', 'threaded_mode'], false);
-    // eslint-disable-next-line no-fallthrough -- fall-through to `COMPOSE_RESET` is intended
-  case COMPOSE_RESET:
-    return state.withMutations(map => {
-      map.set('in_reply_to', null);
-      if (defaultContentType) map.set('content_type', defaultContentType);
-      map.set('text', '');
-      map.set('spoiler', false);
-      map.set('spoiler_text', '');
-      map.set('privacy', state.get('default_privacy'));
-      map.set('id', null);
-      map.set('poll', null);
-      map.set('language', state.get('default_language'));
-      map.update(
-        'advanced_options',
-        map => map.mergeWith(overwrite, state.get('default_advanced_options')),
-      );
-      map.set('idempotencyKey', uuid());
-    });
   case COMPOSE_SUBMIT_REQUEST:
     return state.set('is_submitting', true);
+
+  case COMPOSE_REPLY_CANCEL:
+  case COMPOSE_RESET:
+    state = state.setIn(['advanced_options', 'threaded_mode'], false);
+    return clearAll(state);
   case COMPOSE_SUBMIT_SUCCESS:
     return action.status && state.getIn(['advanced_options', 'threaded_mode']) ? continueThread(state, action.status) : clearAll(state);
   case COMPOSE_SUBMIT_FAIL:
