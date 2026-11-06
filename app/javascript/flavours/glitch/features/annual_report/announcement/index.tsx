@@ -1,7 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 
 import type { ApiAnnualReportState } from '@/flavours/glitch/api/annual_report';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 
 import styles from './styles.module.scss';
 

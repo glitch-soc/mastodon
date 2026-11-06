@@ -15,7 +15,7 @@ import {
 
 import type { ModalType } from '@/flavours/glitch/actions/modal';
 import { openModal } from '@/flavours/glitch/actions/modal';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import {
   LegacyDropdownMenuItems,
   Menu,

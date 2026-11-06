@@ -12,7 +12,7 @@ import {
   AccountListItemFollowButton,
 } from '@/flavours/glitch/components/account_list_item';
 import { PendingBadge } from '@/flavours/glitch/components/badge';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { SelectField } from '@/flavours/glitch/components/form_fields';
 import {
   Article,

@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { AvatarById } from '@/flavours/glitch/components/avatar';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Icon } from '@/flavours/glitch/components/icon';
 import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
 import KeyboardArrowDownIcon from '@/material-icons/400-24px/keyboard_arrow_down.svg?react';

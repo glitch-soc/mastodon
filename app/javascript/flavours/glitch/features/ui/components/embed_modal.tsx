@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { showAlertForError } from 'flavours/glitch/actions/alerts';
 import api from 'flavours/glitch/api';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { CopyPasteText } from 'flavours/glitch/components/copy_paste_text';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { useAppDispatch } from 'flavours/glitch/store';

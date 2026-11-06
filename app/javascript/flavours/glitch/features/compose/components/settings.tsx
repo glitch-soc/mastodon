@@ -7,7 +7,7 @@ import { EyeSlashIcon, GearIcon, WarningIcon } from '@phosphor-icons/react';
 import { changeComposeSensitivity } from '@/flavours/glitch/actions/compose';
 import { setComposeQuotePolicy } from '@/flavours/glitch/actions/compose_typed';
 import type { ApiQuotePolicy } from '@/flavours/glitch/api_types/quotes';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import {
   Menu,
   MenuItem,

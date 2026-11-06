@@ -15,7 +15,7 @@ import {
   collectionEditorActions,
   removeCollectionItem,
 } from '@/flavours/glitch/reducers/slices/collections';
-import { IconButton } from 'flavours/glitch/components/button/redesign';
+import { IconButton } from 'flavours/glitch/components/button';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 import { MAX_COLLECTION_ACCOUNT_COUNT } from '../collections/editor/accounts';

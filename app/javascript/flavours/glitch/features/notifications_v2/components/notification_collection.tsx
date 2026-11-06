@@ -2,7 +2,7 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { LinkedDisplayName } from '@/flavours/glitch/components/display_name';
 import { Icon } from '@/flavours/glitch/components/icon';
 import { CollectionMenu } from '@/flavours/glitch/features/collections/components/collection_menu';

@@ -8,10 +8,7 @@ import { XIcon } from '@phosphor-icons/react';
 
 import { focusCompose } from '@/flavours/glitch/actions/compose';
 import type { ApiCollectionJSON } from '@/flavours/glitch/api_types/collections';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { CopyLinkField } from '@/flavours/glitch/components/form_fields';
 import {
   ModalShell,

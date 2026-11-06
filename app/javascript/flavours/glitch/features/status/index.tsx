@@ -9,7 +9,7 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { statusInteraction } from '@/flavours/glitch/actions/interactions_typed';
 import { fetchStatus } from '@/flavours/glitch/actions/statuses';
-import { ToggleIconButton } from '@/flavours/glitch/components/button/redesign';
+import { ToggleIconButton } from '@/flavours/glitch/components/button';
 import { Column } from '@/flavours/glitch/components/column';
 import {
   ColumnHeader,

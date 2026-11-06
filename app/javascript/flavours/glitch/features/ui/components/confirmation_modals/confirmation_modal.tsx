@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import {
   ModalShell,
   ModalShellActions,

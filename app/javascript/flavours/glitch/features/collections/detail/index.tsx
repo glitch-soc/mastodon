@@ -16,7 +16,7 @@ import type {
   CollectionAccountItem,
 } from 'flavours/glitch/api_types/collections';
 import { Badge } from 'flavours/glitch/components/badge';
-import { IconButton } from 'flavours/glitch/components/button/redesign';
+import { IconButton } from 'flavours/glitch/components/button';
 import { Callout } from 'flavours/glitch/components/callout';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { useAccountHandle } from 'flavours/glitch/components/display_name/default';

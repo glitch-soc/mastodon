@@ -6,7 +6,7 @@ import classNames from 'classnames';
 
 import { PushPinIcon } from '@phosphor-icons/react';
 
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 
 import { useAccountContext } from '../hooks/useAccountContext';
 import classes from '../styles.module.scss';

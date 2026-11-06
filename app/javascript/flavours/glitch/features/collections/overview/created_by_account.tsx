@@ -5,8 +5,8 @@ import { FormattedMessage } from 'react-intl';
 
 import { PlusIcon } from '@phosphor-icons/react';
 
-import type { ButtonProps } from '@/flavours/glitch/components/button/redesign';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import type { ButtonProps } from '@/flavours/glitch/components/button';
+import { Button } from '@/flavours/glitch/components/button';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { EmptyState } from '@/flavours/glitch/components/empty_state';
 import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';

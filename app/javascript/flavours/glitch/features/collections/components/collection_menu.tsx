@@ -15,7 +15,7 @@ import {
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { openModal } from 'flavours/glitch/actions/modal';
 import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
-import { IconButton } from 'flavours/glitch/components/button/redesign';
+import { IconButton } from 'flavours/glitch/components/button';
 import { me } from 'flavours/glitch/initial_state';
 import type { MenuItem } from 'flavours/glitch/models/dropdown_menu';
 import { useAppDispatch } from 'flavours/glitch/store';

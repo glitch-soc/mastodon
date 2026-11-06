@@ -15,7 +15,7 @@ import {
   apiRemoveAccountFromList,
 } from 'flavours/glitch/api/lists';
 import type { ApiListJSON } from 'flavours/glitch/api_types/lists';
-import { Button, IconButton } from 'flavours/glitch/components/button/redesign';
+import { Button, IconButton } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { getOrderedLists } from 'flavours/glitch/selectors/lists';

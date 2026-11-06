@@ -4,7 +4,7 @@ import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
 
 import { QuestionIcon } from '@phosphor-icons/react';
 
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import { Popover } from '@/flavours/glitch/components/popover';
 import { useSelectableClick } from 'flavours/glitch/hooks/useSelectableClick';
 

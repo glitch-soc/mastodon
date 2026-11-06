@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { TrashIcon } from '@phosphor-icons/react';
 
 import { changeComposeSpoilerText } from '@/flavours/glitch/actions/compose';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import {
   FormFieldWrapper,
   TextInput,

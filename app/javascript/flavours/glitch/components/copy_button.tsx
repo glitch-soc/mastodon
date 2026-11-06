@@ -9,11 +9,8 @@ import { showAlert } from '@/flavours/glitch/actions/alerts';
 import type {
   ButtonProps,
   IconButtonProps,
-} from '@/flavours/glitch/components/button/redesign';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+} from '@/flavours/glitch/components/button';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { useAppDispatch } from '@/flavours/glitch/store';
 
 const messages = defineMessages({

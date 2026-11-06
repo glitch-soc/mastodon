@@ -8,7 +8,7 @@ import { Callout } from '@/flavours/glitch/components/callout';
 import { submitReport } from 'flavours/glitch/actions/reports';
 import { fetchServer } from 'flavours/glitch/actions/server';
 import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
-import { Button, IconButton } from 'flavours/glitch/components/button/redesign';
+import { Button, IconButton } from 'flavours/glitch/components/button';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { useAccount } from 'flavours/glitch/hooks/useAccount';
 import { useAppDispatch } from 'flavours/glitch/store';

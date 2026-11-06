@@ -11,7 +11,7 @@ import {
   muteAccount,
   blockAccount,
 } from 'flavours/glitch/actions/accounts';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 
 const mapStateToProps = () => ({});

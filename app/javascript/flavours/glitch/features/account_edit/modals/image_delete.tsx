@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { deleteImage } from '@/flavours/glitch/reducers/slices/profile_edit';
 import type { ImageLocation } from '@/flavours/glitch/reducers/slices/profile_edit';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';

@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { GearIcon } from '@phosphor-icons/react';
 
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { useAppDispatch } from '@/flavours/glitch/store';
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { requestBrowserPermission } from 'flavours/glitch/actions/notifications';

@@ -2,10 +2,7 @@ import { useCallback, useState } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import {
-  Button,
-  CaretIcon,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, CaretIcon } from '@/flavours/glitch/components/button';
 import { Icon } from '@/flavours/glitch/components/icon';
 import {
   Menu,

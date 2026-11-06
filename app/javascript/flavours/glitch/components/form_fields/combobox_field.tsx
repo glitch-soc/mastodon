@@ -22,7 +22,7 @@ import {
 import { getScrollParent } from '@react-aria/utils';
 
 import { useMergedRefs } from '@/flavours/glitch/hooks/useMergedRefs';
-import { IconButton } from 'flavours/glitch/components/button/redesign';
+import { IconButton } from 'flavours/glitch/components/button';
 
 import { LoadingIndicator } from '../loading_indicator';
 import type { PopoverProps } from '../popover';

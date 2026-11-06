@@ -18,7 +18,7 @@ import {
 
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { useAccountHandle } from '@/flavours/glitch/components/display_name/default';
 import {

@@ -26,7 +26,7 @@ import {
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { initMuteModal } from '@/flavours/glitch/actions/mutes';
 import { initReport } from '@/flavours/glitch/actions/reports';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import {
   Menu,
   MenuList,

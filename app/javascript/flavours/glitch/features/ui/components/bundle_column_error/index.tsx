@@ -6,7 +6,7 @@ import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { CopyButton } from '@/flavours/glitch/components/copy_button';
 import { EmptyState } from '@/flavours/glitch/components/empty_state';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 
 import classes from './styles.module.scss';
 

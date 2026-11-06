@@ -8,10 +8,7 @@ import { ChatCircleDotsIcon, EyeIcon } from '@phosphor-icons/react';
 
 import { changeComposeVisibility } from '@/flavours/glitch/actions/compose_typed';
 import type { StatusVisibility } from '@/flavours/glitch/api_types/statuses';
-import {
-  Button,
-  CaretIcon,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, CaretIcon } from '@/flavours/glitch/components/button';
 import { Icon } from '@/flavours/glitch/components/icon';
 import {
   Menu,

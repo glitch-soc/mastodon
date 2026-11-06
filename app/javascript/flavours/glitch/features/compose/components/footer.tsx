@@ -12,10 +12,7 @@ import {
 } from '@phosphor-icons/react';
 
 import { addPoll, uploadCompose } from '@/flavours/glitch/actions/compose';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import type { OnEmojiPick } from '@/flavours/glitch/components/emoji/picker';
 import { EmojiPickerButton } from '@/flavours/glitch/components/emoji/picker';
 import {

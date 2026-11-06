@@ -18,7 +18,7 @@ import type { EmojiData, EmojiSkin } from 'emoji-mart';
 
 import { emojiUse } from '@/flavours/glitch/actions/emojis';
 import { changeSetting } from '@/flavours/glitch/actions/settings';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import { CircularProgress } from '@/flavours/glitch/components/circular_progress';
 import {
   PER_LINE,

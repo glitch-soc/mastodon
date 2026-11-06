@@ -19,7 +19,7 @@ import type {
   ApiCreateCollectionPayload,
   ApiUpdateCollectionPayload,
 } from 'flavours/glitch/api_types/collections';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import {
   CheckboxField,
   ComboboxField,

@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { unblockDomain } from '@/flavours/glitch/actions/domain_blocks';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { useAppDispatch } from '@/flavours/glitch/store';
 
 export const Domain: React.FC<{

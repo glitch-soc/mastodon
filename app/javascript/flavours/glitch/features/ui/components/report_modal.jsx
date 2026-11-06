@@ -12,7 +12,7 @@ import { fetchRelationships } from 'flavours/glitch/actions/accounts';
 import { submitReport } from 'flavours/glitch/actions/reports';
 import { fetchServer } from 'flavours/glitch/actions/server';
 import { expandAccountTimeline } from 'flavours/glitch/actions/timelines';
-import { IconButton } from 'flavours/glitch/components/button/redesign';
+import { IconButton } from 'flavours/glitch/components/button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import Category from 'flavours/glitch/features/report/category';
 import Comment from 'flavours/glitch/features/report/comment';

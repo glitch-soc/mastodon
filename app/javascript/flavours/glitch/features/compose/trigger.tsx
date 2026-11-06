@@ -8,8 +8,8 @@ import { useRouteMatch } from 'react-router';
 import { PenNibIcon, ReadCvLogoIcon } from '@phosphor-icons/react';
 import { isIPad, isWebKit } from '@react-aria/utils';
 
-import type { IconButtonProps } from '@/flavours/glitch/components/button/redesign';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import type { IconButtonProps } from '@/flavours/glitch/components/button';
+import { IconButton } from '@/flavours/glitch/components/button';
 import { useBodyScrollLock } from '@/flavours/glitch/hooks/useBodyScrollLock';
 import { useCloseOnHistoryBack } from '@/flavours/glitch/hooks/useCloseOnHistoryBack';
 import { useResizeObserver } from '@/flavours/glitch/hooks/useObserver';

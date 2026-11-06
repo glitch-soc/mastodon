@@ -13,7 +13,7 @@ import type {
   ValidationErrorResponse,
   ValidationError,
 } from '@/flavours/glitch/api_types/errors';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import type { FieldStatus } from '@/flavours/glitch/components/form_fields';
 import { TextInputField } from '@/flavours/glitch/components/form_fields/text_input_field';

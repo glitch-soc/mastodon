@@ -2,10 +2,7 @@ import type { FC, MouseEventHandler } from 'react';
 
 import { PencilIcon, TrashIcon } from '@phosphor-icons/react';
 
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 
 export interface EditButtonProps {
   onClick: MouseEventHandler;

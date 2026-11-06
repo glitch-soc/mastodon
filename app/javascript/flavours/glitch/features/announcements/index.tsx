@@ -8,7 +8,7 @@ import type { Map, List } from 'immutable';
 import { XIcon } from '@phosphor-icons/react';
 
 import { hideAnnouncements } from '@/flavours/glitch/actions/announcements';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import type { RenderSlideFn } from '@/flavours/glitch/components/carousel';
 import { Carousel } from '@/flavours/glitch/components/carousel';
 import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';

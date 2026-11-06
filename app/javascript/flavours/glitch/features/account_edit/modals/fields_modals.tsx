@@ -10,7 +10,7 @@ import type { FC, FocusEventHandler } from 'react';
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { closeModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import type { FieldStatus } from '@/flavours/glitch/components/form_fields';
 import { EmojiTextInputField } from '@/flavours/glitch/components/form_fields';
 import { useCustomEmojis } from '@/flavours/glitch/hooks/useCustomEmojis';

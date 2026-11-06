@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import { useOverflowButton } from '@/flavours/glitch/hooks/useOverflow';
 import { useToggle } from '@/flavours/glitch/hooks/useToggle';
 
-import { Button } from '../button/redesign';
+import { Button } from '../button';
 import { HashtagMenu } from '../hashtag_menu';
 import { MenuTrigger } from '../menu';
 

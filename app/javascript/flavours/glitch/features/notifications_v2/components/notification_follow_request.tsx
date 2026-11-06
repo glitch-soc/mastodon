@@ -8,7 +8,7 @@ import {
   authorizeFollowRequest,
   rejectFollowRequest,
 } from '@/flavours/glitch/actions/accounts';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import type { NotificationGroupFollowRequest } from '@/flavours/glitch/models/notification_group';
 import { useAppDispatch } from '@/flavours/glitch/store';
 

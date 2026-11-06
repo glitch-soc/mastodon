@@ -6,7 +6,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { MagnifyingGlassIcon, TranslateIcon } from '@phosphor-icons/react';
 
 import { changeComposeLanguage } from '@/flavours/glitch/actions/compose';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Combobox } from '@/flavours/glitch/components/form_fields';
 import { ComboboxMenuItem } from '@/flavours/glitch/components/form_fields/combobox_field';
 import { PopoverMenuCard } from '@/flavours/glitch/components/menu/card';

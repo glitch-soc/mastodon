@@ -8,7 +8,7 @@ import PersonAlertIcon from '@/material-icons/400-24px/person_alert.svg?react';
 import ShieldQuestionIcon from '@/material-icons/400-24px/shield_question.svg?react';
 import { closeModal } from 'flavours/glitch/actions/modal';
 import { updateNotificationsPolicy } from 'flavours/glitch/actions/notification_policies';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 

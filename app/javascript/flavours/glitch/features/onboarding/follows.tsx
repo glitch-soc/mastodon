@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { Helmet } from '@unhead/react/helmet';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { ColumnSearchHeader } from '@/flavours/glitch/components/column/search_header';

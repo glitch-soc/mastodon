@@ -19,7 +19,7 @@ import {
   toggleStatusSpoilers,
 } from '@/flavours/glitch/actions/statuses';
 import { Avatars } from '@/flavours/glitch/components/avatar';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import { Hotkeys } from '@/flavours/glitch/components/hotkeys';
 import {
   LegacyDropdownMenuItems,

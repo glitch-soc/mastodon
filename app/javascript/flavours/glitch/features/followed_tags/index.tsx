@@ -13,7 +13,7 @@ import {
   unfollowHashtag,
 } from 'flavours/glitch/actions/tags_typed';
 import type { ApiHashtagJSON } from 'flavours/glitch/api_types/tags';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { Hashtag } from 'flavours/glitch/components/hashtag';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';

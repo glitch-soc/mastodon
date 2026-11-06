@@ -16,10 +16,7 @@ import {
   deletePollOption,
   updatePollOption,
 } from '@/flavours/glitch/actions/compose_typed';
-import {
-  Button,
-  buttonClasses,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, buttonClasses } from '@/flavours/glitch/components/button';
 import {
   ToggleField,
   TextInput,

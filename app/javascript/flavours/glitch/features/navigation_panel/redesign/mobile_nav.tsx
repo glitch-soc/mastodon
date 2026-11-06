@@ -19,10 +19,7 @@ import {
   openNavigation,
 } from '@/flavours/glitch/actions/navigation';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { Menu, MenuList, MenuTrigger } from '@/flavours/glitch/components/menu';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { ComposeButton } from '@/flavours/glitch/features/compose/trigger';

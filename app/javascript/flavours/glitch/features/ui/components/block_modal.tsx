@@ -13,7 +13,7 @@ import CollectionsIcon from '@/material-icons/400-24px/category.svg?react';
 import VisibilityOffIcon from '@/material-icons/400-24px/visibility_off.svg?react';
 import { blockAccount } from 'flavours/glitch/actions/accounts';
 import { closeModal } from 'flavours/glitch/actions/modal';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 

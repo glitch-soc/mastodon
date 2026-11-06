@@ -17,7 +17,7 @@ import VisibilityOffIcon from '@/material-icons/400-24px/visibility_off.svg?reac
 import VolumeOffIcon from '@/material-icons/400-24px/volume_off.svg?react';
 import { muteAccount } from 'flavours/glitch/actions/accounts';
 import { closeModal } from 'flavours/glitch/actions/modal';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 

@@ -9,7 +9,7 @@ import { ImmutablePureComponent } from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
 import { followAccount } from 'flavours/glitch/actions/accounts';
-import { Button, IconButton } from 'flavours/glitch/components/button/redesign';
+import { Button, IconButton } from 'flavours/glitch/components/button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import Option from 'flavours/glitch/features/report/components/option';
 import { languages as preloadedLanguages } from 'flavours/glitch/initial_state';

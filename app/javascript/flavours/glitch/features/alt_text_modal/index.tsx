@@ -21,7 +21,7 @@ import { Tesseract as fetchTesseract } from '@/flavours/glitch/features/ui/util/
 import { showAlertForError } from 'flavours/glitch/actions/alerts';
 import { uploadThumbnail } from 'flavours/glitch/actions/compose';
 import { changeUploadCompose } from 'flavours/glitch/actions/compose_typed';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { GIFV } from 'flavours/glitch/components/gifv';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { Skeleton } from 'flavours/glitch/components/skeleton';

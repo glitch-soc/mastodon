@@ -21,12 +21,7 @@ import {
   useAppSelector,
 } from '@/flavours/glitch/store/typed_functions';
 
-import {
-  Button,
-  IconButton,
-  ToggleButton,
-  ToggleIconButton,
-} from '../button/redesign';
+import { Button, IconButton, ToggleButton, ToggleIconButton } from '../button';
 import { Icon } from '../icon';
 import {
   Menu,

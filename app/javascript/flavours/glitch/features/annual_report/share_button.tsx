@@ -6,7 +6,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { showAlert } from '@/flavours/glitch/actions/alerts';
 import { resetCompose, focusCompose } from '@/flavours/glitch/actions/compose';
 import { closeModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import type { AnnualReport as AnnualReportData } from '@/flavours/glitch/models/annual_report';
 import { useAppDispatch } from '@/flavours/glitch/store';
 

@@ -11,7 +11,7 @@ import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
 import { openModal, closeModal } from 'flavours/glitch/actions/modal';
 import { apiRequest } from 'flavours/glitch/api';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import {
   domain as localDomain,
   registrationsOpen,

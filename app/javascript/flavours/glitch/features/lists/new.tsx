@@ -8,7 +8,7 @@ import { isFulfilled } from '@reduxjs/toolkit';
 
 import { Helmet } from '@unhead/react/helmet';
 
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { NotSignedInIndicator } from '@/flavours/glitch/components/not_signed_in_indicator';

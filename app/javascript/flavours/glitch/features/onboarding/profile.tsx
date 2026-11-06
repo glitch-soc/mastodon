@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { Helmet } from '@unhead/react/helmet';
 
 import { Badge } from '@/flavours/glitch/components/badge';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import AddPhotoAlternateIcon from '@/material-icons/400-24px/add_photo_alternate.svg?react';

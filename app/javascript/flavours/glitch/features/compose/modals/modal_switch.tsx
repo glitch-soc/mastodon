@@ -5,7 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { changeComposeVisibility } from '@/flavours/glitch/actions/compose_typed';
 import { closeModal } from '@/flavours/glitch/actions/modal';
 import type { StatusVisibility } from '@/flavours/glitch/api_types/statuses';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import {
   ModalActions,
   ModalShell,

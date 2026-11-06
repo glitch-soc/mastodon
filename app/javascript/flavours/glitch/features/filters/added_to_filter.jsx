@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { toServerSideType } from 'flavours/glitch/utils/filters';
 
