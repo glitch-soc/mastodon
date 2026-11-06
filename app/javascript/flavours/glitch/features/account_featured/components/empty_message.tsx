@@ -2,10 +2,8 @@ import { useCallback } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Link } from 'react-router-dom';
-
 import { openModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button';
+import { Button } from '@/flavours/glitch/components/button/redesign';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { EmptyState } from '@/flavours/glitch/components/empty_state';
 import { LimitedAccountHint } from '@/flavours/glitch/components/limited_account_hint';
@@ -67,14 +65,19 @@ export const EmptyMessage: React.FC<EmptyMessageProps> = ({
         }
       >
         {!withoutAddCollectionButton && (
-          <Link to='/collections/new' className='button'>
+          <Button
+            as='link'
+            to='/collections/new'
+            color='accent'
+            variant='solid'
+          >
             <FormattedMessage
               id='empty_column.account_featured_self.no_collections_button'
               defaultMessage='Create a collection'
             />
-          </Link>
+          </Button>
         )}
-        <Button secondary onClick={confirmHideFeaturedTab}>
+        <Button onClick={confirmHideFeaturedTab}>
           <FormattedMessage
             id='empty_column.account_featured_self.no_collections_hide_tab'
             defaultMessage='Hide this tab instead'

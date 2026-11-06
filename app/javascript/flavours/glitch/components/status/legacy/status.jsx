@@ -22,7 +22,6 @@ import { SensitiveMediaContext } from '@/flavours/glitch/features/ui/util/sensit
 import { displayMedia } from '@/flavours/glitch/initial_state';
 import { CollectionPreviewCard } from '@/flavours/glitch/features/collections/components/collection_preview_card';
 import { compareUrls } from '@/flavours/glitch/utils/compare_urls';
-import AttachmentList from '@/flavours/glitch/components/attachment_list';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 
 import { injectIntl } from '../../intl';
@@ -560,14 +559,7 @@ class Status extends ImmutablePureComponent {
     } else if (attachments.size > 0) {
       const language = status.getIn(['translation', 'language']) || status.get('language');
 
-      if (muted || attachments.some(item => item.get('type') === 'unknown')) {
-        media.push(
-          <AttachmentList
-            compact
-            media={status.get('media_attachments')}
-          />,
-        );
-      } else if (['image', 'gifv', 'unknown'].includes(status.getIn(['media_attachments', 0, 'type'])) || status.get('media_attachments').size > 1) {
+      if (['image', 'gifv', 'unknown'].includes(status.getIn(['media_attachments', 0, 'type'])) || status.get('media_attachments').size > 1) {
         media.push(
           <Bundle fetchComponent={MediaGallery} loading={this.renderLoadingMediaGallery} key='gallery'>
             {Component => (
