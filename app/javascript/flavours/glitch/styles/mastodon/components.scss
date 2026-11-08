@@ -2700,57 +2700,6 @@ a.status-card {
   }
 }
 
-.column-settings__pillbar {
-  display: flex;
-  background-color: transparent;
-  margin-bottom: 10px;
-  align-items: stretch;
-  gap: 2px;
-
-  .pillbar-button:first-child {
-    border-start-start-radius: 4px;
-    border-end-start-radius: 4px;
-  }
-
-  .pillbar-button:last-child {
-    border-start-end-radius: 4px;
-    border-end-end-radius: 4px;
-  }
-}
-
-.pillbar-button {
-  border: 0;
-  color: var(--color-text-primary);
-  padding: 2px;
-  margin: 0;
-  font-size: inherit;
-  flex: auto;
-  background-color: var(--color-bg-elevated);
-  transition: all 0.2s ease;
-  transition-property: background-color, box-shadow;
-
-  &[disabled] {
-    cursor: not-allowed;
-    opacity: 0.5;
-  }
-
-  &:not([disabled]) {
-    &:hover,
-    &:active {
-      background: var(--color-bg-secondary);
-    }
-
-    &.active {
-      background-color: var(--color-bg-brand-base);
-      color: var(--color-text-on-brand-base);
-    }
-
-    &:focus-visible {
-      outline: var(--outline-focus-default);
-    }
-  }
-}
-
 .text-btn {
   display: inline-flex;
   align-items: center;
