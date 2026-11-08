@@ -271,9 +271,6 @@ export function submitCompose(successCallback, overridePrivacy) {
 
       dispatch(insertIntoTagHistory(response.data.tags, statusText));
       dispatch(submitComposeSuccess({ ...response.data }));
-      if (typeof successCallback === 'function') {
-        successCallback(response.data);
-      }
 
       // To make the app more responsive, immediately push the status
       // into the columns
@@ -285,8 +282,10 @@ export function submitCompose(successCallback, overridePrivacy) {
         }
       };
 
-      if (statusId) {
-        dispatch(importFetchedStatus({ ...response.data }));
+      dispatch(importFetchedStatus({ ...response.data }));
+
+      if (typeof successCallback === 'function') {
+        successCallback(response.data);
       }
 
       if (statusId === null) {

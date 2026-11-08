@@ -325,6 +325,8 @@ export const submitComposer = createAppThunk(
 
     const { compose, composer, meta, statuses, server, settings } = getState();
 
+    const threadedMode = !!compose.getIn(['advanced_options', 'threaded_mode']);
+
     let text = compose.get('text') as string;
 
     const attachments = compose.get('media_attachments');
@@ -402,7 +404,11 @@ export const submitComposer = createAppThunk(
             window.location.assign(status.url);
           }
 
-          dispatch(resetComposer());
+          if (threadedMode) {
+            dispatch(replyComposeById({ statusId: status.id }));
+          } else {
+            dispatch(resetComposer());
+          }
         }),
       );
     }
