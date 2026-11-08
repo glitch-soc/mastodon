@@ -17,10 +17,7 @@ import {
   directCompose,
   mentionCompose,
 } from '@/flavours/glitch/actions/compose';
-import {
-  initDomainBlockModal,
-  unblockDomain,
-} from '@/flavours/glitch/actions/domain_blocks';
+import { unblockDomain } from '@/flavours/glitch/actions/domain_blocks';
 import type { StatusInteractionIntent } from '@/flavours/glitch/actions/interactions_typed';
 import { statusInteraction } from '@/flavours/glitch/actions/interactions_typed';
 import { openModal } from '@/flavours/glitch/actions/modal';
@@ -959,7 +956,16 @@ function getMenuItems({
         if (isDomainBlocking) {
           dispatch(unblockDomain(domain));
         } else {
-          dispatch(initDomainBlockModal(account));
+          dispatch(
+            openModal({
+              modalType: 'DOMAIN_BLOCK',
+              modalProps: {
+                domain,
+                acct: account.acct,
+                accountId: account.id,
+              },
+            }),
+          );
         }
       },
       dangerous: !isDomainBlocking,

@@ -5,10 +5,11 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
+import { PushPinIcon } from '@phosphor-icons/react';
+
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useCurrentAccountId } from '@/flavours/glitch/hooks/useAccountId';
 import type { AccountStatusShape } from '@/flavours/glitch/models/status';
-import IconPinned from '@/images/icons/icon_pinned.svg?react';
 
 import { Avatar } from '../avatar';
 import { Badge } from '../badge';
@@ -136,7 +137,7 @@ export const StatusRedesignHeader: React.FC<StatusRedesignHeaderProps> = ({
       {featured && (
         <Badge
           className={classes.pinnedBadge}
-          icon={<Icon id='pinned' icon={IconPinned} />}
+          icon={<Icon id='pinned' icon={PushPinIcon} />}
           label={
             <FormattedMessage
               id='account.timeline.pinned'
