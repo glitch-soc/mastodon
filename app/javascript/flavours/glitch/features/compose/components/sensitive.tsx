@@ -5,9 +5,11 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { TrashIcon } from '@phosphor-icons/react';
 
 import { changeComposeSpoilerText } from '@/flavours/glitch/actions/compose';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
-import { FormFieldWrapper } from '@/flavours/glitch/components/form_fields';
-import { TextInput } from '@/flavours/glitch/components/form_fields/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
+import {
+  FormFieldWrapper,
+  TextInput,
+} from '@/flavours/glitch/components/form_fields';
 import {
   matchesKeyCode,
   normalizeKey,
@@ -81,6 +83,7 @@ export const ComposeSensitiveField: React.FC<
 
   return (
     <FormFieldWrapper
+      compact
       className={classes.sensitiveWrapper}
       status={
         errors.includes('missing-content-warning')

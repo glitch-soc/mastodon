@@ -23,7 +23,7 @@ import {
 } from 'flavours/glitch/api/lists';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { VerifiedBadge } from 'flavours/glitch/components/badge';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { FollowersCounter } from 'flavours/glitch/components/counters';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';

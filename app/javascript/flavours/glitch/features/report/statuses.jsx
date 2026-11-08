@@ -7,9 +7,9 @@ import { OrderedSet } from 'immutable';
 import ImmutablePropTypes from 'react-immutable-proptypes';
 import { connect } from 'react-redux';
 
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
-import StatusCheckBox from 'flavours/glitch/features/report/containers/status_check_box_container';
+import { StatusCheckBox } from './components/status_check_box'
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
 
 const mapStateToProps = (state, { accountId }) => ({

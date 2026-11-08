@@ -6,10 +6,7 @@ import classNames from 'classnames';
 
 import { XIcon } from '@phosphor-icons/react';
 
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
 
 export type { BaseConfirmationModalProps as DialogModalProps } from './confirmation_modals/confirmation_modal';

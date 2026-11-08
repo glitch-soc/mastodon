@@ -11,10 +11,7 @@ import {
   XIcon,
 } from '@phosphor-icons/react';
 
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { useOverflowScroll } from '@/flavours/glitch/hooks/useOverflow';
 import { changeSetting } from 'flavours/glitch/actions/settings';
 import {

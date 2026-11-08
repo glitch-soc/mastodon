@@ -9,10 +9,7 @@ import type { UniqueIdentifier } from '@dnd-kit/core';
 import { DotsSixVerticalIcon } from '@phosphor-icons/react';
 
 import { rearrangeComposeAttachments } from '@/flavours/glitch/actions/compose_typed';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import {
   ModalActions,
   ModalShell,

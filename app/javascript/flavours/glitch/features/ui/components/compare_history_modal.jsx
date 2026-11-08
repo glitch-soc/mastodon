@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import escapeTextContentForBrowser from 'escape-html';
 
 import { closeModal } from 'flavours/glitch/actions/modal';
-import { IconButton } from 'flavours/glitch/components/button/redesign';
+import { IconButton } from 'flavours/glitch/components/button';
 import InlineAccount from 'flavours/glitch/components/inline_account';
 import MediaAttachments from 'flavours/glitch/components/media_attachments';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';

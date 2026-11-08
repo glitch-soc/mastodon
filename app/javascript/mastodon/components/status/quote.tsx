@@ -36,7 +36,7 @@ import {
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
 
 import { Avatar } from '../avatar';
-import { Button } from '../button/redesign';
+import { Button } from '../button';
 import { Card, CardBody, CardTitle, PrimaryCardLink } from '../card';
 import { DisplayName } from '../display_name';
 import { DisplayNameSimple } from '../display_name/simple';
@@ -160,12 +160,16 @@ export const QuotedStatus: React.FC<{
         {!disableOpen ? (
           <Link
             {...accountStatusLinkProps(status.account)}
-            className={classes.accountLink}
+            className={classNames(classes.accountLink, classes.accountName)}
           >
             <DisplayName account={status.account} variant='noDomain' />
           </Link>
         ) : (
-          <DisplayName account={status.account} variant='noDomain' />
+          <DisplayName
+            account={status.account}
+            variant='noDomain'
+            className={classes.accountName}
+          />
         )}
       </CardTitle>
 

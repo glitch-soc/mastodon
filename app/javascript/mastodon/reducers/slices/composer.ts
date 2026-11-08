@@ -87,6 +87,9 @@ const composerSlice = createSlice({
       state.displayState =
         state.displayState === 'showing' ? 'minimized' : 'showing';
     },
+    minimizeComposer(state) {
+      state.displayState = 'minimized';
+    },
     hideComposer(state) {
       state.displayState = 'hidden';
     },
@@ -157,6 +160,7 @@ const composerSlice = createSlice({
 export const composer = composerSlice.reducer;
 
 export const {
+  minimizeComposer,
   requestFocus: requestComposerFocus,
   clearPendingFocus: clearComposerFocusRequest,
   clearErrors: clearComposerErrors,
@@ -305,6 +309,21 @@ export const closeComposer = createAppThunk((_arg, { getState, dispatch }) => {
   }
 });
 
+/**
+ * Closes the composer if it's empty, otherwise minimises it
+ */
+export const closeOrMinimizeComposer = createAppThunk(
+  (_arg, { getState, dispatch }) => {
+    const isChanged = selectComposerIsChanged(getState());
+
+    if (isChanged) {
+      dispatch(minimizeComposer());
+    } else {
+      dispatch(closeComposer());
+    }
+  },
+);
+
 export const selectIsMinimized = createAppSelector(
   [(state) => state.composer.displayState],
   (displayState) => displayState === 'minimized',
@@ -323,17 +342,13 @@ export const submitComposer = createAppThunk(
       dispatch(changeCompose(textareaValue));
     }
 
-    const { compose, composer, meta, statuses, server, settings } = getState();
+    const { compose, meta, statuses, server, settings } = getState();
 
     let text = compose.get('text') as string;
 
     const attachments = compose.get('media_attachments');
     const spoilerText = compose.get('spoiler_text') as string;
-    if (
-      (!text.trim() || text === composer.initialText) &&
-      isList(attachments) &&
-      attachments.isEmpty()
-    ) {
+    if (!text.trim() && isList(attachments) && attachments.isEmpty()) {
       dispatch(composerSlice.actions.addError('empty'));
     }
 

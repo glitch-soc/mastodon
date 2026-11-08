@@ -10,7 +10,7 @@ import {
   rejectFollowRequest,
 } from '@/flavours/glitch/actions/accounts';
 import { AvatarOverlay } from '@/flavours/glitch/components/avatar_overlay';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
 import { useRelationship } from '@/flavours/glitch/hooks/useRelationship';

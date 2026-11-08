@@ -20,7 +20,7 @@ import {
 } from '@/flavours/glitch/actions/columns';
 import { submitMarkers } from '@/flavours/glitch/actions/markers';
 import { openModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Column } from '@/flavours/glitch/components/column';
 import {
   ColumnHeader,

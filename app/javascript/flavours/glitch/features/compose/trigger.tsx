@@ -8,13 +8,15 @@ import { useRouteMatch } from 'react-router';
 import { PenNibIcon, ReadCvLogoIcon } from '@phosphor-icons/react';
 import { isIPad, isWebKit } from '@react-aria/utils';
 
-import type { IconButtonProps } from '@/flavours/glitch/components/button/redesign';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import type { IconButtonProps } from '@/flavours/glitch/components/button';
+import { IconButton } from '@/flavours/glitch/components/button';
 import { useBodyScrollLock } from '@/flavours/glitch/hooks/useBodyScrollLock';
+import { useCloseOnHistoryBack } from '@/flavours/glitch/hooks/useCloseOnHistoryBack';
 import { useResizeObserver } from '@/flavours/glitch/hooks/useObserver';
 import { useViewportSize } from '@/flavours/glitch/hooks/useViewportSize';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
+  closeOrMinimizeComposer,
   minimizeComposerToggle,
   openNewComposer,
 } from '@/flavours/glitch/reducers/slices/composer';
@@ -76,7 +78,19 @@ export const ComposeButton: React.FC<{
     viewport.height < NARROW_HEIGHT ||
     viewport.width < BREAKPOINTS.openable ||
     (isIPad() && isWebKit());
-  useBodyScrollLock(isFullscreen && displayState === 'showing');
+
+  const isFullscreenOpen = isFullscreen && displayState === 'showing';
+
+  useBodyScrollLock(isFullscreenOpen);
+
+  useCloseOnHistoryBack(
+    () => {
+      dispatch(closeOrMinimizeComposer());
+    },
+    {
+      active: isFullscreenOpen,
+    },
+  );
 
   if (!signedIn) {
     return null;

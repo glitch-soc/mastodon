@@ -4,6 +4,7 @@ import { useLayoutEffect, useRef } from 'react';
 import classNames from 'classnames';
 
 import { useBodyScrollLock } from '@/flavours/glitch/hooks/useBodyScrollLock';
+import { useCloseOnHistoryBack } from '@/flavours/glitch/hooks/useCloseOnHistoryBack';
 import { useMergedRefs } from '@/flavours/glitch/hooks/useMergedRefs';
 import { useOnClickOutside } from '@/flavours/glitch/hooks/useOnClickOutside';
 import { useScrollSensor } from '@/flavours/glitch/hooks/useScrollSensor';
@@ -14,7 +15,7 @@ interface BottomSheetProps extends Omit<
   ComponentPropsWithRef<'dialog'>,
   'onClose'
 > {
-  onClose: (e: Event) => void;
+  onClose: (e?: Event) => void;
 }
 
 export const BottomSheet: React.FC<BottomSheetProps> = ({
@@ -27,6 +28,8 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
   const contentRef = useRef<HTMLDivElement>(null);
 
   useBodyScrollLock();
+
+  useCloseOnHistoryBack(onClose, { ignoreFocus: true });
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current;

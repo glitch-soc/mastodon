@@ -29,12 +29,12 @@ import { selectPictureInPicture } from '@/flavours/glitch/selectors/statuses';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 import { compareUrls } from '@/flavours/glitch/utils/compare_urls';
 
-import { Button } from '../button/redesign';
+import { Button } from '../button';
 
 import classes from './attachments.module.scss';
 import { useStatusContext } from './hooks';
-import { PictureInPicturePlaceholder } from './legacy/picture_in_picture_placeholder';
 import { LinkCard } from './link';
+import { PictureInPicturePlaceholder } from './picture_in_picture_placeholder';
 import mainClasses from './styles.module.scss';
 
 export const StatusAttachments: React.FC<{

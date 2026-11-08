@@ -33,7 +33,7 @@ import { me } from 'flavours/glitch/initial_state';
 import type { MenuItem } from 'flavours/glitch/models/dropdown_menu';
 import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
 
-import { IconButton, Button } from '../button/redesign';
+import { IconButton, Button } from '../button';
 import { LegacyDropdownMenuItems, Menu, MenuList, MenuTrigger } from '../menu';
 import { Permalink } from '../permalink';
 

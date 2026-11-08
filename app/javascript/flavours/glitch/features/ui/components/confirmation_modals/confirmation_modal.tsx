@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import {
   ModalShell,
   ModalShellActions,
@@ -37,6 +37,7 @@ interface ConfirmationModalProps {
   className?: string;
   updating?: boolean;
   disabled?: boolean;
+  destructive?: boolean;
   noFocusButton?: boolean;
 }
 
@@ -57,6 +58,7 @@ export const ConfirmationModal: React.FC<
   className,
   updating,
   disabled,
+  destructive,
   noCloseOnConfirm = false,
   noFocusButton = false,
 }) => {
@@ -118,7 +120,7 @@ export const ConfirmationModal: React.FC<
           disabled={disabled}
           autoFocus={!noFocusButton}
           variant='solid'
-          color='accent'
+          color={destructive ? 'destructive' : 'accent'}
         >
           {confirm}
         </Button>

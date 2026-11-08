@@ -7,7 +7,7 @@ import type { Area } from 'react-easy-crop';
 import Cropper from 'react-easy-crop';
 
 import { setDragUploadEnabled } from '@/flavours/glitch/actions/compose_typed';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { RangeInputField } from '@/flavours/glitch/components/form_fields/range_input_field';
 import {
   selectImageInfo,

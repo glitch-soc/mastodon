@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { GIF } from 'flavours/glitch/components/gif';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 

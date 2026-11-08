@@ -4,7 +4,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import { PencilSimpleIcon, MinusIcon, XIcon } from '@phosphor-icons/react';
 
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import {
   closeComposer,
   minimizeComposerToggle,

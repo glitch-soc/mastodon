@@ -12,7 +12,7 @@ import { blockAccount } from 'flavours/glitch/actions/accounts';
 import { blockDomain } from 'flavours/glitch/actions/domain_blocks';
 import { closeModal } from 'flavours/glitch/actions/modal';
 import { apiRequest } from 'flavours/glitch/api';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { Icon } from 'flavours/glitch/components/icon';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { ShortNumber } from 'flavours/glitch/components/short_number';

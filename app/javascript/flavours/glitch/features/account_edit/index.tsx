@@ -9,7 +9,7 @@ import type { ModalType } from '@/flavours/glitch/actions/modal';
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { AccountBio } from '@/flavours/glitch/components/account_bio';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { DismissibleCallout } from '@/flavours/glitch/components/callout/dismissible';
 import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
 import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';

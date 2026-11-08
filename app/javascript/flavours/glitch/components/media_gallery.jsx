@@ -16,7 +16,7 @@ import { SpoilerButton } from 'flavours/glitch/components/spoiler_button';
 import { formatTime } from 'flavours/glitch/features/video';
 
 import { autoPlayGif, displayMedia, useBlurhash } from '../initial_state';
-import { Button } from './button/redesign';
+import { Button } from './button';
 
 class Item extends PureComponent {
 

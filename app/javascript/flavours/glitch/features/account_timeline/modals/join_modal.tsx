@@ -7,10 +7,7 @@ import { XIcon } from '@phosphor-icons/react';
 
 import { focusCompose, resetCompose } from '@/flavours/glitch/actions/compose';
 import { closeModal } from '@/flavours/glitch/actions/modal';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { FormattedDateWrapper } from '@/flavours/glitch/components/formatted_date';
 import {

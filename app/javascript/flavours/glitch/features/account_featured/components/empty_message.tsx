@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import { openModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { EmptyState } from '@/flavours/glitch/components/empty_state';
 import { LimitedAccountHint } from '@/flavours/glitch/components/limited_account_hint';

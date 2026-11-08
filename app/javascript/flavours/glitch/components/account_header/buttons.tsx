@@ -12,7 +12,7 @@ import { useFollowReference } from '@/flavours/glitch/hooks/useFollowReference';
 import { getAccountHidden } from '@/flavours/glitch/selectors/accounts';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
-import { Button, IconButton } from '../button/redesign';
+import { Button, IconButton } from '../button';
 import { CopyIconButton } from '../copy_button';
 import { FollowButton } from '../follow_button';
 

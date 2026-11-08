@@ -5,7 +5,7 @@ import { DotsThreeIcon } from '@phosphor-icons/react';
 import { ColumnHeaderButton } from '@/flavours/glitch/components/column_header';
 import { Menu, MenuList, MenuTrigger } from '@/flavours/glitch/components/menu';
 
-import type { IconButtonProps } from '../button/redesign';
+import type { IconButtonProps } from '../button';
 
 type ColumnSettingsMenuProps = {
   icon?: IconButtonProps['icon'];

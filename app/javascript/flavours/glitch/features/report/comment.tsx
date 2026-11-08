@@ -9,7 +9,7 @@ import { shallowEqual } from 'react-redux';
 import { Toggle } from '@/flavours/glitch/components/form_fields/toggle_field';
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
 import { fetchAccount } from 'flavours/glitch/actions/accounts';
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import type { Status } from 'flavours/glitch/models/status';
 import type { RootState } from 'flavours/glitch/store';
 import {

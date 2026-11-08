@@ -10,7 +10,7 @@ import { openModal } from '@/flavours/glitch/actions/modal';
 import { fetchServer } from '@/flavours/glitch/actions/server';
 import type { ApiInstanceJSON } from '@/flavours/glitch/api_types/instance';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Callout } from '@/flavours/glitch/components/callout/redesign';
 import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { LockupLink, LockupWrapper } from '@/flavours/glitch/components/lockup';

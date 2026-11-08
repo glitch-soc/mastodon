@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import type { AccountField } from '@/flavours/glitch/components/account_header/fields';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
 import {
   ModalShell,

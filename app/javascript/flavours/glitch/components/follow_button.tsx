@@ -18,8 +18,8 @@ import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 import { useBreakpoint } from '../features/ui/hooks/useBreakpoint';
 
-import { Button } from './button/redesign';
-import type { ButtonProps } from './button/redesign';
+import { Button } from './button';
+import type { ButtonProps } from './button';
 import type { MastodonLocationDescriptor } from './router';
 
 const longMessages = defineMessages({

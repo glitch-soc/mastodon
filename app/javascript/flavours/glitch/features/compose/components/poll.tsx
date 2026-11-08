@@ -16,12 +16,11 @@ import {
   deletePollOption,
   updatePollOption,
 } from '@/flavours/glitch/actions/compose_typed';
+import { Button, buttonClasses } from '@/flavours/glitch/components/button';
 import {
-  Button,
-  buttonClasses,
-} from '@/flavours/glitch/components/button/redesign';
-import { ToggleField } from '@/flavours/glitch/components/form_fields';
-import { TextInput } from '@/flavours/glitch/components/form_fields/redesign';
+  ToggleField,
+  TextInput,
+} from '@/flavours/glitch/components/form_fields';
 import { useAppSelector, useAppDispatch } from '@/flavours/glitch/store';
 import { DAY, HOUR, MINUTE } from '@/flavours/glitch/utils/time';
 

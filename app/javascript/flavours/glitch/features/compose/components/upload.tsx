@@ -14,10 +14,7 @@ import {
 import { undoUploadCompose } from '@/flavours/glitch/actions/compose';
 import { openModal } from '@/flavours/glitch/actions/modal';
 import type { ApiAudioAttachmentJSON } from '@/flavours/glitch/api_types/media_attachments';
-import {
-  Button,
-  IconButton,
-} from '@/flavours/glitch/components/button/redesign';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { StatusImage } from '@/flavours/glitch/components/status/image';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 

@@ -22,7 +22,7 @@ import { fetchFollowRequests } from '@/flavours/glitch/actions/accounts';
 import { fetchLists } from '@/flavours/glitch/actions/lists';
 import { closeNavigation } from '@/flavours/glitch/actions/navigation';
 import { fetchFollowedHashtags } from '@/flavours/glitch/actions/tags_typed';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { Callout } from '@/flavours/glitch/components/callout/redesign';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { useScrollSensor } from '@/flavours/glitch/hooks/useScrollSensor';

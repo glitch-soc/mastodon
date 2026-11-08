@@ -5,7 +5,7 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 
 import { connect } from 'react-redux';
 
-import { Button } from 'flavours/glitch/components/button/redesign';
+import { Button } from 'flavours/glitch/components/button';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 
