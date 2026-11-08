@@ -40,9 +40,6 @@ export const Footer: React.FC<{
   const getStatus = useMemo(() => makeGetStatus(), []) as GetStatusSelector;
   const status = useAppSelector((state) => getStatus(state, { id: statusId }));
   const account = status?.get('account') as Account | undefined;
-  const showReplyCount = useAppSelector(
-    (state) => state.local_settings.get('show_reply_count', false) as boolean,
-  );
 
   const handleReplyClick = useCallback(() => {
     if (!status) {
@@ -95,8 +92,7 @@ export const Footer: React.FC<{
         icon='reply'
         iconComponent={reply.icon}
         onClick={handleReplyClick}
-        counter={showReplyCount ? reply.counter : undefined}
-        obfuscateCount={!showReplyCount}
+        counter={reply.counter}
       />
 
       <StatusReblogButton statusId={statusId}>

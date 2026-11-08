@@ -19,7 +19,6 @@ import LocalSettingsNavigationItem from './item';
 const messages = defineMessages({
   general: {  id: 'settings.general', defaultMessage: 'General' },
   compose: {  id: 'settings.compose_box_opts', defaultMessage: 'Compose box' },
-  content_warnings: { id: 'settings.content_warnings', defaultMessage: 'Content Warnings' },
   media: { id: 'settings.media', defaultMessage: 'Media' },
   preferences: { id: 'settings.preferences', defaultMessage: 'Preferences' },
   close: { id: 'settings.close', defaultMessage: 'Close' },
@@ -60,22 +59,14 @@ class LocalSettingsNavigation extends PureComponent {
           active={index === 2}
           index={2}
           onNavigate={onNavigate}
-          icon='warning'
-          iconComponent={WarningIcon}
-          title={intl.formatMessage(messages.content_warnings)}
-        />
-        <LocalSettingsNavigationItem
-          active={index === 3}
-          index={3}
-          onNavigate={onNavigate}
           icon='image'
           iconComponent={ImageIcon}
           title={intl.formatMessage(messages.media)}
         />
         <LocalSettingsNavigationItem
-          active={index === 4}
+          active={index === 3}
           className='close'
-          index={5}
+          index={3}
           onNavigate={onClose}
           icon='times'
           iconComponent={CloseIcon}
