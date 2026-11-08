@@ -113,7 +113,6 @@ const mapStateToProps = state => ({
   fullWidthColumns: state.getIn(['local_settings', 'fullwidth_columns']),
   unreadNotifications: selectUnreadNotificationGroupsCount(state),
   showFaviconBadge: state.getIn(['local_settings', 'notifications', 'favicon_badge']),
-  hicolorPrivacyIcons: state.getIn(['local_settings', 'hicolor_privacy_icons']),
   moved: state.getIn(['accounts', me, 'moved']) && state.getIn(['accounts', state.getIn(['accounts', me, 'moved'])]),
   firstLaunch: state.getIn(['settings', 'introductionVersion'], 0) < INTRODUCTION_VERSION,
   newAccount: !state.getIn(['accounts', me, 'note']) && !state.getIn(['accounts', me, 'bot']) && state.getIn(['accounts', me, 'following_count'], 0) === 0 && state.getIn(['accounts', me, 'statuses_count'], 0) === 0,
@@ -300,7 +299,6 @@ class UI extends PureComponent {
     intl: PropTypes.object.isRequired,
     unreadNotifications: PropTypes.number,
     showFaviconBadge: PropTypes.bool,
-    hicolorPrivacyIcons: PropTypes.bool,
     moved: PropTypes.map,
     layout: PropTypes.string.isRequired,
     firstLaunch: PropTypes.bool,
@@ -660,7 +658,6 @@ class UI extends PureComponent {
       'wide': isWide,
       'fullwidth-columns': this.props.fullWidthColumns,
       'system-font': this.props.systemFontUi,
-      'hicolor-privacy-icons': this.props.hicolorPrivacyIcons,
     });
 
     const handlers = {
