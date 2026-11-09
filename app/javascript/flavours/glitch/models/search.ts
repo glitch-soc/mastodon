@@ -2,11 +2,11 @@ import type { ApiCollectionJSON } from '@/flavours/glitch/api_types/collections'
 import type { ApiSearchResultsJSON } from '@/flavours/glitch/api_types/search';
 import type { ApiHashtagJSON } from '@/flavours/glitch/api_types/tags';
 
-export type SearchType = 'account' | 'hashtag' | 'accounts' | 'statuses';
+export type RecentSearchType = 'account' | 'hashtag' | 'accounts' | 'statuses';
 
 export interface RecentSearch {
   q: string;
-  type?: SearchType;
+  type?: RecentSearchType;
 }
 
 export interface SearchResults {
