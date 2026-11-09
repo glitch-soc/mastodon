@@ -4,7 +4,6 @@ import {
   addToScrollLockStack,
   removeFromScrollLockStack,
 } from '@/flavours/glitch/reducers/slices/scrollLockStack';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import {
   createAppSelector,
   useAppDispatch,
@@ -17,7 +16,6 @@ const getShouldLockBodyScroll = createAppSelector(
     (state) => state.navigation.open,
     (state) => state.modal.get('stack').size > 0,
     (state) =>
-      isRedesignEnabled() &&
       state.composer.displayState === 'showing' &&
       state.meta.get('layout') === 'mobile',
   ],

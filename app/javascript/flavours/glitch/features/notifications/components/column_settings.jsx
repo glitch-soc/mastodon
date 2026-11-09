@@ -8,13 +8,11 @@ import ImmutablePropTypes from 'react-immutable-proptypes';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
 import { PERMISSION_MANAGE_USERS, PERMISSION_MANAGE_REPORTS } from 'flavours/glitch/permissions';
 
-import ClearColumnButton from './clear_column_button';
 import GrantPermissionButton from './grant_permission_button';
 import PillBarButton from './pill_bar_button';
 import { PolicyControls } from './policy_controls';
 import SettingToggle from './setting_toggle';
 import { ColumnSettingsGroup } from './column_settings_group';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 class ColumnSettings extends PureComponent {
   static propTypes = {
@@ -49,12 +47,6 @@ class ColumnSettings extends PureComponent {
 
     return (
       <div className='column-settings'>
-        {!isRedesignEnabled() &&
-          <section>
-            <ClearColumnButton onClick={onClear} />
-          </section>
-        }
-
         {alertsEnabled && browserSupport && browserPermission === 'denied' && (
           <section>
             <span className='warning-hint'>
@@ -75,7 +67,7 @@ class ColumnSettings extends PureComponent {
 
         <section role='group' aria-labelledby='notifications-filter-bar'>
           <h3 id='notifications-filter-bar'><FormattedMessage id='notifications.column_settings.filter_bar.category' defaultMessage='Quick filter bar' /></h3>
- 
+
           <div className='column-settings__row'>
             <SettingToggle id='show-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'show']} onChange={onChange} label={filterBarShowStr} />
             <SettingToggle id='show-filter-bar' prefix='notifications' settings={settings} settingPath={['quickFilter', 'advanced']} onChange={onChange} label={filterAdvancedStr} />

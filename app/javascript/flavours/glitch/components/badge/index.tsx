@@ -4,7 +4,6 @@ import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import type { OnAttributeHandler } from '@/flavours/glitch/utils/html';
 import AdminIcon from '@/images/icons/icon_admin.svg?react';
 import ClockIcon from '@/images/icons/icon_clock.svg?react';
@@ -54,7 +53,7 @@ export const Badge: FC<BadgeProps> = ({
     {...otherProps}
     className={classNames(
       classes.badge,
-      isRedesignEnabled() && redesignClasses.badge,
+      redesignClasses.badge,
       !icon && [classes.badgeWithoutIcon, redesignClasses.badgeWithoutIcon],
       classes[variant],
       className,

@@ -7,9 +7,6 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import DeleteIcon from '@/material-icons/400-24px/delete.svg?react';
-import DoneIcon from '@/material-icons/400-24px/done.svg?react';
-import InventoryIcon from '@/material-icons/400-24px/inventory_2.svg?react';
 import {
   fetchNotificationRequest,
   fetchNotificationsForRequest,
@@ -18,13 +15,10 @@ import {
   dismissNotificationRequest,
 } from 'flavours/glitch/actions/notification_requests';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
-import { IconButton } from 'flavours/glitch/components/icon_button';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import { SensitiveMediaContextProvider } from 'flavours/glitch/features/ui/util/sensitive_media_context';
 
 import NotificationContainer from './containers/notification_container';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { ColumnHeader, ColumnHeaderButton } from '@/flavours/glitch/components/column_header';
 import { CheckIcon, XIcon } from '@phosphor-icons/react';
 
@@ -88,42 +82,25 @@ export const NotificationRequest = ({ multiColumn, params: { id } }) => {
 
   return (
     <Column bindToDocument={!multiColumn} label={columnTitle}>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={columnTitle}
-          extraButtons={
-            <>
-              <ColumnHeaderButton icon={XIcon} onClick={handleDismiss}>
-                {intl.formatMessage(messages.dismiss)}
-              </ColumnHeaderButton>
-              <ColumnHeaderButton
-                icon={CheckIcon}
-                variant='solid'
-                color='accent'
-                onClick={handleAccept}
-              >
-                {intl.formatMessage(messages.accept)}
-              </ColumnHeaderButton>
-            </>
-          }
-        />
-      ) : (
-        <LegacyColumnHeader
-          icon='archive'
-          iconComponent={InventoryIcon}
-          title={columnTitle}
-          multiColumn={multiColumn}
-          showBackButton
-          scrollTopOnClick
-          extraButton={!removed && (
-            <>
-              <IconButton className='column-header__button' iconComponent={DeleteIcon} onClick={handleDismiss} title={intl.formatMessage(messages.dismiss)} />
-              <IconButton className='column-header__button' iconComponent={DoneIcon} onClick={handleAccept} title={intl.formatMessage(messages.accept)} />
-            </>
-          )}
-        />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={columnTitle}
+        extraButtons={
+          <>
+            <ColumnHeaderButton icon={XIcon} onClick={handleDismiss}>
+              {intl.formatMessage(messages.dismiss)}
+            </ColumnHeaderButton>
+            <ColumnHeaderButton
+              icon={CheckIcon}
+              variant='solid'
+              color='accent'
+              onClick={handleAccept}
+            >
+              {intl.formatMessage(messages.accept)}
+            </ColumnHeaderButton>
+          </>
+        }
+      />
 
       <SensitiveMediaContextProvider hideMediaByDefault>
         <ScrollableList

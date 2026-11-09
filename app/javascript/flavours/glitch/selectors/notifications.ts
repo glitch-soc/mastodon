@@ -5,8 +5,6 @@ import type { NotificationGroup } from 'flavours/glitch/models/notification_grou
 import type { NotificationGap } from 'flavours/glitch/reducers/notification_groups';
 import type { RootState } from 'flavours/glitch/store';
 
-import { isRedesignEnabled } from '../utils/environment';
-
 import {
   selectSettingsNotificationsExcludedTypes,
   selectSettingsNotificationsQuickFilterActive,
@@ -68,7 +66,7 @@ export const selectUnreadNotificationGroupsCount = createSelector(
     function filterRelevantNotifications(
       group: NotificationGap | NotificationGroup,
     ) {
-      if (isRedesignEnabled() && group.type === 'follow_request') {
+      if (group.type === 'follow_request') {
         // Pending follow requests are counted separately in the redesign
         return false;
       }

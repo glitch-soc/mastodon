@@ -15,7 +15,6 @@ import { MultiColumnMenuItems } from '@/flavours/glitch/components/column_header
 import { MenuItemCheckbox } from '@/flavours/glitch/components/menu';
 import { openNewComposer } from '@/flavours/glitch/reducers/slices/composer';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import {
   addColumn,
   removeColumn,
@@ -165,17 +164,10 @@ const DirectTimeline: React.FC<ColumnBase> = ({ columnId, multiColumn }) => {
           prepend={
             <div className='follow_requests-unlocked_explanation'>
               <span>
-                {isRedesignEnabled() ? (
-                  <FormattedMessage
-                    id='compose_form.encryption_warning_messages'
-                    defaultMessage='Messages are not end-to-end encrypted. Never share sensitive information, such as your phone number or banking details, on Mastodon.'
-                  />
-                ) : (
-                  <FormattedMessage
-                    id='compose_form.encryption_warning'
-                    defaultMessage='Posts on Mastodon are not end-to-end encrypted. Do not share any dangerous information over Mastodon.'
-                  />
-                )}{' '}
+                <FormattedMessage
+                  id='compose_form.encryption_warning_messages'
+                  defaultMessage='Messages are not end-to-end encrypted. Never share sensitive information, such as your phone number or banking details, on Mastodon.'
+                />{' '}
                 <a
                   href='https://docs.joinmastodon.org/user/posting/#private'
                   rel='noreferrer'
@@ -225,11 +217,7 @@ const DirectTimeline: React.FC<ColumnBase> = ({ columnId, multiColumn }) => {
       )}
 
       <Helmet>
-        <title>
-          {intl.formatMessage(
-            isRedesignEnabled() ? messages.title_redesign : messages.title,
-          )}
-        </title>
+        <title>{intl.formatMessage(messages.title_redesign)}</title>
         <meta name='robots' content='noindex' />
       </Helmet>
     </Column>

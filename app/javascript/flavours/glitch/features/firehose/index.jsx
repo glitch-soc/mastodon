@@ -13,16 +13,13 @@ import { changeSetting } from 'flavours/glitch/actions/settings';
 import { connectPublicStream, connectCommunityStream } from 'flavours/glitch/actions/streaming';
 import { expandPublicTimeline, expandCommunityTimeline } from 'flavours/glitch/actions/timelines';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import SettingText from 'flavours/glitch/components/setting_text';
 import { localLiveFeedAccess, remoteLiveFeedAccess, domain } from 'flavours/glitch/initial_state';
 import { canViewFeed } from 'flavours/glitch/permissions';
 import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
-import SettingToggle from '../notifications/components/setting_toggle';
 import StatusListContainer from '../ui/containers/status_list_container';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { ColumnHeader, ColumnSettingsMenu } from '@/flavours/glitch/components/column_header';
 import { MultiColumnMenuItems } from '@/flavours/glitch/components/column_header/multicolumn_settings';
 import { MenuItemCheckbox } from '@/flavours/glitch/components/menu';
@@ -193,22 +190,11 @@ const Firehose = ({ feedType, multiColumn }) => {
   const canViewLocalFeed = canViewFeed(signedIn, permissions, localLiveFeedAccess);
   const canViewRemoteFeed = canViewFeed(signedIn, permissions, remoteLiveFeedAccess);
 
-  let title;
-  if (canViewLocalFeed && canViewRemoteFeed) {
-    title = messages.title;
-  } else if (canViewLocalFeed) {
-    title = messages.title_local;
-  } else {
-    title = messages.title_singular;
-  }
+  const canOnlyViewSingleFeed = canViewLocalFeed !== canViewRemoteFeed;
 
-  if (isRedesignEnabled()) {
-    const canOnlyViewSingleFeed = canViewLocalFeed !== canViewRemoteFeed;
-
-    title = canOnlyViewSingleFeed
-      ? intl.formatMessage(messages.title_singular_redesign)
-      : intl.formatMessage(messages.title_redesign);
-  }
+  const title = canOnlyViewSingleFeed
+    ? intl.formatMessage(messages.title_singular_redesign)
+    : intl.formatMessage(messages.title_redesign);
 
   return (
     <Column bindToDocument={!multiColumn} label={intl.formatMessage(messages.title)}>

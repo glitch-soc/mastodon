@@ -8,7 +8,6 @@ import { Helmet } from '@unhead/react/helmet';
 import { useSelector, useDispatch } from 'react-redux';
 
 import ArrowDropDownIcon from '@/material-icons/400-24px/arrow_drop_down.svg?react';
-import InventoryIcon from '@/material-icons/400-24px/inventory_2.svg?react';
 import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
 import {
@@ -17,21 +16,15 @@ import {
   acceptNotificationRequests,
   dismissNotificationRequests,
 } from 'flavours/glitch/actions/notification_requests';
-import { changeSetting } from 'flavours/glitch/actions/settings';
 import { CheckBox } from 'flavours/glitch/components/check_box';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { Icon } from 'flavours/glitch/components/icon';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 import { Dropdown } from 'flavours/glitch/components/dropdown_menu';
 
 import { NotificationRequest } from './components/notification_request';
-import { PolicyControls } from './components/policy_controls';
-import SettingToggle from './components/setting_toggle';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { ColumnHeader, ColumnHeaderButton } from '@/flavours/glitch/components/column_header';
 import { GearIcon } from '@phosphor-icons/react';
-import { NotificationRequestsSettings } from './components/notification_requests_settings';
 
 const messages = defineMessages({
   title: { id: 'notification_requests.title', defaultMessage: 'Filtered notifications' },
@@ -187,40 +180,26 @@ export const NotificationRequests = ({ multiColumn }) => {
       }),
     );
   }, [dispatch]);
-    
+
   const selectionRow = notificationRequests.length > 0 && (
     <SelectRow selectionMode={selectionMode} setSelectionMode={setSelectionMode} selectAllChecked={selectAllChecked} toggleSelectAll={toggleSelectAll} selectedItems={checkedRequestIds} />
   );
 
   return (
     <Column bindToDocument={!multiColumn} label={intl.formatMessage(messages.title)}>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={intl.formatMessage(messages.title)}
-          extraButtons={
-            <ColumnHeaderButton icon={GearIcon} onClick={openNotificationRequestsSettings}>
-                <FormattedMessage
-                  id='notifications.settings'
-                  defaultMessage='Notification Settings'
-                />
-            </ColumnHeaderButton>
-          }
-          extraStickyContent={selectionRow}
-        />
-      ) : (
-        <LegacyColumnHeader
-          icon='archive'
-          iconComponent={InventoryIcon}
-          title={intl.formatMessage(messages.title)}
-          multiColumn={multiColumn}
-          showBackButton
-          scrollTopOnClick
-          appendContent={selectionRow}
-        >
-          <NotificationRequestsSettings />
-        </LegacyColumnHeader>
-      )}
+      <ColumnHeader
+        withBackButton
+        title={intl.formatMessage(messages.title)}
+        extraButtons={
+          <ColumnHeaderButton icon={GearIcon} onClick={openNotificationRequestsSettings}>
+              <FormattedMessage
+                id='notifications.settings'
+                defaultMessage='Notification Settings'
+              />
+          </ColumnHeaderButton>
+        }
+        extraStickyContent={selectionRow}
+      />
 
       <ScrollableList
         scrollKey='notification_requests'
