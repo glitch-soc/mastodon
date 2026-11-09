@@ -4,7 +4,7 @@ import { apiGetSearch } from 'flavours/glitch/api/search';
 import type { ApiSearchType } from 'flavours/glitch/api_types/search';
 import type {
   RecentSearch,
-  SearchType as RecentSearchType,
+  RecentSearchType,
 } from 'flavours/glitch/models/search';
 import { searchHistory } from 'flavours/glitch/settings';
 import {
