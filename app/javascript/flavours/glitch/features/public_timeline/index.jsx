@@ -7,9 +7,7 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { connect } from 'react-redux';
 
-import PublicIcon from '@/material-icons/400-24px/public.svg?react';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { DismissableBanner } from 'flavours/glitch/components/dismissable_banner';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import { identityContextPropShape, withIdentity } from 'flavours/glitch/identity_context';
@@ -21,7 +19,6 @@ import { connectPublicStream } from '../../actions/streaming';
 import { expandPublicTimeline } from '../../actions/timelines';
 import StatusListContainer from '../ui/containers/status_list_container';
 
-import ColumnSettingsContainer from './containers/column_settings_container';
 import { ColumnHeader, ColumnSettingsMenu } from '@/flavours/glitch/components/column_header';
 import { FeedColumnSettings } from './components/feed_column_settings';
 import { MultiColumnMenuItems } from '@/flavours/glitch/components/column_header/multicolumn_settings';
