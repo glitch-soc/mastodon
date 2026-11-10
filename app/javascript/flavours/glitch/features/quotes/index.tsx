@@ -9,19 +9,15 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { fetchQuotes } from '@/flavours/glitch/actions/interactions_typed';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import {
   ColumnHeader,
   ColumnHeaderButton,
 } from '@/flavours/glitch/components/column_header';
-import { Icon } from '@/flavours/glitch/components/icon';
 import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
 import StatusList from '@/flavours/glitch/components/status_list';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import { domain } from '@/flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import RefreshIcon from '@/material-icons/400-24px/refresh.svg?react';
 
 const messages = defineMessages({
   title: { id: 'status.quotes_title', defaultMessage: 'Post Quotes' },
@@ -119,36 +115,15 @@ export const Quotes: React.FC<{
 
   return (
     <Column bindToDocument={!multiColumn}>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={intl.formatMessage(messages.title)}
-          extraButtons={
-            <ColumnHeaderButton
-              icon={ArrowClockwiseIcon}
-              onClick={handleRefresh}
-            >
-              {intl.formatMessage(messages.refresh)}
-            </ColumnHeaderButton>
-          }
-        />
-      ) : (
-        <LegacyColumnHeader
-          showBackButton
-          multiColumn={multiColumn}
-          extraButton={
-            <button
-              type='button'
-              className='column-header__button'
-              title={intl.formatMessage(messages.refresh)}
-              aria-label={intl.formatMessage(messages.refresh)}
-              onClick={handleRefresh}
-            >
-              <Icon id='refresh' icon={RefreshIcon} />
-            </button>
-          }
-        />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={intl.formatMessage(messages.title)}
+        extraButtons={
+          <ColumnHeaderButton icon={ArrowClockwiseIcon} onClick={handleRefresh}>
+            {intl.formatMessage(messages.refresh)}
+          </ColumnHeaderButton>
+        }
+      />
 
       <StatusList
         scrollKey='quotes_timeline'

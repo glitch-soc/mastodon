@@ -10,9 +10,6 @@ import { BundleColumnError } from '@/flavours/glitch/features/ui/components/bund
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
 import { useLayout } from '@/flavours/glitch/hooks/useLayout';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-
-import { ProfileColumnHeader } from '../../account/components/profile_column_header';
 
 import { RemoteHint } from './remote';
 
@@ -102,11 +99,7 @@ export const AccountList: FC<AccountListProps> = ({
 
   return (
     <Column>
-      {isRedesignEnabled() ? (
-        <ColumnHeader withBackButton title={title} />
-      ) : (
-        <ProfileColumnHeader multiColumn={multiColumn} />
-      )}
+      <ColumnHeader withBackButton title={title} />
 
       <ScrollableList
         scrollKey={scrollKey}

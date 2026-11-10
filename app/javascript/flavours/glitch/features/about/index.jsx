@@ -15,7 +15,6 @@ import { injectIntl } from '@/flavours/glitch/components/intl';
 import { fetchServer, fetchExtendedDescription, fetchDomainBlocks  } from 'flavours/glitch/actions/server';
 import { Account } from 'flavours/glitch/components/account';
 import { Column } from '@/flavours/glitch/components/column';
-import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { ServerHeroImage } from 'flavours/glitch/components/server_hero_image';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import { LinkFooter} from 'flavours/glitch/features/ui/components/link_footer';
@@ -24,7 +23,6 @@ import { Section } from './components/section';
 import { RulesSection } from './components/rules';
 import { getColumnSkipLinkId } from '../ui/components/skip_links';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 import classes from './styles.module.scss';
 
@@ -90,11 +88,9 @@ class About extends PureComponent {
 
     return (
       <Column bindToDocument={!multiColumn} label={intl.formatMessage(messages.title)}>
-        {isRedesignEnabled() &&
-          <ColumnHeader title={domain} />
-        }
+        <ColumnHeader title={domain} />
         <div
-          className={classNames('scrollable about', isRedesignEnabled() && classes.redesignOverrides)}
+          className={classNames('scrollable about', classes.redesignOverrides)}
           id={getColumnSkipLinkId(1)}
         >
           <div className='about__header'>
@@ -106,11 +102,6 @@ class About extends PureComponent {
               srcSet={Object.keys(server.item?.thumbnail.versions ?? {}).map((key) => `${server.item?.thumbnail.versions && server.item.thumbnail.versions[key]} ${key.replace('@', '')}`).join(', ')}
               className='about__header__hero'
             />
-            {!isRedesignEnabled() &&
-              <NavigationFocusTarget as='h1'>
-                {isLoading ? <Skeleton width='10ch' /> : domain}
-              </NavigationFocusTarget>
-            }
             <p><FormattedMessage id='about.powered_by' defaultMessage='Decentralized social media powered by {mastodon}' values={{ mastodon: <a href='https://joinmastodon.org' className='about__mail' target='_blank' rel='noopener'>Mastodon</a> }} /></p>
           </div>
 

@@ -90,7 +90,6 @@ const Followers: FC = () => {
         accountId && (
           <AccountListHeader
             accountId={accountId}
-            titleText={titleText}
             total={account?.following_count}
           />
         )

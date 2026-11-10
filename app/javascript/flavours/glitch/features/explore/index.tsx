@@ -7,7 +7,6 @@ import { Helmet } from '@unhead/react/helmet';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { Search } from '@/flavours/glitch/components/search';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { useIdentity } from 'flavours/glitch/identity_context';
 
 import Links from './links';
@@ -84,11 +83,7 @@ const Explore: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
       </Switch>
 
       <Helmet>
-        <title>
-          {intl.formatMessage(
-            isRedesignEnabled() ? messages.titleRedesign : messages.title,
-          )}
-        </title>
+        <title>{intl.formatMessage(messages.titleRedesign)}</title>
         <meta name='robots' content='all' />
       </Helmet>
     </Column>

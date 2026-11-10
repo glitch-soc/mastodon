@@ -7,7 +7,6 @@ import type { List, Record } from 'immutable';
 import { ColumnIndexContext } from '@/flavours/glitch/components/column/context';
 import MultiColumnPlaceholderColumn from '@/flavours/glitch/features/multi_column_placeholder';
 import { useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 import {
   Compose,
@@ -88,7 +87,7 @@ export const MultiColumnContent: React.FC<{
         const uuid = column.get('uuid');
         const id = column.get('id');
 
-        if (isRedesignEnabled() && id === 'COMPOSE') {
+        if (id === 'COMPOSE') {
           return null;
         }
 
