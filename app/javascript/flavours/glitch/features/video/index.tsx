@@ -863,9 +863,8 @@ export const Video: React.FC<{
               })}
             >
               <Button
-                contrastOnMedia
                 size='xs'
-                variant='solid'
+                variant='solidOnMedia'
                 className='media-gallery__actions__pill'
                 onClick={toggleReveal}
                 type='button'
