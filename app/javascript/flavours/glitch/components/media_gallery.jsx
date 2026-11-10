@@ -273,7 +273,8 @@ class MediaGallery extends PureComponent {
     trailing: true,
   });
 
-  handleOpen = () => {
+  handleOpen = (e) => {
+    e.preventDefault();
     if (this.props.onToggleVisibility) {
       this.props.onToggleVisibility();
     } else {
