@@ -3,10 +3,10 @@ import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 
-import { IconLogo } from '@/mastodon/components/logo';
-import { customAppIcon, domain, title } from '@/mastodon/initial_state';
+import { IconLogo } from '@/flavours/glitch/components/logo';
+import { customAppIcon, domain, title } from '@/flavours/glitch/initial_state';
 
-import { getNavigationSkipLinkId } from '../../ui/components/skip_links';
+import { getNavigationSkipLinkId } from '../ui/components/skip_links';
 
 import classes from './header.module.scss';
 

@@ -60,7 +60,7 @@ export const FavouriteModal: React.FC<{
         </Button>
 
         <Button size='sm' variant='solid' onClick={handleFavourite}>
-          <FormattedMessage id='status.favourite' defaultMessage='Favourite' />
+          <FormattedMessage id='status.favourite' defaultMessage='Favorite' />
         </Button>
       </ModalActions>
     </ModalShell>

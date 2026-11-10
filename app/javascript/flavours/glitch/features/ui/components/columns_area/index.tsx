@@ -3,8 +3,8 @@ import classNames from 'classnames';
 import { Column } from '@/flavours/glitch/components/column';
 import { ComposeButton } from '@/flavours/glitch/features/compose/trigger';
 import { DiscoveryPanel } from '@/flavours/glitch/features/discovery_panel';
-import { RedesignNavigationPanel } from '@/flavours/glitch/features/navigation_panel/redesign';
-import { RedesignMobileNavigation } from '@/flavours/glitch/features/navigation_panel/redesign/mobile_nav';
+import { RedesignNavigationPanel } from '@/flavours/glitch/features/navigation_panel';
+import { RedesignMobileNavigation } from '@/flavours/glitch/features/navigation_panel/mobile_nav';
 import { Footer } from 'flavours/glitch/features/custom_homepage/components/footer';
 
 import { useBreakpoint } from '../../hooks/useBreakpoint';
