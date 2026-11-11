@@ -2,10 +2,10 @@ import { forwardRef, useCallback, useState } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { submitCompose } from '@/flavours/glitch/actions/compose';
 import { PRIVATE_QUOTE_MODAL_ID } from '@/flavours/glitch/actions/compose_typed';
 import { changeSetting } from '@/flavours/glitch/actions/settings';
 import { CheckBox } from '@/flavours/glitch/components/check_box';
+import { submitComposer } from '@/flavours/glitch/reducers/slices/composer';
 import { useAppDispatch } from '@/flavours/glitch/store';
 
 import { ConfirmationModal } from './confirmation_modal';
@@ -51,7 +51,7 @@ export const PrivateQuoteNotify = forwardRef<
 
     const dispatch = useAppDispatch();
     const handleConfirm = useCallback(() => {
-      dispatch(submitCompose());
+      dispatch(submitComposer());
       if (dismiss) {
         dispatch(
           changeSetting(['dismissed_banners', PRIVATE_QUOTE_MODAL_ID], true),
