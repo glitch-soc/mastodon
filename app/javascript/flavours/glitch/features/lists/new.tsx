@@ -12,6 +12,7 @@ import { Button } from '@/flavours/glitch/components/button';
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { NotSignedInIndicator } from '@/flavours/glitch/components/not_signed_in_indicator';
+import { Scrollable } from '@/flavours/glitch/components/scrollable_list/components';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import ChevronRightIcon from '@/material-icons/400-24px/chevron_right.svg?react';
 import { fetchList } from 'flavours/glitch/actions/lists';
@@ -22,6 +23,7 @@ import type { RepliesPolicyType } from 'flavours/glitch/api_types/lists';
 import { Avatar } from 'flavours/glitch/components/avatar';
 import { AvatarGroup } from 'flavours/glitch/components/avatar_group';
 import {
+  FormStack,
   SelectField,
   TextInputField,
   ToggleField,
@@ -178,62 +180,52 @@ const NewList: React.FC<{ list?: List | null }> = ({ list }) => {
   );
 
   return (
-    <form className='simple_form app-form' onSubmit={handleSubmit}>
-      <div className='fields-group'>
-        <TextInputField
-          required
-          maxLength={30}
-          label={intl.formatMessage(messages.nameFieldLabel)}
-          value={title}
-          onChange={handleTitleChange}
-          id='list_title'
-        />
-      </div>
+    <FormStack onSubmit={handleSubmit}>
+      <TextInputField
+        required
+        maxLength={30}
+        label={intl.formatMessage(messages.nameFieldLabel)}
+        value={title}
+        onChange={handleTitleChange}
+        id='list_title'
+      />
 
-      <div className='fields-group'>
-        <SelectField
-          label={intl.formatMessage(messages.showRepliesTo)}
-          value={repliesPolicy}
-          onChange={handleRepliesPolicyChange}
-          id='list_replies_policy'
-        >
-          <option value='none'>
-            <FormattedMessage
-              id='lists.replies_policy.none'
-              defaultMessage='No one'
-            />
-          </option>
-          <option value='list'>
-            {intl.formatMessage(messages.replyPolicyList)}
-          </option>
-          <option value='followed'>
-            <FormattedMessage
-              id='lists.replies_policy.followed'
-              defaultMessage='Any followed user'
-            />
-          </option>
-        </SelectField>
-      </div>
+      <SelectField
+        label={intl.formatMessage(messages.showRepliesTo)}
+        value={repliesPolicy}
+        onChange={handleRepliesPolicyChange}
+        id='list_replies_policy'
+      >
+        <option value='none'>
+          <FormattedMessage
+            id='lists.replies_policy.none'
+            defaultMessage='No one'
+          />
+        </option>
+        <option value='list'>
+          {intl.formatMessage(messages.replyPolicyList)}
+        </option>
+        <option value='followed'>
+          <FormattedMessage
+            id='lists.replies_policy.followed'
+            defaultMessage='Any followed user'
+          />
+        </option>
+      </SelectField>
 
-      {id && (
-        <div className='fields-group'>
-          <MembersLink id={id} />
-        </div>
-      )}
+      {id && <MembersLink id={id} />}
 
-      <div className='fields-group'>
-        <ToggleField
-          label={
-            <FormattedMessage
-              id='lists.exclusive'
-              defaultMessage='Hide members in Home'
-            />
-          }
-          hint={intl.formatMessage(messages.exclusiveHint)}
-          checked={exclusive}
-          onChange={handleExclusiveChange}
-        />
-      </div>
+      <ToggleField
+        label={
+          <FormattedMessage
+            id='lists.exclusive'
+            defaultMessage='Hide members in Home'
+          />
+        }
+        hint={intl.formatMessage(messages.exclusiveHint)}
+        checked={exclusive}
+        onChange={handleExclusiveChange}
+      />
 
       <div className='actions'>
         <Button
@@ -249,7 +241,7 @@ const NewList: React.FC<{ list?: List | null }> = ({ list }) => {
           )}
         </Button>
       </div>
-    </form>
+    </FormStack>
   );
 };
 
@@ -277,7 +269,7 @@ const NewListWrapper: React.FC<{
     <Column bindToDocument={!multiColumn} label={title}>
       <ColumnHeader withBackButton title={title} />
 
-      <div className='scrollable'>
+      <Scrollable>
         {!signedIn ? (
           <NotSignedInIndicator />
         ) : isLoading ? (
@@ -285,7 +277,7 @@ const NewListWrapper: React.FC<{
         ) : (
           <NewList list={list} />
         )}
-      </div>
+      </Scrollable>
 
       <Helmet>
         <title>{title}</title>
