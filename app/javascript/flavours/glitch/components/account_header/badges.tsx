@@ -3,11 +3,12 @@ import type { FC } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
+import { UserIcon } from '@phosphor-icons/react';
+
 import { fetchRelationships } from '@/flavours/glitch/actions/accounts';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import type { AccountRole } from '@/flavours/glitch/models/account';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import PersonIcon from '@/material-icons/400-24px/person.svg?react';
 
 import {
   AdminBadge,
@@ -58,7 +59,7 @@ export const AccountBadges: FC<{ accountId: string }> = ({ accountId }) => {
     } else {
       badges.push(
         <Badge
-          icon={<PersonIcon />}
+          icon={<UserIcon />}
           key={role.id}
           label={role.name}
           domain={`(${domain})`}
