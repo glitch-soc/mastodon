@@ -49,23 +49,6 @@ class LocalSettingsPage extends PureComponent {
         <h1><FormattedMessage id='settings.general' defaultMessage='General' /></h1>
         <LocalSettingsPageItem
           settings={settings}
-          item={['show_reply_count']}
-          id='mastodon-settings--reply-count'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.show_reply_counter' defaultMessage='Display an estimate of the reply count' />
-        </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
-          item={['hicolor_privacy_icons']}
-          id='mastodon-settings--hicolor_privacy_icons'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.hicolor_privacy_icons' defaultMessage='High color privacy icons' />
-          <span className='hint'><FormattedMessage id='settings.hicolor_privacy_icons.hint' defaultMessage='Display privacy icons in bright and easily distinguishable colors' /></span>
-        </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
           item={['confirm_boost_missing_media_description']}
           id='mastodon-settings--confirm_boost_missing_media_description'
           onChange={onChange}
@@ -115,84 +98,11 @@ class LocalSettingsPage extends PureComponent {
             <span className='hint'><FormattedMessage id='settings.notifications.favicon_badge.hint' defaultMessage='Add a badge for unread notifications to the favicon' /></span>
           </LocalSettingsPageItem>
         </section>
-
-        <section>
-          <h2><FormattedMessage id='settings.status_icons' defaultMessage='Toot icons' /></h2>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['status_icons', 'language']}
-            id='mastodon-settings--status-icons-language'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.status_icons_language' defaultMessage='Language indicator' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['status_icons', 'reply']}
-            id='mastodon-settings--status-icons-reply'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.status_icons_reply' defaultMessage='Reply indicator' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['status_icons', 'local_only']}
-            id='mastodon-settings--status-icons-local_only'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.status_icons_local_only' defaultMessage='Local-only indicator' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['status_icons', 'media']}
-            id='mastodon-settings--status-icons-media'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.status_icons_media' defaultMessage='Media and poll indicators' />
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['status_icons', 'visibility']}
-            id='mastodon-settings--status-icons-visibility'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.status_icons_visibility' defaultMessage='Toot privacy indicator' />
-          </LocalSettingsPageItem>
-        </section>
-        <section>
-          <h2><FormattedMessage id='settings.layout_opts' defaultMessage='Layout options' /></h2>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['stretch']}
-            id='mastodon-settings--stretch'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.wide_view' defaultMessage='Wide view (Desktop mode only)' />
-            <span className='hint'><FormattedMessage id='settings.wide_view_hint' defaultMessage='Stretches columns to better fill the available space.' /></span>
-          </LocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['fullwidth_columns']}
-            id='mastodon-settings--fullwidth_columns'
-            onChange={onChange}
-          >
-            <FormattedMessage id='settings.fullwidth_view' defaultMessage='Stretch columns to full width (Desktop mode only)' />
-            <span className='hint'><FormattedMessage id='settings.fullwidth_view_hint' defaultMessage='Stretches columns to fill all the available space.' /></span>
-          </LocalSettingsPageItem>
-        </section>
       </div>
     ),
     ({ intl, onChange, settings }) => (
       <div className='glitch local-settings__page compose_box_opts'>
         <h1><FormattedMessage id='settings.compose_box_opts' defaultMessage='Compose box' /></h1>
-        <LocalSettingsPageItem
-          settings={settings}
-          item={['always_show_spoilers_field']}
-          id='mastodon-settings--always_show_spoilers_field'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.always_show_spoilers_field' defaultMessage='Always enable the Content Warning field' />
-        </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
           item={['prepend_cw_re']}
@@ -220,97 +130,12 @@ class LocalSettingsPage extends PureComponent {
         </LocalSettingsPageItem>
         <LocalSettingsPageItem
           settings={settings}
-          item={['show_content_type_choice']}
-          id='mastodon-settings--show_content_type_choice'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.show_content_type_choice' defaultMessage='Show content-type choice when authoring toots' />
-        </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
           item={['show_published_toast']}
           id='mastodon-settings--show_published_toast'
           onChange={onChange}
         >
           <FormattedMessage id='settings.show_published_toast' defaultMessage='Display toast when publishing/saving a post' />
         </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
-          item={['side_arm']}
-          id='mastodon-settings--side_arm'
-          options={[
-            { value: 'none', message: intl.formatMessage(messages.side_arm_none) },
-            { value: 'direct', message: intl.formatMessage(messages.direct) },
-            { value: 'private', message: intl.formatMessage(messages.private) },
-            { value: 'unlisted', message: intl.formatMessage(messages.unlisted) },
-            { value: 'public', message: intl.formatMessage(messages.public) },
-          ]}
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.side_arm' defaultMessage='Secondary toot button:' />
-        </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
-          item={['side_arm_reply_mode']}
-          id='mastodon-settings--side_arm_reply_mode'
-          options={[
-            { value: 'keep', message: intl.formatMessage(messages.side_arm_keep) },
-            { value: 'copy', message: intl.formatMessage(messages.side_arm_copy) },
-            { value: 'restrict', message: intl.formatMessage(messages.side_arm_restrict) },
-          ]}
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.side_arm_reply_mode' defaultMessage='When replying to a toot, the secondary toot button should:' />
-        </LocalSettingsPageItem>
-      </div>
-    ),
-    ({ intl, onChange, settings }) => (
-      <div className='glitch local-settings__page content_warnings'>
-        <h1><FormattedMessage id='settings.content_warnings' defaultMessage='Content Warnings' /></h1>
-        <LocalSettingsPageItem
-          settings={settings}
-          item={['content_warnings', 'shared_state']}
-          id='mastodon-settings--content_warnings-shared_state'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.content_warnings_shared_state' defaultMessage='Show/hide content of all copies at once' />
-          <span className='hint'><FormattedMessage id='settings.content_warnings_shared_state_hint' defaultMessage='Reproduce upstream Mastodon behavior by having the Content Warning button affect all copies of a post at once. This will prevent automatic collapsing of any copy of a toot with unfolded CW' /></span>
-        </LocalSettingsPageItem>
-        <section>
-          <h2><FormattedMessage id='settings.content_warnings_unfold_opts' defaultMessage='Auto-unfolding options' /></h2>
-          <DeprecatedLocalSettingsPageItem
-            id='mastodon-settings--content_warnings-auto_unfold'
-            value={expandSpoilers}
-          >
-            <FormattedMessage id='settings.enable_content_warnings_auto_unfold' defaultMessage='Automatically unfold content-warnings' />
-            <span className='hint'>
-              <FormattedMessage
-                id='settings.deprecated_setting'
-                defaultMessage="This setting is now controlled from Mastodon's {settings_page_link}"
-                values={{
-                  settings_page_link: (
-                    <a href={preferenceLink('user_setting_expand_spoilers')}>
-                      <FormattedMessage
-                        id='settings.shared_settings_link'
-                        defaultMessage='user preferences'
-                      />
-                    </a>
-                  ),
-                }}
-              />
-            </span>
-          </DeprecatedLocalSettingsPageItem>
-          <LocalSettingsPageItem
-            settings={settings}
-            item={['content_warnings', 'filter']}
-            id='mastodon-settings--content_warnings-auto_unfold'
-            onChange={onChange}
-            placeholder={intl.formatMessage(messages.regexp)}
-            disabled={!expandSpoilers}
-          >
-            <FormattedMessage id='settings.content_warnings_filter' defaultMessage='Content warnings to not automatically unfold:' />
-          </LocalSettingsPageItem>
-        </section>
       </div>
     ),
     ({ intl, onChange, settings }) => (

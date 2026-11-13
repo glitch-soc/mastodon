@@ -36,7 +36,7 @@ const makeGetStatusIds = (pending = false) => createSelector([
   (state)           => state.get('statuses'),
   (_, { type }) => type,
   getRegex,
-], (columnSettings, statusIds, statuses, type, regex) => {
+], (columnSettings, statusIds, statuses, type, _regex) => {
   return statusIds.filter(id => {
     if (isNonStatusId(id)) return true;
 
@@ -65,10 +65,12 @@ const makeGetStatusIds = (pending = false) => createSelector([
       return false;
     }
 
+    /* Temporarily(?) disable regex filtering feature
     const searchIndex = statusForId.get('reblog') ? statuses.getIn([statusForId.get('reblog'), 'search_index']) : statusForId.get('search_index');
     if (regex && regex.test(searchIndex)) {
       return false;
     }
+    */
 
     return true;
   });

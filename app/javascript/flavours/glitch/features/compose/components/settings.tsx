@@ -24,6 +24,7 @@ import {
   useAppSelector,
 } from '@/flavours/glitch/store/typed_functions';
 
+import { GlitchSettings } from './glitch_settings';
 import {
   selectComposePrivacy,
   selectComposeQuotePolicy,
@@ -198,6 +199,10 @@ const ComposeSettingsInnerMenu: React.FC = () => {
           />
         </MenuItemCheckbox>
       </MenuItemGroup>
+
+      <MenuItemDivider />
+
+      <GlitchSettings />
     </>
   );
 };

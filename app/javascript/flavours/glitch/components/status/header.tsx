@@ -20,12 +20,13 @@ import { RelativeTimestamp } from '../relative_timestamp';
 import { Skeleton } from '../skeleton';
 
 import classes from './header.module.scss';
+import { LocalOnlyIcon } from './local_only_icon';
 import { accountStatusLinkProps, statusLink } from './utils';
 
 interface StatusHeaderProps {
   status: Pick<
     AccountStatusShape,
-    'id' | 'account' | 'created_at' | 'visibility' | 'mentions'
+    'id' | 'account' | 'created_at' | 'visibility' | 'mentions' | 'local_only'
   >;
   className?: string;
   featured?: boolean;
@@ -161,6 +162,7 @@ export const StatusHeaderAuthors: React.FC<
       >
         <RelativeTimestamp timestamp={status.created_at} />
       </Link>
+      {status.local_only && <LocalOnlyIcon />}
     </p>
   );
 };
