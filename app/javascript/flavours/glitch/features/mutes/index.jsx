@@ -10,20 +10,17 @@ import { connect } from 'react-redux';
 
 import { debounce } from 'lodash';
 
-import VolumeOffIcon from '@/material-icons/400-24px/volume_off.svg?react';
 import { fetchMutes, expandMutes } from '@/flavours/glitch/actions/mutes';
 import { Account } from '@/flavours/glitch/components/account';
 import { Column } from '@/flavours/glitch/components/column';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
 import ScrollableList from '@/flavours/glitch/components/scrollable_list';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 
 
 const messages = defineMessages({
-  heading: { id: 'column.mutes', defaultMessage: 'Muted users' },
+  heading: { id: 'column.muted_accounts', defaultMessage: 'Muted Accounts' },
 });
 
 const mapStateToProps = state => ({
@@ -67,14 +64,10 @@ class Mutes extends ImmutablePureComponent {
 
     return (
       <Column bindToDocument={!multiColumn}>
-        {isRedesignEnabled() ? (
-          <ColumnHeader
-            withBackButton
-            title={intl.formatMessage(messages.heading)}
-          />
-        ) : (
-          <LegacyColumnHeader icon='volume-off' iconComponent={VolumeOffIcon} title={intl.formatMessage(messages.heading)} showBackButton />
-        )}
+        <ColumnHeader
+          withBackButton
+          title={intl.formatMessage(messages.heading)}
+        />
         <ScrollableList
           scrollKey='mutes'
           onLoadMore={this.handleLoadMore}

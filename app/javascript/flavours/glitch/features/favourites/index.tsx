@@ -10,22 +10,17 @@ import { ArrowClockwiseIcon } from '@phosphor-icons/react';
 import { Helmet } from '@unhead/react/helmet';
 import { useDebouncedCallback } from 'use-debounce';
 
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import {
   ColumnHeader,
   ColumnHeaderButton,
 } from '@/flavours/glitch/components/column_header';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import RefreshIcon from '@/material-icons/400-24px/refresh.svg?react';
-import StarIcon from '@/material-icons/400-24px/star-fill.svg?react';
 import {
   fetchFavourites,
   expandFavourites,
 } from 'flavours/glitch/actions/interactions';
 import { Account } from 'flavours/glitch/components/account';
 import { Column } from 'flavours/glitch/components/column';
-import { Icon } from 'flavours/glitch/components/icon';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import ScrollableList from 'flavours/glitch/components/scrollable_list';
 
@@ -80,54 +75,24 @@ const Favourites: React.FC<{ multiColumn?: boolean }> = ({ multiColumn }) => {
     );
   }
 
-  const emptyMessage = isRedesignEnabled() ? (
+  const emptyMessage = (
     <FormattedMessage
       id='empty_column.likes'
       defaultMessage='No one has liked this post yet. When someone does, they will show up here.'
-    />
-  ) : (
-    <FormattedMessage
-      id='empty_column.favourites'
-      defaultMessage='No one has favorited this post yet. When someone does, they will show up here.'
     />
   );
 
   return (
     <Column bindToDocument={!multiColumn}>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={intl.formatMessage(messages.title)}
-          extraButtons={
-            <ColumnHeaderButton
-              icon={ArrowClockwiseIcon}
-              onClick={handleRefresh}
-            >
-              {intl.formatMessage(messages.refresh)}
-            </ColumnHeaderButton>
-          }
-        />
-      ) : (
-        <LegacyColumnHeader
-          icon='star'
-          iconComponent={StarIcon}
-          title={intl.formatMessage(messages.heading)}
-          scrollTopOnClick
-          showBackButton
-          multiColumn={multiColumn}
-          extraButton={
-            <button
-              type='button'
-              className='column-header__button'
-              title={intl.formatMessage(messages.refresh)}
-              aria-label={intl.formatMessage(messages.refresh)}
-              onClick={handleRefresh}
-            >
-              <Icon id='refresh' icon={RefreshIcon} />
-            </button>
-          }
-        />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={intl.formatMessage(messages.title)}
+        extraButtons={
+          <ColumnHeaderButton icon={ArrowClockwiseIcon} onClick={handleRefresh}>
+            {intl.formatMessage(messages.refresh)}
+          </ColumnHeaderButton>
+        }
+      />
 
       <ScrollableList
         scrollKey='favourites'

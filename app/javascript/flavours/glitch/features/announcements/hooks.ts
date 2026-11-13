@@ -11,7 +11,6 @@ import {
 } from '@/flavours/glitch/actions/announcements';
 import type { ApiAnnouncementJSON } from '@/flavours/glitch/api_types/announcements';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 type AnnouncementItem = ImmutableRecord<ApiAnnouncementJSON>;
 
@@ -40,7 +39,7 @@ export function useHasAnnouncements({
   const hasUnreadAnnouncements = !!unreadAnnouncementCount;
 
   useEffect(() => {
-    if (hasUnreadAnnouncements && isRedesignEnabled()) {
+    if (hasUnreadAnnouncements) {
       dispatch(showAnnouncements());
     }
   }, [hasUnreadAnnouncements, dispatch]);

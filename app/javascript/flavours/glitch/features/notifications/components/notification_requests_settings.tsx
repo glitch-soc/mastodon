@@ -4,7 +4,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { closeModal } from '@/flavours/glitch/actions/modal';
 import { changeSetting } from '@/flavours/glitch/actions/settings';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import {
   ModalShell,
   ModalActions,

@@ -12,7 +12,7 @@ import { fetchRelationships } from 'flavours/glitch/actions/accounts';
 import { submitReport } from 'flavours/glitch/actions/reports';
 import { fetchServer } from 'flavours/glitch/actions/server';
 import { expandAccountTimeline } from 'flavours/glitch/actions/timelines';
-import { IconButton } from 'flavours/glitch/components/icon_button';
+import { IconButton } from 'flavours/glitch/components/button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import Category from 'flavours/glitch/features/report/category';
 import Comment from 'flavours/glitch/features/report/comment';
@@ -20,6 +20,7 @@ import Rules from 'flavours/glitch/features/report/rules';
 import Statuses from 'flavours/glitch/features/report/statuses';
 import Thanks from 'flavours/glitch/features/report/thanks';
 import { makeGetAccount } from 'flavours/glitch/selectors';
+import { XIcon } from '@phosphor-icons/react';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -213,7 +214,7 @@ class ReportModal extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal report-dialog-modal'>
         <div className='report-modal__target'>
-          <IconButton className='report-modal__close' title={intl.formatMessage(messages.close)} icon='times' iconComponent={CloseIcon} onClick={onClose} size={20} />
+          <IconButton className='report-modal__close' icon={XIcon} onClick={onClose}  variant='ghost'>{intl.formatMessage(messages.close)}</IconButton>
           <FormattedMessage id='report.target' defaultMessage='Report {target}' values={{ target: <strong>{account.get('acct')}</strong> }} />
         </div>
 

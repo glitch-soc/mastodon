@@ -2,7 +2,8 @@ import { useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
-import CheckIcon from '@/material-icons/400-24px/check.svg?react';
+import { CheckIcon } from '@phosphor-icons/react';
+
 import { Icon } from 'flavours/glitch/components/icon';
 import type { Account } from 'flavours/glitch/models/account';
 

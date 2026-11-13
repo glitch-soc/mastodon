@@ -17,8 +17,7 @@ import { importFetchedAccounts, importFetchedStatus } from './importer';
 import { openModal } from './modal';
 import { updateTimeline } from './timelines';
 import { insertStatusIntoAccountTimelines } from './timelines_typed';
-import { isRedesignEnabled } from '../utils/environment';
-import { requestComposerFocus } from '../reducers/slices/composer';
+import { initializeComposer, requestComposerFocus } from '../reducers/slices/composer';
 
 /** @type {AbortController | undefined} */
 let fetchComposeSuggestionsAccountsController;
@@ -100,12 +99,6 @@ const messages = defineMessages({
   messageSaved: { id: 'compose.message.saved.body', defaultMessage: 'Message saved' },
 });
 
-export const ensureComposeIsVisible = (getState) => {
-  if (!getState().getIn(['compose', 'mounted']) && !isRedesignEnabled()) {
-    browserHistory.push('/publish', { focusTarget: false });
-  }
-};
-
 export function setComposeToStatus(status, text, spoiler_text, content_type) {
   return (dispatch, getState) => {
     const maxOptions = getState().server.server.item?.configuration.polls.max_options;
@@ -137,13 +130,7 @@ export function replyCompose(status) {
       prependCWRe: prependCWRe,
     });
 
-    ensureComposeIsVisible(getState);
-
-    if (isRedesignEnabled()) {
-      const text = getState().getIn(['compose', 'text'], '');
-      // Preselect any mentions past the first, mirroring the reply text's leading `@user `.
-      dispatch(requestComposerFocus({ start: text.search(/\s/) + 1, end: text.length }));
-    }
+    dispatch(initializeComposer({selectAfterFirstSpace: true}));
   };
 }
 
@@ -159,34 +146,24 @@ export function resetCompose() {
   };
 }
 
-export const focusCompose = (defaultText = '', caretStart = false) => (dispatch, getState) => {
+export const focusCompose = (defaultText = '', caretStart = false) => (dispatch) => {
   dispatch({
     type: COMPOSE_FOCUS,
     defaultText,
     caretStart,
   });
 
-  ensureComposeIsVisible(getState);
-
-  if (isRedesignEnabled()) {
-    const position = caretStart ? 0 : getState().getIn(['compose', 'text'], '').length;
-    dispatch(requestComposerFocus({ start: position, end: position }));
-  }
+  dispatch(initializeComposer({ noSelect: caretStart }));
 };
 
 export function mentionCompose(account) {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     dispatch({
       type: COMPOSE_MENTION,
       account: account,
     });
 
-    ensureComposeIsVisible(getState);
-
-    if (isRedesignEnabled()) {
-      const position = getState().getIn(['compose', 'text'], '').length;
-      dispatch(requestComposerFocus({ start: position, end: position }));
-    }
+    dispatch(initializeComposer());
   };
 }
 
@@ -203,12 +180,7 @@ export function directCompose(account) {
       account: account,
     });
 
-    ensureComposeIsVisible(getState);
-
-    if (isRedesignEnabled()) {
-      const position = getState().getIn(['compose', 'text'], '').length;
-      dispatch(requestComposerFocus({ start: position, end: position }));
-    }
+    dispatch(initializeComposer());
   };
 }
 
@@ -319,7 +291,7 @@ export function submitCompose(successCallback, overridePrivacy) {
 
       if (getState().getIn(['local_settings', 'show_published_toast'])) {
         let message = statusId === null ? messages.published : messages.saved;
-        if (isRedesignEnabled() && response.data.visibility === 'direct') {
+        if (response.data.visibility === 'direct') {
           message = statusId === null ? messages.messagePublished : messages.messageSaved;
         }
 
@@ -723,7 +695,7 @@ export function selectComposeSuggestion(position, token, suggestion, path) {
       });
     }
 
-    if (isRedesignEnabled() && path.length === 1 && path[0] === 'text') {
+    if (path.length === 1 && path[0] === 'text') {
       const caretPosition = startPosition + (inserted ? completion.length : token.length) + 1;
       dispatch(requestComposerFocus({ start: caretPosition, end: caretPosition }));
     }

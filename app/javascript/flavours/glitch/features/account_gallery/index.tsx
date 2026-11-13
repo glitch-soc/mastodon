@@ -1,6 +1,6 @@
 import { useEffect, useCallback } from 'react';
 
-import { FormattedMessage, useIntl, defineMessages } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import { List as ImmutableList, isList } from 'immutable';
 
@@ -8,7 +8,6 @@ import { openModal } from '@/flavours/glitch/actions/modal';
 import { expandAccountMediaTimeline } from '@/flavours/glitch/actions/timelines';
 import { AccountHeader } from '@/flavours/glitch/components/account_header';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { LimitedAccountHint } from '@/flavours/glitch/components/limited_account_hint';
@@ -24,14 +23,8 @@ import {
   useAppDispatch,
   createAppSelector,
 } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import PersonIcon from '@/material-icons/400-24px/person.svg?react';
 
 import { MediaItem } from './components/media_item';
-
-const messages = defineMessages({
-  profile: { id: 'column_header.profile', defaultMessage: 'Profile' },
-});
 
 const emptyList = ImmutableList<MediaAttachment>();
 
@@ -103,7 +96,6 @@ const selectGalleryTimeline = createAppSelector(
 export const AccountGallery: React.FC<{
   multiColumn: boolean;
 }> = ({ multiColumn }) => {
-  const intl = useIntl();
   const dispatch = useAppDispatch();
   const accountId = useAccountId();
   const account = useAccount(accountId);
@@ -222,20 +214,10 @@ export const AccountGallery: React.FC<{
 
   return (
     <Column>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={<DisplayNameSimple account={account} />}
-        />
-      ) : (
-        <LegacyColumnHeader
-          icon='user-circle'
-          iconComponent={PersonIcon}
-          title={intl.formatMessage(messages.profile)}
-          showBackButton
-          scrollTopOnClick
-        />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={<DisplayNameSimple account={account} />}
+      />
 
       <ScrollableList
         className='account-gallery__container'

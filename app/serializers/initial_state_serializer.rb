@@ -51,7 +51,8 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:emoji_style]       = object_account_user.settings['web.emoji_style']
       store[:display_own_boosts] = object_account_user.setting_display_own_boosts
       store[:display_own_posts] = object_account_user.setting_display_own_posts
-      store[:wrapstodon]        = wrapstodon
+      store[:show_stats_in_feed] = object_account_user.settings['web.show_stats_in_feed']
+      store[:wrapstodon] = wrapstodon
     else
       store[:auto_play_gif] = Setting.auto_play_gif
       store[:display_media] = Setting.display_media
@@ -76,6 +77,7 @@ class InitialStateSerializer < ActiveModel::Serializer
       store[:default_sensitive] = object_account_user.setting_default_sensitive
       store[:default_language]  = object_account_user.preferred_posting_language
       store[:default_quote_policy] = object_account_user.setting_default_quote_policy
+      store[:default_spoiler_field] = object_account_user.setting_default_spoiler_field
     end
 
     store[:text] = object.text if object.text

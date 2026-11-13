@@ -5,8 +5,8 @@ import { defineMessages, useIntl } from 'react-intl';
 import { useHistory } from 'react-router-dom';
 
 import { replyComposeById } from '@/flavours/glitch/actions/compose_typed';
+import { StatusReblogButton } from '@/flavours/glitch/components/status/action_bar';
 import { useStatusIcons } from '@/flavours/glitch/components/status/hooks';
-import { BoostButton } from '@/flavours/glitch/components/status/legacy/boost_button';
 import OpenInNewIcon from '@/material-icons/400-24px/open_in_new.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { IconButton } from 'flavours/glitch/components/icon_button';
@@ -99,7 +99,9 @@ export const Footer: React.FC<{
         obfuscateCount={!showReplyCount}
       />
 
-      <BoostButton counters statusId={statusId} />
+      <StatusReblogButton statusId={statusId}>
+        {status.get('reblogs_count') as number}
+      </StatusReblogButton>
 
       <IconButton
         className='status__action-bar-button star-icon'

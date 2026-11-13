@@ -11,17 +11,17 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { fromJS } from 'immutable';
+
+import { EyeIcon, EyeSlashIcon } from '@phosphor-icons/react';
+
 import { openModal } from '@/mastodon/actions/modal';
 import type { DeployPictureInPictureCallback } from '@/mastodon/actions/picture_in_picture';
 import { deployPictureInPicture } from '@/mastodon/actions/picture_in_picture';
 import { CollectionPreviewCard } from '@/mastodon/features/collections/components/collection_preview_card';
-import MediaCard from '@/mastodon/features/status/components/card';
-import { useAccount } from '@/mastodon/hooks/useAccount';
 import { useExpandedStatus } from '@/mastodon/hooks/useStatus';
 import { displayMedia } from '@/mastodon/initial_state';
 import type {
-  CardShape,
-  ExpandedStatusShape,
   MediaAttachment,
   MediaAttachmentShape,
 } from '@/mastodon/models/status';
@@ -30,18 +30,13 @@ import { selectMediaFilters } from '@/mastodon/selectors/filters';
 import { selectPictureInPicture } from '@/mastodon/selectors/statuses';
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
 import { compareUrls } from '@/mastodon/utils/compare_urls';
-import { decodeIDNA } from '@/mastodon/utils/links';
 
-import { Avatar } from '../avatar';
-import { Button } from '../button/redesign';
-import { Card, CardActions, CardBody, CardTitle } from '../card';
-import { DisplayName } from '../display_name';
-import { RelativeTimestamp } from '../relative_timestamp';
+import { Button, IconButton } from '../button';
 
 import classes from './attachments.module.scss';
 import { useStatusContext } from './hooks';
-import { PictureInPicturePlaceholder } from './legacy/picture_in_picture_placeholder';
-import { StatusQuote } from './quote';
+import { LinkCard } from './link';
+import { PictureInPicturePlaceholder } from './picture_in_picture_placeholder';
 import mainClasses from './styles.module.scss';
 
 export const StatusAttachments: React.FC<{
@@ -67,11 +62,6 @@ export const StatusAttachments: React.FC<{
         defaultPosterUrl={status.account.avatar_static}
       />
     );
-  }
-
-  // Don't display the card or collection if this is a quote.
-  if (status.quote) {
-    return <StatusQuote {...status.quote} parentId={statusId} />;
   }
 
   const card = status.card;
@@ -206,7 +196,7 @@ const MediaAttachments: React.FC<{
           modalProps: {
             statusId,
             options,
-            media: attachment,
+            media: fromJS(attachment),
             lang: language,
           },
         }),
@@ -239,7 +229,11 @@ const MediaAttachments: React.FC<{
     isMediaAttachmentOfType(attachment, 'video') ||
     isMediaAttachmentOfType(attachment, 'gifv')
   ) {
-    aspectRatio = `${attachment.meta.original.width} / ${attachment.meta.original.height}`;
+    const width = attachment.meta?.original?.width;
+    const height = attachment.meta?.original?.height;
+    if (width && height) {
+      aspectRatio = `${width} / ${height}`;
+    }
   } else if (isMediaAttachmentOfType(attachment, 'audio')) {
     aspectRatio = '16 / 9';
   }
@@ -255,13 +249,10 @@ const MediaAttachments: React.FC<{
     aspectRatio,
     mediaFilters,
     wrapperRef,
-  } satisfies Omit<
-    React.ComponentProps<typeof MediaAttachmentWrapper>,
-    'children'
-  >;
+  } satisfies Omit<MediaAttachmentWrapperProps, 'children'>;
 
   if (isMediaAttachmentOfType(attachment, 'audio')) {
-    const { colors, original } = attachment.meta;
+    const { colors, original } = attachment.meta ?? {};
     return (
       <MediaAttachmentWrapper {...wrapperProps} type='audio'>
         <Audio
@@ -272,7 +263,7 @@ const MediaAttachments: React.FC<{
           backgroundColor={colors?.background}
           foregroundColor={colors?.foreground}
           accentColor={colors?.accent}
-          duration={original.duration}
+          duration={original?.duration}
           deployPictureInPicture={handleDeployPictureInPicture}
           blurhash={attachment.blurhash}
           onToggleVisibility={handleToggleMediaVisibility}
@@ -283,7 +274,7 @@ const MediaAttachments: React.FC<{
   }
 
   if (isMediaAttachmentOfType(attachment, 'video')) {
-    const { original } = attachment.meta;
+    const original = attachment.meta?.original;
     return (
       <MediaAttachmentWrapper {...wrapperProps} type='video'>
         <Video
@@ -291,7 +282,7 @@ const MediaAttachments: React.FC<{
           alt={description}
           lang={language}
           preview={attachment.preview_url}
-          frameRate={original.frame_rate}
+          frameRate={original?.frame_rate}
           aspectRatio={aspectRatio}
           blurhash={attachment.blurhash}
           onOpenVideo={handleOpenVideo}
@@ -304,35 +295,42 @@ const MediaAttachments: React.FC<{
   }
 
   return (
-    <MediaAttachmentWrapper {...wrapperProps} type='gallery'>
+    <MediaAttachmentWrapper
+      {...wrapperProps}
+      type='gallery'
+      aspectRatioForce={restAttachments.length === 0}
+    >
       <MediaGallery
         media={immutableAttachments}
         lang={language}
         height={110}
         onOpenMedia={handleOpenMedia}
-        onToggleVisibility={handleToggleMediaVisibility}
         visible={showMedia}
       />
     </MediaAttachmentWrapper>
   );
 };
 
-const MediaAttachmentWrapper: React.FC<{
+interface MediaAttachmentWrapperProps {
   visible: boolean;
   statusHidden: boolean;
   onToggle: () => void;
   type?: 'gallery' | 'video' | 'audio';
   children: React.ReactNode;
   aspectRatio: string;
+  aspectRatioForce?: boolean;
   mediaFilters: string[];
   wrapperRef: React.RefObject<HTMLDivElement | null>;
-}> = ({
+}
+
+const MediaAttachmentWrapper: React.FC<MediaAttachmentWrapperProps> = ({
   visible,
   statusHidden,
   type = 'gallery',
   onToggle,
   children,
   aspectRatio,
+  aspectRatioForce,
   mediaFilters,
   wrapperRef,
 }) => {
@@ -340,22 +338,30 @@ const MediaAttachmentWrapper: React.FC<{
     <div
       ref={wrapperRef}
       data-color-scheme='dark'
-      className={classes.galleryWrapper}
+      className={classNames(
+        classes.galleryWrapper,
+        aspectRatioForce && classes.galleryWrapperAspectForce,
+      )}
+      style={{ ['--aspect-ratio']: aspectRatio } as React.CSSProperties}
     >
-      {!visible && !statusHidden && (
-        <div className={classes.gallerySpoiler}>
-          {mediaFilters.length > 0 && (
-            <FormattedMessage
-              id='filter_warning.matches_filter'
-              defaultMessage='Matches filter “<span>{title}</span>”'
-              tagName='p'
-              values={{
-                title: mediaFilters.join(', '),
-                span: (chunks) => <span>{chunks}</span>,
-              }}
-            />
+      {!visible && !statusHidden && mediaFilters.length > 0 && (
+        <div
+          className={classNames(
+            classes.gallerySpoiler,
+            mediaFilters.length > 0 && classes.gallerySpoilerFilter,
           )}
-          <Button size='sm' variant='solid' onClick={onToggle}>
+          data-interactive-post-content='true'
+        >
+          <FormattedMessage
+            id='filter_warning.matches_filter'
+            defaultMessage='Matches filter “<span>{title}</span>”'
+            tagName='p'
+            values={{
+              title: mediaFilters.join(', '),
+              span: (chunks) => <span>{chunks}</span>,
+            }}
+          />
+          <Button color='media' size='sm' onClick={onToggle}>
             <FormattedMessage
               id='content_warning.media.show_short'
               defaultMessage='Show media'
@@ -365,10 +371,8 @@ const MediaAttachmentWrapper: React.FC<{
       )}
       <div
         className={classNames(
-          mainClasses.contentWrapper,
-          classes.galleryContent,
-          !visible && mainClasses.hasContentWarning,
-          !visible && classes.galleryHideButtons,
+          mainClasses.contentWarningBlur,
+          !visible && mainClasses.contentWarningBlurActive,
           !visible && classes.galleryHideActions,
           mediaFilters.length > 0 && classes.galleryFilterBlur,
         )}
@@ -378,106 +382,25 @@ const MediaAttachmentWrapper: React.FC<{
         >
           {children}
         </Suspense>
+        {(mediaFilters.length === 0 || visible) && (
+          <IconButton
+            icon={visible ? EyeSlashIcon : EyeIcon}
+            className={classes.gallerySpoiler}
+            color='media'
+            size='xs'
+            onClick={onToggle}
+          >
+            {visible ? (
+              <FormattedMessage id='media_gallery.hide' defaultMessage='Hide' />
+            ) : (
+              <FormattedMessage
+                id='content_warning.media.show_short'
+                defaultMessage='Show media'
+              />
+            )}
+          </IconButton>
+        )}
       </div>
     </div>
-  );
-};
-
-const LinkCard: React.FC<{ card: CardShape; status: ExpandedStatusShape }> = ({
-  card,
-  status,
-}) => {
-  // Use the old card if we have authors as the new design doesn't have attribution yet.
-  if (card.type === 'video') {
-    return (
-      <div className={classes.cardMedia}>
-        <MediaCard
-          key={`${status.id}-${status.edited_at}`}
-          card={card}
-          sensitive={status.sensitive}
-        />
-      </div>
-    );
-  }
-
-  const providerUrl = new URL(card.provider_url || card.url);
-
-  const cardLinkProps = {
-    as: 'a',
-    href: card.url,
-    target: '_blank',
-    rel: 'noopener',
-  } as const;
-
-  const authors = card.authors
-    .map(({ accountId }) => accountId)
-    .filter((id): id is string => !!id);
-
-  return (
-    <Card>
-      <CardTitle
-        afterContent={
-          card.published_at && (
-            <RelativeTimestamp timestamp={card.published_at} />
-          )
-        }
-        lang={card.language ?? undefined}
-      >
-        <a
-          href={`${providerUrl.protocol}//${providerUrl.host}`}
-          target='_blank'
-          rel='noopener'
-        >
-          {card.author_name ||
-            card.provider_name ||
-            decodeIDNA(providerUrl.host)}
-        </a>
-      </CardTitle>
-      <CardBody {...cardLinkProps}>{card.title}</CardBody>
-      {card.description && (
-        <CardBody {...cardLinkProps} isDescription>
-          {card.description}
-        </CardBody>
-      )}
-
-      {authors.length > 0 && (
-        <CardActions>
-          <FormattedMessage
-            id='status.link_preview.authors'
-            defaultMessage='{count, plural, one {Find the author in the Fediverse:} other {Find the authors in the Fediverse:}}'
-            values={{
-              count: authors.length,
-            }}
-            tagName='span'
-          />
-
-          {authors.map((accountId) => (
-            <LinkCardAuthor authorId={accountId} key={accountId} />
-          ))}
-        </CardActions>
-      )}
-    </Card>
-  );
-};
-
-const LinkCardAuthor: React.FC<{ authorId?: string }> = ({ authorId }) => {
-  const author = useAccount(authorId);
-
-  if (!author) {
-    return null;
-  }
-
-  return (
-    <Button
-      as='link'
-      size='sm'
-      color='accent'
-      variant='ghost'
-      to={`/@${author.get('acct')}`}
-      className={classes.cardAuthor}
-    >
-      <Avatar account={author} />
-      <DisplayName variant='simple' account={author} />
-    </Button>
   );
 };

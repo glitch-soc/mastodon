@@ -3,13 +3,14 @@ import { useCallback, useId, useState } from 'react';
 
 import { defineMessages, useIntl } from 'react-intl';
 
+import { MagnifyingGlassIcon } from '@phosphor-icons/react';
+
 import { Combobox } from '@/flavours/glitch/components/form_fields';
 import { ComboboxMenuItem } from '@/flavours/glitch/components/form_fields/combobox_field';
 import { useSearchTags } from '@/flavours/glitch/hooks/useSearchTags';
 import type { TagSearchResult } from '@/flavours/glitch/hooks/useSearchTags';
 import { addFeaturedTags } from '@/flavours/glitch/reducers/slices/profile_edit';
 import { useAppDispatch } from '@/flavours/glitch/store';
-import SearchIcon from '@/material-icons/400-24px/search.svg?react';
 
 import classes from '../styles.module.scss';
 
@@ -71,7 +72,7 @@ export const AccountEditTagSearch: FC = () => {
         renderItem={renderItem}
         onSelectItem={handleSelect}
         className={classes.autoComplete}
-        icon={SearchIcon}
+        icon={MagnifyingGlassIcon}
         type='search'
       />
     </>

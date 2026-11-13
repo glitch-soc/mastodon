@@ -7,7 +7,7 @@ import { languages as preloadedLanguages } from '@/flavours/glitch/initial_state
 import type { AnyStatusShape } from '@/flavours/glitch/models/status';
 import { useAppSelector } from '@/flavours/glitch/store';
 
-import { Button } from '../button/redesign';
+import { Button } from '../button';
 
 import classes from './styles.module.scss';
 

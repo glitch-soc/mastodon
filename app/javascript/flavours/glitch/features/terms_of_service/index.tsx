@@ -14,14 +14,11 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
-import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import { apiGetTermsOfService } from 'flavours/glitch/api/instance';
 import type { ApiTermsOfServiceJSON } from 'flavours/glitch/api_types/instance';
 import { BundleColumnError } from 'flavours/glitch/features/ui/components/bundle_column_error';
 
 import aboutClasses from '../about/styles.module.scss';
-import { getColumnSkipLinkId } from '../ui/components/skip_links';
 
 const messages = defineMessages({
   title: { id: 'terms_of_service.title', defaultMessage: 'Terms of Service' },
@@ -60,31 +57,21 @@ const TermsOfService: React.FC<{
       bindToDocument={!multiColumn}
       label={intl.formatMessage(messages.title)}
     >
-      {isRedesignEnabled() && (
-        <ColumnHeader
-          title={
-            <FormattedMessage
-              id='terms_of_service.title'
-              defaultMessage='Terms of Service'
-            />
-          }
-        />
-      )}
+      <ColumnHeader
+        title={
+          <FormattedMessage
+            id='terms_of_service.title'
+            defaultMessage='Terms of Service'
+          />
+        }
+      />
       <div
         className={classNames(
           'scrollable privacy-policy',
-          isRedesignEnabled() && aboutClasses.redesignOverrides,
+          aboutClasses.redesignOverrides,
         )}
       >
         <div className='column-title'>
-          {!isRedesignEnabled() && (
-            <NavigationFocusTarget as='h1' id={getColumnSkipLinkId(1)}>
-              <FormattedMessage
-                id='terms_of_service.title'
-                defaultMessage='Terms of Service'
-              />
-            </NavigationFocusTarget>
-          )}
           <p className='prose'>
             {response?.effective ? (
               <FormattedMessage

@@ -1,25 +1,29 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useId, useState } from 'react';
 
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { DotsThreeIcon, ShareFatIcon } from '@phosphor-icons/react';
+import { DotsThreeIcon, ShareNetworkIcon } from '@phosphor-icons/react';
 
 import { statusInteraction } from '@/flavours/glitch/actions/interactions';
 import { fetchStatus } from '@/flavours/glitch/actions/statuses';
 import { useCurrentAccountId } from '@/flavours/glitch/hooks/useAccountId';
+import { useDismissible } from '@/flavours/glitch/hooks/useDismissible';
 import { useAccountStatus } from '@/flavours/glitch/hooks/useStatus';
 import { quickBoosting } from '@/flavours/glitch/initial_state';
-import type { AccountStatusShape } from '@/flavours/glitch/models/status';
-import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-
+import type {
+  AccountStatusShape,
+  StatusShape,
+} from '@/flavours/glitch/models/status';
 import {
-  Button,
-  IconButton,
-  ToggleButton,
-  ToggleIconButton,
-} from '../button/redesign';
+  useAppDispatch,
+  useAppSelector,
+} from '@/flavours/glitch/store/typed_functions';
+
+import { AnimatedNumber } from '../animated_number';
+import { Button, IconButton, ToggleButton, ToggleIconButton } from '../button';
+import { Icon } from '../icon';
 import {
   Menu,
   MenuItem,
@@ -27,35 +31,35 @@ import {
   MenuTrigger,
   LegacyDropdownMenuItems,
 } from '../menu';
+import { Popover } from '../popover';
 
 import {
   useStatusContext,
   useStatusIcons,
   useStatusMenuActions,
 } from './hooks';
-import { RemoveQuoteHint } from './legacy/action_bar/remove_quote_hint';
+import {
+  StatusLikeBurstActiveIcon,
+  StatusLikeBurstIcon,
+} from './like_burst_icon';
 import classes from './styles.module.scss';
+import { getStatusContent } from './utils';
 
 interface StatusActionBarProps {
   statusId: string;
+  reblogId: string | undefined;
   withDismiss?: boolean;
   withCounters?: boolean;
-  /** Only show methods to respond (reply, boost, like) and not sharing, bookmarking, and the overflow menu. */
-  onlyResponses?: boolean;
 }
 
 export const StatusActionBar: React.FC<StatusActionBarProps> = ({
   statusId,
+  reblogId,
   withDismiss,
   withCounters,
-  onlyResponses,
 }) => {
   const status = useAccountStatus(statusId);
-  const quotedAccountId = useAppSelector(
-    (state) =>
-      state.statuses.getIn([status?.quote?.quoted_status, 'account']) ?? null,
-  );
-  const currentAccountId = useCurrentAccountId();
+  const reblogStatus = useAccountStatus(reblogId);
   const { contextType } = useStatusContext();
   const statusUrl = status?.url ?? status?.uri;
 
@@ -69,16 +73,53 @@ export const StatusActionBar: React.FC<StatusActionBarProps> = ({
     // We need to make this partial as by default share always is set, despite not being supported in FF.
     const nav = navigator as Partial<Pick<Navigator, 'share'>> &
       Pick<Navigator, 'clipboard'>;
+
     if (nav.share) {
+      const statusContentHtml =
+        status?.translation?.contentHtml ?? status?.contentHtml;
+      const statusContent = getStatusContent(statusContentHtml ?? '');
+
       void nav.share({
+        text: statusContent,
         url: statusUrl,
       });
     } else {
       dispatch(statusInteraction({ statusId, intent: 'copy', contextType }));
     }
-  }, [contextType, dispatch, statusId, statusUrl]);
+  }, [
+    contextType,
+    status?.contentHtml,
+    status?.translation?.contentHtml,
+    dispatch,
+    statusId,
+    statusUrl,
+  ]);
 
   const { reply, like, bookmark } = useStatusIcons(statusId);
+
+  const currentAccountId = useCurrentAccountId();
+
+  const [likeBurst, setLikeBurst] = useState(false);
+
+  const handleLikeClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      if (currentAccountId && !like.active) {
+        setLikeBurst(true);
+      }
+
+      like.action(event);
+    },
+    [currentAccountId, like],
+  );
+
+  const handleLikeAnimationEnd = useCallback(
+    (event: React.AnimationEvent<HTMLButtonElement>) => {
+      if (event.animationName.endsWith('heart-pop')) {
+        setLikeBurst(false);
+      }
+    },
+    [],
+  );
 
   if (!status) {
     return null;
@@ -87,12 +128,8 @@ export const StatusActionBar: React.FC<StatusActionBarProps> = ({
   const isPublic =
     status.visibility === 'public' || status.visibility === 'unlisted';
 
-  const isQuotingMe = quotedAccountId === currentAccountId;
-  const shouldShowQuoteRemovalHint =
-    isQuotingMe && contextType === 'notifications';
-
-  const responseButtons = (
-    <>
+  return (
+    <div className={classes.actions}>
       <Button
         size='sm'
         clipPadding
@@ -101,11 +138,11 @@ export const StatusActionBar: React.FC<StatusActionBarProps> = ({
         onClick={reply.action}
         tooltip={{ type: 'label', text: reply.title }}
       >
-        {withCounters && reply.counter}
+        {withCounters && <AnimatedNumber value={reply.counter ?? 0} />}
       </Button>
 
       <StatusReblogButton statusId={statusId}>
-        {withCounters && status.reblogs_count}
+        {withCounters && <AnimatedNumber value={status.reblogs_count} />}
       </StatusReblogButton>
 
       <ToggleButton
@@ -113,28 +150,22 @@ export const StatusActionBar: React.FC<StatusActionBarProps> = ({
         variant='ghost'
         active={like.active}
         tooltip={{ type: 'label', text: like.title }}
-        leadingIcon={like.icon}
-        onClick={like.action}
-        className={classNames(!onlyResponses && classes.actionsButtonGap)}
+        leadingIcon={
+          like.active ? StatusLikeBurstActiveIcon : StatusLikeBurstIcon
+        }
+        onClick={handleLikeClick}
+        data-like-burst={likeBurst || undefined}
+        onAnimationEnd={handleLikeAnimationEnd}
+        className={classes.actionsButtonGap}
       >
-        {withCounters && like.counter}
+        {withCounters && <AnimatedNumber value={like.counter ?? 0} />}
       </ToggleButton>
-    </>
-  );
-
-  if (onlyResponses) {
-    return <div className={classes.actions}>{responseButtons}</div>;
-  }
-
-  return (
-    <div className={classes.actions}>
-      {responseButtons}
 
       {isPublic && (
         <IconButton
           size='sm'
           variant='ghost'
-          icon={ShareFatIcon}
+          icon={ShareNetworkIcon}
           onClick={handleShareClick}
         >
           <FormattedMessage id='status.share' defaultMessage='Share' />
@@ -151,27 +182,47 @@ export const StatusActionBar: React.FC<StatusActionBarProps> = ({
         {bookmark.title}
       </ToggleIconButton>
 
-      <RemoveQuoteHint
-        className='status__action-bar__button-wrapper'
-        canShowHint={shouldShowQuoteRemovalHint}
-      >
-        {(dismissQuoteHint) => (
-          <StatusActionMenu
-            dismissQuoteHint={dismissQuoteHint}
-            status={status}
-            withDismiss={withDismiss}
-          />
-        )}
-      </RemoveQuoteHint>
+      <StatusActionMenu
+        status={status}
+        reblogStatus={reblogStatus}
+        withDismiss={withDismiss}
+      />
     </div>
   );
 };
 
-const StatusReblogButton: React.FC<{
+export const StatusReblogButton: React.FC<{
   statusId: string;
   children: React.ReactNode;
 }> = ({ statusId, children }) => {
   const { boost, quote } = useStatusIcons(statusId);
+
+  const isBoosted = !!boost.active;
+  const [wasBoosted, setWasBoosted] = useState(isBoosted);
+  const [boostSpin, setBoostSpin] = useState(false);
+
+  if (isBoosted !== wasBoosted) {
+    setWasBoosted(isBoosted);
+    setBoostSpin(isBoosted);
+  }
+
+  const handleBoostAnimationEnd = useCallback(() => {
+    setBoostSpin(false);
+  }, []);
+
+  const handleShiftClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (e.shiftKey) {
+        e.preventDefault();
+        boost.action(e);
+      }
+    },
+    [boost],
+  );
+
+  const preventMenuOpenOnShiftClick = useCallback((e?: React.MouseEvent) => {
+    return !e?.shiftKey;
+  }, []);
 
   if (quickBoosting) {
     return (
@@ -186,6 +237,8 @@ const StatusReblogButton: React.FC<{
         leadingIcon={boost.icon}
         disabled={boost.disabled}
         onClick={boost.action}
+        className={boostSpin ? classes.boostSpin : undefined}
+        onAnimationEnd={handleBoostAnimationEnd}
       >
         {children}
       </ToggleButton>
@@ -193,12 +246,13 @@ const StatusReblogButton: React.FC<{
   }
 
   return (
-    <Menu>
+    <Menu onOpen={preventMenuOpenOnShiftClick}>
       <MenuTrigger
         as={ToggleButton}
         size='sm'
         variant='ghost'
         active={boost.active}
+        disabled={boost.disabled && quote.disabled}
         tooltip={{
           type: 'label',
           text: (
@@ -208,7 +262,10 @@ const StatusReblogButton: React.FC<{
             />
           ),
         }}
+        onClick={handleShiftClick}
         leadingIcon={boost.icon}
+        className={boostSpin ? classes.boostSpin : undefined}
+        onAnimationEnd={handleBoostAnimationEnd}
       >
         {children}
       </MenuTrigger>
@@ -236,14 +293,22 @@ const StatusReblogButton: React.FC<{
 };
 
 const StatusActionMenu: React.FC<{
-  dismissQuoteHint: () => void;
   status: AccountStatusShape;
+  reblogStatus: AccountStatusShape | null;
   withDismiss?: boolean;
-}> = ({ status, dismissQuoteHint, withDismiss }) => {
+}> = ({ status, reblogStatus, withDismiss }) => {
   const { contextType } = useStatusContext();
   const dispatch = useAppDispatch();
 
-  const menu = useStatusMenuActions({ status, contextType, withDismiss });
+  const menu = useStatusMenuActions({
+    status,
+    reblogStatus,
+    contextType,
+    withDismiss,
+  });
+
+  const { showHint, dismiss } = useQuoteHint({ status });
+  const [buttonEle, setButtonEle] = useState<HTMLButtonElement | null>(null);
 
   const onOpen = useCallback(() => {
     // Replicates needsStatusRefresh of the Dropdown component.
@@ -253,8 +318,8 @@ const StatusActionMenu: React.FC<{
       );
     }
 
-    dismissQuoteHint();
-  }, [dismissQuoteHint, dispatch, status.id, status.quote_approval]);
+    dismiss();
+  }, [dismiss, dispatch, status.id, status.quote_approval]);
 
   return (
     <Menu onOpen={onOpen}>
@@ -263,6 +328,7 @@ const StatusActionMenu: React.FC<{
         size='sm'
         variant='ghost'
         icon={DotsThreeIcon}
+        ref={setButtonEle}
       >
         <FormattedMessage id='status.more' defaultMessage='More' />
       </MenuTrigger>
@@ -270,6 +336,123 @@ const StatusActionMenu: React.FC<{
       <MenuList placement='top-end'>
         <LegacyDropdownMenuItems items={menu} />
       </MenuList>
+
+      {showHint && (
+        <QuoteHintTooltip anchorElement={buttonEle} dismiss={dismiss} />
+      )}
     </Menu>
+  );
+};
+
+const QUOTE_HINT_BANNER_ID = 'notifications/remove_quote_hint';
+
+/**
+ * We don't want to show this hint in the UI more than once,
+ * so the first time it renders, we store a unique component ID
+ * here to prevent any other hints from being displayed after it.
+ */
+let firstHintId: string | null = null;
+
+function useQuoteHint({ status }: { status?: Pick<StatusShape, 'quote'> }) {
+  const { contextType } = useStatusContext();
+  const quotedAccountId = useAppSelector(
+    (state) =>
+      state.statuses.getIn([status?.quote?.quoted_status, 'account']) ?? null,
+  );
+  const currentAccountId = useCurrentAccountId();
+  const isQuotingMe = quotedAccountId === currentAccountId;
+  const shouldShowQuoteRemovalHint =
+    isQuotingMe && contextType === 'notifications';
+
+  const { wasDismissed, dismiss } = useDismissible(QUOTE_HINT_BANNER_ID);
+
+  const shouldShowHint = !wasDismissed && shouldShowQuoteRemovalHint;
+
+  const uniqueId = useId();
+  const [isOnlyHint, setIsOnlyHint] = useState(false);
+  useEffect(() => {
+    if (!shouldShowHint) {
+      return () => null;
+    }
+
+    if (!firstHintId) {
+      firstHintId = uniqueId;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIsOnlyHint(true);
+    }
+
+    return () => {
+      if (firstHintId === uniqueId) {
+        firstHintId = null;
+        setIsOnlyHint(false);
+      }
+    };
+  }, [shouldShowHint, uniqueId]);
+
+  return {
+    showHint: isOnlyHint && shouldShowHint,
+    dismiss,
+  };
+}
+
+const QuoteHintTooltip: React.FC<{
+  anchorElement: HTMLElement | null;
+  dismiss: () => void;
+}> = ({ anchorElement, dismiss }) => {
+  const intl = useIntl();
+  return (
+    <Popover
+      isOpen
+      offset={{ mainAxis: 10, crossAxis: 12 }}
+      placement='bottom-end'
+      reference={anchorElement}
+      container={null}
+      onClose={dismiss}
+    >
+      {({ props, placement }) => (
+        <div
+          {...props}
+          className={classNames('info-tooltip dropdown-animation', placement)}
+        >
+          <FormattedMessage
+            id='remove_quote_hint.title'
+            defaultMessage='Want to remove your quoted post?'
+            tagName='h4'
+          />
+
+          <FormattedMessage
+            id='remove_quote_hint.message'
+            defaultMessage='You can do so from the {icon} options menu.'
+            values={{
+              icon: (
+                <Icon
+                  icon={DotsThreeIcon}
+                  aria-label={intl.formatMessage({
+                    id: 'status.more',
+                    defaultMessage: 'More',
+                  })}
+                  className={classes.inlineIcon}
+                />
+              ),
+            }}
+            tagName='p'
+          />
+
+          <Button
+            variant='ghost'
+            color='accent'
+            size='sm'
+            clipPadding
+            onClick={dismiss}
+            className={classes.button}
+          >
+            <FormattedMessage
+              id='remove_quote_hint.button_label'
+              defaultMessage='Got it'
+            />
+          </Button>
+        </div>
+      )}
+    </Popover>
   );
 };

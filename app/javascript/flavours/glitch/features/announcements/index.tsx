@@ -8,7 +8,7 @@ import type { Map, List } from 'immutable';
 import { XIcon } from '@phosphor-icons/react';
 
 import { hideAnnouncements } from '@/flavours/glitch/actions/announcements';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import { IconButton } from '@/flavours/glitch/components/button';
 import type { RenderSlideFn } from '@/flavours/glitch/components/carousel';
 import { Carousel } from '@/flavours/glitch/components/carousel';
 import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
@@ -19,7 +19,6 @@ import {
   useAppDispatch,
   useAppSelector,
 } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import elephantUIPlane from '@/images/elephant_ui_plane.svg';
 
 import type { IAnnouncement } from './announcement';
@@ -69,17 +68,15 @@ export const Announcements: FC = () => {
         src={mascot ?? elephantUIPlane}
       />
 
-      {isRedesignEnabled() && (
-        <IconButton
-          icon={XIcon}
-          onClick={closeAnnouncements}
-          size='sm'
-          variant='ghost'
-          className='announcements__close-button'
-        >
-          <FormattedMessage id='lightbox.close' defaultMessage='Close' />
-        </IconButton>
-      )}
+      <IconButton
+        icon={XIcon}
+        onClick={closeAnnouncements}
+        size='sm'
+        variant='ghost'
+        className='announcements__close-button'
+      >
+        <FormattedMessage id='lightbox.close' defaultMessage='Close' />
+      </IconButton>
 
       <CustomEmojiProvider emojis={emojis}>
         <Carousel

@@ -3,12 +3,13 @@ import type { FC } from 'react';
 
 import { defineMessage, FormattedMessage, useIntl } from 'react-intl';
 
+import { XIcon } from '@phosphor-icons/react';
+
 import { focusCompose, resetCompose } from '@/flavours/glitch/actions/compose';
 import { closeModal } from '@/flavours/glitch/actions/modal';
-import { Button } from '@/flavours/glitch/components/button';
+import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { FormattedDateWrapper } from '@/flavours/glitch/components/formatted_date';
-import { IconButton } from '@/flavours/glitch/components/icon_button';
 import {
   ModalShell,
   ModalShellBody,
@@ -21,7 +22,6 @@ import {
   useAppSelector,
 } from '@/flavours/glitch/store';
 import AnniversaryImage from '@/images/anniversary.svg?react';
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 
 import classes from './styles.module.scss';
 
@@ -128,12 +128,12 @@ export const AccountJoinModal: FC<{
         />
 
         <IconButton
-          iconComponent={CloseIcon}
-          icon='times'
+          icon={XIcon}
           onClick={onClose}
-          title={intl.formatMessage(closeMessage)}
           className={classes.joinClose}
-        />
+        >
+          {intl.formatMessage(closeMessage)}
+        </IconButton>
       </ModalShellBody>
     </ModalShell>
   );
@@ -249,7 +249,7 @@ const AccountAnniversaryShare: FC<{
   }
 
   return (
-    <Button onClick={onShare}>
+    <Button onClick={onShare} variant='solid'>
       {anniversary === 0 && isMe && (
         <FormattedMessage
           id='account.join_modal.share.intro'

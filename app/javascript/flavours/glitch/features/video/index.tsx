@@ -8,9 +8,8 @@ import { useSpring, animated, config } from '@react-spring/web';
 import { throttle } from 'lodash';
 
 import type { DeployPictureInPictureCallback } from '@/flavours/glitch/actions/picture_in_picture';
-import { Button } from '@/flavours/glitch/components/button/redesign';
+import { Button } from '@/flavours/glitch/components/button';
 import { useRevealedMedia } from '@/flavours/glitch/hooks/useRevealedMedia';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import Forward5Icon from '@/material-icons/400-24px/forward_5-fill.svg?react';
 import FullscreenIcon from '@/material-icons/400-24px/fullscreen.svg?react';
 import FullscreenExitIcon from '@/material-icons/400-24px/fullscreen_exit.svg?react';
@@ -786,8 +785,6 @@ export const Video: React.FC<{
     preload = 'none';
   }
 
-  const ButtonComp = isRedesignEnabled() ? Button : 'button';
-
   // The outer wrapper is necessary to avoid reflowing the layout when going into full screen
   return (
     <div>
@@ -865,9 +862,9 @@ export const Video: React.FC<{
                 active: paused || hovered,
               })}
             >
-              <ButtonComp
+              <Button
                 size='xs'
-                variant='solid'
+                color='media'
                 className='media-gallery__actions__pill'
                 onClick={toggleReveal}
                 type='button'
@@ -876,7 +873,7 @@ export const Video: React.FC<{
                   id='media_gallery.hide'
                   defaultMessage='Hide'
                 />
-              </ButtonComp>
+              </Button>
             </div>
           )}
 

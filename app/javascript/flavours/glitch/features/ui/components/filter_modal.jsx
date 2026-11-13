@@ -5,13 +5,13 @@ import { defineMessages, FormattedMessage } from 'react-intl';
 import { ImmutablePureComponent } from 'react-immutable-pure-component';
 import { connect } from 'react-redux';
 
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { fetchFilters, createFilter, createFilterStatus } from 'flavours/glitch/actions/filters';
 import { fetchStatus } from 'flavours/glitch/actions/statuses';
-import { IconButton } from 'flavours/glitch/components/icon_button';
+import { IconButton } from 'flavours/glitch/components/button';
 import { injectIntl } from '@/flavours/glitch/components/intl';
 import AddedToFilter from 'flavours/glitch/features/filters/added_to_filter';
 import SelectFilter from 'flavours/glitch/features/filters/select_filter';
+import { XIcon } from '@phosphor-icons/react';
 
 const messages = defineMessages({
   close: { id: 'lightbox.close', defaultMessage: 'Close' },
@@ -122,7 +122,7 @@ class FilterModal extends ImmutablePureComponent {
     return (
       <div className='modal-root__modal report-dialog-modal'>
         <div className='report-modal__target'>
-          <IconButton className='report-modal__close' title={intl.formatMessage(messages.close)} icon='times' iconComponent={CloseIcon} onClick={onClose} size={20} />
+          <IconButton className='report-modal__close' icon={XIcon} onClick={onClose}variant='ghost'>{intl.formatMessage(messages.close)}</IconButton>
           <FormattedMessage id='filter_modal.title.status' defaultMessage='Filter a post' />
         </div>
 

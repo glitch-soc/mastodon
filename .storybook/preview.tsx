@@ -21,7 +21,7 @@ import { IdentityContext } from '@/mastodon/identity_context';
 import type { LocaleData } from '@/mastodon/locales';
 import { reducerWithInitialState } from '@/mastodon/reducers';
 import { defaultMiddleware } from '@/mastodon/store/store';
-import { mockHandlers, unhandledRequestHandler } from '@/testing/api';
+import { mockHandlers, unhandledFrameHandler } from '@/testing/api';
 
 import { modes } from './modes';
 
@@ -32,7 +32,7 @@ const startMsw = mswLoader(async () => {
   const worker = setupWorker();
 
   await worker.start({
-    onUnhandledRequest: unhandledRequestHandler,
+    onUnhandledFrame: unhandledFrameHandler,
   });
 
   return worker;
@@ -63,6 +63,16 @@ const preview: Preview = {
         ],
       },
     },
+    contrast: {
+      description: 'Contrast mode',
+      toolbar: {
+        title: 'Contrast',
+        items: [
+          { value: 'default', icon: 'contrastignored' },
+          { value: 'high', icon: 'contrast' },
+        ],
+      },
+    },
     loggedIn: {
       description: 'Whether a user is logged in',
       toolbar: {
@@ -78,6 +88,7 @@ const preview: Preview = {
   initialGlobals: {
     locale: 'en',
     theme: 'light',
+    contrast: 'default',
     loggedIn: 'true',
   },
   decorators: [
@@ -170,9 +181,11 @@ const preview: Preview = {
     },
     (Story, { globals }) => {
       const theme = globals.theme;
+      const contrast = globals.contrast;
       useEffect(() => {
         document.documentElement.dataset.colorScheme = theme;
-      }, [theme]);
+        document.documentElement.dataset.contrast = contrast;
+      }, [contrast, theme]);
       return <Story />;
     },
     (Story) => (
@@ -204,14 +217,6 @@ const preview: Preview = {
           <Story />
         </IdentityContext.Provider>
       );
-    },
-    (Story, { parameters }) => {
-      useEffect(() => {
-        document.documentElement.dataset.redesign = parameters.redesign
-          ? 'true'
-          : 'false';
-      }, [parameters.redesign]);
-      return <Story />;
     },
   ],
   loaders: [

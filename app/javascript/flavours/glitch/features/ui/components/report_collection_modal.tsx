@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
+import { XIcon } from '@phosphor-icons/react';
+
 import { Callout } from '@/flavours/glitch/components/callout';
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { submitReport } from 'flavours/glitch/actions/reports';
 import { fetchServer } from 'flavours/glitch/actions/server';
 import type { ApiCollectionJSON } from 'flavours/glitch/api_types/collections';
-import { Button } from 'flavours/glitch/components/button';
-import { IconButton } from 'flavours/glitch/components/icon_button';
+import { Button, IconButton } from 'flavours/glitch/components/button';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { useAccount } from 'flavours/glitch/hooks/useAccount';
 import { useAppDispatch } from 'flavours/glitch/store';
@@ -36,7 +36,7 @@ const CollectionThanks: React.FC<{
       <div className='flex-spacer' />
 
       <div className='report-dialog-modal__actions'>
-        <Button onClick={onClose}>
+        <Button onClick={onClose} variant='solid' color='accent'>
           <FormattedMessage id='report.close' defaultMessage='Done' />
         </Button>
       </div>
@@ -202,11 +202,12 @@ export const ReportCollectionModal: React.FC<{
       <div className='report-modal__target'>
         <IconButton
           className='report-modal__close'
-          title={intl.formatMessage(messages.close)}
-          icon='times'
-          iconComponent={CloseIcon}
+          icon={XIcon}
           onClick={onClose}
-        />
+          variant='ghost'
+        >
+          {intl.formatMessage(messages.close)}
+        </IconButton>
         <FormattedMessage
           id='report.target'
           defaultMessage='Report {target}'

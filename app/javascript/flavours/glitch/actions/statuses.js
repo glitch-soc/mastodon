@@ -5,7 +5,7 @@ import { browserHistory } from 'flavours/glitch/components/router';
 import api from '../api';
 
 import { showAlert } from './alerts';
-import { ensureComposeIsVisible, setComposeToStatus } from './compose';
+import { setComposeToStatus } from './compose';
 import { importFetchedStatus, importFetchedAccount } from './importer';
 import { fetchContext } from './statuses_typed';
 import { deleteFromTimelines } from './timelines';
@@ -135,7 +135,6 @@ export const editStatus = (id) => (dispatch, getState) => {
 
   api().get(`/api/v1/statuses/${id}/source`).then(response => {
     dispatch(fetchStatusSourceSuccess());
-    ensureComposeIsVisible(getState);
     dispatch(setComposeToStatus(status, response.data.text, response.data.spoiler_text, response.data.content_type, response.data.quote?.quoted_status?.id));
   }).catch(error => {
     dispatch(fetchStatusSourceFail(error));
@@ -172,7 +171,6 @@ export function deleteStatus(id, withRedraft = false) {
 
       if (withRedraft) {
         dispatch(redraft(status, response.data.text, response.data.content_type));
-        ensureComposeIsVisible(getState);
       } else {
         dispatch(showAlert({ message: messages.deleteSuccess }));
       }
