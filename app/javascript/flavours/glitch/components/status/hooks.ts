@@ -736,7 +736,7 @@ function getMenuItems({
     const statusContent = getStatusContent(status.content);
 
     menu.push({
-      text: status.content,
+      text: intl.formatMessage(menuMessages.share),
       action: () => {
         void navigator.share({
           text: statusContent,
