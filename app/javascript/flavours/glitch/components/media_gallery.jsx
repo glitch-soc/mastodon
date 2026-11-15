@@ -27,7 +27,6 @@ class Item extends PureComponent {
     standalone: PropTypes.bool,
     index: PropTypes.number.isRequired,
     size: PropTypes.number.isRequired,
-    letterbox: PropTypes.bool,
     onClick: PropTypes.func.isRequired,
     displayWidth: PropTypes.number,
     visible: PropTypes.bool.isRequired,
@@ -91,7 +90,7 @@ class Item extends PureComponent {
   };
 
   render () {
-    const { attachment, lang, index, size, standalone, letterbox, displayWidth, visible } = this.props;
+    const { attachment, lang, index, size, standalone, displayWidth, visible } = this.props;
 
     let badges = [], thumbnail;
 
@@ -146,13 +145,12 @@ class Item extends PureComponent {
           rel='noopener'
         >
           <img
-            className={letterbox ? 'letterbox' : null}
             src={previewUrl}
             srcSet={srcSet}
             sizes={sizes}
             alt={description}
             lang={lang}
-            style={{ objectPosition: letterbox ? null : `${x}% ${y}%` }}
+            style={{ objectPosition: `${x}% ${y}%` }}
             onLoad={this.handleImageLoad}
             onError={this.handleImageError}
           />
@@ -171,7 +169,7 @@ class Item extends PureComponent {
       thumbnail = (
         <div className={classNames('media-gallery__gifv', { autoplay: autoPlay })}>
           <video
-            className={`media-gallery__item-gifv-thumbnail${letterbox ? ' letterbox' : ''}`}
+            className='media-gallery__item-gifv-thumbnail'
             aria-label={description}
             lang={lang}
             role='application'
@@ -190,7 +188,7 @@ class Item extends PureComponent {
     }
 
     return (
-      <div className={classNames('media-gallery__item', { standalone, letterbox, 'media-gallery__item--error': this.state.error, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
+      <div className={classNames('media-gallery__item', { standalone, 'media-gallery__item--error': this.state.error, 'media-gallery__item--tall': height === 100, 'media-gallery__item--wide': width === 100 })} key={attachment.get('id')}>
         <Blurhash
           hash={attachment.get('blurhash')}
           dummy={!useBlurhash}
@@ -218,13 +216,10 @@ class MediaGallery extends PureComponent {
 
   static propTypes = {
     sensitive: PropTypes.bool,
-    standalone: PropTypes.bool,
-    letterbox: PropTypes.bool,
-    fullwidth: PropTypes.bool,
-    hidden: PropTypes.bool,
     media: ImmutablePropTypes.list.isRequired,
     lang: PropTypes.string,
     size: PropTypes.object,
+    height: PropTypes.number.isRequired,
     onOpenMedia: PropTypes.func.isRequired,
     defaultWidth: PropTypes.number,
     cacheWidth: PropTypes.func,
@@ -232,10 +227,6 @@ class MediaGallery extends PureComponent {
     autoplay: PropTypes.bool,
     onToggleVisibility: PropTypes.func,
     matchedFilters: PropTypes.arrayOf(PropTypes.string),
-  };
-
-  static defaultProps = {
-    standalone: false,
   };
 
   state = {
@@ -257,10 +248,6 @@ class MediaGallery extends PureComponent {
     } else if (!is(prevProps.visible, this.props.visible) && this.props.visible !== undefined) {
       this.setState({ visible: this.props.visible });
     }
-
-    if (this.node) {
-      this.handleResize();
-    }
   }
 
   handleResize = debounce(() => {
@@ -268,7 +255,6 @@ class MediaGallery extends PureComponent {
       this._setDimensions();
     }
   }, 250, {
-    leading: true,
     trailing: true,
   });
 
@@ -296,51 +282,47 @@ class MediaGallery extends PureComponent {
   _setDimensions () {
     const width = this.node.offsetWidth;
 
-    if (width && width !== this.state.width) {
-      // offsetWidth triggers a layout, so only calculate when we need to
-      if (this.props.cacheWidth) {
-        this.props.cacheWidth(width);
-      }
-
-      this.setState({
-        width: width,
-      });
+    // offsetWidth triggers a layout, so only calculate when we need to
+    if (this.props.cacheWidth) {
+      this.props.cacheWidth(width);
     }
+
+    this.setState({
+      width: width,
+    });
   }
 
-  isStandaloneEligible() {
-    const { media, standalone } = this.props;
-    return standalone && media.size === 1 && media.getIn([0, 'meta', 'small', 'aspect']);
+  isFullSizeEligible() {
+    const { media } = this.props;
+    return media.size === 1 && media.getIn([0, 'meta', 'small', 'aspect']);
   }
 
   render () {
-    const { media, lang, sensitive, letterbox, fullwidth, defaultWidth, autoplay, matchedFilters, showSpoilerButton } = this.props;
+    const { media, lang, sensitive, defaultWidth, autoplay, matchedFilters, showSpoilerButton } = this.props;
     const { visible } = this.state;
-    const size     = media.size;
-    const uncached = media.every(attachment => attachment.get('type') === 'unknown');
-
     const width = this.state.width || defaultWidth;
 
     let children;
 
     const style = {};
 
-    const computedClass = classNames('media-gallery', `media-gallery--layout-${size}`, { 'full-width': fullwidth });
-
-    if (this.isStandaloneEligible()) { // TODO: cropImages setting
+    if (this.isFullSizeEligible()) {
       style.aspectRatio = `${this.props.media.getIn([0, 'meta', 'small', 'aspect'])}`;
     } else {
-      style.aspectRatio = '16 / 9';
+      style.aspectRatio = '3 / 2';
     }
 
-    if (this.isStandaloneEligible()) {
+    const size     = media.size;
+    const uncached = media.every(attachment => attachment.get('type') === 'unknown');
+
+    if (this.isFullSizeEligible()) {
       children = <Item standalone autoplay={autoplay} onClick={this.handleClick} attachment={media.get(0)} lang={lang} displayWidth={width} visible={visible} />;
     } else {
-      children = media.map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} lang={lang} size={size} letterbox={letterbox} displayWidth={width} visible={visible || uncached} />);
+      children = media.map((attachment, i) => <Item key={attachment.get('id')} autoplay={autoplay} onClick={this.handleClick} attachment={attachment} index={i} lang={lang} size={size} displayWidth={width} visible={visible || uncached} />);
     }
 
     return (
-      <div className={computedClass} style={style} ref={this.handleRef}>
+      <div className={`media-gallery media-gallery--layout-${size}`} style={style} ref={this.handleRef}>
         {children}
 
         {(!visible || uncached) && <SpoilerButton uncached={uncached} sensitive={sensitive} onClick={this.handleOpen} matchedFilters={matchedFilters} />}

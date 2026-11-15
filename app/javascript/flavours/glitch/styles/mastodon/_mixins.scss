@@ -196,20 +196,6 @@
 }
 
 /**
- * glitch-soc additions
- */
-
-@mixin fullwidth-gallery {
-  &.full-width {
-    margin-left: -14px;
-    margin-right: -14px;
-    width: inherit;
-    max-width: none;
-    border-radius: 0;
-  }
-}
-
-/**
  * Utilities
  */
 
