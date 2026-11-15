@@ -184,8 +184,6 @@ export const Video: React.FC<{
   startVolume?: number;
   startMuted?: boolean;
   matchedFilters?: string[];
-  letterbox?: boolean;
-  fullwidth?: boolean;
 }> = ({
   preview,
   frameRate = '25',
@@ -208,8 +206,6 @@ export const Video: React.FC<{
   startVolume,
   startMuted,
   matchedFilters,
-  letterbox,
-  fullwidth,
 }) => {
   const intl = useIntl();
   const [currentTime, setCurrentTime] = useState(0);
@@ -795,8 +791,6 @@ export const Video: React.FC<{
           detailed,
           fullscreen,
           editable,
-          letterbox,
-          'full-width': fullwidth,
         })}
         style={{ aspectRatio }}
         ref={playerRef}

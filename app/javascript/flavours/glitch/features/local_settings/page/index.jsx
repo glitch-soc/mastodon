@@ -318,23 +318,6 @@ class LocalSettingsPage extends PureComponent {
         <h1><FormattedMessage id='settings.media' defaultMessage='Media' /></h1>
         <LocalSettingsPageItem
           settings={settings}
-          item={['media', 'letterbox']}
-          id='mastodon-settings--media-letterbox'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.media_letterbox' defaultMessage='Letterbox media' />
-          <span className='hint'><FormattedMessage id='settings.media_letterbox_hint' defaultMessage='Scale down and letterbox media to fill the image containers instead of stretching and cropping them' /></span>
-        </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
-          item={['media', 'fullwidth']}
-          id='mastodon-settings--media-fullwidth'
-          onChange={onChange}
-        >
-          <FormattedMessage id='settings.media_fullwidth' defaultMessage='Full-width media previews' />
-        </LocalSettingsPageItem>
-        <LocalSettingsPageItem
-          settings={settings}
           item={['inline_preview_cards']}
           id='mastodon-settings--inline-preview-cards'
           onChange={onChange}
