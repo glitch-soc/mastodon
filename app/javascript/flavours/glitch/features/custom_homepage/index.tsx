@@ -2,23 +2,23 @@ import { useEffect } from 'react';
 
 import { FormattedMessage } from 'react-intl';
 
-import classNames from 'classnames';
 import { Route, Switch, useRouteMatch } from 'react-router-dom';
 
 import { SignInIcon } from '@phosphor-icons/react';
 import { Helmet } from '@unhead/react/helmet';
 
+import { fetchServer } from '@/flavours/glitch/actions/server';
+import { Column } from '@/flavours/glitch/components/column';
 import {
   ColumnHeader,
   ColumnHeaderButton,
 } from '@/flavours/glitch/components/column_header';
 import { NavigationFocusTarget } from '@/flavours/glitch/components/navigation_focus_target';
+import { ServerHeroImage } from '@/flavours/glitch/components/server_hero_image';
+import { TabLink, TabList } from '@/flavours/glitch/components/tab_list';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import { domain, sso_redirect } from '@/flavours/glitch/initial_state';
-import { fetchServer } from 'flavours/glitch/actions/server';
-import { ServerHeroImage } from 'flavours/glitch/components/server_hero_image';
-import { TabLink, TabList } from 'flavours/glitch/components/tab_list';
-import { useAppSelector, useAppDispatch } from 'flavours/glitch/store';
+import { useAppSelector, useAppDispatch } from '@/flavours/glitch/store';
 
 import { About } from './about';
 import { LatestActivity } from './latest_activity';
@@ -35,7 +35,7 @@ export const CustomHomepage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className={classNames(classes.page, classes.pageRedesign)}>
+    <Column bindToDocument label={domain}>
       <ColumnHeader
         title={domain}
         extraButtons={
@@ -99,6 +99,6 @@ export const CustomHomepage: React.FC = () => {
         <title>{server.item?.domain}</title>
         <meta name='robots' content='all' />
       </Helmet>
-    </div>
+    </Column>
   );
 };

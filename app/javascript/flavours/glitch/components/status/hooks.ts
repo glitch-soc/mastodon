@@ -72,7 +72,6 @@ import {
   StatusReplyIcon,
 } from './icons';
 import type { StatusContextType } from './types';
-import { getStatusContent } from './utils';
 
 export const StatusContext = createContext<{
   id?: string | null;
@@ -418,6 +417,7 @@ const screenReaderMessages = defineMessages({
   boosted: { id: 'status.reblogged_by', defaultMessage: '{name} boosted' },
 });
 
+const domParser = new DOMParser();
 export function useTextForScreenReader({
   statusId,
   reblogAcct,
@@ -437,12 +437,17 @@ export function useTextForScreenReader({
 
     const spoilerText = status.translation?.spoiler_text ?? status.spoiler_text;
     const contentHtml = status.translation?.contentHtml ?? status.contentHtml;
-
     let contentText = spoilerText;
-
     if (!status.hidden) {
       contentText = '';
-      contentText = getStatusContent(contentHtml);
+      for (const paragraph of domParser
+        .parseFromString(contentHtml, 'text/html')
+        .querySelectorAll('p')) {
+        const text = paragraph.textContent.trim();
+        if (text) {
+          contentText += ` ${text}`;
+        }
+      }
     }
 
     const values = [
@@ -733,13 +738,10 @@ function getMenuItems({
   });
 
   if (isPublic && 'share' in navigator) {
-    const statusContent = getStatusContent(status.content);
-
     menu.push({
       text: intl.formatMessage(menuMessages.share),
       action: () => {
         void navigator.share({
-          text: statusContent,
           url: statusUrl,
         });
       },

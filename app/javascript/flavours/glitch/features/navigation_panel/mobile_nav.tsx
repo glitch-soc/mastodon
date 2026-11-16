@@ -19,12 +19,10 @@ import {
   closeNavigation,
   openNavigation,
 } from '@/flavours/glitch/actions/navigation';
-import { Avatar } from '@/flavours/glitch/components/avatar';
 import { Button, IconButton } from '@/flavours/glitch/components/button';
 import { Menu, MenuList, MenuTrigger } from '@/flavours/glitch/components/menu';
 import { FOCUS_TARGET } from '@/flavours/glitch/components/navigation_focus_target';
 import { ComposeButton } from '@/flavours/glitch/features/compose/trigger';
-import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useCloseOnHistoryBack } from '@/flavours/glitch/hooks/useCloseOnHistoryBack';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
@@ -35,19 +33,19 @@ import {
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
 import {
-  RedesignNavigationPanel,
+  NavigationPanel,
   useNotificationsCount,
   handleSearchLinkClick,
 } from '.';
-import { AccountMenuItems } from './account_card_and_menu';
+import { AccountMenuItems } from './account_menu_items';
 import { LogoLockup } from './header';
+import { AccountButton } from './mini_nav';
 import classes from './mobile_nav.module.scss';
-import { MobileNavLink, MobileNavProfileButton } from './navigation_link';
+import { MiniNavigationLink } from './navigation_link';
 
-export const RedesignMobileNavigation: React.FC = () => {
+export const MobileNavigation: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { accountId, signedIn } = useIdentity();
-  const account = useAccount(accountId);
+  const { signedIn } = useIdentity();
 
   const notificationsCount = useNotificationsCount();
 
@@ -68,53 +66,42 @@ export const RedesignMobileNavigation: React.FC = () => {
       {signedIn ? (
         <nav className={classes.root}>
           <ul className={classNames(classes.floatingCard, classes.list)}>
-            <MobileNavLink to='/home' iconComponent={HouseIcon}>
+            <MiniNavigationLink to='/home' icon={HouseIcon}>
               <FormattedMessage id='tabs_bar.home' defaultMessage='Home' />
-            </MobileNavLink>
-            <MobileNavLink
+            </MiniNavigationLink>
+            <MiniNavigationLink
               to={{
                 pathname: trendsEnabled ? '/explore' : '/search',
                 state: { focusTarget: FOCUS_TARGET.SEARCH },
               }}
-              iconComponent={MagnifyingGlassIcon}
+              icon={MagnifyingGlassIcon}
               onClick={handleSearchLinkClick}
             >
               <FormattedMessage id='tabs_bar.search' defaultMessage='Search' />
-            </MobileNavLink>
-            <MobileNavLink
-              to='/conversations'
-              iconComponent={ChatCircleDotsIcon}
-            >
+            </MiniNavigationLink>
+            <MiniNavigationLink to='/conversations' icon={ChatCircleDotsIcon}>
               <FormattedMessage
                 id='tabs_bar.messages'
                 defaultMessage='Messages'
                 description='Message refers to a direct message. For languages where this is confusing, "chat" or "direct message" can be used.'
               />
-            </MobileNavLink>
-            <MobileNavLink
+            </MiniNavigationLink>
+            <MiniNavigationLink
               to='/notifications'
-              iconComponent={BellIcon}
-              withDot={notificationsCount > 0}
+              icon={BellIcon}
+              badgeCount={notificationsCount}
+              badgeType='dot'
             >
               <FormattedMessage
                 id='tabs_bar.notifications'
                 defaultMessage='Notifications'
               />
-            </MobileNavLink>
+            </MiniNavigationLink>
             <Menu>
-              <MenuTrigger
-                as={MobileNavProfileButton}
-                avatar={
-                  <Avatar
-                    size={24}
-                    account={account}
-                    className={classes.avatar}
-                  />
-                }
-              >
+              <MenuTrigger as={AccountButton}>
                 <FormattedMessage
-                  id='tabs_bar.account_settings'
-                  defaultMessage='Account settings'
+                  id='tabs_bar.account'
+                  defaultMessage='Account'
                 />
               </MenuTrigger>
               <MenuList placement='top-end' offset={8}>
@@ -285,7 +272,7 @@ const SlideOutNavigation: React.FC = () => {
       inert={!isOpen}
     >
       <animated.div className={classes.slideOut} {...bind()} style={{ x }}>
-        <RedesignNavigationPanel mode='slide-out' />
+        <NavigationPanel mode='slide-out' />
       </animated.div>
     </div>
   );
