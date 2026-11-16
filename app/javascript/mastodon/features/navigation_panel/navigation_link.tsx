@@ -4,17 +4,19 @@ import classNames from 'classnames';
 import { NavLink } from 'react-router-dom';
 import type { NavLinkProps } from 'react-router-dom';
 
+import { CaretDownIcon } from '@phosphor-icons/react';
 import type { Icon } from '@phosphor-icons/react';
 
 import { Badge } from '@/mastodon/components/badge';
+import { Tooltip } from '@/mastodon/components/tooltip';
 import { useIsLinkActive } from '@/mastodon/hooks/useIsLinkActive';
 
 import classes from './navigation_link.module.scss';
 
 type NavigationLinkProps = {
-  stacked?: boolean;
-  iconComponent?: Icon | React.FC<SVGProps<SVGSVGElement>>;
+  icon?: Icon | React.FC<SVGProps<SVGSVGElement>>;
   badgeCount?: number;
+  withDivider?: boolean;
 } & (
   | ({ as?: 'button' } & React.ComponentPropsWithRef<'button'>)
   | ({ as?: 'a' } & React.ComponentPropsWithRef<'a'>)
@@ -22,10 +24,10 @@ type NavigationLinkProps = {
 );
 
 export const NavigationLink: React.FC<NavigationLinkProps> = ({
-  stacked = false,
   as = 'link',
-  iconComponent: IconComp,
+  icon: IconComp,
   badgeCount = 0,
+  withDivider = false,
   children,
   ...otherProps
 }) => {
@@ -39,11 +41,16 @@ export const NavigationLink: React.FC<NavigationLinkProps> = ({
   );
 
   return (
-    <li className={classes.wrapper}>
+    <li
+      className={classNames(
+        classes.wrapper,
+        withDivider && classes.wrapperWithDivider,
+      )}
+    >
       <Comp
         {...otherProps}
         type={as === 'button' ? 'button' : undefined}
-        className={classNames(classes.link, stacked && classes.linkStacked)}
+        className={classes.link}
       >
         {IconComp && (
           <span className={classes.icon}>
@@ -63,56 +70,82 @@ export const NavigationLink: React.FC<NavigationLinkProps> = ({
   );
 };
 
-type MobileNavLink = NavLinkProps & {
-  withDot?: boolean;
+export type MiniNavigationLinkProps = {
+  badgeType?: 'default' | 'dot';
+  badgeCount?: number;
+  withMenuIndicator?: boolean;
   children: ReactNode;
-  iconComponent: Icon | React.FC<SVGProps<SVGSVGElement>>;
-};
+  icon: Icon | React.FC<SVGProps<SVGSVGElement>> | { customIcon: ReactNode };
+} & (
+  | ({ as?: 'button' } & React.ComponentPropsWithRef<'button'>)
+  | ({ as?: 'a' } & React.ComponentPropsWithRef<'a'>)
+  | ({ as?: 'link' } & NavLinkProps)
+);
 
-export const MobileNavLink: React.FC<MobileNavLink> = ({
-  iconComponent: IconComp,
-  withDot,
+export const MiniNavigationLink: React.FC<MiniNavigationLinkProps> = ({
+  as = 'link',
+  icon: IconComp,
+  badgeType = 'default',
+  badgeCount,
+  withMenuIndicator,
   children,
   ...otherProps
 }) => {
+  let Comp: React.ElementType = as;
+  if (as === 'link') {
+    Comp = NavLink;
+  }
+
   const isActive = useIsLinkActive(
     'to' in otherProps ? otherProps.to : undefined,
   );
 
-  return (
-    <li>
-      <NavLink
-        {...otherProps}
-        className={classNames(classes.link, classes.linkMobile)}
-      >
-        <span
-          className={classNames(classes.icon, withDot && classes.iconWithDot)}
-        >
-          <IconComp size={24} weight={isActive ? 'fill' : undefined} />
-        </span>
-        <span className='sr-only'>{children}</span>
-      </NavLink>
-    </li>
-  );
-};
+  const icon =
+    'customIcon' in IconComp ? (
+      IconComp.customIcon
+    ) : (
+      <IconComp size={24} weight={isActive ? 'fill' : undefined} />
+    );
 
-export const MobileNavProfileButton: React.FC<
-  { avatar?: ReactNode } & Pick<MobileNavLink, 'children' | 'withDot'>
-> = ({ children, avatar, withDot, ...otherProps }) => {
+  const withDot = !!badgeCount && badgeType === 'dot';
+  const withBadge = !!badgeCount && badgeType === 'default';
+
   return (
     <li>
-      <button
-        type='button'
-        {...otherProps}
-        className={classNames(classes.link, classes.linkMobile)}
-      >
-        <span
-          className={classNames(classes.icon, withDot && classes.iconWithDot)}
-        >
-          {avatar}
-        </span>
-        <span className='sr-only'>{children}</span>
-      </button>
+      <Tooltip text={children} placement='top' offset={-2}>
+        {({ getTooltipProps }) => (
+          <Comp
+            type={as === 'button' ? 'button' : undefined}
+            {...getTooltipProps(otherProps)}
+            className={classNames(classes.link, classes.linkMini)}
+          >
+            <span
+              className={classNames(
+                classes.icon,
+                withDot && classes.iconWithDot,
+              )}
+            >
+              {icon}
+            </span>
+            <span className='sr-only'>{children}</span>
+            {withMenuIndicator && (
+              <CaretDownIcon
+                weight='fill'
+                size={10}
+                className={classes.menuIndicatorIcon}
+              />
+            )}
+
+            {withBadge && (
+              <Badge
+                variant='accent'
+                label={badgeCount}
+                className={classes.miniBadge}
+              />
+            )}
+          </Comp>
+        )}
+      </Tooltip>
     </li>
   );
 };
