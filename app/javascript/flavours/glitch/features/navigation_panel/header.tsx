@@ -10,6 +10,7 @@ import { PenNibIcon } from '@phosphor-icons/react';
 import { closeNavigation } from '@/flavours/glitch/actions/navigation';
 import { Button } from '@/flavours/glitch/components/button';
 import { IconLogo } from '@/flavours/glitch/components/logo';
+import { useIdentity } from '@/flavours/glitch/identity_context';
 import { customAppIcon, domain, title } from '@/flavours/glitch/initial_state';
 import { openNewComposer } from '@/flavours/glitch/reducers/slices/composer';
 import { useAppDispatch } from '@/flavours/glitch/store';
@@ -23,6 +24,7 @@ export const NavigationHeader: React.FC<{
   siteName?: string;
   isStuck: boolean;
 }> = ({ siteName, isStuck }) => {
+  const { signedIn } = useIdentity();
   const dispatch = useAppDispatch();
 
   const openComposer = useCallback(() => {
@@ -34,18 +36,22 @@ export const NavigationHeader: React.FC<{
     <header className={classes.root} data-stuck={isStuck}>
       <LogoLockup siteName={siteName} />
 
-      <MiniNav />
+      {signedIn && (
+        <>
+          <MiniNav />
 
-      <Button
-        leadingIcon={PenNibIcon}
-        onClick={openComposer}
-        variant='solid'
-        color='accent'
-        size='md'
-        className={classes.newPostButton}
-      >
-        <FormattedMessage id='tabs_bar.publish' defaultMessage='New Post' />
-      </Button>
+          <Button
+            leadingIcon={PenNibIcon}
+            onClick={openComposer}
+            variant='solid'
+            color='accent'
+            size='md'
+            className={classes.newPostButton}
+          >
+            <FormattedMessage id='tabs_bar.publish' defaultMessage='New Post' />
+          </Button>
+        </>
+      )}
     </header>
   );
 };
