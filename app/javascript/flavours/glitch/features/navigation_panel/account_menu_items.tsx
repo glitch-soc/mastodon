@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { FormattedMessage } from 'react-intl';
 
 import {
-  DotsThreeIcon,
   UserIcon,
   GearIcon,
   CirclesFourIcon,
@@ -18,72 +17,23 @@ import {
 
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { Avatar } from '@/flavours/glitch/components/avatar';
-import { IconButton } from '@/flavours/glitch/components/button';
 import { DisplayName } from '@/flavours/glitch/components/display_name';
 import { useAccountHandle } from '@/flavours/glitch/components/display_name/default';
 import {
   LockupContent,
-  LockupLink,
   LockupWrapper,
 } from '@/flavours/glitch/components/lockup';
 import {
-  Menu,
   MenuItem,
   MenuItemDivider,
   MenuItemGroup,
   MenuItemLink,
-  MenuList,
-  MenuTrigger,
 } from '@/flavours/glitch/components/menu';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import { useAppDispatch } from '@/flavours/glitch/store';
 
-import classes from './account_card_and_menu.module.scss';
-
-export const NavigationAccountCardAndMenu: React.FC = () => {
-  const { accountId } = useIdentity();
-  const account = useAccount(accountId);
-  const handle = useAccountHandle(account);
-  const accountBasePath = `/@${account?.acct}`;
-
-  if (!accountId) {
-    return null;
-  }
-
-  return (
-    <LockupWrapper
-      icon={<Avatar account={account} size={32} />}
-      sideContent={
-        <Menu type='navigation'>
-          <MenuTrigger
-            as={IconButton}
-            icon={DotsThreeIcon}
-            size='sm'
-            variant='ghost'
-          >
-            <FormattedMessage
-              id='tabs_bar.account_settings'
-              defaultMessage='Account settings'
-            />
-          </MenuTrigger>
-          <MenuList placement='top' offset={12} strategy='fixed' minWidth={220}>
-            <AccountMenuItems />
-          </MenuList>
-        </Menu>
-      }
-      className={classes.root}
-    >
-      <LockupLink
-        to={accountBasePath}
-        subtitle={handle}
-        className={classes.accountLink}
-      >
-        <DisplayName variant='simple' account={account} />
-      </LockupLink>
-    </LockupWrapper>
-  );
-};
+import classes from './account_menu_items.module.scss';
 
 export const AccountMenuItems: React.FC<{
   context?: 'default' | 'mobile';
@@ -104,7 +54,7 @@ export const AccountMenuItems: React.FC<{
 
   return (
     <>
-      {context === 'mobile' && <ProfileMenuItem />}
+      <ProfileMenuItem />
 
       <MenuItemLink to={accountBasePath} exact icon={UserIcon}>
         <FormattedMessage
