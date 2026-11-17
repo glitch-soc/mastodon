@@ -1,3 +1,8 @@
+import type {
+  ApiGifvAttachmentJSON,
+  ApiImageAttachmentJSON,
+  ApiVideoAttachmentJSON,
+} from '@/flavours/glitch/api_types/media_attachments';
 import type { Account as TAccount } from '@/flavours/glitch/models/account';
 import type { Status as TStatus } from '@/flavours/glitch/models/status';
 
@@ -82,3 +87,8 @@ export interface StatusProps extends Omit<StatusContainerProps, 'nextId'> {
   ) => void;
   pictureInPicture: Immutable.Map<'inUse' | 'available', boolean>;
 }
+
+export type StatusImageAttachmentJSON =
+  | ApiImageAttachmentJSON
+  | ApiGifvAttachmentJSON
+  | ApiVideoAttachmentJSON;
