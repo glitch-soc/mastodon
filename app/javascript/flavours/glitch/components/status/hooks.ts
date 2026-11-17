@@ -71,11 +71,12 @@ import {
   StatusReplyAllIcon,
   StatusReplyIcon,
 } from './icons';
-import type { StatusContextType } from './types';
+import type { StatusContextType, StatusVariant } from './types';
 
 export const StatusContext = createContext<{
   id?: string | null;
   contextType?: StatusContextType;
+  variant?: StatusVariant;
   registerHotkeyCallback?: (
     hotkey: HotkeyName,
     handler: HotkeyHandlerFunction,
