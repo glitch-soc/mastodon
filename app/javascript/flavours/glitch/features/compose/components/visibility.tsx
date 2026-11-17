@@ -4,12 +4,11 @@ import { FormattedMessage } from 'react-intl';
 
 import classNames from 'classnames';
 
-import { ChatCircleDotsIcon, EyeIcon } from '@phosphor-icons/react';
+import { ChatCircleDotsIcon } from '@phosphor-icons/react';
 
 import { changeComposeVisibility } from '@/flavours/glitch/actions/compose_typed';
 import type { StatusVisibility } from '@/flavours/glitch/api_types/statuses';
 import { Button, CaretIcon } from '@/flavours/glitch/components/button';
-import { Icon } from '@/flavours/glitch/components/icon';
 import {
   Menu,
   MenuList,
@@ -36,10 +35,9 @@ export const ComposeVisibility: React.FC<{ className?: string }> = ({
   if (privacy === 'direct') {
     return (
       <div className={classNames(className, classes.toolbarMessage)}>
-        <Icon icon={EyeIcon} />
         <FormattedMessage
           id='compose.privacy.direct.hint'
-          defaultMessage='Visible to everyone mentioned. Not encrypted.'
+          defaultMessage='Visible to mentions, including people you reply to or quote. Not encrypted.'
         />
       </div>
     );
