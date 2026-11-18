@@ -8,7 +8,6 @@ import { useLocation } from 'react-router';
 import { ArrowLeftIcon, ListIcon } from '@phosphor-icons/react';
 import type { DistributedOmit } from 'type-fest';
 
-import { openNavigation } from '@/flavours/glitch/actions/navigation';
 import type { IconButtonProps } from '@/flavours/glitch/components/button';
 import { Button, IconButton } from '@/flavours/glitch/components/button';
 import {
@@ -22,6 +21,7 @@ import { Tooltip } from '@/flavours/glitch/components/tooltip';
 import { getColumnSkipLinkId } from '@/flavours/glitch/features/ui/components/skip_links';
 import { useBreakpoint } from '@/flavours/glitch/features/ui/hooks/useBreakpoint';
 import { useResizeObserver } from '@/flavours/glitch/hooks/useObserver';
+import { openMobileMenu } from '@/flavours/glitch/reducers/slices/navigation';
 import { useAppDispatch } from '@/flavours/glitch/store';
 import { hasReactChildren } from '@/flavours/glitch/utils/has_react_children';
 
@@ -201,7 +201,7 @@ const MobileMenuButton: React.FC = () => {
   const dispatch = useAppDispatch();
 
   const openMobileNavigation = useCallback(() => {
-    dispatch(openNavigation());
+    dispatch(openMobileMenu());
   }, [dispatch]);
 
   const isMobile = useBreakpoint('openable');

@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { WarningIcon } from '@phosphor-icons/react';
 
 import { changeComposeLanguage } from '@/flavours/glitch/actions/compose';
+import { Button } from '@/flavours/glitch/components/button';
 import { Callout } from '@/flavours/glitch/components/callout/redesign';
 import { Icon } from '@/flavours/glitch/components/icon';
 import { useToggle } from '@/flavours/glitch/hooks/useToggle';
@@ -181,21 +182,23 @@ const LanguageHint: React.FC<{ guess: string; onDismiss: () => void }> = ({
   return (
     <Callout
       icon={WarningIcon}
-      actionClick={handleChange}
-      actionText={
-        <FormattedMessage
-          id='compose.hints.language.change'
-          defaultMessage='Change'
-          description='Label on button to accept language change prompt'
-        />
-      }
-      secondaryActionClick={onDismiss}
-      secondaryActionText={
-        <FormattedMessage
-          id='compose.hints.language.dismiss'
-          defaultMessage='Dismiss'
-          description='Label on button to dismiss language change prompt'
-        />
+      actions={
+        <>
+          <Button size='sm' onClick={handleChange}>
+            <FormattedMessage
+              id='compose.hints.language.change'
+              defaultMessage='Change'
+              description='Label on button to accept language change prompt'
+            />
+          </Button>
+          <Button size='sm' variant='ghost' onClick={onDismiss}>
+            <FormattedMessage
+              id='compose.hints.language.dismiss'
+              defaultMessage='Dismiss'
+              description='Label on button to dismiss language change prompt'
+            />
+          </Button>
+        </>
       }
     >
       <FormattedMessage
