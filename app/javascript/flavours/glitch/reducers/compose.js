@@ -107,7 +107,6 @@ const initialState = ImmutableMap({
   }),
   default_privacy: 'public',
   default_sensitive: false,
-  default_spoiler_field: false,
   default_language: 'en',
   resetFileKey: Math.floor((Math.random() * 0x10000)),
   idempotencyKey: null,
@@ -188,7 +187,6 @@ function clearAll(state) {
     );
     map.set('privacy', state.get('default_privacy'));
     map.set('sensitive', state.get('default_sensitive'));
-    map.set('spoiler', state.get('default_spoiler_field', false));
     map.set('language', state.get('default_language'));
     map.update('media_attachments', list => list.clear());
     map.set('progress', 0);
