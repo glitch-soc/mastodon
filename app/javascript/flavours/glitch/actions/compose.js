@@ -229,7 +229,7 @@ export function submitCompose(successCallback, overridePrivacy) {
 
     const visibility = overridePrivacy || getState().getIn(['compose', 'privacy']);
 
-    const sensitive = !!getState().getIn(['compose', 'sensitive']) && !!getState().getIn(['compose', 'spoiler'])
+    const sensitive = !!getState().getIn(['compose', 'sensitive']) || !!getState().getIn(['compose', 'spoiler']);
 
     api().request({
       url: statusId === null ? '/api/v1/statuses' : `/api/v1/statuses/${statusId}`,
