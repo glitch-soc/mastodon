@@ -42,7 +42,11 @@
 
   &.galleryWrapperAspectForce {
     aspect-ratio: var(--aspect-ratio);
-    max-height: var(--max-media-height-large);
+    max-height: var(--max-media-height-small);
+
+    @container (width > 500px) {
+      max-height: var(--max-media-height-large);
+    }
   }
 }
 
@@ -119,6 +123,12 @@
         color: var(--color-text-primary);
       }
     }
+  }
+
+  .cardAuthors {
+    margin-inline: 0;
+    margin-block-start: 0;
+    padding-block-end: var(--space-1);
   }
 }
 
