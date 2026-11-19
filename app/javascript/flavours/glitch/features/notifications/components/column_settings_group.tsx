@@ -13,7 +13,7 @@ import {
   useAppSelector,
 } from '@/flavours/glitch/store';
 
-import PillBarButton from './pill_bar_button';
+import SettingToggle from './setting_toggle';
 
 const selectNotificationSettings = createAppSelector(
   [
@@ -102,8 +102,8 @@ export const ColumnSettingsGroup: FC<{ label: ReactNode; type: string }> = ({
     <section role='group' aria-labelledby={`notifications-${type}`}>
       <h3 id={`notifications-${type}`}>{label}</h3>
 
-      <div className='column-settings__pillbar'>
-        <PillBarButton
+      <div className='column-settings__row'>
+        <SettingToggle
           disabled={!browserPermission}
           prefix='notifications_desktop'
           settings={settings}
@@ -118,7 +118,7 @@ export const ColumnSettingsGroup: FC<{ label: ReactNode; type: string }> = ({
         />
 
         {showPushSettings && (
-          <PillBarButton
+          <SettingToggle
             prefix='notifications_push'
             settings={pushSettings}
             settingPath={['alerts', type]}
@@ -132,7 +132,7 @@ export const ColumnSettingsGroup: FC<{ label: ReactNode; type: string }> = ({
           />
         )}
 
-        <PillBarButton
+        <SettingToggle
           prefix='notifications'
           settings={settings}
           settingPath={['shows', type]}
@@ -145,7 +145,7 @@ export const ColumnSettingsGroup: FC<{ label: ReactNode; type: string }> = ({
           }
         />
 
-        <PillBarButton
+        <SettingToggle
           prefix='notifications'
           settings={settings}
           settingPath={['sounds', type]}

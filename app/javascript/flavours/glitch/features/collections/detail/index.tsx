@@ -5,27 +5,26 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { useHistory, useLocation, useParams } from 'react-router';
 import { Link } from 'react-router-dom';
 
+import {
+  QuestionIcon,
+  ShareNetworkIcon,
+  StarIcon,
+} from '@phosphor-icons/react';
 import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/flavours/glitch/components/column/header';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import HelpIcon from '@/material-icons/400-24px/help.svg?react';
-import ListAltIcon from '@/material-icons/400-24px/list_alt.svg?react';
-import ShareIcon from '@/material-icons/400-24px/share.svg?react';
-import StarIcon from '@/material-icons/400-24px/star.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
 import type {
   ApiCollectionJSON,
   CollectionAccountItem,
 } from 'flavours/glitch/api_types/collections';
 import { Badge } from 'flavours/glitch/components/badge';
+import { IconButton } from 'flavours/glitch/components/button';
 import { Callout } from 'flavours/glitch/components/callout';
 import { DisplayName } from 'flavours/glitch/components/display_name';
 import { useAccountHandle } from 'flavours/glitch/components/display_name/default';
 import { FormattedDateWrapper } from 'flavours/glitch/components/formatted_date';
-import { IconButton } from 'flavours/glitch/components/icon_button';
 import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { Scrollable } from 'flavours/glitch/components/scrollable_list/components';
 import { useAccount } from 'flavours/glitch/hooks/useAccount';
@@ -124,7 +123,7 @@ export const PendingNote: React.FC = () => {
   return (
     <Callout
       variant='subtle'
-      icon={HelpIcon}
+      icon={QuestionIcon}
       title={
         <FormattedMessage
           id='collections.pending_accounts.title'
@@ -220,18 +219,10 @@ const CollectionHeader: React.FC<{
           <AuthorNote id={account_id} />
         </div>
         <div className={classes.headerButtonWrapper}>
-          <IconButton
-            iconComponent={ShareIcon}
-            icon='share-icon'
-            title={intl.formatMessage(messages.share)}
-            className={classes.iconButton}
-            onClick={openShareModal}
-          />
-          <CollectionMenu
-            context='collection'
-            collection={collection}
-            className={classes.iconButton}
-          />
+          <IconButton icon={ShareNetworkIcon} onClick={openShareModal}>
+            {intl.formatMessage(messages.share)}
+          </IconButton>
+          <CollectionMenu context='collection' collection={collection} />
         </div>
       </div>
       {withDescription && description && (
@@ -314,17 +305,7 @@ export const CollectionDetailPage: React.FC<{
 
   return (
     <Column bindToDocument={!multiColumn} label={pageTitle}>
-      {isRedesignEnabled() ? (
-        <ColumnHeader withBackButton title={pageTitle} />
-      ) : (
-        <LegacyColumnHeader
-          showBackButton
-          title={pageTitle}
-          icon='collection-icon'
-          iconComponent={ListAltIcon}
-          multiColumn={multiColumn}
-        />
-      )}
+      <ColumnHeader withBackButton title={pageTitle} />
 
       <Scrollable>
         {collection ? (

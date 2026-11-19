@@ -1,35 +1,23 @@
 import type { FC } from 'react';
 
-import { FormattedMessage, useIntl } from 'react-intl';
-import type { MessageDescriptor } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 
 import { Link } from 'react-router-dom';
 
 import { Callout } from '@/flavours/glitch/components/callout';
-import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useCurrentAccountId } from '@/flavours/glitch/hooks/useAccountId';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 
 import classes from '../styles.module.scss';
 
 export const AccountListHeader: FC<{
   accountId: string;
   total?: number;
-  titleText: MessageDescriptor;
-}> = ({ accountId, total, titleText }) => {
-  const intl = useIntl();
+}> = ({ accountId, total }) => {
   const account = useAccount(accountId);
   const currentId = useCurrentAccountId();
   return (
     <>
-      {!isRedesignEnabled() && (
-        <h1 className={classes.title}>
-          {intl.formatMessage(titleText, {
-            name: <DisplayNameSimple account={account} />,
-          })}
-        </h1>
-      )}
       {!!total && (
         <h2 className={classes.subtitle}>
           <FormattedMessage

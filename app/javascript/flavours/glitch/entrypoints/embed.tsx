@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client';
 
-import { Status } from 'flavours/glitch/features/standalone/status';
+import { EmbedRoot } from 'flavours/glitch/features/standalone/status';
 import { afterInitialRender } from 'flavours/glitch/hooks/useRenderSignal';
 import { loadPolyfills } from 'flavours/glitch/polyfills';
 import ready from 'flavours/glitch/ready';
@@ -16,7 +16,7 @@ function loaded() {
     const props = JSON.parse(attr) as { id: string; locale: string };
     const root = createRoot(mountNode);
 
-    root.render(<Status {...props} />);
+    root.render(<EmbedRoot {...props} />);
   }
 }
 

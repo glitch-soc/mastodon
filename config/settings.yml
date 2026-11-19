@@ -17,10 +17,12 @@ defaults: &defaults
   local_topic_feed_access: 'authenticated'
   remote_topic_feed_access: 'authenticated'
   show_staff_badge: true
+  postpone_confirmation_emails: false
   preview_sensitive_media: false
   noindex: false
   flavour: 'glitch'
   skin: 'default'
+  theme_color: 'indigo'
   thumbnail_description: ''
   trends: true
   trendable_by_default: false

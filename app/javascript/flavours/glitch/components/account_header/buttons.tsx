@@ -3,23 +3,16 @@ import type { FC } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { ChatCircleDotsIcon, UserMinusIcon } from '@phosphor-icons/react';
-
-import { followAccount } from '@/flavours/glitch/actions/accounts';
 import { directCompose } from '@/flavours/glitch/actions/compose';
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useFollowReference } from '@/flavours/glitch/hooks/useFollowReference';
 import { getAccountHidden } from '@/flavours/glitch/selectors/accounts';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
-import NotificationsActiveIcon from '@/material-icons/400-24px/notifications_active-fill.svg?react';
 
-import { Button, IconButton } from '../button/redesign';
-import { CopyIconButton, CopyIconButtonLegacy } from '../copy_button';
+import { Button } from '../button';
+import { CopyIconButton } from '../copy_button';
 import { FollowButton } from '../follow_button';
-import { IconButton as LegacyIconButton } from '../icon_button';
 
 import { AccountMenu } from './menu';
 import classes from './styles.module.scss';
@@ -74,12 +67,6 @@ const AccountButtonsOther: FC<
 
   const dispatch = useAppDispatch();
 
-  const handleNotifyToggle = useCallback(() => {
-    if (account) {
-      dispatch(followAccount(account.id, { notify: !relationship?.notifying }));
-    }
-  }, [dispatch, account, relationship]);
-
   const sendDirectMessage = useCallback(() => {
     if (account) {
       dispatch(directCompose(account));
@@ -101,30 +88,28 @@ const AccountButtonsOther: FC<
   }
 
   const isMovedAndUnfollowedAccount = account.moved && !relationship?.following;
-  const isFollowing = relationship?.requested || relationship?.following;
-
-  const shouldHideMainFollowButton = isRedesignEnabled() && isFollowing;
+  const isFollowing = relationship?.following;
 
   return (
     <>
-      {!shouldHideMainFollowButton && !isMovedAndUnfollowedAccount && (
+      {!isFollowing && !isMovedAndUnfollowedAccount && (
         <FollowButton
-          compact={isRedesignEnabled()}
           accountId={accountId}
           className={classes.followButton}
           withUnmute={false}
+          size='sm'
           labelLength='long'
           reference={reference}
         />
       )}
-      {isFollowing && isRedesignEnabled() && (
+      {isFollowing && (
         <>
           <Button
-            leadingIcon={ChatCircleDotsIcon}
             size='sm'
             variant='solid'
             color='accent'
             onClick={sendDirectMessage}
+            className={classes.followButton}
           >
             <FormattedMessage
               id='account.menu.message'
@@ -132,41 +117,18 @@ const AccountButtonsOther: FC<
               description='Message refers to a direct message. For languages where this is confusing, "chat" or "direct message" can be used.'
             />
           </Button>
-          <IconButton icon={UserMinusIcon} size='sm' onClick={confirmUnfollow}>
+          <Button size='sm' onClick={confirmUnfollow}>
             <FormattedMessage id='account.unfollow' defaultMessage='Unfollow' />
-          </IconButton>
+          </Button>
         </>
       )}
-      {isFollowing && !isRedesignEnabled() && (
-        <LegacyIconButton
-          icon={relationship.notifying ? 'bell' : 'bell-o'}
-          iconComponent={
-            relationship.notifying ? NotificationsActiveIcon : NotificationsIcon
-          }
-          active={relationship.notifying}
-          title={intl.formatMessage(
-            relationship.notifying
-              ? messages.disableNotifications
-              : messages.enableNotifications,
-            { name: account.username },
-          )}
-          onClick={handleNotifyToggle}
+      {!noShare && (
+        <CopyIconButton
+          title={intl.formatMessage(messages.copy)}
+          value={account.url}
+          size='sm'
         />
       )}
-      {!noShare &&
-        (isRedesignEnabled() ? (
-          <CopyIconButton
-            title={intl.formatMessage(messages.copy)}
-            value={account.url}
-            size='sm'
-          />
-        ) : (
-          <CopyIconButtonLegacy
-            className='optional'
-            title={intl.formatMessage(messages.copy)}
-            value={account.url}
-          />
-        ))}
     </>
   );
 };

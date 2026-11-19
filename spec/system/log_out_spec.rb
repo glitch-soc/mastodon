@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Log out', feature: :redesign do
+RSpec.describe 'Log out' do
   include ProfileStories
 
   before do
@@ -33,7 +33,7 @@ RSpec.describe 'Log out', feature: :redesign do
         .to have_css('body', class: 'app-body')
 
       within 'nav' do
-        click_on frontend_translations('tabs_bar.account_settings')
+        click_on frontend_translations('tabs_bar.account')
       end
 
       click_on frontend_translations('navigation_bar.sign_out')

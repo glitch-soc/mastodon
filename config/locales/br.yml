@@ -501,7 +501,6 @@ br:
     empty: N'ho peus alias ebet.
     remove: Dilemel an alias
   appearance:
-    discovery: Dizoloadur
     localization:
       body: Gant tud a-youl vat eo troet Mastodon.
       guide_link: https://crowdin.com/project/mastodon
@@ -929,5 +928,4 @@ br:
     nickname_hint: Skrivit lesanv hoc'h alc'hwez surentez nevez
     not_enabled: WebAuthn n'eo ket aotreet ganeoc'h c'hoazh
     not_supported: Alc'hwezioù surentez a zo diembreg gant ar merdeer-se
-    otp_required: Evit implijout alc'hwezioù surentez, aotrit dilesadur dre eil-elfenn da gentañ.
     registered_on: Enrollet d'ar %{date}

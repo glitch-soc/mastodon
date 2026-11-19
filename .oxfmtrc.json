@@ -29,7 +29,6 @@
     "AUTHORS.md",
     "/app/javascript/mastodon/locales/*.json",
     "/config/locales",
-    ".storybook/static/mockServiceWorker.js",
 
     // Automatically generated (glitch-soc)
     "/app/javascript/flavours/glitch/features/emoji/emoji_map.json",

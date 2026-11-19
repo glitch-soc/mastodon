@@ -16,17 +16,16 @@ import { useSpring, animated } from '@react-spring/web';
 import Textarea from 'react-textarea-autosize';
 import { length } from 'stringz';
 
+import { CharacterCounter } from '@/flavours/glitch/components/character_counter';
+import { Tesseract as fetchTesseract } from '@/flavours/glitch/features/ui/util/async-components';
 import { showAlertForError } from 'flavours/glitch/actions/alerts';
 import { uploadThumbnail } from 'flavours/glitch/actions/compose';
 import { changeUploadCompose } from 'flavours/glitch/actions/compose_typed';
 import { Button } from 'flavours/glitch/components/button';
 import { GIFV } from 'flavours/glitch/components/gifv';
-import { LoadingIndicator } from 'flavours/glitch/components/loading_indicator';
 import { NavigationFocusTarget } from 'flavours/glitch/components/navigation_focus_target';
 import { Skeleton } from 'flavours/glitch/components/skeleton';
 import { Audio } from 'flavours/glitch/features/audio';
-import { CharacterCounter } from 'flavours/glitch/features/compose/components/character_counter';
-import { Tesseract as fetchTesseract } from 'flavours/glitch/features/ui/util/async-components';
 import { Video, getPointerPosition } from 'flavours/glitch/features/video';
 import { me } from 'flavours/glitch/initial_state';
 import type { MediaAttachment } from 'flavours/glitch/models/media_attachment';
@@ -84,7 +83,9 @@ const UploadButton: React.FC<{
 
   return (
     <label>
-      <Button onClick={handleClick}>{children}</Button>
+      <Button onClick={handleClick} variant='solid' color='accent'>
+        {children}
+      </Button>
 
       <input
         id='upload-modal__thumbnail'
@@ -402,15 +403,14 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
     return (
       <div className='modal-root__modal dialog-modal'>
         <div className='dialog-modal__header'>
-          <Button onClick={handleSubmit} disabled={!valid}>
-            {isSaving ? (
-              <LoadingIndicator />
-            ) : (
-              <FormattedMessage
-                id='alt_text_modal.done'
-                defaultMessage='Done'
-              />
-            )}
+          <Button
+            onClick={handleSubmit}
+            disabled={!valid}
+            loading={isSaving}
+            variant='solid'
+            color='accent'
+          >
+            <FormattedMessage id='alt_text_modal.done' defaultMessage='Done' />
           </Button>
 
           <NavigationFocusTarget
@@ -418,12 +418,12 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
             className='dialog-modal__header__title'
           >
             <FormattedMessage
-              id='alt_text_modal.add_alt_text'
-              defaultMessage='Add alt text'
+              id='account_edit.image_alt_modal.edit_title'
+              defaultMessage='Edit alt text'
             />
           </NavigationFocusTarget>
 
-          <Button secondary onClick={onClose}>
+          <Button onClick={onClose}>
             <FormattedMessage
               id='alt_text_modal.cancel'
               defaultMessage='Cancel'
@@ -485,23 +485,24 @@ export const AltTextModal = forwardRef<ModalRef, Props & Partial<RestoreProps>>(
 
               <div className='input__toolbar'>
                 <CharacterCounter
-                  max={MAX_LENGTH}
-                  text={isDetecting ? '' : description}
+                  maxLength={MAX_LENGTH}
+                  currentString={isDetecting ? '' : description}
                 />
 
                 <div className='spacer' />
 
-                <button
-                  className='link-button'
+                <Button
+                  variant='ghost'
+                  color='accent'
+                  size='sm'
                   onClick={handleDetectClick}
                   disabled={type !== 'image' || isDetecting}
-                  type='button'
                 >
                   <FormattedMessage
                     id='alt_text_modal.add_text_from_image'
                     defaultMessage='Add text from image'
                   />
-                </button>
+                </Button>
 
                 <InfoButton />
               </div>

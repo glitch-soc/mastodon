@@ -30,13 +30,9 @@ import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibili
 import type { Account } from '@/flavours/glitch/models/account';
 import { selectTimelineByKey } from '@/flavours/glitch/selectors/timelines';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-
-import { ProfileColumnHeader } from '../account/components/profile_column_header';
 
 import { FeaturedTags } from './components/featured_tags';
 import { AccountFilters } from './components/filters';
-import { renderPinnedStatusHeader } from './components/pinned_statuses';
 import { TagSuggestions } from './components/tags_suggestions';
 import {
   AccountTimelineContext,
@@ -120,14 +116,10 @@ const InnerTimeline: FC<{ account: Account; multiColumn: boolean }> = ({
 
   return (
     <Column bindToDocument={!multiColumn}>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={<DisplayNameSimple account={account} />}
-        />
-      ) : (
-        <ProfileColumnHeader multiColumn={multiColumn} />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={<DisplayNameSimple account={account} />}
+      />
 
       <StatusList
         alwaysPrepend
@@ -146,7 +138,6 @@ const InnerTimeline: FC<{ account: Account; multiColumn: boolean }> = ({
         timelineId='account'
         withCounters
         className={classNames(classes.statusWrapper)}
-        statusProps={{ headerRenderFn: renderPinnedStatusHeader }}
       />
     </Column>
   );
