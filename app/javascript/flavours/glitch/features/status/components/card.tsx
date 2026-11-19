@@ -6,13 +6,13 @@ import classNames from 'classnames';
 
 import { isMap } from 'immutable';
 
+import { LinkCardAuthors } from '@/flavours/glitch/components/status/link';
 import { decodeIDNA } from '@/flavours/glitch/utils/links';
 import DescriptionIcon from '@/material-icons/400-24px/description-fill.svg?react';
 import OpenInNewIcon from '@/material-icons/400-24px/open_in_new.svg?react';
 import PlayArrowIcon from '@/material-icons/400-24px/play_arrow-fill.svg?react';
 import { Blurhash } from 'flavours/glitch/components/blurhash';
 import { Icon } from 'flavours/glitch/components/icon';
-import { MoreFromAuthor } from 'flavours/glitch/components/more_from_author';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 import { displayMedia, useBlurhash } from 'flavours/glitch/initial_state';
 import type {
@@ -265,7 +265,7 @@ export const Card: React.FC<CardProps> = ({ card: rawCard, sensitive }) => {
         <CardDescription card={card} />
       </a>
 
-      {author && <MoreFromAuthor accountId={author} />}
+      {author && <LinkCardAuthors authors={card.authors} />}
     </>
   );
 };

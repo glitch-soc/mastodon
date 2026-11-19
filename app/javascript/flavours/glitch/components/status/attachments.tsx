@@ -391,6 +391,7 @@ const MediaAttachmentWrapper: React.FC<MediaAttachmentWrapperProps> = ({
             className={classes.gallerySpoilerButton}
             color='media'
             size='xs'
+            expandHitArea={3}
             onClick={onToggle}
           >
             <FormattedMessage id='media_gallery.hide' defaultMessage='Hide' />
