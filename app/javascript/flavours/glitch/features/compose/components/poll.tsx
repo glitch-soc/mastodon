@@ -22,6 +22,7 @@ import {
   TextInput,
 } from '@/flavours/glitch/components/form_fields';
 import { useAppSelector, useAppDispatch } from '@/flavours/glitch/store';
+import { isKeyComposing } from '@/flavours/glitch/utils/events';
 import { DAY, HOUR, MINUTE } from '@/flavours/glitch/utils/time';
 
 import classes from './attachments.module.scss';
@@ -73,6 +74,10 @@ export const ComposePoll: React.FC = () => {
   const dispatch = useAppDispatch();
   const handleKeyDown = useCallback(
     (index: number, event: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isKeyComposing(event)) {
+        return;
+      }
+
       const value = event.currentTarget.value;
 
       // Disable Enter key to avoid submitting the form.
