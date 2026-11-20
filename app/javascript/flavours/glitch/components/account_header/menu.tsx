@@ -30,6 +30,7 @@ import {
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { initMuteModal } from '@/flavours/glitch/actions/mutes';
 import { initReport } from '@/flavours/glitch/actions/reports';
+import type { ButtonProps } from '@/flavours/glitch/components/button';
 import { IconButton } from '@/flavours/glitch/components/button';
 import {
   Menu,
@@ -53,7 +54,9 @@ import {
 import type { AppDispatch } from '@/flavours/glitch/store';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
-export const AccountMenu: FC<{ accountId: string }> = ({ accountId }) => {
+export const AccountMenu: FC<
+  { accountId: string } & Pick<ButtonProps, 'size'>
+> = ({ accountId, size = 'sm' }) => {
   const intl = useIntl();
   const { signedIn, permissions } = useIdentity();
 
@@ -86,7 +89,7 @@ export const AccountMenu: FC<{ accountId: string }> = ({ accountId }) => {
     <Menu>
       <MenuTrigger
         as={IconButton}
-        size='sm'
+        size={size}
         icon={DotsThreeIcon}
         disabled={menuItems.length === 0}
       >
