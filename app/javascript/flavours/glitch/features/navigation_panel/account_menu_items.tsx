@@ -31,6 +31,7 @@ import {
 } from '@/flavours/glitch/components/menu';
 import { useAccount } from '@/flavours/glitch/hooks/useAccount';
 import { useIdentity } from '@/flavours/glitch/identity_context';
+import { domain } from '@/flavours/glitch/initial_state';
 import { useAppDispatch } from '@/flavours/glitch/store';
 
 import classes from './account_menu_items.module.scss';
@@ -143,10 +144,12 @@ export const AccountMenuItems: React.FC<{
   );
 };
 
+const disableActiveLinkState = () => false;
+
 const ProfileMenuItem: React.FC = () => {
   const { accountId } = useIdentity();
   const account = useAccount(accountId);
-  const handle = useAccountHandle(account);
+  const handle = useAccountHandle(account, domain);
 
   if (!accountId) {
     return null;
@@ -155,12 +158,16 @@ const ProfileMenuItem: React.FC = () => {
   const accountBasePath = `/@${account?.acct}`;
 
   return (
-    <MenuItemLink to={accountBasePath} exact>
+    <MenuItemLink to={accountBasePath} isActive={disableActiveLinkState}>
       <LockupWrapper
         icon={<Avatar account={account} size={40} />}
         className={classes.profileMenuItem}
       >
-        <LockupContent subtitle={handle}>
+        <LockupContent
+          subtitle={
+            <span className={classes.profileMenuSubtitle}>{handle}</span>
+          }
+        >
           <DisplayName variant='simple' account={account} />
         </LockupContent>
       </LockupWrapper>
