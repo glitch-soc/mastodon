@@ -27,7 +27,17 @@ export const ComposeSettingsMenu: React.FC = () => {
   const privacy = useAppSelector(selectComposePrivacy);
 
   if (privacy === 'direct') {
-    return null;
+    return (
+      <Menu>
+        <MenuTrigger as={IconButton} icon={GearIcon} size='sm'>
+          <FormattedMessage id='compose.settings' defaultMessage='Settings' />
+        </MenuTrigger>
+
+        <MenuList maxWidth={310} placement='bottom-end' strategy='fixed'>
+          <GlitchSettings />
+        </MenuList>
+      </Menu>
+    );
   }
 
   return (
