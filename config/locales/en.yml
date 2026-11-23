@@ -1490,7 +1490,7 @@ en:
       preamble_html: Login with your <strong>%{domain}</strong> credentials. If your account is hosted on a different server, you will not be able to log in here.
       title: Login to %{domain}
     sign_up:
-      manual_review: Sign-ups on this Mastodon server, %{domain}, go through manual review by our moderators. To help us process your registration, write a bit about yourself and most importantly why you chose our server (which is cooperatively-governed and will rely on donations from Jan 2027 onwards). To avoid potential bots, requests that are unspecific or from disposable email accounts will be rejected.
+      manual_review: Sign-ups on this Mastodon server, neurospace.live, go through manual review. We generally receive many requests from bots, so please give 1) a brief but Very Specific reason why you chose our server, and 2) convince us you are not a bot - this is purposely open-ended. Requests that are unspecific or from disposable emails will be rejected.
       preamble: With an account on this Mastodon server, you'll be able to follow any other person on the fediverse, regardless of where their account is hosted.
       title: Let's get you set up on %{domain}.
     status:
