@@ -136,7 +136,7 @@ GEM
     bloom_fit (1.2.0)
       msgpack (~> 1.0)
     blurhash (0.1.8)
-    bootsnap (1.26.1)
+    bootsnap (1.26.2)
       msgpack (~> 1.5)
     brakeman (8.1.0)
       racc
@@ -300,7 +300,7 @@ GEM
       rainbow
       rubocop (>= 1.0)
       sysexits (~> 1.1)
-    hashdiff (1.2.1)
+    hashdiff (1.2.2)
     hashie (5.2.0)
       logger
     hcaptcha (7.1.0)
@@ -474,7 +474,7 @@ GEM
     nokogiri (1.19.7)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
-    omniauth (2.4.1)
+    omniauth (2.4.2)
       hashie (>= 3.5.2)
       logger
       rack (>= 2.2.8)
@@ -567,7 +567,7 @@ GEM
       opentelemetry-helpers-sql
       opentelemetry-helpers-sql-processor (>= 0.5.1, < 1.0)
       opentelemetry-instrumentation-base (~> 0.25)
-    opentelemetry-instrumentation-rack (0.31.2)
+    opentelemetry-instrumentation-rack (0.32.0)
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-rails (0.42.0)
       opentelemetry-instrumentation-action_mailer (~> 0.7)
@@ -601,7 +601,7 @@ GEM
     ox (2.14.29)
       bigdecimal (>= 3.0)
     parallel (2.3.0)
-    parser (3.3.13.0)
+    parser (3.3.14.0)
       ast (~> 2.4.1)
       racc
     parslet (2.0.0)
@@ -638,7 +638,7 @@ GEM
       activesupport (>= 3.0.0)
     raabro (1.5.0)
     racc (1.8.1)
-    rack (3.2.8)
+    rack (3.2.9)
     rack-attack (6.8.0)
       rack (>= 1.0, < 4)
     rack-cors (3.0.0)
@@ -655,7 +655,7 @@ GEM
       base64 (>= 0.1.0)
       logger (>= 1.6.0)
       rack (>= 3.0.0, < 4)
-    rack-proxy (2.0.1)
+    rack-proxy (2.0.2)
       rack (>= 2.0, < 4)
     rack-session (2.1.2)
       base64 (>= 0.1.0)
@@ -724,7 +724,7 @@ GEM
       redis-client (>= 0.22.0)
     redis-client (0.31.0)
       connection_pool
-    regexp_parser (2.13.1)
+    regexp_parser (2.13.4)
     reline (0.7.0)
       io-console (~> 0.5)
     request_store (1.7.0)
@@ -769,7 +769,7 @@ GEM
       rspec-mocks (~> 3.0)
       sidekiq (>= 5, < 9)
     rspec-support (3.13.8)
-    rubocop (1.92.2)
+    rubocop (1.92.3)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
       lint_roller (~> 1.1.0)
@@ -860,7 +860,7 @@ GEM
     stackprof (0.2.28)
     starry (0.2.0)
       base64
-    stoplight (5.8.3)
+    stoplight (6.0.1)
       concurrent-ruby
       zeitwerk
     strong_migrations (2.8.0)
@@ -926,7 +926,7 @@ GEM
       activesupport
       faraday (~> 2.0)
       faraday-follow_redirects
-    webmock (3.34.0)
+    webmock (3.36.0)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
@@ -1036,7 +1036,7 @@ DEPENDENCIES
   opentelemetry-instrumentation-http_client (~> 0.29.0)
   opentelemetry-instrumentation-net_http (~> 0.30.0)
   opentelemetry-instrumentation-pg (~> 0.37.0)
-  opentelemetry-instrumentation-rack (~> 0.31.0)
+  opentelemetry-instrumentation-rack (~> 0.32.0)
   opentelemetry-instrumentation-rails (~> 0.42.0)
   opentelemetry-instrumentation-redis (~> 0.29.0)
   opentelemetry-instrumentation-sidekiq (~> 0.29.0)
