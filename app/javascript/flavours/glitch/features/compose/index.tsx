@@ -6,14 +6,19 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { Column } from '@/flavours/glitch/components/column';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
+import { useConfirmBeforePageClose } from '@/flavours/glitch/hooks/useConfirmBeforePageClose';
+import { selectComposerIsChanged } from '@/flavours/glitch/reducers/slices/composer';
 import { mountCompose, unmountCompose } from 'flavours/glitch/actions/compose';
-import { useAppDispatch } from 'flavours/glitch/store';
+import { useAppDispatch, useAppSelector } from 'flavours/glitch/store';
 
 import { ComposeForm } from './form';
 
 const Compose: React.FC<{ multiColumn: boolean }> = ({ multiColumn }) => {
   const intl = useIntl();
   const dispatch = useAppDispatch();
+  const isComposerChanged = useAppSelector(selectComposerIsChanged);
+
+  useConfirmBeforePageClose(isComposerChanged);
 
   useEffect(() => {
     dispatch(mountCompose());

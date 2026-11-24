@@ -12,12 +12,14 @@ import type { IconButtonProps } from '@/flavours/glitch/components/button';
 import { IconButton } from '@/flavours/glitch/components/button';
 import { useBodyScrollLock } from '@/flavours/glitch/hooks/useBodyScrollLock';
 import { useCloseOnHistoryBack } from '@/flavours/glitch/hooks/useCloseOnHistoryBack';
+import { useConfirmBeforePageClose } from '@/flavours/glitch/hooks/useConfirmBeforePageClose';
 import { useViewportSize } from '@/flavours/glitch/hooks/useViewportSize';
 import { useIdentity } from '@/flavours/glitch/identity_context';
 import {
   closeOrMinimizeComposer,
   minimizeComposerToggle,
   openNewComposer,
+  selectComposerIsChanged,
 } from '@/flavours/glitch/reducers/slices/composer';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 import { includeMultiColumnPaths } from '@/flavours/glitch/utils/react_router';
@@ -38,6 +40,7 @@ export const ComposeButton: React.FC<{
 }> = ({ inline = false }) => {
   const displayState = useAppSelector((state) => state.composer.displayState);
   const isMobile = useBreakpoint('openable');
+  const isComposerChanged = useAppSelector(selectComposerIsChanged);
 
   const hasMobileFloatingActionButton = useHasMobileFloatingActionButton({
     isMobile,
@@ -72,6 +75,7 @@ export const ComposeButton: React.FC<{
       [dispatch, isMinimized],
     );
 
+  useConfirmBeforePageClose(isComposerChanged && displayState !== 'hidden');
   useBodyScrollLock(isShowing);
   useCloseOnHistoryBack(
     () => {
@@ -132,7 +136,6 @@ export const ComposeButton: React.FC<{
           onClick={toggleMinimize}
           {...floatingButtonProps}
           hidden={false} // never hide minimized composer button
-          color='neutral'
         >
           <FormattedMessage
             id='compose.expand'
