@@ -1678,12 +1678,6 @@ a.account__display-name {
   }
 }
 
-@media screen and (min-width: $no-gap-breakpoint) {
-  .search-page .search {
-    display: none;
-  }
-}
-
 @media screen and (max-width: ($no-gap-breakpoint - 1px)) {
   .layout-single-column {
     .column > .scrollable {
@@ -2234,9 +2228,9 @@ a.status-card {
 
 .status-card__title {
   display: block;
-  font-weight: 700;
-  font-size: 19px;
-  line-height: 24px;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22px;
   color: var(--color-text-primary);
   overflow: hidden;
   white-space: nowrap;
@@ -2261,7 +2255,8 @@ a.status-card {
 
 .status-card__host {
   display: block;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 18px;
   margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -2285,7 +2280,8 @@ a.status-card {
 .status-card__description {
   display: block;
   margin-top: 8px;
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 18px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2436,10 +2432,6 @@ a.status-card {
       text-decoration: underline;
       color: var(--color-text-brand-soft);
     }
-  }
-
-  &--with-descendants {
-    border-top: var(--border-thin);
   }
 }
 
@@ -2984,11 +2976,6 @@ a.status-card {
     transform: scale(1);
     animation-timing-function: ease-out;
   }
-}
-
-.no-reduce-motion .pulse-loading {
-  transform-origin: center center;
-  animation: heartbeat 1.5s ease-in-out infinite both;
 }
 
 .upload-area {
@@ -4092,7 +4079,6 @@ a.status-card {
 }
 
 .doodle-modal,
-.report-modal,
 .actions-modal,
 .compare-history-modal {
   @include elevation-2;
@@ -4134,12 +4120,6 @@ a.status-card {
   .button {
     flex: 0 0 auto;
   }
-}
-
-.report-modal {
-  width: 90vw;
-  max-width: 700px;
-  border: 1px solid var(--color-border-primary);
 }
 
 .report-dialog-modal {
@@ -4351,15 +4331,6 @@ a.status-card {
   .emoji-mart-search-icon {
     inset-inline-end: 10px + 5px;
   }
-}
-
-.setting-divider {
-  background: transparent;
-  border: 0;
-  margin: 0;
-  width: 100%;
-  height: 1px;
-  margin-bottom: 29px;
 }
 
 .actions-modal {
@@ -6805,16 +6776,6 @@ noscript {
   overflow: hidden;
   flex-shrink: 0;
 
-  &__background-image {
-    width: 125%;
-    position: absolute;
-    bottom: -25%;
-    inset-inline-end: -25%;
-    z-index: -1;
-    opacity: 0.15;
-    mix-blend-mode: luminosity;
-  }
-
   &__message {
     @include type-body;
 
@@ -6835,22 +6796,6 @@ noscript {
 
       color: var(--color-text-brand);
       margin-bottom: var(--space-2);
-    }
-
-    &__actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-1);
-
-      &__wrapper {
-        display: flex;
-        margin-top: var(--space-7);
-      }
-
-      .button {
-        display: block;
-        flex-grow: 1;
-      }
     }
   }
 
@@ -7323,22 +7268,6 @@ noscript {
 
         @media (width <= $mobile-menu-breakpoint) {
           right: 0;
-        }
-      }
-
-      &__icon {
-        border-radius: 50%;
-        color: var(--color-text-on-brand-base);
-        background: var(--scroll-button-bg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        aspect-ratio: 1;
-        padding: 8px;
-
-        .icon {
-          width: 24px;
-          height: 24px;
         }
       }
 
