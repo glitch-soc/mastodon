@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { WarningIcon } from '@phosphor-icons/react';
 
 import { changeComposeLanguage } from '@/flavours/glitch/actions/compose';
+import { saveSettings } from '@/flavours/glitch/actions/settings';
 import { Button } from '@/flavours/glitch/components/button';
 import { Callout } from '@/flavours/glitch/components/callout/redesign';
 import { Icon } from '@/flavours/glitch/components/icon';
@@ -171,6 +172,7 @@ const LanguageHint: React.FC<{ guess: string; onDismiss: () => void }> = ({
   const dispatch = useAppDispatch();
   const handleChange = useCallback(() => {
     dispatch(changeComposeLanguage(guess));
+    dispatch(saveSettings());
     // Trigger the dismiss since if the language is changed we assume the user doesn't want to be prompted again.
     onDismiss();
   }, [dispatch, guess, onDismiss]);

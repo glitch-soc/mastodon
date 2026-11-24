@@ -6,6 +6,7 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 import { MagnifyingGlassIcon, TranslateIcon } from '@phosphor-icons/react';
 
 import { changeComposeLanguage } from '@/flavours/glitch/actions/compose';
+import { saveSettings } from '@/flavours/glitch/actions/settings';
 import { Button } from '@/flavours/glitch/components/button';
 import { Combobox } from '@/flavours/glitch/components/form_fields';
 import { ComboboxMenuItem } from '@/flavours/glitch/components/form_fields/combobox_field';
@@ -106,6 +107,7 @@ export const LanguageDropdown: React.FC<{ onClose: () => void }> = ({
     ({ code }: LanguageObject) => {
       if (code) {
         dispatch(changeComposeLanguage(code));
+        dispatch(saveSettings());
         onClose();
       }
     },
