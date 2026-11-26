@@ -21,9 +21,6 @@ an:
       other: Publicacions
     posts_tab_heading: Publicacions
   admin:
-    account_actions:
-      action: Realizar acción
-      title: Amoderar %{acct}
     account_moderation_notes:
       create: Creyar
       created_msg: Nota de moderación creyada con exito!
@@ -522,9 +519,7 @@ an:
       disable: Deshabilitar
       disabled: Deshabilitau
       enable: Hablitar
-      enable_hint: Una vegada connectau, lo tuyo servidor se suscribirá a totz las publicacions publicas d'este relé, y prencipiará a ninviar las publicacions publicas d'este servidor enta ell.
       enabled: Habilitau
-      inbox_url: URL d'o relés
       pending: Asperando l'aprebación d'o relés
       save_and_enable: Alzar y connectar
       setup: Preparar una connexión de relés
@@ -543,10 +538,7 @@ an:
       action_taken_by: Acción presa per
       actions:
         mark_as_sensitive_description_html: Los fichers multimedia en os mensaches informaus se marcarán como sensibles y s'aplicará una amonestación pa aduyar-te a escalar las futuras infraccions d'a mesma cuenta.
-        other_description_html: Veyer mas opcions pa controlar lo comportamiento d'a cuenta y personalizar la comunicación d'a cuenta denunciada.
         resolve_description_html: No se prendrán medidas contra la cuenta denunciada, no se rechistrará l'amonestación, y se zarrará l'informe.
-        silence_description_html: La cuenta será visible nomás pa aquells que ya en sigan u lo busquen manualment, limitando seriosament lo suyo alcance. Siempre puede estar revertiu. Se zarrarán totz los informes contre esta cuenta.
-        suspend_description_html: Esta cuenta y totz los suyos contenius serán inaccesibles y finalment eliminaus, y interaccionar con ella no será posible. Reversible en 30 días. Zarra totz los informes contra eta cuenta.
       actions_description_remote_html: Decide qué acción prener pa resolver este reporte. Ixo afectará nomás a como <strong>lo tuyo</strong> servidor se comunica con estea cuenta remota y a cómo chestiona lo suyo conteniu.
       add_to_report: Anyadir mas a lo reporte
       are_you_sure: Yes seguro?
@@ -730,19 +722,6 @@ an:
         suspend: "%{name} suspendió la cuenta de %{target}"
       appeal_approved: Apelado
       appeal_pending: Apelación pendient
-    system_checks:
-      database_schema_check:
-        message_html: I hai migracions pendients d'a base de datos. Per favor, executa-las pa asegurar-te que l'aplicación funciona como debería
-      elasticsearch_running_check:
-        message_html: No se podió connectar a Elasticsearch. Per favor, compreba que ye executando-se, u desactiva la busqueda de texto completo
-      elasticsearch_version_check:
-        message_html: 'Versión incompatible de Elasticsearch: %{value}'
-        version_comparison: Elasticsearch %{running_version} se ye executando pero s'ameneste Elasticsearch %{required_version}
-      rules_check:
-        action: Administrar reglas d'o servidor
-        message_html: No ha definiu garra regla d'o servidor.
-      sidekiq_process_check:
-        message_html: No i hai garra proceso Sidekiq en execución pa la coda (u codas) de %{value}. Per favor, revise la suya configuración de Sidekiq
     tags:
       review: Estau de revisión
       updated_msg: Hashtags actualizaus exitosament
@@ -810,8 +789,6 @@ an:
     warning_presets:
       add_new: Anyadir nuevo
       delete: Borrar
-      edit_preset: Editar aviso predeterminau
-      empty: Encara no has definiu garra preajuste d'alvertencia.
     webhooks:
       add_new: Anyadir endpoint
       delete: Eliminar
@@ -870,7 +847,6 @@ an:
     remove: Desvincular alias
   appearance:
     animations_and_accessibility: Animacions y accesibilidat
-    discovery: Descubrir
     localization:
       body: Mastodon ye traduciu con la aduya de voluntarios.
       guide_link: https://crowdin.com/project/mastodon
@@ -1523,5 +1499,4 @@ an:
     nickname_hint: Escriba la embotada d'a suya nueva clau de seguranza
     not_enabled: Encara no has activau WebAuthn
     not_supported: Este navegador no suporta claus de seguranza
-    otp_required: Pa usar claus de seguranza, per favor habilite primero l'autenticación de dople factor.
     registered_on: Rechistrau lo %{date}

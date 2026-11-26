@@ -8,6 +8,11 @@ nan-TW:
     hosted_on: 佇 %{domain} 運作 ê Mastodon站
     title: 關係本站
   accounts:
+    api_errors:
+      2fa_required: Lí ê口座若無雙因素驗證，就bē當用
+      account_deleted: Lí ê口座已經hőngthâi掉
+      account_suspended: Lí ê口座ê權限已經停止ah
+      login_disabled: Lí ê口座tann停止使用ah。
     errors:
       cannot_be_added_to_collections: Tsit ê口座袂當加入kàu集合。
     followers:
@@ -26,10 +31,8 @@ nan-TW:
     self_follow_error: 跟tuè家己ê口座無允准
   admin:
     account_actions:
-      action: 執行動作
       already_silenced: Tsit ê口座有受著限制。
       already_suspended: Tsit ê口座ê權限已經hōo lâng停止。
-      title: Kā %{acct} 做管理ê動作
     account_moderation_notes:
       create: 留記錄
       created_msg: 管理記錄成功建立！
@@ -727,6 +730,11 @@ nan-TW:
       reset: 重頭設
       search: Tshiau-tshuē
       title: IP規則
+    moderation_subscriptions:
+      apply_automatically: 自動應用警告
+      apply_conditions:
+        always: 一直
+        never: 永永無愛
     relationships:
       title: "%{acct} ê關係"
     relays:
@@ -736,9 +744,7 @@ nan-TW:
       disable: 停止使用
       disabled: 停止使用ê
       enable: 啟用
-      enable_hint: Lí ê服侍器tsi̍t-ē啟動，ē訂tuì tsit ê中繼逐ê公開PO文，mā ē開始送tsit臺服侍器ê公開PO文kàu hia。
       enabled: 啟用ê
-      inbox_url: 中繼 URL
       pending: Teh等中繼站允准
       save_and_enable: 儲存koh啟用
       setup: 設定中繼ê連結
@@ -757,11 +763,7 @@ nan-TW:
       actions:
         delete_description_html: 受檢舉ê PO文（以及／á是）收藏ē thâi掉，而且ē用tsi̍t ue̍h橫tsuā記錄，幫tsān lí提升kâng tsi̍t ê用戶未來ê違規。
         mark_as_sensitive_description_html: 受檢舉ê PO文內ê媒體ē標做敏感，而且ē用tsi̍t ue̍h橫tsuā記錄，幫tsān lí提升kâng tsi̍t ê用戶未來ê違規。
-        other_description_html: 看其他控制tsit ê口座ê所行，kap自訂聯絡受檢舉ê口座ê選項。
         resolve_description_html: Buē用行動控制受檢舉ê口座，mā無用橫tsuā記錄，而且tsit ê報告ē關掉。
-        silence_description_html: 本口座kan-ta ē hōo早前跟tuè ê á是手動tshiau ê看見，大大限制看見ê範圍。設定隨時ē當回復。請關所有tuì tsit ê口座ê檢舉。
-        suspend_description_html: Tsit ê口座kap伊ê內容ē bē當用，落尾ē thâi掉，mā bē當hām伊互動。30 kang以內通回復。請關所有tuì tsit ê口座ê檢舉。
-      actions_description_html: 決定行siánn物行動來解決tsit ê檢舉。Nā lí tuì受檢舉ê口座採用處罰，電子phue通知ē送予in，除非選擇 <strong>Pùn-sò phue</strong> 類別。
       actions_description_remote_html: 決定行siánn物行動來解決tsit ê檢舉。Tse kan-ta ē影響 <strong>lí ê</strong> 服侍器hām tsit ê遠距離服侍器聯絡kap處理伊ê內容ê方法。
       actions_no_posts: Tsit份檢舉無beh thâi掉ê相關PO文
       add_to_report: 加添其他ê內容kàu檢舉
@@ -1051,50 +1053,6 @@ nan-TW:
       appeal_approved: 投訴ah
       appeal_pending: 投訴teh等審核
       appeal_rejected: 投訴hōo lâng拒絕
-    system_checks:
-      database_schema_check:
-        message_html: 有leh等待處理ê資料庫遷suá。請執行tsiah-ê，來保證應用程式照期望pháng
-      elasticsearch_analysis_index_mismatch:
-        message_html: Elasticsearch ê索引分析器過期ah。請執行 <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: Elasticsearch ê cluster無健康（紅色ê狀態），bē當用tshiau-tshuē功能
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch ê cluster無健康（黃色ê狀態），lí可能想beh調查原因。
-      elasticsearch_index_mismatch:
-        message_html: Elasticsearch索引對應過期ah。請執行 <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: 看文件
-        message_html: Lí ê Elasticsearch ê cluster有超過tsi̍t ê節點，m̄-kú Mastodon iáu無設定用in。
-      elasticsearch_preset_single_node:
-        action: 看文件
-        message_html: Lí ê Elasticsearch 叢集kan-ta有tsi̍t ê節點，<code>ES_PRESET</code> 應該設定做 <code>single_node_cluster</code>。
-      elasticsearch_reset_chewy:
-        message_html: Lí ê Elasticsearch系統索引因為設定改變，過期ah。請執行 <code>tootctl search deploy --reset-chewy</code> 來更新。
-      elasticsearch_running_check:
-        message_html: Bē當連接 Elasticsearch。請確認kám有teh pháng，á是停用全文tshiau-tshuē
-      elasticsearch_version_check:
-        message_html: Bē當相容ê Elasticsearch版本：%{value}
-        version_comparison: Elasticsearch %{running_version} 版teh pháng，m̄-kú 愛 %{required_version} 版。
-      rules_check:
-        action: 管理服侍器ê規則
-        message_html: Lí iáu bē定義任何服侍器ê規則。
-      sidekiq_process_check:
-        message_html: 排列 %{value} 無leh pháng Sidekiq ê程序。請檢視lí ê Sidekiq 設定
-      software_version_check:
-        action: 看ē當the̍h ê更新
-        message_html: 有Mastodon ê更新ē當載落去。
-      software_version_critical_check:
-        action: 看ē當the̍h ê更新
-        message_html: 有重大ê Mastodon更新ē當載落去，請趕緊更新。
-      software_version_patch_check:
-        action: 看ē當the̍h ê更新
-        message_html: 有修正錯誤ê Mastodon ê更新，ē當載落去。
-      upload_check_privacy_error:
-        action: 檢查tse，the̍h著其他資訊
-        message_html: "<strong>Lí ê網頁服侍器設定錯誤。Lí ê服侍器ê隱私權有風險。</strong>"
-      upload_check_privacy_error_object_storage:
-        action: 檢查tse，the̍h著其他資訊
-        message_html: "<strong>Lí ê物件儲存空間設定錯誤。Lí ê服侍器ê隱私權有風險。</strong>"
     tags:
       moderation:
         not_trendable: Bē當做趨勢
@@ -1239,9 +1197,6 @@ nan-TW:
     warning_presets:
       add_new: 加新ê
       delete: Thâi掉
-      edit_preset: 編輯預設ê警告
-      empty: Lí iáu bē定義任何預設ê警告。
-      title: 預設ê警告
     webhooks:
       add_new: 加添端點
       delete: Thâi掉
@@ -1320,7 +1275,6 @@ nan-TW:
     animations_and_accessibility: 動畫kap無障礙設定
     boosting_preferences: 轉送ê偏好設定
     boosting_preferences_info_html: "<strong>撇步：</strong>無論án-nuá設定，<kbd>Shift</kbd> + <kbd>Click</kbd> 佇%{icon} 轉送標á ē liâm-mī轉送。"
-    discovery: 發現
     localization:
       body: Mastodon是由志工翻譯。
       guide_link: https://crowdin.com/project/mastodon
@@ -1738,7 +1692,7 @@ nan-TW:
       '43200': 12 點鐘以後
       '604800': 1 禮拜以後
       '86400': 1 kang以後
-    expires_in_prompt: 永永
+    expires_in_prompt: 永永bē過期
     generate: 生邀請ê連結
     invalid: Tsit ê邀請無效
     invited_by: Lí予伊邀請：

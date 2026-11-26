@@ -23,9 +23,6 @@ sr:
       other: Објава
     posts_tab_heading: Објаве
   admin:
-    account_actions:
-      action: Извршите радњу
-      title: Извршите модераторске радње на %{acct}
     account_moderation_notes:
       create: Оставите белешку
       created_msg: Модераторска белешка успешно направљена!
@@ -583,9 +580,7 @@ sr:
       disable: Искључи
       disabled: Искључен
       enable: Укључи
-      enable_hint: Када се омогући, ваш сервер ће бити претплаћен на све јавне објаве са овог релеја, и почеће да шаље јавне објаве овог сервера на њега.
       enabled: Укључен
-      inbox_url: URL Релеја
       pending: Чека се одобрење релеја
       save_and_enable: Сачувај и омогући
       setup: Подеси везу релеја
@@ -605,11 +600,7 @@ sr:
       action_taken_by: Акцију извео
       actions:
         mark_as_sensitive_description_html: Мултимедијални садржај са пријављених објава ће бити означен као осетљив и прекршај ће бити уписан ради лакше интервенције у случају даљих прекршаја са истог налога.
-        other_description_html: Погледајте више опција за контролисање понашања налога и прилагодите комуникацију са пријављеним налогом.
         resolve_description_html: Ниједна радња неће бити предузета против пријављеног налога, ниједан преступ није уписан и пријава ће бити затворена.
-        silence_description_html: Налог ће бити видљив само онима који га већ прате или који га ручно потраже, што ће значајно ограничити његов домет. Ограничење се може повући у сваком тренутку. Затвара све пријаве поднете против овог налога.
-        suspend_description_html: Налог и сви његови садржаји ће постати недоступни и у једном тренутку избрисани, а интеракција са налогом више неће бити могућа. Суспензија се може повући у року од 30 дана. Затвара све пријаве поднете против овог налога.
-      actions_description_html: Одлучите коју радњу да спроведете ради решавања ове пријаве. Уколико спроведете казнену радњу против пријављеног налога, власник налога ће бити обавештен путем е-поште, осим уколико ознака <strong>„Нежељене поруке”</strong> није одабрана.
       actions_description_remote_html: Одлучите коју радњу да предузмете ради решавања ове пријаве. Ово ће утицати само на то како <strong>Ваш</strong> сервер комуницира са овим удаљеним налогом и обрађује његов садржај.
       add_to_report: Додај још у пријаву
       already_suspended_badges:
@@ -844,45 +835,6 @@ sr:
       appeal_approved: Жалба уважена
       appeal_pending: Жалба у разматрању
       appeal_rejected: Жалба одбијена
-    system_checks:
-      database_schema_check:
-        message_html: Селидбе базâ података су на чекању. Молимо Вас обавите их да би се апликација понашала како треба
-      elasticsearch_health_red:
-        message_html: Elasticsearch кластер је нездрав (црвени статус), функције претраге су недоступне
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch кластер је нездрав (жути статус), можда бисте желели да истражите разлог
-      elasticsearch_index_mismatch:
-        message_html: Elasticsearch мапирања индекса су застарела. Покрените <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Погледај документацију
-        message_html: Ваш Elasticsearch кластер има више од једног чвора, али Mastodon није конфигурисан да их користи.
-      elasticsearch_preset_single_node:
-        action: Погледај документацију
-        message_html: Ваш Elasticsearch кластер има само један чвор, <code>ES_PRESET</code>треба поставити на<code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Индекс Elasticsearch система је застарео због промене подешавања. Покрените <code>tootctl search deploy --reset-chewy</code>да бисте га ажурирали.
-      elasticsearch_running_check:
-        message_html: Повезивање на Elasticsearch није било могуће. Молимо Вас проверите да ли је покренут, или онемогућите претрагу целог текста
-      elasticsearch_version_check:
-        message_html: 'Неусклађена Elasticsearch верзија: %{value}'
-        version_comparison: Elasticsearch %{running_version} је инсталиран а %{required_version} је неопходан
-      rules_check:
-        action: Управљање правилима сервера
-        message_html: Нисте дефинисали ниједно правило сервера.
-      sidekiq_process_check:
-        message_html: Ниједан Sidekiq процес није покренут за ред(ове) %{value}. Молимо Вас прегледајте своју Sidekiq конфигурацију
-      software_version_critical_check:
-        action: Погледајте доступна ажурирања
-        message_html: Доступно је критично ажурирање за Mastodon, ажурирајте га што је пре могуће.
-      software_version_patch_check:
-        action: Погледајте доступна ажурирања
-        message_html: Доступна је исправка грешака за Mastodon.
-      upload_check_privacy_error:
-        action: Проверите овде за више информација
-        message_html: "<strong>Ваш веб сервер је погрешно конфигурисан. Приватност ваших корисника је изложена ризику.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Проверите овде за више информација
-        message_html: "<strong>Ваше складиште објекта је погрешно конфигурисано. Приватност ваших корисника је изложена ризику.</strong>"
     tags:
       review: Прегледај статус
       updated_msg: Подешавања хеш ознака успешно ажурирана
@@ -954,9 +906,6 @@ sr:
     warning_presets:
       add_new: Додај нови
       delete: Избриши
-      edit_preset: Уреди предефинисана упозорења
-      empty: Још увек нисте дефинисали ниједно упозорење.
-      title: Предефинисна упозорења
     webhooks:
       add_new: Додај крајњу тачку
       delete: Избриши
@@ -1025,7 +974,6 @@ sr:
     remove: Одвежи псеудоним
   appearance:
     animations_and_accessibility: Анимације и приступачност
-    discovery: Откривање
     localization:
       body: Mastodon преводе добровољци.
       guide_link: https://crowdin.com/project/mastodon
@@ -1852,5 +1800,4 @@ sr:
     nickname_hint: Унесите надимак свог новог сигурносног кључа
     not_enabled: Још увек нисте омогућили WebAuthn
     not_supported: Овај претраживач не подржава сигурносне кључеве
-    otp_required: Да бисте користили сигурносне кључеве, молимо Вас прво укључите двофакторску аутентификацију.
     registered_on: Регистрован/-а %{date}

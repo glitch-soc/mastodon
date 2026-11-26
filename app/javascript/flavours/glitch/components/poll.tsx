@@ -5,11 +5,11 @@ import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
 import classNames from 'classnames';
 
+import { CheckIcon } from '@phosphor-icons/react';
 import { animated, useSpring } from '@react-spring/web';
 import escapeTextContentForBrowser from 'escape-html';
 
 import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
-import CheckIcon from '@/material-icons/400-24px/check.svg?react';
 import { openModal } from 'flavours/glitch/actions/modal';
 import { fetchPoll, vote } from 'flavours/glitch/actions/polls';
 import { Icon } from 'flavours/glitch/components/icon';

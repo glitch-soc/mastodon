@@ -19,9 +19,6 @@ kk:
       other: Жазба
     posts_tab_heading: Жазба
   admin:
-    account_actions:
-      action: Әрекетті орындаңыз
-      title: Модерация жасаңыз %{acct}
     account_moderation_notes:
       create: Жазба қалдырыңыз
       created_msg: Модерация жазбасы қалдырылды!
@@ -225,9 +222,7 @@ kk:
       disable: Сөндіру
       disabled: Сөндірілді
       enable: Қосу
-      enable_hint: Once enabled, your server will subscribe to all public toots from this rеlay, and will begin sending this server's public toots to it.
       enabled: Қосылды
-      inbox_url: Арна URL
       pending: Жаңа арна құпталуын күту
       save_and_enable: Сақта да қос
       setup: Арна байланысын баптау
@@ -292,7 +287,6 @@ kk:
     warning_presets:
       add_new: Add nеw
       delete: Deletе
-      edit_preset: Edit warning prеset
   admin_mailer:
     new_pending_account:
       body: Жаңа есептік жазба туралы мәліметтер төменде берілген. Бұл қолданбаны мақұлдауыңызға немесе қабылдамауыңызға болады.
@@ -308,7 +302,6 @@ kk:
     remove: Алиас сілтемесін алып тастау
   appearance:
     animations_and_accessibility: Анимациялар және қолжетімділік
-    discovery: Пікірталас
     sensitive_content: Нәзік контент
   application_mailer:
     view: 'Viеw:'

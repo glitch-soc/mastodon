@@ -25,10 +25,8 @@ lv:
     self_follow_error: Nav ļauts sekot savam kontam
   admin:
     account_actions:
-      action: Veikt darbību
       already_silenced: Šis konts jau ir ierobežots.
       already_suspended: Šis konts jau ir aizturēts.
-      title: Veikt satura pārraudzības darbību %{acct}
     account_moderation_notes:
       create: Atstāt piezīmi
       created_msg: Satura pārraudzības piezīme ir sekmīgi izveidota.
@@ -624,9 +622,7 @@ lv:
       disable: Atspējot
       disabled: Atspējots
       enable: Iespējot
-      enable_hint: Tiklīdz iespējots, serveris abonēs visus šī releja publiskos ierakstus un sāks tam sūtīt šī iservera publiskos ierakstus.
       enabled: Iespējots
-      inbox_url: Releja URL
       pending: Gaida apstiprinājumu no releja
       save_and_enable: Saglabāt un iespējot
       setup: Iestatīt releja savienojumu
@@ -646,11 +642,7 @@ lv:
       action_taken_by: Veiktā darbība
       actions:
         mark_as_sensitive_description_html: Informācijas nesēji ierakstos, par kuriem ziņots, tiks atzīmēti kā jūtīgi, un tiks iegrāmatots brīdinājums, lai palīdzētu ziņot par turpmākiem tā paša konta pārkāpumiem.
-        other_description_html: Skatīt vairāk iespēju kontrolēt konta uzvedību un pielāgot saziņu ar paziņoto kontu.
         resolve_description_html: Pret norādīto kontu netiks veiktas nekādas darbības, netiks reģistrēts brīdinājums, un ziņojums tiks slēgts.
-        silence_description_html: Konts būs redzams tikai tiem, kas tam jau seko vai meklē to manuāli, ievērojami ierobežojot tā sasniedzamību. To vienmēr var atgriezt. Tiek aizvērti visi šī konta pārskati.
-        suspend_description_html: Konts un viss tā saturs nebūs pieejams un galu galā tiks izdzēsts, un mijiedarbība ar to nebūs iespējama. Atgriežams 30 dienu laikā. Tiek aizvērti visi šī konta pārskati.
-      actions_description_html: Izlem, kādas darbības jāveic, lai atrisinātu šo ziņojumu. Ja tiks pieņemti sodoši mēri pret kontu, par kuru ziņots, tam e-pastā tiks nosūtīts paziņojums, izņemot gadījumus, kad ir atlasīta kategorija <strong>Mēstules</strong>.
       actions_description_remote_html: Izlem, kādas darbības jāveic, lai atrisinātu šo ziņojumu. Tas ietekmēs tikai to, kā <strong>tavs</strong> serveris sazinās ar šo attālo kontu un apstrādā tā saturu.
       actions_no_posts: Šim ziņojumam nav saistītu ierakstu, kurus izdzēst
       add_to_report: Pievienot varāk paziņošanai
@@ -908,50 +900,6 @@ lv:
       appeal_approved: Pārsūdzēts
       appeal_pending: Pārsūdzība gaida izskatīšanu
       appeal_rejected: Pārsūdzība noraidīta
-    system_checks:
-      database_schema_check:
-        message_html: Ir nepabeigtas datubāzes migrācijas. Lūgums palaist tās, lai nodrošinātu, ka lietotne darbojas, kā paredzēts
-      elasticsearch_analysis_index_mismatch:
-        message_html: Elasticsearch indeksa analizētāja iestatījumi ir novecojuši. Lūgums izpildīt komandu <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: Elasticsearch kopa ir neveselīga (sarkans stāvoklis), meklēšanas līdzekļi nav pieejami
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch kopa ir neveselīga (dzeltens stāvoklis), varētu būt nepieciešams izmeklēt cēloni
-      elasticsearch_index_mismatch:
-        message_html: Elasticsearch indeksa kartējumi ir novecojuši. Lūdzu, palaid <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Skatīt dokumentāciju
-        message_html: Tavam Elasticsearch klasterim ir vairāk nekā viens mezgls, taču Mastodon nav konfigurēts to lietošanai.
-      elasticsearch_preset_single_node:
-        action: Skatīt dokumentāciju
-        message_html: Tavam Elasticsearch klasterim ir tikai viens mezgls, <code>ES_PRESET</code> ir jāiestata uz <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Tavas Elasticsearch sistēmas indekss ir novecojis iestatījuma izmaiņu dēļ. Lūdzu, palaid <code>tootctl search deploy --reset-chewy</code>, lai to atjauninātu.
-      elasticsearch_running_check:
-        message_html: Nevarēja izveidot savienojumu ar Elasticsearch. Lūdzu, pārbaudi, vai tā darbojas, vai atspējo pilna teksta meklēšanu
-      elasticsearch_version_check:
-        message_html: 'Nesaderīga Elasticsearch versija: %{value}'
-        version_comparison: Darbojas Elasticsearch %{running_version}, tomēr ir nepieciešama %{required_version}
-      rules_check:
-        action: Pārvaldīt servera noteikumus
-        message_html: Nav pievienots neviens servera noteikums.
-      sidekiq_process_check:
-        message_html: Rindā(s) %{value} nedarbojas neviens Sidekiq process. Lūdzu, pārskati savu Sidekiq konfigurāciju
-      software_version_check:
-        action: Skatīt pieejamos atjauninājumus
-        message_html: Pieejams Mastodon atjauninājums.
-      software_version_critical_check:
-        action: Skatīt pieejamos atjauninājumus
-        message_html: Ir pieejams kritisks Mastodon atjauninājums. Lūdzu, atjaunini to pēc iespējas ātrāk.
-      software_version_patch_check:
-        action: Skatīt pieejamos atjauninājumus
-        message_html: Ir pieejams Mastodon kļūdu labojums.
-      upload_check_privacy_error:
-        action: Pārbaudi šeit, lai iegūtu plašāku informāciju
-        message_html: "<strong>Tavs tīmekļa serveris ir nepareizi konfigurēts. Tavu lietotāju privātums ir apdraudēts.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Pārbaudi šeit, lai iegūtu plašāku informāciju
-        message_html: "<strong>Tava objektu krātuve ir nepareizi konfigurēta. Tavu lietotāju privātums ir apdraudēts.</strong>"
     tags:
       moderation:
         not_trendable: Nav izplatīts
@@ -1085,9 +1033,6 @@ lv:
     warning_presets:
       add_new: Pievienot jaunu
       delete: Dzēst
-      edit_preset: Labot iepriekš iestatītus brīdinājumus
-      empty: Tu vēl neesi definējis iepriekš iestatītos brīdinājumus.
-      title: Brīdinājumu priekšiestatījums
     webhooks:
       add_new: Pievienot galapunktu
       delete: Dzēst
@@ -1156,7 +1101,6 @@ lv:
     remove: Atsaistīt aizstājvārdu
   appearance:
     animations_and_accessibility: Animācijas un pieejamība
-    discovery: Atklāšana
     localization:
       body: Mastodon ir tulkojuši brīvprātīgie.
       guide_link: https://crowdin.com/project/mastodon
@@ -2092,5 +2036,4 @@ lv:
     nickname_hint: Ievadi savas jaunās drošības atslēgas segvārdu
     not_enabled: Tu vel neesi iespējojis WebAuthn
     not_supported: Šī pārlūkprogramma neatbalsta drošības atslēgas
-    otp_required: Lai izmantotu drošības atslēgas, lūgums vispirms iespējot divpakāpju autentifikāciju.
     registered_on: Reģistrēts %{date}

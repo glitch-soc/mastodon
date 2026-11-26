@@ -3,6 +3,11 @@
 namespace :admin do
   get '/dashboard', to: 'dashboard#index'
 
+  resources :server_checks, only: [:index]
+  get '/server_health', to: redirect('/admin/server_checks')
+  post '/ignored_server_checks/:key', to: 'ignored_server_checks#create', as: 'ignored_server_check'
+  delete '/ignored_server_checks/:key', to: 'ignored_server_checks#destroy'
+
   concern :batch do
     collection { post :batch }
   end
@@ -85,6 +90,7 @@ namespace :admin do
     resource :discovery, only: [:show, :update], controller: 'discovery'
     resource :external, only: [:show, :update], controller: 'external'
     resource :other, only: [:show, :update], controller: 'other'
+    resource :crawlers, only: [:show, :update], controller: 'crawlers'
   end
 
   resources :site_uploads, only: [:destroy]
@@ -112,6 +118,18 @@ namespace :admin do
     resources :moderation_notes, module: :instances, only: [:create, :destroy]
   end
 
+  resources :moderation_subscriptions do
+    collection do
+      get :logs
+    end
+  end
+
+  resources :moderation_suggestions do
+    member do
+      post :apply
+    end
+  end
+
   resources :rules, only: [:index, :new, :create, :edit, :update, :destroy] do
     member do
       post :move_up
@@ -131,6 +149,7 @@ namespace :admin do
   end
 
   resources :reports, only: [:index, :show] do
+    # TODO: can be removed after 5.0.0
     resources :actions, only: [:create], module: :reports do
       collection do
         post :preview
@@ -162,9 +181,16 @@ namespace :admin do
       post :unblock_email
     end
 
+    resource :moderation_action, only: [:new, :create], controller: 'accounts/moderation_actions' do
+      collection do
+        post :preview
+      end
+    end
     resource :change_email, only: [:show, :update]
     resource :reset, only: [:create]
-    resource :action, only: [:new, :create], controller: 'account_actions'
+
+    # TODO: can be removed after 5.0.0
+    resource :action, only: [:new, :create], controller: 'accounts/moderation_actions'
 
     resources :collections, only: [:index, :show], concerns: :batch
     resources :statuses, only: [:index, :show], concerns: :batch

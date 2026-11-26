@@ -21,9 +21,6 @@ sc:
       other: Tuts
     posts_tab_heading: Tuts
   admin:
-    account_actions:
-      action: Faghe un'atzione
-      title: Faghe un'atzione de moderatzione in %{acct}
     account_moderation_notes:
       create: Lassa una nota
       created_msg: As creadu una nota de moderatzione.
@@ -455,9 +452,7 @@ sc:
       disable: Disativa
       disabled: Disativadu
       enable: Ativa
-      enable_hint: Si abilitadu, su serbidore tuo at a èssere sutascritu a totu is tuts pùblicos de custu ripetidore e bi at a cumintzare a imbiare totu is tuts pùblicos de custu serbidore.
       enabled: Ativadu
-      inbox_url: URL de su ripetidore
       pending: Isetende s'aprovatzione de su ripetidore
       save_and_enable: Sarva e ativa
       setup: Cunfigura una connessione cun unu ripetidore
@@ -586,14 +581,6 @@ sc:
       actions:
         none: "%{name} at imbiadu un'avisu a %{target}"
         suspend: "%{name} at suspèndidu su contu de %{target}"
-    system_checks:
-      database_schema_check:
-        message_html: Ddoe at tràmudas de bases de datos in suspesu. Pone·ddas in esecutzione pro ti assegurare chi s'aplicatzione funtzionet comente si tocat
-      rules_check:
-        action: Gesti is règulas de su serbidore
-        message_html: No as cunfiguradu peruna règula de su serbidore.
-      sidekiq_process_check:
-        message_html: Perunu protzessu Sidekiq est in esecutzione pro sa coa(s) %{value}. Revisiona is cunfiguratziones de Sidekiq
     tags:
       review: Revisiona s'istadu
       updated_msg: Cunfiguratzione de etichetas atualizada
@@ -611,8 +598,6 @@ sc:
     warning_presets:
       add_new: Agiunghe noa
       delete: Cantzella
-      edit_preset: Modìfica s'avisu predefinidu
-      empty: No as cunfiguradu ancora perunu avisu predefinidu.
     webhooks:
       delete: Cantzella
       disable: Disativa
@@ -653,7 +638,6 @@ sc:
     remove: Disconnete su nomìngiu
   appearance:
     animations_and_accessibility: Animatziones e atzessibilidade
-    discovery: Iscoberta
     localization:
       body: Mastodon est bortadu in manera voluntària.
       guide_link: https://crowdin.com/project/mastodon
@@ -1236,5 +1220,4 @@ sc:
     nickname_hint: Inserta su nomìngiu de sa crae de seguresa tua noa
     not_enabled: No as ativadu ancora WebAuthn
     not_supported: Custu navigadore no est cumpatìbile cun is craes de seguresa
-    otp_required: Pro impreare is craes de seguresa depes ativare prima s'autenticatzione in duos passos.
     registered_on: 'Registratzione: %{date}'

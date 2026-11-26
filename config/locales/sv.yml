@@ -37,10 +37,19 @@ sv:
     self_follow_error: Det är inte tillåtet att följa ditt eget konto
   admin:
     account_actions:
-      action: Utför åtgärd
       already_silenced: Detta konto är redan begränsat.
       already_suspended: Detta konto är redan avstängt.
-      title: Utför aktivitet för moderering på %{acct}
+      notification_title: Användarnotis & meddelande
+      text_box_title: Konsekvenser för denna åtgärd
+      title: 'Utför modereringsåtgärd på @%{acct}:'
+      types:
+        delete: Radera inlägg
+        disable: Frys konto
+        mark_as_sensitive: Markera inlägg som känsliga
+        none: Skicka en varning
+        sensitive: Markera kontot som känsligt
+        silence: Begränsa konto
+        suspend: Stäng av konto
     account_moderation_notes:
       create: Lämna kommentar
       created_msg: Modereringsnotering skapad utan problem!
@@ -93,6 +102,7 @@ sv:
       enable: Aktivera
       enable_sign_in_token: Aktivera kontrollen med säkerhetskod
       enable_sign_in_token_auth: Aktivera autentisering med pollett via e-post
+      enable_unconfirmed: Tillåt bekräftelsemejl
       enabled: Aktiverad
       enabled_msg: Uppfrysningen av %{username}s konto lyckades
       follow_recommendations:
@@ -274,6 +284,7 @@ sv:
         update_ip_block: Uppdatera IP-regel
         update_report: Uppdatera rapport
         update_status: Uppdatera inlägg
+        update_tag: Uppdatera hashtagg
         update_user_role: Uppdatera roll
         update_username_block: Uppdatera användarnamnsregel
       actions:
@@ -291,6 +302,7 @@ sv:
         create_domain_block_html: "%{name} blockerade domänen %{target}"
         create_email_domain_block_html: "%{name} blockerade e-post domänet%{target}"
         create_ip_block_html: "%{name} skapade regel för IP %{target}"
+        create_moderation_subscription_html: "%{name} skapade modereringsprenumerationen %{target}"
         create_relay_html: "%{name} skapade ombudet %{target}"
         create_unavailable_domain_html: "%{name} stoppade leverans till domänen %{target}"
         create_user_role_html: "%{name} skapade rollen %{target}"
@@ -306,6 +318,7 @@ sv:
         destroy_email_domain_block_html: "%{name} avblockerade e-post domänet %{target}"
         destroy_instance_html: "%{name} rensade domän %{target}"
         destroy_ip_block_html: "%{name} tog bort regel för IP %{target}"
+        destroy_moderation_subscription_html: "%{name} raderade modereringsprenumerationen %{target}"
         destroy_relay_html: "%{name} tog bort ombudet %{target}"
         destroy_status_html: "%{name} tog bort inlägget av %{target}"
         destroy_unavailable_domain_html: "%{name} återupptog leverans till domänen %{target}"
@@ -354,10 +367,18 @@ sv:
         update_user_role_html: "%{name} ändrade rollen %{target}"
         update_username_block_html: "%{name} uppdaterade regel för användarnamn som innehåller %{target}"
         usable_tag_html: kan användas;
+      automated_actions:
+        create_domain_allow_html: Automatiskt tillåten federation med domän %{target}
+        create_domain_block_html: Automatiskt blockerad domän %{target}
+        destroy_domain_allow_html: Automatiskt otillåten federation med domän %{target}
+        destroy_domain_block_html: Automatiskt avblockerad domän %{target}
+        update_domain_block_html: Automatiskt uppdaterad domänblockering för %{target}
       deleted_account: raderat konto
+      deleted_suggestion: en raderad modereringsprenumeration
       empty: Inga loggar hittades.
       filter_by_action: Filtrera efter åtgärd
       filter_by_user: Filtrera efter användare
+      suggested_by_html: Åtgärd föreslagen av %{subscription}
       title: Revisionslogg
       unavailable_instance: "(domännamn inte tillgängligt)"
     announcements:
@@ -473,6 +494,11 @@ sv:
       undo: Tag bort från vitlistan
     domain_blocks:
       add_new: Lägg till ny
+      confirm_downgrade:
+        cancel: Avbryt
+        confirm: Nedgradera
+        preamble_html: Du håller på att nedgradera den befintliga blockeringen på <strong>%{domain}</strong> och dess underdomäner.
+        title: Bekräfta nedgradering av domänblockering för %{domain}
       confirm_suspension:
         cancel: Avbryt
         confirm: Pausa
@@ -672,6 +698,8 @@ sv:
       title: Följ rekommendationer
       unsuppress: Återställ följrekommendation
     instances:
+      advisories:
+        title: Bulletiner från modereringsprenumerationer
       audit_log:
         title: Senaste revisionsloggar
         view_all: Visa fullständiga revisionssloggar
@@ -695,6 +723,7 @@ sv:
         comment: Intern anteckning
         description_html: Du kan definiera innehållspolicyer som kommer tillämpas på alla konton från denna domän samt alla dess underdomäner.
         limited_federation_mode_description_html: Du kan välja om du vill tillåta federering med den här domänen.
+        moderation_subscription: Modereringsprenumeration
         policies:
           reject_media: Avvisa media
           reject_reports: Avvisa rapporter
@@ -775,6 +804,92 @@ sv:
       reset: Återställ
       search: Sök
       title: IP-regler
+    moderation_subscriptions:
+      add_new: Lägg till prenumeration
+      advisory_action: 'Åtgärd: %{action}'
+      advisory_actions:
+        accept: tillåt
+        limit: tysta
+        reject: pausa
+      apply_automatically: Tillämpa bulletiner automatiskt
+      apply_conditions:
+        always: Alltid
+        never: Aldrig
+        safely: Endast om det inte bryter relationer
+      apply_conditions_hint:
+        always: Använd alltid rekommenderade åtgärder automatiskt. Använd endast det här alternativet för listor du litar på.
+        never: Använd aldrig rekommenderade åtgärder automatiskt. Generera alltid ett förslag istället.
+        safely: Tillämpa rekommenderade åtgärder så länge de inte bryter befintliga följarrelationer med lokala användare. I sådana fall kommer ett förslag att genereras istället.
+      delete: Ta bort
+      destroyed_msg: Tog bort modereringsprenumeration
+      empty: Ingen modereringslista har prenumererats på ännu.
+      last_synced_at: Senast synkad den
+      list_action: Prenumerationstyp
+      list_actions:
+        accept: Tillåt-lista
+        default: Mixad (tillåt & neka)
+        reject: Blocklista
+      list_actions_hint:
+        accept: Objekt utan angiven åtgärd kommer att behandlas som tillåtna. Blockeringar kommer att ignoreras.
+        default: Objekt utan angiven åtgärd kommer att behandlas som blockeringar. Blockeringar och tillåtelser kommer båda att behandlas som sådana.
+        reject: Objekt utan angiven åtgärd kommer att behandlas som blockeringar. Tillåtelser kommer att ignoreras.
+      list_actions_short:
+        accept: Tillåt-lista
+        default: Mixad
+        reject: Block-lista
+      name: Namn
+      new:
+        create: Prenumerera
+        title: Ny modereringsprenumeration
+      override_unattributed: Åsidosätt manuella blockeringar
+      override_unattributed_hint: Tillåt denna prenumeration att automatiskt uppgradera eller ta över befintliga manuella block när du automatiskt tillämpar bulletiner.
+      policies:
+        apply_advisories: Tillämpar automatiskt bulletiner
+        apply_advisories_safely: Tillämpar automatiskt bulletiner som inte bryter relationer
+        apply_retractions: Tillämpar automatiskt tillbakadraganden
+      priority: Prioritet
+      priority_hint: Modereringsprenumerationer utvärderas i prioritetsordning, prenumerationer med ett lägre antal åsidosätter prenumerationer med ett högre.
+      retract_automatically: Dra tillbaka bulletiner automatiskt
+      retract_automatically_hint: Om indragning eller nedgradering av policy-ändringar ska tillåtas när prenumerationen tar bort ett motsvarande objekt. När automatisk indragning är möjlig, och en motsvarande rådgivning finns i en lista med lägre prioriteringar kommer den att antas. När automatisk indragning är inaktiverad, kommer ett förslag att genereras istället.
+      show:
+        delete_confirm: Är du säker på att du vill ta bort denna modereringsprenumeration?
+        edit: Redigera prenumeration
+        empty: Denna prenumeration har inga bulletiner än.
+        title: 'Modereringsprenumeration: %{name}'
+      tabs:
+        logs: Loggar
+        subscriptions: Prenumerationer
+        suggestions: Förslag
+      title: Modereringsprenumerationer
+      type: Typ
+      types:
+        csv_list: CSV-lista
+      url: URL
+    moderation_subscriptions_logs:
+      title: Loggar för modereringsprenumerationer
+    moderation_suggestions:
+      actions:
+        accept: Tillåt
+        limit: Begränsa
+        reject: Pausa
+        retract: Dra tillbaka nuvarande policy
+      applied_msg: Tillämpade förslag för %{target_key}
+      apply_accept: Tillåt
+      apply_limit: Begränsa
+      apply_reject: Pausa
+      apply_retract: Dra tillbaka
+      current_states:
+        accept: tillåts för närvarande
+        limit: för närvarande begränsad
+        reject: för närvarande pausad
+      description: Följande är förslag från dina modereringsabonnemang i prioritetsordning.
+      destroyed_msg: Avvisade förslag för %{target_key}
+      dismiss: Avfärda förslag
+      empty: Det finns inget modereringsförslag just nu.
+      retracted_msg: Policyn för %{target_key} har dragits in
+      suggested_from_html: Föreslagen av %{link}
+      title: Modereringsförslag
+      unable_to_apply_msg: Det går inte att tillämpa förslag för %{target_key}
     relationships:
       title: "%{acct}s relationer"
     relays:
@@ -784,9 +899,7 @@ sv:
       disable: Inaktivera
       disabled: Inaktiverad
       enable: Aktivera
-      enable_hint: Vid aktivering kommer din server börja prenumerera på alla offentliga inlägg från detta ombud, och kommer börja sända denna servers offentliga inlägg till den.
       enabled: Aktivera
-      inbox_url: Ombuds-URL
       pending: Väntar på ombudets godkännande
       save_and_enable: Spara och aktivera
       setup: Konfigurera ett ombud
@@ -806,11 +919,7 @@ sv:
       actions:
         delete_description_html: De rapporterade inläggen och/eller samlingarna kommer raderas och en markör kommer registreras för att hjälpa dig att eskalera framtida överträdelser från samma konto.
         mark_as_sensitive_description_html: Medierna i de rapporterade inläggen kommer markeras som känsliga och en prick kommer registreras för att hjälpa dig eskalera framtida överträdelser av samma konto.
-        other_description_html: Se fler alternativ för att kontrollera kontots beteende och anpassa kommunikationen till det rapporterade kontot.
         resolve_description_html: Ingen åtgärd vidtas mot det rapporterade kontot, ingen prick registreras och rapporten stängs.
-        silence_description_html: Kontot kommer endast synas för de som redan följer den eller manuellt söker på den, vilket dramatiskt minskar dess räckvidd. Kan alltid ångras. Stänger alla anmälningar mot detta konto.
-        suspend_description_html: Kontot och allt dess innehåll kommer att vara oåtkomligt och så småningom tas bort, det kommer inte gå att interagera med kontot. Kan ångras inom 30 dagar. Stänger alla anmälningar mot detta konto.
-      actions_description_html: Välj vilken åtgärd som skall vidtas för att lösa denna rapport. Om du vidtar en bestraffningsåtgärd mot det rapporterade kontot kommer en e-postnotis att skickas till dem, förutom om du valt kategorin <strong>Skräppost</strong>.
       actions_description_remote_html: Bestäm vilka åtgärder som ska vidtas för att lösa denna rapport. Detta kommer bara att påverka hur <strong>din</strong> server kommunicerar med detta fjärrkonto och hanterar dess innehåll.
       actions_no_posts: Denna rapport har inga associerade inlägg att ta bort
       add_to_report: Lägg till mer i rapporten
@@ -865,12 +974,18 @@ sv:
       summary:
         action_preambles:
           delete_html: 'Du håller på att <strong>ta bort</strong> några av <strong>@%{acct}</strong>s inlägg. Detta kommer:'
+          disable_html: 'Du är på väg att <strong>frysa</strong> <strong>@%{acct}</strong>s konto. Detta kommer att:'
           mark_as_sensitive_html: 'Du håller på att <strong>markera</strong> några av <strong>@%{acct}</strong>s inlägg som <strong>känsliga</strong>. Detta kommer:'
+          none_html: 'Du är på väg att <strong>varna</strong> <strong>@%{acct}</strong>. Detta kommer att:'
+          sensitive_html: 'Du är på väg att <strong>markera</strong> <strong>@%{acct}</strong>s konto som <strong>känsligt</strong>. Detta kommer att:'
           silence_html: 'Du håller på att <strong>begränsa</strong> <strong>@%{acct}</strong>s konto. Detta kommer:'
           suspend_html: 'Du håller på att <strong>stänga av</strong> <strong>@%{acct}</strong>s konto. Detta kommer:'
         actions:
           delete_html: Ta bort kränkande inlägg
+          disable_html: Förhindra användaren från att använda sitt konto, men kommer inte att ta bort eller dölja deras innehåll
           mark_as_sensitive_html: Markera de anmälda inläggens media som känslig
+          none_html: Skicka en varning till användaren, utan att utlösa någon annan åtgärd
+          sensitive_html: Tvinga alla den här användarens mediebilagor att flaggas som känsliga
           silence_html: Begränsa kraftigt <strong>@%{acct}</strong> räckvidd genom att göra deras profil och innehåll bara synligt till folk som redan följer dom eller som manuellt söker upp deras profil
           suspend_html: Stäng av <strong>@%{acct}</strong>, vilket gör deras profil och innehåll oåtkomligt och omöjligt att interagera med
         close_report: 'Markera anmälningen #%{id} som löst'
@@ -969,6 +1084,55 @@ sv:
       translation: Översättning
       translations: Översättningar
       translations_explanation: Du kan eventuellt lägga till översättningar av reglerna. Standardvärdet kommer att visas om ingen översatt version är tillgänglig. Se alltid till att alla angivna översättningar är i synk med standardvärdet.
+    server_checks:
+      categories:
+        completed:
+          title: Slutförda
+        critical:
+          title: Kritiska
+        error:
+          title: Fel
+        ignored:
+          title: Ignorerade
+        suggestion:
+          title: Förslag
+        unprocessed:
+          title: Obehandlade
+        warning:
+          title: Varningar
+      checks:
+        database_schema:
+          error:
+            title: Det gick inte att kontrollera databasschemat
+          ok:
+            title: Det finns inga pågående databasmigreringar
+          pending:
+            lead_html: Kör dem för att se till att programmet beter sig som förväntat
+            title: Det finns väntande databasmigreringar
+          running:
+            title: Din server kontrollerar databasens schema
+          unprocessed:
+            title: Din server har inte kontrollerat databasens schema ännu
+        elastic_search:
+          error:
+            title: Det gick inte att kontrollera Elasticsearch-konfigurationen
+          ok:
+            title: Elasticsearch är konfigurerad utan problem
+        rules:
+          pending:
+            title: Ställ in serverregler
+        software_version:
+          ok:
+            title: Din Mastodon-instans är uppdaterad
+      ignore:
+        label: Ignorera
+      recommendations:
+        title: Rekommendationer
+      restore:
+        label: Återställ
+      setup:
+        label: Ställ in
+      title: Serverhälsa
     settings:
       about:
         manage_rules: Hantera serverregler
@@ -1123,50 +1287,6 @@ sv:
       appeal_approved: Överklagad
       appeal_pending: Överklagande väntar
       appeal_rejected: Överklagan avslagen
-    system_checks:
-      database_schema_check:
-        message_html: Det finns väntande databasmigreringar. Vänligen kör dem för att säkerställa att programmet beter sig som förväntat
-      elasticsearch_analysis_index_mismatch:
-        message_html: Inställningarna för indexanalys med elastisk sökning är inte uppdaterade. Var god kör <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: Elasticsearch kluster är ohälsosamt (röd status), sökfunktioner är otillgängliga
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch kluster är ohälsosamt (gul status), du kanske vill undersöka orsaken
-      elasticsearch_index_mismatch:
-        message_html: Elasticsearch index mappningar är föråldrade. Vänligen kör <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Se dokumentation
-        message_html: Din Elasticsearch-kluster har mer än en nod, men Mastodon är inte konfigurerad att använda dem.
-      elasticsearch_preset_single_node:
-        action: Se dokumentation
-        message_html: Ditt Elasticsearch-kluster har bara en nod, <code>ES_PRESET</code> borde vara satt till <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Ditt systemindex för Elasticsearch är föråldrat på grund av en inställningsändring. Vänligen kör <code>tootctl search deploy --reset-chewy</code> för att uppdatera det.
-      elasticsearch_running_check:
-        message_html: Kunde inte ansluta till Elasticsearch. Kontrollera att det körs, eller inaktivera fulltextsökning
-      elasticsearch_version_check:
-        message_html: 'Inkompatibel Elasticsearch-version: %{value}'
-        version_comparison: Elasticsearch %{running_version} körs medan %{required_version} krävs
-      rules_check:
-        action: Hantera serverregler
-        message_html: Du har inte definierat några serverregler.
-      sidekiq_process_check:
-        message_html: Ingen Sidekiq-process körs för kön/köerna %{value}. Vänligen kontrollera din Sidekiq-konfiguration
-      software_version_check:
-        action: Se tillgängliga uppdateringar
-        message_html: En Mastodon-uppdatering är tillgänglig.
-      software_version_critical_check:
-        action: Se tillgängliga uppdateringar
-        message_html: En kritisk uppdatering för Mastodon är tillgänglig. Uppdatera så snart som möjligt.
-      software_version_patch_check:
-        action: Se tillgängliga uppdateringar
-        message_html: En buggfix Mastodon-uppdatering är tillgänglig.
-      upload_check_privacy_error:
-        action: Kolla här för mer information
-        message_html: "<strong>Din webbserver är felkonfigurerad. Sekretessen för dina användare är i fara.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Kolla här för mer information
-        message_html: "<strong>Din objektlagring är felkonfigurerad. Sekretessen för dina användare är i riskzonen.</strong>"
     tags:
       moderation:
         not_trendable: Kan inte trenda
@@ -1319,9 +1439,19 @@ sv:
     warning_presets:
       add_new: Lägg till ny
       delete: Radera
-      edit_preset: Redigera varningsförval
-      empty: Du har inte definierat några varningsförval ännu.
-      title: Varning förinställningar
+      dropdown:
+        all_actions: Alla åtgärder
+        delete: Radera
+        disable: Frys
+        mark_as_sensitive: Markera som känsligt
+        none: Varning
+        sensitive: Känsligt
+        silence: Begränsa
+        suspend: Pausa
+      edit_preset: Redigera förinställt svar
+      empty: Du har inte definierat några förinställda svar än.
+      navigation_title: Förinställda svar
+      title: Förinställda svar för moderering
     webhooks:
       add_new: Lägg till slutpunkt
       delete: Ta bort
@@ -1370,9 +1500,15 @@ sv:
     new_critical_software_updates:
       body: En kritisk uppdatering för Mastodon har släppts. Du bör uppdatera så snart som möjligt!
       subject: Kritiska uppdateringar för Mastodon är tillgängliga för %{instance}!
+    new_moderation_suggestions:
+      body: Den modereringslista som din server prenumererar på har publicerat nya förslag.
+      subject: Nya modereringsförslag är tillgängliga på %{instance}!
     new_pending_account:
       body: Detaljerna för det nya kontot finns nedan. Du kan godkänna eller avvisa denna ansökan.
       subject: Nytt konto flaggat för granskning på %{instance} (%{username})
+    new_pending_accounts:
+      body: Nya konton har skapats på %{instance}. Eftersom din server är konfigurerad att skjuta upp bekräftelsemeddelanden efter modereringsgodkännande, har dessa konton inte haft en chans att verifiera sin e-postadress ännu. Detaljerna för de nya kontona är nedan. Du kan godkänna eller avvisa dessa ansökningar.
+      subject: Nya konton tillgängliga för granskning på %{instance}
     new_report:
       body: "%{reporter} har rapporterat %{target}"
       body_remote: Någon från %{domain} har rapporterat %{target}
@@ -1401,7 +1537,6 @@ sv:
     animations_and_accessibility: Animationer och tillgänglighet
     boosting_preferences: Boostinställningar
     boosting_preferences_info_html: "<strong>Tips:</strong> Oavsett inställningar kommer <kbd>Skift</kbd> + <kbd>Klick</kbd> på %{icon} Boosta-ikonen att boosta direkt."
-    discovery: Upptäck
     localization:
       body: Mastodon översätts av volontärer.
       guide_link: https://crowdin.com/project/mastodon
@@ -1481,11 +1616,16 @@ sv:
     security: Säkerhet
     set_new_password: Skriv in nytt lösenord
     setup:
+      correct_email: Rätt adress
       email_below_hint_html: Kolla din skräppost-mapp eller begär en ny. Du kan korrigera din e-postadress om den är fel.
       email_settings_hint_html: Klicka på länken vi skickade till %{email} för att börja använda Mastodon. Vi väntar här.
+      email_settings_hint_wait_html: Din ansökan granskas. Du bör snart få ett meddelande via e-post på %{email}. När du får det, klicka på länken för att börja använda Mastodon. Vi väntar här.
       link_not_received: Fick du ingen länk?
       new_confirmation_instructions_sent: Du kommer att få ett nytt e-postmeddelande med bekräftelselänken om några minuter!
       title: Kolla din inkorg
+      title_wait: Håll ett öga på din inkorg
+      wrong_email: Fel e-postadress?
+      wrong_email_below_hint_html: Få inte panik! Du kan korrigera din e-postadress nedan.
     sign_in:
       preamble_html: Logga in med dina användaruppgifter på <strong>%{domain}</strong>. Om ditt konto finns på en annan server kommer du inte att kunna logga in här.
       title: Logga in på %{domain}
@@ -1522,6 +1662,12 @@ sv:
     auto: Auto
     dark: Mörkt
     light: Ljust
+  color_theme:
+    cyan: Cyan
+    indigo: Indigo
+    lime: Lime
+    orange: Orange
+    pink: Rosa
   contrast:
     auto: Auto
     high: Hög
@@ -1570,6 +1716,7 @@ sv:
       action_taken: Vidtagen åtgärd
       appeal: Överklaga
       appeal_approved: Pricken är inte längre giltig då överklagan godkändes
+      appeal_handled_by: Överklagande hanterat av
       appeal_rejected: Överklagan har avvisats
       appeal_submitted_at: Överklagan inskickad
       appealed_msg: Din överklagan har skickats in. Du blir notifierad om den godkänns.
@@ -2011,6 +2158,7 @@ sv:
           trillion: T
   otp_authentication:
     code_hint: Ange koden som genererats av din autentiseringsapp för att bekräfta
+    delete: Radera
     description_html: Om du aktiverar <strong>tvåfaktorsautentisering</strong> med en autentiseringsapp kommer du behöva din mobiltelefon för att logga in, som kommer generera koder för dig att ange.
     enable: Aktivera
     instructions_html: "<strong>Skanna den här QR-koden i Google Authenticator eller en liknande TOTP-app i din telefon</strong>. Från och med nu så kommer den appen att generera symboler som du måste skriva in när du ska logga in."
@@ -2037,7 +2185,7 @@ sv:
       too_many_options: kan inte innehålla mer än %{max} objekt
     vote: Rösta
   posting_defaults:
-    explanation: Dessa inställningar kommer att användas som standard när du skapar nya inlägg, men du kan redigera dem per inlägg i kompositören.
+    explanation: Dessa inställningar kommer att användas som standard när du skapar nya inlägg, men du kan redigera dem per inlägg i skrivläget.
   preferences:
     other: Annat
     posting_defaults: Standardinställningar för inlägg
@@ -2491,7 +2639,6 @@ sv:
     nickname_hint: Ange smeknamnet på din nya säkerhetsnyckel
     not_enabled: Du har inte aktiverat WebAuthn än
     not_supported: Denna webbläsare stöder inte säkerhetsnycklar
-    otp_required: För att använda säkerhetsnycklar måste du först aktivera tvåfaktorsautentisering.
     registered_on: Registrerad den %{date}
   wrapstodon:
     description: Se hur %{name} använde Mastodon i år!

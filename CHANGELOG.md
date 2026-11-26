@@ -2,6 +2,120 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0] - UNRELEASED
+
+### New web interface
+
+**Mastodon has a new look!**
+
+This version contains a redesign of Mastodon's web interface. This includes a refreshed visual design (with a new color theme setting to personalise it further), a new page layout and a new composer.
+
+This is only the start of the journey and this version is laying out the basis for many new things to come.
+
+You can read all about it in our [dedicated blog post](https://blog.joinmastodon.org/2026/10/5.0-a-closer-look/).
+
+### Added
+
+- **Add creator controls for relays** (#41636 by @Gargron)
+  - When your admin has configured opt-in relays on your server, you can decide whether to share your public posts with them using the controls in the "Privacy and reach" area of the settings. You can change your choice at any time. If you stop sharing, the relay is notified via a block activity so it can clean up data if needed.
+- Add forwarding of activities with FEP-8b32 Object Integrity Proofs (#41856 by @ClearlyClaire)
+- Add ability to opt out of interaction stats in feeds (#41561 by @ClearlyClaire)
+- Add admin setting for customizing robots.txt, and add more AI user agents to the default one (#41496 by @Gargron)
+- Add [schema.org](http://schema.org/) markup to SEO-enabled profiles and replies (#41505 and #41656 by @Gargron)
+- Add collection limits to `/api/v2/instance` (#41680 by @oneiros)
+- Add a setting to pick a color theme for the web interface (#41088, #41094, #41153 by @diondiondion and @ClearlyClaire)
+- Add a user setting to have the Content Warning field on by default (#40824 by @ClearlyClaire)
+- Add a user setting to hide your own posts and boosts (#40813 and #40867 by @arte7)
+  - Your own boosts are now hidden by default.
+- Add ability to follow hashtag from the menu (#40640 by @ChaosExAnima)
+- **Add new Server Health admin page** (#41101 and #41282, #41792, and #41750 by @jhbabon and @mjankowski)
+- **Add bloom filters to limit which servers account deletion notices are sent to** (#40283 by @ClearlyClaire)
+  - This heavily reduces the number of deletion notices sent to other servers by storing the list of servers which fetched an account in a bloom filter. This is strongly recommended on large servers which regularly delete many accounts as it heavily decreases the number of federation Delete activities. This feature introduces a new setting to require signed requests for accounts in order to know where the request comes from.
+- Add server setting to postpone confirmation emails after accounts are approved (#40690, #40702, #41099 by @ClearlyClaire)
+- Add `DISABLE_ANNOUNCEMENT_REACTIONS` environment variable to disable emoji reactions in announcements (#40931 by @ClearlyClaire)
+- Add `RACK_COMPRESS` env to enable `Rack::Deflater` middleware (#39927 by @shleeable)
+- Add server directory and default server opt-in options (#40750 by @arte7)
+- Add new tab to server settings for external discovery (#40768 by @arte7)
+- Add moderation domain block/allow list synchronization feature (#40136, #41349 by @ClearlyClaire and @zunda)
+  - In this version, this is behind an experimental feature flag to allow us to gather feedback and test it in the real world. We expect this to be stable and enabled for all servers in our next release.
+- Add the app used for registration in the moderation view of an account (#40567 by @jhbabon)
+- Add canned response (formerly warning presets) categories to restrict them to a specific action (#41092, #41264 by @arte7)
+- Add information about who handled an appeal in moderation interface (#41186, #41427 by @arte7 and @ClearlyClaire)
+- Add information about trends and follow recommendation blocks in the account moderation page (#40398 by @jhbabon)
+- Add support for verifying ML-DSA-44 HTTP Message Signatures (#41119 by @ClearlyClaire)
+- Add support for signing-up through the OAuth flow (#40659 by @ClearlyClaire)
+  - You can read more about the new flow [in our documentation](https://docs.joinmastodon.org/methods/oauth/#authorize). The previous registration flow (`POST /api/v1/accounts`) is deprecated and will be removed in a future version.
+- Add `allow_nonfunctional` parameter to `GET /api/v1/accounts/verify_credentials` (#40803 by @ClearlyClaire)
+- Add server-side filtering to home feed endpoint (#40468, #41031 by @ClearlyClaire and @cacheflow)
+- Add counters to track which features result in users following each other (#40226, #40258, #40340 by @Gargron)
+
+### Fixed
+
+- Fix handling of missing admin name and email on about page (#41830 by @mjankowski)
+- Fix styling of landing page setting in branding admin settings (#41887 by @mjankowski)
+- Fix REST API serving suspended user’s collections (#41869 by @oneiros)
+- Fix trend FASPs being notified of non-public posts (#41867 by @oneiros)
+- Fix JS error on Terms of Service admin index page date formatting (#41857 by @mjankowski)
+- Fix media privacy server check ignoring `S3_ENDPOINT` (#41834 by @lazerg)
+- Fix error when “redirect” pages are requested with JSON format (#41761 by @mjankowski)
+- Fix image thumbnail URLs in RSS feed items (#40964 by @cweiske)
+- Fix terms of service and privacy policy API failing on percent signs (#41343 by @dualfroz)
+- Fix size of date-of-birth input fields (#41021 by @ClearlyClaire)
+- Fix invisible links in server announcements (#40949 by @diondiondion)
+- Fixes infinite requests loop on hovering over broken emojis (#40884 by @FFederi)
+- Fix HTTP 200 response code on paths to remote accounts that don't exist (#40341 by @Gargron)
+- Fix performance of media attachment queries in admin instance page (#40515 by @crafkaz)
+- Fix deprecated nginx HTTP/2 directive (#36149 by @sirodoht)
+- Fix typo in new locales for admin account trending info (#40438 by @jhbabon)
+- Fix follows and followers pages to show "Today" instead of hours (#40367 by @FFederi)
+- Fix long dropdown menus being cut off on smaller screens (#41026 by @diondiondion)
+- Fix the moderation interface to allow seeing media reports of suspended accounts (#40274 by @jhbabon)
+
+### Changed
+
+- **Change relay setup** (#41636 by @Gargron)
+  - Instead of enabling a relay by pasting its "inbox URL" you can now enable it by using the relay's fediverse handle. You also gain additional options, such as controlling whether the relay can send you posts (bidirectional) or only accept them from you (broadcast-only), and whether all users' public posts are sent to the relay by default or they must opt-in to it first.
+- **Change the moderation account and report actions** to unify them and add new quick actions (#41558, #41666, and #41902 by @arte7)
+- Change Terms of Service interstitial to format `time` (#41860 by @mjankowski)
+- Change `standard_locale_name` helper to support regional locales (#41767 by @mjankowski)
+- Change accounts moderation actions page, use new layout and dynamic inputs (#41409 by @arte7)
+- Change 2FA to allow Webauthn without requiring TOTP (#41608 by @nicolastemciuc, @santiagorodriguez96 and @ClearlyClaire)
+- Change moderation report quick actions (#41346 by @arte7)
+- Change authentication errors to return HTTP 422 instead of HTTP 200 (#41503 by @ClearlyClaire)
+- Change account confirmation e-mail to not redirect to app (#41066 and #41181 by @ClearlyClaire and @oneiros)
+- Change empty search requests to return a HTTP 400 error (#40196 and #40214 by @Gargron)
+- Change warning presets to canned responses and move the navigation item (#41045 by @arte7)
+- Change FASP configuration to individual toggles for capabilities (#40764 and #40787 by @oneiros)
+- Change the web interface to check media attachment size limit before uploading (#30475 by @rgroothuijsen)
+
+### Removed
+
+- Remove deprecated collection alpha routes (#41870 by @oneiros)
+- Remove redundant database index on `fasp_capabilities` (#41788 by @mjankowski)
+- Remove `vapid_key` from `Application` REST API entity (#41859 by @e-nomem)
+- Remove system checks from admin dashboard (#41854 by @jhbabon)
+- Remove old routes for profile updates settings/featured_tags create/destroy actions (#41814 and #41815 by @mjankowski)
+  - This may cause an error for people in the middle of updating their profiles when a server is updated from pre-4.6 Mastodon to Mastodon 5.0
+- Remove reference to deprecated TOR setup in docker compose (#41559 by @mjankowski)
+- Remove vagrant support (#41519 by @mjankowski)
+- Remove discovery area in settings (#41258 by @ChaosExAnima)
+- Remove deprecated `tootctl accounts fix-duplicate` command (#40232 by @ClearlyClaire)
+- Remove support for node version 22 (#41152 by @mjankowski)
+- Remove support for ruby 3.3 and 3.4, only support a single version (#40603 by @mjankowski)
+- Remove support for pre-4.7 zero-downtime migrations (#40235 by @ClearlyClaire)
+
+## [4.7.6] - 2026-11-19
+
+### Security
+
+- Updated dependencies `ruby`, `puma`, `rails`, `sanitize`, `msgpack` and `omniauth`
+
+### Fixed
+
+- Fix missing `featuredCollections` definition to JSON-LD context (#41728 by @oneiros)
+- Fix improper use of translation strings in email notification unsubscription page (#41555 by @ClearlyClaire)
+- Fix missing dropdown label in admin audit log (#41301 by @e-nomem)
+
 ## [4.7.5] - 2026-11-03
 
 ### Security

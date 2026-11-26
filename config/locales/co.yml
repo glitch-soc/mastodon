@@ -20,9 +20,6 @@ co:
       other: Statuti
     posts_tab_heading: Statuti
   admin:
-    account_actions:
-      action: Realizà un'azzione
-      title: Realizà un'azzione di muderazione nant'à %{acct}
     account_moderation_notes:
       create: Creà una nota
       created_msg: Nota di muderazione creata!
@@ -387,9 +384,7 @@ co:
       disable: Disattivà
       disabled: Disattivatu
       enable: Attivà
-      enable_hint: Quandu sarà attivatu, u vostru servore hà da seguità i statuti pubblichi di u ripetitore, è mandarà i so statuti pubblichi quallà.
       enabled: Attivatu
-      inbox_url: URL di u ripetitore
       pending: In attesa di l'apprubazione di u ripetitore
       save_and_enable: Salvà è attivà
       setup: Creà una cunnessione cù un ripetitore
@@ -459,10 +454,6 @@ co:
         title: Media
       no_status_selected: I statuti ùn sò micca stati mudificati perchè manc'unu era selezziunatu
       with_media: Cù media
-    system_checks:
-      rules_check:
-        action: Amministrà e regule di u servore
-        message_html: Ùn avete micca ancu difinitu di regula per u servore.
     tags:
       review: Statutu di verificazione
       updated_msg: Parametri di i hashtag messi à ghjornu
@@ -490,7 +481,6 @@ co:
     warning_presets:
       add_new: Aghjunghje
       delete: Sguassà
-      edit_preset: Cambià a preselezzione d'avertimentu
   admin_mailer:
     new_pending_account:
       body: I ditagli di u novu contu sò quì sottu. Pudete appruvà o righjittà a dumanda.
@@ -508,7 +498,6 @@ co:
     remove: Sguassà u pseudonimu
   appearance:
     animations_and_accessibility: Animazione è accessibilità
-    discovery: Scuperta
     localization:
       body: Mastodon hè tradottu da una squadra di vuluntari.
       guide_link: https://fr.crowdin.com/project/mastodon
@@ -998,5 +987,4 @@ co:
     nickname_hint: Entrate u nome di a vostra nova chjave di sicurità
     not_enabled: Ùn avete micca attivatu WebAuthn
     not_supported: E chjave di sicurità ùn marchjanu micca cù quessu navigatore
-    otp_required: Per utilizà una chjave di sicurità duvete attivà l'identificazione à dui fattori prima.
     registered_on: Arregistrata %{date}

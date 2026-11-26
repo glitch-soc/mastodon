@@ -27,10 +27,8 @@ lt:
     self_follow_error: Neleidžiama sekti savo pačių paskyros
   admin:
     account_actions:
-      action: Atlikti veiksmą
       already_silenced: Ši paskyra jau buvo apribota.
       already_suspended: Ši paskyra jau sustabdyta.
-      title: Atlikti prižiūrėjimo veiksmą %{acct}
     account_moderation_notes:
       create: Palikti pastabą
       created_msg: Prižiūrėjimo pastaba sėkmingai sukurta!
@@ -543,9 +541,7 @@ lt:
       disable: Išjungti
       disabled: Išjungtas
       enable: Įjungti
-      enable_hint: Kai bus įjungtas, tavo serveris užsiprenumeruos visus šio perdavimo viešus įrašus ir pradės į jį siųsti šio serverio viešus įrašus.
       enabled: Įjungtas
-      inbox_url: Perdavimo URL
       pending: Laukiama perdavimo patvirtinimo
       save_and_enable: Išsaugoti ir įjungti
       setup: Nustatyti perdavimo ryšį
@@ -668,24 +664,6 @@ lt:
       view_publicly: Peržiūrėti viešai
       view_quoted_post: Peržiūrėti paminėtą įrašą
       with_media: Su medija
-    system_checks:
-      database_schema_check:
-        message_html: Laukiama duomenų bazės perkėlimo. Paleisk juos, kad įsitikintum, jog programa veikia taip, kaip tikimasi.
-      elasticsearch_analysis_index_mismatch:
-        message_html: "„Elasticsearch“ indekso analizatoriaus nustatymai pasenę. Vykdykite <code>tootctl search deploy --only-mapping --only=%{value}</code>."
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch klasteris yra nesveikas (geltona būsena), galbūt norėsi išsiaiškinti priežastį
-      elasticsearch_preset:
-        action: Žiūrėti dokumentaciją
-        message_html: Tavo Elasticsearch klasteris turi daugiau nei vieną mazgą, bet Mastodon nėra sukonfigūruotas juos naudoti.
-      elasticsearch_preset_single_node:
-        action: Žiūrėti dokumentaciją
-        message_html: Tavo Elasticsearch klasteris turi tik vieną mazgą, <code>ES_PRESET</code> turėtų būti nustatyta į <code>single_node_cluster</code>.
-      elasticsearch_running_check:
-        message_html: Nepavyko prijungti prie Elasticsearch. Patikrink, ar ji veikia, arba išjunk viso teksto paiešką.
-      software_version_check:
-        action: Žiūrėti galimus naujinimus
-        message_html: Yra „Mastodon“ naujinimas.
     tags:
       moderation:
         not_trendable: Netendencinga
@@ -819,8 +797,6 @@ lt:
     warning_presets:
       add_new: Pridėti naują
       delete: Ištrinti
-      edit_preset: Keisti įspėjimo nustatymus
-      title: Įspėjamieji numatytieji
     webhooks:
       add_new: Pridėti galutinį tašką
       delete: Ištrinti
@@ -856,7 +832,6 @@ lt:
     animations_and_accessibility: Animacijos ir pritaikymas neįgaliesiems
     boosting_preferences: Pasidalinimo nustatymai
     boosting_preferences_info_html: "<strong>Patarimas:</strong> Nepriklausomai nuo nustatymų, <kbd>Shift</kbd> + <kbd>Click</kbd> ant %{icon} Dalintis ikonos iš karto pasidalins įrašu."
-    discovery: Atradimas
     localization:
       body: Mastodon verčia savanoriai.
       guide_link_text: Visi gali prisidėti.
@@ -1150,6 +1125,7 @@ lt:
           thousand: tūkst.
   otp_authentication:
     code_hint: Įvesk autentifikatoriaus programėlės sugeneruotą kodą, kad patvirtintum
+    delete: Ištrinti
     description_html: Jei įjungsi <strong>dvigubo tapatybės nustatymą</strong> naudojant autentifikatoriaus programėlę, prisijungiant reikės turėti telefoną, kuris generuos prieigos raktos, kuriuos turėsi įvesti.
     instructions_html: "<strong>Nuskenuok šį QR kodą į Google Authenticator arba panašią TOTP programėlę savo telefone</strong>. Nuo šiol ši programėlė generuos prieigos raktus, kuriuos turėsi įvesti prisijungiant."
   pagination:
@@ -1425,4 +1401,3 @@ lt:
       success: Tavo saugumo raktas buvo sėkmingai ištrintas.
     nickname_hint: Įvesk naujojo saugumo rakto slapyvardį
     not_enabled: Dar neįjungei WebAuthn
-    otp_required: Norint naudoti saugumo raktus, pirmiausia įjunk dvigubą tapatybės nustatymą.

@@ -8,6 +8,7 @@ module.exports = {
     'node_modules/**/*',
     'public/assets/**/*',
     'public/packs*/**/*',
+    'tmp/**/*',
     'vendor/**/*',
   ],
   reportDescriptionlessDisables: true,

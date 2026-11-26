@@ -10,7 +10,6 @@ import { fetchEndorsedAccounts } from '@/flavours/glitch/actions/accounts';
 import { AccountHeader } from '@/flavours/glitch/components/account_header';
 import { AccountListItem } from '@/flavours/glitch/components/account_list_item';
 import { Column } from '@/flavours/glitch/components/column';
-import { ColumnBackButton } from '@/flavours/glitch/components/column/back_button';
 import { ColumnHeader } from '@/flavours/glitch/components/column_header';
 import { DisplayNameSimple } from '@/flavours/glitch/components/display_name/simple';
 import { LoadingIndicator } from '@/flavours/glitch/components/loading_indicator';
@@ -28,7 +27,6 @@ import { useAccountId } from '@/flavours/glitch/hooks/useAccountId';
 import { useAccountVisibility } from '@/flavours/glitch/hooks/useAccountVisibility';
 import { me } from '@/flavours/glitch/initial_state';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
 import AddIcon from '@/material-icons/400-24px/add.svg?react';
 
 import { CollectionListItem } from '../collections/components/collection_list_item';
@@ -132,14 +130,10 @@ const AccountFeatured: React.FC<{ multiColumn: boolean }> = ({
 
   return (
     <Column>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={<DisplayNameSimple account={account} />}
-        />
-      ) : (
-        <ColumnBackButton />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={<DisplayNameSimple account={account} />}
+      />
 
       <Scrollable>
         {accountId && (
@@ -231,14 +225,10 @@ const AccountFeaturedWrapper = ({
   const account = useAccount(accountId);
   return (
     <Column>
-      {isRedesignEnabled() ? (
-        <ColumnHeader
-          withBackButton
-          title={<DisplayNameSimple account={account} />}
-        />
-      ) : (
-        <ColumnBackButton />
-      )}
+      <ColumnHeader
+        withBackButton
+        title={<DisplayNameSimple account={account} />}
+      />
       <div className='scrollable scrollable--flex'>
         {accountId && <AccountHeader accountId={accountId} />}
         {children}

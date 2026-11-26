@@ -3,23 +3,18 @@ import type { FC } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { ChatCircleDotsIcon, UserMinusIcon } from '@phosphor-icons/react';
-
-import { followAccount } from '@/mastodon/actions/accounts';
 import { directCompose } from '@/mastodon/actions/compose';
 import { openModal } from '@/mastodon/actions/modal';
+import { useBreakpoint } from '@/mastodon/features/ui/hooks/useBreakpoint';
 import { useAccount } from '@/mastodon/hooks/useAccount';
 import { useFollowReference } from '@/mastodon/hooks/useFollowReference';
 import { getAccountHidden } from '@/mastodon/selectors/accounts';
 import { useAppDispatch, useAppSelector } from '@/mastodon/store';
-import { isRedesignEnabled } from '@/mastodon/utils/environment';
-import NotificationsIcon from '@/material-icons/400-24px/notifications.svg?react';
-import NotificationsActiveIcon from '@/material-icons/400-24px/notifications_active-fill.svg?react';
 
-import { Button, IconButton } from '../button/redesign';
-import { CopyIconButton, CopyIconButtonLegacy } from '../copy_button';
+import type { ButtonProps } from '../button';
+import { Button } from '../button';
+import { CopyIconButton } from '../copy_button';
 import { FollowButton } from '../follow_button';
-import { IconButton as LegacyIconButton } from '../icon_button';
 
 import { AccountMenu } from './menu';
 import classes from './styles.module.scss';
@@ -52,20 +47,28 @@ export const AccountButtons: FC<AccountButtonsProps> = ({
 }) => {
   const hidden = useAppSelector((state) => getAccountHidden(state, accountId));
   const me = useAppSelector((state) => state.meta.get('me') as string);
+  const isMobile = useBreakpoint('openable');
+  const buttonSize = isMobile ? 'md' : 'sm';
 
   return (
     <div className={className}>
       {!hidden && (
-        <AccountButtonsOther accountId={accountId} noShare={noShare} />
+        <AccountButtonsOther
+          accountId={accountId}
+          noShare={noShare}
+          size={buttonSize}
+        />
       )}
-      {(accountId !== me || forceMenu) && <AccountMenu accountId={accountId} />}
+      {(accountId !== me || forceMenu) && (
+        <AccountMenu accountId={accountId} size={buttonSize} />
+      )}
     </div>
   );
 };
 
 const AccountButtonsOther: FC<
-  Pick<AccountButtonsProps, 'accountId' | 'noShare'>
-> = ({ accountId, noShare }) => {
+  Pick<AccountButtonsProps, 'accountId' | 'noShare'> & Pick<ButtonProps, 'size'>
+> = ({ accountId, noShare, size = 'sm' }) => {
   const intl = useIntl();
   const account = useAccount(accountId);
   const relationship = useAppSelector((state) =>
@@ -73,12 +76,6 @@ const AccountButtonsOther: FC<
   );
 
   const dispatch = useAppDispatch();
-
-  const handleNotifyToggle = useCallback(() => {
-    if (account) {
-      dispatch(followAccount(account.id, { notify: !relationship?.notifying }));
-    }
-  }, [dispatch, account, relationship]);
 
   const sendDirectMessage = useCallback(() => {
     if (account) {
@@ -101,30 +98,28 @@ const AccountButtonsOther: FC<
   }
 
   const isMovedAndUnfollowedAccount = account.moved && !relationship?.following;
-  const isFollowing = relationship?.requested || relationship?.following;
-
-  const shouldHideMainFollowButton = isRedesignEnabled() && isFollowing;
+  const isFollowing = relationship?.following;
 
   return (
     <>
-      {!shouldHideMainFollowButton && !isMovedAndUnfollowedAccount && (
+      {!isFollowing && !isMovedAndUnfollowedAccount && (
         <FollowButton
-          compact={isRedesignEnabled()}
           accountId={accountId}
           className={classes.followButton}
           withUnmute={false}
+          size={size}
           labelLength='long'
           reference={reference}
         />
       )}
-      {isFollowing && isRedesignEnabled() && (
+      {isFollowing && (
         <>
           <Button
-            leadingIcon={ChatCircleDotsIcon}
-            size='sm'
+            size={size}
             variant='solid'
             color='accent'
             onClick={sendDirectMessage}
+            className={classes.followButton}
           >
             <FormattedMessage
               id='account.menu.message'
@@ -132,41 +127,18 @@ const AccountButtonsOther: FC<
               description='Message refers to a direct message. For languages where this is confusing, "chat" or "direct message" can be used.'
             />
           </Button>
-          <IconButton icon={UserMinusIcon} size='sm' onClick={confirmUnfollow}>
+          <Button size={size} onClick={confirmUnfollow}>
             <FormattedMessage id='account.unfollow' defaultMessage='Unfollow' />
-          </IconButton>
+          </Button>
         </>
       )}
-      {isFollowing && !isRedesignEnabled() && (
-        <LegacyIconButton
-          icon={relationship.notifying ? 'bell' : 'bell-o'}
-          iconComponent={
-            relationship.notifying ? NotificationsActiveIcon : NotificationsIcon
-          }
-          active={relationship.notifying}
-          title={intl.formatMessage(
-            relationship.notifying
-              ? messages.disableNotifications
-              : messages.enableNotifications,
-            { name: account.username },
-          )}
-          onClick={handleNotifyToggle}
+      {!noShare && (
+        <CopyIconButton
+          title={intl.formatMessage(messages.copy)}
+          value={account.url}
+          size={size}
         />
       )}
-      {!noShare &&
-        (isRedesignEnabled() ? (
-          <CopyIconButton
-            title={intl.formatMessage(messages.copy)}
-            value={account.url}
-            size='sm'
-          />
-        ) : (
-          <CopyIconButtonLegacy
-            className='optional'
-            title={intl.formatMessage(messages.copy)}
-            value={account.url}
-          />
-        ))}
     </>
   );
 };

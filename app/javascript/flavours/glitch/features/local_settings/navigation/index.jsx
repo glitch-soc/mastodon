@@ -4,10 +4,11 @@ import { PureComponent } from 'react';
 
 import { defineMessages } from 'react-intl';
 
+import { SlidersHorizontalIcon } from '@phosphor-icons/react';
+
 import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import EditIcon from '@/material-icons/400-24px/edit.svg?react';
 import ImageIcon from '@/material-icons/400-24px/image.svg?react';
-import ManufacturingIcon from '@/material-icons/400-24px/manufacturing.svg?react';
 import SettingsIcon from '@/material-icons/400-24px/settings-fill.svg?react';
 import WarningIcon from '@/material-icons/400-24px/warning.svg?react';
 import { injectIntl } from '@/flavours/glitch/components/intl';
@@ -18,7 +19,6 @@ import LocalSettingsNavigationItem from './item';
 const messages = defineMessages({
   general: {  id: 'settings.general', defaultMessage: 'General' },
   compose: {  id: 'settings.compose_box_opts', defaultMessage: 'Compose box' },
-  content_warnings: { id: 'settings.content_warnings', defaultMessage: 'Content Warnings' },
   media: { id: 'settings.media', defaultMessage: 'Media' },
   preferences: { id: 'settings.preferences', defaultMessage: 'Preferences' },
   close: { id: 'settings.close', defaultMessage: 'Close' },
@@ -44,7 +44,7 @@ class LocalSettingsNavigation extends PureComponent {
           index={0}
           onNavigate={onNavigate}
           icon='cogs'
-          iconComponent={ManufacturingIcon}
+          iconComponent={SlidersHorizontalIcon}
           title={intl.formatMessage(messages.general)}
         />
         <LocalSettingsNavigationItem
@@ -59,30 +59,14 @@ class LocalSettingsNavigation extends PureComponent {
           active={index === 2}
           index={2}
           onNavigate={onNavigate}
-          icon='warning'
-          iconComponent={WarningIcon}
-          title={intl.formatMessage(messages.content_warnings)}
-        />
-        <LocalSettingsNavigationItem
-          active={index === 3}
-          index={3}
-          onNavigate={onNavigate}
           icon='image'
           iconComponent={ImageIcon}
           title={intl.formatMessage(messages.media)}
         />
         <LocalSettingsNavigationItem
-          active={index === 4}
-          href={preferencesLink}
-          index={4}
-          icon='cog'
-          iconComponent={SettingsIcon}
-          title={intl.formatMessage(messages.preferences)}
-        />
-        <LocalSettingsNavigationItem
-          active={index === 5}
+          active={index === 3}
           className='close'
-          index={5}
+          index={3}
           onNavigate={onClose}
           icon='times'
           iconComponent={CloseIcon}

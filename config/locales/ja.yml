@@ -7,10 +7,20 @@ ja:
     hosted_on: Mastodon hosted on %{domain}
     title: このサーバーについて
   accounts:
+    api_errors:
+      2fa_required: 二段階認証が設定されていないとアカウントを使用できません
+      account_deleted: あなたのアカウントは削除されました
+      account_suspended: あなたのアカウントは停止されています
+      login_disabled: あなたのアカウントは現在無効化されています
+      memorial: あなたのアカウントは追悼アカウント化されました
+      pending_approval: あなたのアカウントは現在承認待ちです
+      pending_confirmation: あなたのアカウントには確認済みのメールアドレスがありません
     errors:
       cannot_be_added_to_collections: このアカウントはコレクションに追加できません。
     followers:
       other: フォロワー
+    following:
+      other: フォロー中
     instance_actor_flash: このアカウントは、個々のユーザーではなく、サーバー自体を表すために使用される仮想のユーザーです。 連合のために使用されるため、停止しないで下さい。
     last_active: 最後の活動
     link_verified_on: このリンクの所有権は%{date}に確認されました
@@ -23,10 +33,8 @@ ja:
     self_follow_error: 自分のアカウントをフォローすることはできません
   admin:
     account_actions:
-      action: アクションを実行
       already_silenced: すでに制限されているアカウントです。
       already_suspended: すでに停止されているアカウントです。
-      title: "%{acct}さんに対してアクションを実行"
     account_moderation_notes:
       create: 書き込む
       created_msg: モデレーションメモを書き込みました！
@@ -58,9 +66,11 @@ ja:
       custom: カスタム
       delete: データを削除する
       deleted: 削除済み
+      deletion_irreversible: このアカウントのデータは取り消せない形で削除されました。
       demote: 降格
       destroyed_msg: "%{username}さんのデータは完全に削除されるよう登録されました"
       disable: 無効化
+      disable_sign_in_token: セキュリティコードチャレンジを一時的に無効化
       disable_sign_in_token_auth: メールトークン認証を無効化
       disable_two_factor_authentication: 二要素認証を無効にする
       disabled: 無効
@@ -73,6 +83,9 @@ ja:
       enable_sign_in_token_auth: メールトークン認証を有効化
       enabled: 有効
       enabled_msg: "%{username}の無効化を解除しました"
+      follow_recommendations:
+        suppress: おすすめフォローに表示しない
+        suppressed: 非表示
       followers: フォロワー数
       follows: フォロー数
       header: ヘッダー
@@ -466,7 +479,14 @@ ja:
       not_permitted: 権限がありません
       resolved_dns_records_hint_html: 入力されたドメイン名のMXレコードから以下のドメインが解決されました。MXレコードが指すドメインはメールの送受信において重要な役割をもっています。MXレコードのドメインをブロックすると、見た目のドメインが異なるメールアドレスからの登録であっても、そのドメイン名から解決されるMXレコードのドメインが同じ場合はブロックの対象になります。<strong>大手のメールプロバイダをブロックしないように注意してください。</strong>
       resolved_through_html: "%{domain}を通して解決しました"
+      search: 検索
       title: メールドメインブロック
+    email_subscriptions:
+      accounts:
+        account: アカウント
+      compliance_settings:
+        privacy_policy:
+          title: プライバシーポリシー
     export_domain_allows:
       new:
         title: ドメイン許可をインポート
@@ -614,7 +634,11 @@ ja:
       new:
         title: 新規IPルール
       no_ip_block_selected: 何も選択されていないためIPルールを変更しませんでした
+      search: 検索
       title: IPルール
+    moderation_subscriptions:
+      apply_conditions:
+        safely: つながりを壊さない場合のみ
     relationships:
       title: "%{acct} さんのフォロー・フォロワー"
     relays:
@@ -624,9 +648,7 @@ ja:
       disable: 無効化
       disabled: 無効
       enable: 有効化
-      enable_hint: 有効にすると、リレーから全ての公開投稿を受信するようになり、またこのサーバーの全ての公開投稿をリレーに送信するようになります。
       enabled: 有効
-      inbox_url: リレーURL
       pending: リレーサーバーの承認待ちです
       save_and_enable: 保存して有効にする
       setup: リレー接続を設定する
@@ -644,11 +666,7 @@ ja:
       action_taken_by: 通報処理者
       actions:
         mark_as_sensitive_description_html: 報告された投稿のメディアは閲覧注意となり、ストライクが記録され、同じアカウントによる今後の違反行為のエスカレーションに役立てられます。
-        other_description_html: アカウントの動作を制御するためのオプションや、報告されたアカウントへの通信をカスタマイズするためのオプションを確認してください。
         resolve_description_html: 報告されたアカウントに対していかなる措置も取られず、ストライクも記録されず、報告は終了します。
-        silence_description_html: このアカウントは、すでにフォローしている人、または手動で検索した人にしか見えないため、リーチが極端に制限されます。いつでも元に戻すことができます。このアカウントに対するすべての通報をクローズします。
-        suspend_description_html: アカウントとそのすべての内容にアクセスできなくなり、最終的に削除され、やり取りは不可能になります。 30日以内であれば元に戻すことができます。このアカウントに対するすべての通報をクローズします。
-      actions_description_html: このレポートへのアクションを決定してください。アカウントへ懲罰的な措置を取った場合、<strong>Span</strong>カテゴリが選択されている場合を除き、メール通知が送信されます。
       actions_description_remote_html: この通報を解決するためのアクションを選択してください。これは<strong>あなたの</strong>サーバーがこのリモートアカウントと通信し、そのコンテンツを処理する時のみ影響します。
       actions_no_posts: 削除対象となる投稿がレポートに含まれていません
       add_to_report: 通報にさらに追加
@@ -830,6 +848,8 @@ ja:
         all: 誰にでも許可
         disabled: 誰にも許可しない
         users: ログイン済みローカルユーザーのみ許可
+      external:
+        privacy: プライバシー
       feed_access:
         modes:
           authenticated: ログイン済みユーザーのみ
@@ -910,50 +930,6 @@ ja:
       appeal_approved: 異議申立済み
       appeal_pending: 保留中の異議申立
       appeal_rejected: 却下済みの異議申立
-    system_checks:
-      database_schema_check:
-        message_html: 未実行のデータベースマイグレーションがあります。実行して正常に動作するようにしてください。
-      elasticsearch_analysis_index_mismatch:
-        message_html: Elasticsearch インデックスアナライザの設定が古くなっています。 <code>tootctl search deploy --only-mapping --only=%{value}</code>を実行してください
-      elasticsearch_health_red:
-        message_html: 'Elasticsearchクラスターに異常があります(status: red)。検索機能が利用できなくなっています'
-      elasticsearch_health_yellow:
-        message_html: 'Elasticsearchクラスターに異常があります(status: yellow)。必要に応じて対策を実施してください'
-      elasticsearch_index_mismatch:
-        message_html: Elasticsearchのインデックスのマッピング定義が古くなっています。<code>tootctl search deploy --only=%{value}</code> を実行してインデックスを更新してください
-      elasticsearch_preset:
-        action: 詳細情報
-        message_html: Elasticsearchクラスターはマルチノード構成になっていますが、Mastodonがマルチノード構成向けに設定されていません。
-      elasticsearch_preset_single_node:
-        action: 詳細情報
-        message_html: Elasticsearchクラスターはシングルノード構成になっています。<code>ES_PRESET</code> を <code>single_node_cluster</code> に設定してください。
-      elasticsearch_reset_chewy:
-        message_html: 設定が変更されたため、Elasticsearchのシステムインデックスが古くなっています。<code>tootctl search deploy --reset-chewy</code> を実行してインデックスを更新してください
-      elasticsearch_running_check:
-        message_html: Elasticsearchに接続できませんでした。Elasticsearchが実行されていることを確認するか、全文検索を無効にしてください。
-      elasticsearch_version_check:
-        message_html: '互換性のない Elasticsearch バージョン: %{value}'
-        version_comparison: Elasticsearch %{running_version}が実行されていますが、%{required_version}が必要です
-      rules_check:
-        action: サーバーのルールを管理
-        message_html: サーバーのルールを定義していません。
-      sidekiq_process_check:
-        message_html: "%{value}キューに対応するSidekiqプロセスがありません。Sidekiqの設定を確認してください。"
-      software_version_check:
-        action: 利用可能な更新を確認
-        message_html: Mastodonの更新が利用可能です。
-      software_version_critical_check:
-        action: 利用可能な更新を見る
-        message_html: 緊急のMastodonアップデートがあります。速やかに適用してください。
-      software_version_patch_check:
-        action: 詳細
-        message_html: Mastodonのバグ修正アップデートが利用可能です。
-      upload_check_privacy_error:
-        action: ここを開いて詳細を確認してください
-        message_html: "<strong>Web サーバーが正しく設定されていません。ユーザーのプライバシーが危険な状態になっています。</strong>"
-      upload_check_privacy_error_object_storage:
-        action: ここを開いて詳細を確認してください
-        message_html: "<strong>オブジェクトストレージが正しく設定されていません。ユーザーのプライバシーが危険な状態になっています。</strong>"
     tags:
       moderation:
         not_trendable: トレンド不許可
@@ -1091,9 +1067,6 @@ ja:
     warning_presets:
       add_new: 追加
       delete: 削除
-      edit_preset: プリセット警告文を編集
-      empty: まだプリセット警告文が作成されていません。
-      title: プリセット警告文
     webhooks:
       add_new: エンドポイントを追加
       delete: 削除
@@ -1163,7 +1136,6 @@ ja:
     animations_and_accessibility: アニメーションとアクセシビリティー
     boosting_preferences: ブースト設定
     boosting_preferences_info_html: "<strong>Tip:</strong> 設定に関係なく、<kbd>Shift</kbd> を押しながら %{icon} Boostアイコンを<kbd>クリック</kbd>すると、すぐにブーストされます。"
-    discovery: 見つける
     localization:
       body: Mastodonは有志によって翻訳されています。
       guide_link: https://ja.crowdin.com/project/mastodon
@@ -1829,6 +1801,8 @@ ja:
         other: "%{count}本の動画"
     boosted_from_html: "%{acct_link}からブースト"
     content_warning: '閲覧注意: %{warning}'
+    content_warnings:
+      hide: 投稿を隠す
     default_language: UIの表示言語
     disallowed_hashtags:
       other: '許可されていないハッシュタグが含まれています: %{tags}'
@@ -2071,5 +2045,4 @@ ja:
     nickname_hint: セキュリティキーの名前を入力してください
     not_enabled: まだセキュリティキーを有効にしていません
     not_supported: このブラウザはセキュリティキーに対応していないようです
-    otp_required: セキュリティキーを使用するには、まず二要素認証を有効にしてください。
     registered_on: "%{date}に登録"

@@ -21,9 +21,6 @@ ie:
       other: Postas
     posts_tab_heading: Postas
   admin:
-    account_actions:
-      action: Acter
-      title: Far un moderatori action a %{acct}
     account_moderation_notes:
       create: Scrir un note
       created_msg: Moderatori nota creat successosimen!
@@ -541,9 +538,7 @@ ie:
       disable: Desactivisar
       disabled: Desactivisat
       enable: Activisar
-      enable_hint: Pos activisation, tui servitor va abonnar al omni public postas de ti relé, e va comensar misser li public postas de ti-ci servitor a it.
       enabled: Activisat
-      inbox_url: URL del relé
       pending: Atendent li aprobation del relé
       save_and_enable: Conservar e activisar
       setup: Etablisser un conexion a un relé
@@ -562,10 +557,7 @@ ie:
       action_taken_by: Action fat de
       actions:
         mark_as_sensitive_description_html: Li medie in li raportat postas va esser marcat quam sensitiv e un admoniment va esser registrat por auxiliar te escalar si hay futuri infractiones del sam conto.
-        other_description_html: Vider plu optiones por controlar li conduida del conto e customisar comunication al raportat conto.
         resolve_description_html: Null action va esser fat contra li raportat conto, null admoniment registrat, e li raporte va esser cludet.
-        silence_description_html: Li conto va esser visibil nur a tis qui ja seque it o qui sercha it manualmen, limitante severimen su atingement. Ti sempre posse esser revertet. Ti clude omni raportes contra ti conto.
-        suspend_description_html: Ti-ci conto e omni contenete va esser ínaccessibil e finalmen deletet, e interacter con it va esser ínpossibil. Reversibil til que 30 dies ha passat. Clude omni raportes contra ti conto.
       actions_description_remote_html: Decider quel action a far por soluer ti raporte. It va afecter solmen qualmen <strong>vor</strong> servitor comunica con ti lontan conto e tractar su contenete.
       add_to_report: Adjunter plu al raporte
       already_suspended_badges:
@@ -798,45 +790,6 @@ ie:
       appeal_approved: Apellat
       appeal_pending: Apelle pendent
       appeal_rejected: Apelle rejectet
-    system_checks:
-      database_schema_check:
-        message_html: Hay pendent migrationes de database. Ples far les por far cert que li aplication functiona quam expectat
-      elasticsearch_health_red:
-        message_html: Li cluster Elasticsearch es ínsalubri (statu rubi), functiones por serchar ne disponibil
-      elasticsearch_health_yellow:
-        message_html: Li cluster Elasticsearch es ínsalubri (statu yelb); investigar li rason vell esser un bon idé
-      elasticsearch_index_mismatch:
-        message_html: Índex-mappamentes de Elasticsearch es oldijat. Ples executer <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Vider li documentation
-        message_html: Tui cluster Elasticsearch have plu quam un node, ma Mastodon ne es configurat por usar les.
-      elasticsearch_preset_single_node:
-        action: Vider li documentation
-        message_html: Tui cluster Elasticsearch have solmen un node, ples configurar <code>ES_PRESET</code> quam <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Tui sistema-índex por Elasticsearch ha oldijat pro un change de parametres. Ples executer <code>tootctl search deploy --reset-chewy</code> por actualisar it.
-      elasticsearch_running_check:
-        message_html: Ne posset conexer a Elasticsearch. Ples confirmar que it ha esset executet, o desactivar serchada de plen textu
-      elasticsearch_version_check:
-        message_html: 'Version de Elasticsearch íncompatibil: %{value}'
-        version_comparison: Elasticsearch %{running_version} executet ma %{required_version} postulat
-      rules_check:
-        action: Gerer regules de servitor
-        message_html: Tu ancor ne ha definit quelcunc regules de servitor.
-      sidekiq_process_check:
-        message_html: Null processe Sidekiq executet por li caude %{value}(s). Ples reviser tui configuration Sidekiq
-      software_version_critical_check:
-        action: Vider actualisationes disponibil
-        message_html: Un critical actualisation por Mastodon es disposibil, ples actualisar tam rapidmen possibil.
-      software_version_patch_check:
-        action: Vider actualisationes disponibil
-        message_html: Un actualisation por Mastodon quel fixa problemas es disponibil.
-      upload_check_privacy_error:
-        action: Vider ci por plu information
-        message_html: "<strong>Vor web-servitor es misconfigurat. Li privatie de vor usatores es in risca.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Cliccar ci por plu information
-        message_html: "<strong>Vor inmagasinage de objectes es misconfigurat. Li privatie de vor usatores es in risca.</strong>"
     tags:
       review: Statu de revision
       updated_msg: Parametres pri hashtags actualisat successosimen
@@ -905,8 +858,6 @@ ie:
     warning_presets:
       add_new: Adjunter un nov
       delete: Deleter
-      edit_preset: Modificar prefiguration de avise
-      empty: Vu ancor ha definit null prefigurationes de avise.
     webhooks:
       add_new: Adjunter punctu terminal
       delete: Deleter
@@ -974,7 +925,6 @@ ie:
     remove: Desconexer alias
   appearance:
     animations_and_accessibility: Animationes e accessibilitá
-    discovery: Decovriment
     localization:
       body: Mastodon es traductet de voluntarios.
       guide_link: https://crowdin.com/project/mastodon
@@ -1788,5 +1738,4 @@ ie:
     nickname_hint: Scrir li moc-nómine de tui nov clave de securitá
     not_enabled: Tu ancor ne ha possibilisat WebAuthn
     not_supported: Ti-ci navigator ne subtene claves de securitá
-    otp_required: Por usar claves de securitá, ples activisar 2-factor autentication.
     registered_on: Adheret ye %{date}

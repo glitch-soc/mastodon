@@ -27,10 +27,8 @@ uk:
     self_follow_error: Ви не можете стежити за власним обліковим записом
   admin:
     account_actions:
-      action: Виконати дію
       already_silenced: Цей обліковий запис вже обмежено.
       already_suspended: Цей обліковий запис вже було призупинено.
-      title: Здійснити модераційну дію над %{acct}
     account_moderation_notes:
       create: Залишити нотатку
       created_msg: Нотатку модератора успішно створено!
@@ -627,9 +625,7 @@ uk:
       disable: Вимкнути
       disabled: Вимкнено
       enable: Увімкнути
-      enable_hint: Коли ретрансляцію увімкнено, ваш сервер буде підписаний на усі публічні дописи з цього ретранслятора, та почне посилати до нього свої публічні дописи.
       enabled: Увімкнено
-      inbox_url: URL ретранслятора
       pending: Очікуємо на підтвердження ретранслятором
       save_and_enable: Зберегти та увімкнути
       setup: Налаштування з'єднання з ретранслятором
@@ -650,11 +646,7 @@ uk:
       action_taken_by: Дія виконана
       actions:
         mark_as_sensitive_description_html: Медіа у дописах, на які скаржилися будуть позначені делікатними, а попередження буде записано, щоб допомогти вам підвищити рівень майбутніх порушень того самого облікового запису.
-        other_description_html: Більше опцій керування поведінкою облікового запису і налаштування комунікації з обліковим записом, на який поскаржилися.
         resolve_description_html: Не буде застосовано жодних дій проти облікового запису, на який скаржилися, не буде записано попередження, а скаргу буде закрито.
-        silence_description_html: Обліковий запис буде видно лише тим, хто вже за ним слідкує, або знайде його вручну, що значно обмежує його охоплення. Може завжди бути повернуто. Закриває всі скарги на цей обліковий запис.
-        suspend_description_html: Обліковий запис і весь його вміст будуть недоступними й врешті-решт видалені, і взаємодіяти з ним буде неможливо. Відновлення можливе протягом 30 днів. Закриває всі скарги на цей обліковий запис.
-      actions_description_html: Визначте, які дії слід вжити для розв'язання цієї скарги. Якщо ви оберете каральні дії проти зареєстрованого облікового запису, про них буде надіслано сповіщення електронним листом, крім випадків, коли вибрано категорію <strong>Спам</strong>.
       actions_description_remote_html: Визначте, які дії слід вжити для розв'язання цього звіту. Це вплине тільки на те, як <strong>ваш</strong> сервер з'єднується з цим віддаленим обліковим записом і обробляє його вміст.
       actions_no_posts: Ця скарга не має жодних пов'язаних дописів для видалення
       add_to_report: Додати ще подробиць до скарги
@@ -911,50 +903,6 @@ uk:
       appeal_approved: Оскаржено
       appeal_pending: Оскарження в очікуванні
       appeal_rejected: Апеляцію відхилено
-    system_checks:
-      database_schema_check:
-        message_html: Існують відкладені перенесення бази даних. Запустіть їх, щоб забезпечити очікувану роботу програми
-      elasticsearch_analysis_index_mismatch:
-        message_html: Налаштування індексу Elasticsearch застарілі. Будь ласка, запустіть <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: Кластер Elasticsearch нездоровий (червоний статус), функції пошуку недоступні
-      elasticsearch_health_yellow:
-        message_html: Кластер Elasticsearch нездоровий (жовтий статус), можливо, вам потрібно дослідити причину
-      elasticsearch_index_mismatch:
-        message_html: Зіставлення індексів Elasticsearch застаріли. Запустіть <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Дивись документацію
-        message_html: У вашому кластері Elasticsearch більше ніж один вузол, але Mastodon не сконфігуровано на їх застосування.
-      elasticsearch_preset_single_node:
-        action: Дивись документацію
-        message_html: Ваш кластер Elasticsearch має лише один вузол, <code>ES_PRESET</code> слід налаштувати на <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Ваш індекс системи Elasticsearch застарілий через зміну налаштувань. Запустіть <code>tootctl search deploy --reset-chewy</code>, щоб оновити його.
-      elasticsearch_running_check:
-        message_html: Не вдалося під'єднатися до Elasticsearch. Перевірте, чи він запущений або вимкніть повнотекстовий пошук
-      elasticsearch_version_check:
-        message_html: 'Несумісна версія Elasticsear: %{value}'
-        version_comparison: Запущено Elasticsearch %{running_version}, але вимагається %{required_version}
-      rules_check:
-        action: Керування правилами сервера
-        message_html: Ви не визначили будь-які правила сервера.
-      sidekiq_process_check:
-        message_html: Не працює процес Sidekiq для %{value} черги. Перегляньте конфігурації вашого Sidekiq
-      software_version_check:
-        action: Переглянути доступні оновлення
-        message_html: Доступне оновлення Mastodon.
-      software_version_critical_check:
-        action: Переглянути доступні оновлення
-        message_html: Виявлено критичне оновлення Mastodon. Оновіться якнайшвидше.
-      software_version_patch_check:
-        action: Переглянути доступні оновлення
-        message_html: Доступне оновлення Mastodon з виправленням помилок.
-      upload_check_privacy_error:
-        action: Перегляньте подробиці тут
-        message_html: "<strong>Ваш вебсервер неправильно налаштований. Приватність ваших користувачів піддається ризику</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Перегляньте подробиці тут
-        message_html: "<strong>Ваше сховище об'єктів неправильно налаштоване. Приватність ваших користувачів піддається ризику</strong>"
     tags:
       moderation:
         not_trendable: Не трендові
@@ -1088,9 +1036,6 @@ uk:
     warning_presets:
       add_new: Додати новий
       delete: Видалити
-      edit_preset: Редагувати шаблон попередження
-      empty: Ви ще не визначили жодних попереджень.
-      title: Попереджувальні пресети
     webhooks:
       add_new: Додати кінцеву точку
       delete: Видалити
@@ -1163,7 +1108,6 @@ uk:
     animations_and_accessibility: Анімація та доступність
     boosting_preferences: Параметри поширення
     boosting_preferences_info_html: "<strong>Підказка:</strong> незалежно від налаштувань, <kbd>Shift</kbd> + <kbd>натиск</kbd> на піктограму %{icon} Поширити призводитиме до негайного поширення."
-    discovery: Виявлення
     localization:
       body: Mastodon перекладено волонтерами.
       guide_link: https://uk.crowdin.com/project/mastodon
@@ -2072,5 +2016,4 @@ uk:
     nickname_hint: Введіть псевдонім нового ключа безпеки
     not_enabled: Ви ще не активували WebAuthn
     not_supported: Цей браузер не підтримує ключі безпеки
-    otp_required: Для використання ключів безпеки, спочатку увімкніть двофакторну аутентифікацію.
     registered_on: Зареєстровано %{date}

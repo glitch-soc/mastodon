@@ -29,10 +29,8 @@ nn:
     self_follow_error: Du kan ikkje fylgja deg sjølv
   admin:
     account_actions:
-      action: Utfør
       already_silenced: Denne kontoen har allereie vorte avgrensa.
       already_suspended: Denne kontoen er allereie sperra.
-      title: Utfør moderatorhandling på %{acct}
     account_moderation_notes:
       create: Legg igjen merknad
       created_msg: Moderatormerknad er laga!
@@ -767,9 +765,7 @@ nn:
       disable: Slå av
       disabled: Slege av
       enable: Slå på
-      enable_hint: Når dette har blitt skrudd på, vil tjeneren din abonnere på alle offentlige tuter fra denne overgangen, og vil begynne å sende denne tjenerens offentlige tuter til den.
       enabled: Skrudd på
-      inbox_url: Overførings-URL
       pending: Avventer overgangens godkjenning
       save_and_enable: Lagre og slå på
       setup: Sett opp en overgangsforbindelse
@@ -789,11 +785,7 @@ nn:
       actions:
         delete_description_html: Dei rapporterte innlegga og/eller samlingane vil bli sletta, og det vil bli lagra ein merknad slik at du kan handla raskare ved framtidige regelbrot frå same person.
         mark_as_sensitive_description_html: Mediene i dei rapporterte innlegga vil verte markerte som ømtolege, og ein merknad vil verte lagra for å hjelpe deg å eskalera ved framtidige regelbrot frå same konto.
-        other_description_html: Sjå fleire alternativ når det gjeld kontroll av kontoåtferd og tilpassing av kommunikasjonen til den rapporterte kontoen.
         resolve_description_html: Ingen handling utføres mot den rapporterte kontoen, ingen advarsel gis, og rapporten lukkes.
-        silence_description_html: Profilen vil berre vera synleg for dei som allereie fylgjer han eller søkjer han opp manuelt, noko som gjev profilen mykje mindre rekkjevidd. Du kan oppheva stenginga seinare. Dette avsluttar alle rapportar om brukarkontoen.
-        suspend_description_html: Brukarkontoen og alt innhaldet vil bli utilgjengeleg og til slutt sletta, og det vil vera uråd å samhandla med brukaren. Du kan angra dette innan 30 dagar. Dette avsluttar alle rapportar om kontoen.
-      actions_description_html: Avgjer kva som skal gjerast med denne rapporteringa. Dersom du utfører straffetiltak mot den rapporterte kontoen, vil dei motta ein e-post – så sant du ikkje har valt kategorien <strong>Spam</strong>.
       actions_description_remote_html: Avgjer kva du vil gjera for å løysa denne rapporten. Dette påverkar berre korleis tenaren <strong>din</strong> kommuniserer med kontoen på ein annan tenar, og korleis tenaren din handterer innhald derifrå.
       actions_no_posts: Denne rapporten har ingen tilknytte innlegg å sletta
       add_to_report: Legg til i rapporten
@@ -1085,50 +1077,6 @@ nn:
       appeal_approved: Anka
       appeal_pending: Klage behandles
       appeal_rejected: Anken er avvist
-    system_checks:
-      database_schema_check:
-        message_html: Det venter på databaseoverføringer. Vennligst kjør disse for å sikre at applikasjonen oppfører seg som forventet
-      elasticsearch_analysis_index_mismatch:
-        message_html: Indeksanalyseinnstillingane til Elasticsearch er utdaterte. Køyr <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: Elasticsearch-klynga er usunn (raud status), og søkjefunksjonane er utilgjengelege
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch-klyna er usunn (gul status), så du bør undersøkja kvifor
-      elasticsearch_index_mismatch:
-        message_html: Indekskarta for Elasticsearch er utdaterte. Køyr <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Sjå dokumentasjonen
-        message_html: Elasticsearch-klynga di har meir enn ein node, men Mastodon er ikkje sett opp til å bruka dei.
-      elasticsearch_preset_single_node:
-        action: Sjå dokumentasjonen
-        message_html: Elasticsearch-klynga di har berre ein node. <code>ES_PRESET</code> bør vera <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Elasticsearch-systemindeksen er utdatert på grunn av ei endra innstilling. Køyr <code>tootctl search deploy --reset-chewy</code> for å oppdatera indeksen.
-      elasticsearch_running_check:
-        message_html: Kunne ikke koble til Elasticsearch. Kontroller at den kjører, eller deaktiver fulltekstsøk
-      elasticsearch_version_check:
-        message_html: 'Inkompatibel Elasticsearch-versjon: %{value}'
-        version_comparison: Elasticsearch %{running_version} kjører mens %{required_version} er påkrevd
-      rules_check:
-        action: Handter tenarreglar
-        message_html: Du har ikkje laga reglar for denne tenaren.
-      sidekiq_process_check:
-        message_html: Ingen Sidekiq-prosess kjører for %{value} køen(e). Vennligst se gjennom Sidekiq-konfigurasjonen din
-      software_version_check:
-        action: Sjå tilgjengelege oppdateringar
-        message_html: Ei Mastodon-oppdatering er tilgjengeleg.
-      software_version_critical_check:
-        action: Sjå tilgjengelege oppdateringar
-        message_html: Ei kritisk oppdatering til Mastodon er tilgjengeleg. Oppdater så snart som mogleg.
-      software_version_patch_check:
-        action: Sjå tilgjengelege oppdateringar
-        message_html: Ei feilretting for Mastodon er tilgjengeleg.
-      upload_check_privacy_error:
-        action: Sjekk her for meir informasjon
-        message_html: "<strong>Vevtenaren din er sett opp feil. Personvernet til brukarane din er i fare.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Sjekk her for meir informasjon
-        message_html: "<strong>Objektlagringa di er sett opp feil. Personvernet til brukarane dine er i fare.</strong>"
     tags:
       moderation:
         not_trendable: Kan ikkje bli populær
@@ -1275,9 +1223,6 @@ nn:
     warning_presets:
       add_new: Legg til ny
       delete: Slett
-      edit_preset: Endr åtvaringsoppsett
-      empty: Du har ikke definert noen forhåndsinnstillinger for advarsler enda.
-      title: Førehandsinnstillingar for varsel
     webhooks:
       add_new: Legg til endepunkt
       delete: Slett
@@ -1357,7 +1302,6 @@ nn:
     animations_and_accessibility: Animasjonar og tilgjengelegheit
     boosting_preferences: Innstillingar for framheving
     boosting_preferences_info_html: "<strong>Tips:</strong> Å trykkja <kbd>Shift</kbd> + <kbd>klikk</kbd> på %{icon} framhev-ikonet vil framheva innlegget uansett innstillingar."
-    discovery: Oppdaging
     localization:
       body: Mastodon er omsett av friviljuge.
       guide_link: https://crowdin.com/project/mastodon
@@ -2418,7 +2362,6 @@ nn:
     nickname_hint: Skriv inn kallenavnet til din nye sikkerhetsnøkkel
     not_enabled: Du har ikke aktivert WebAuthn ennå
     not_supported: Denne nettleseren støtter ikke sikkerhetsnøkler
-    otp_required: For å bruke sikkerhetsnøkler, må du først aktivere to-faktor autentisering.
     registered_on: Registrert den %{date}
   wrapstodon:
     description: Sjå korleis %{name} brukte Mastodon i år!

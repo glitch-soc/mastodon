@@ -22,10 +22,8 @@ lad:
     posts_tab_heading: Publikasyones
   admin:
     account_actions:
-      action: Realiza aksion
       already_silenced: Este kuento ya tiene sido limitado.
       already_suspended: Este kuento ya tiene sido suspendido.
-      title: Modera %{acct}
     account_moderation_notes:
       create: Kriya nota
       created_msg: Nota de moderasyon kriyada kon sukseso!
@@ -628,9 +626,7 @@ lad:
       disable: Inkapasita
       disabled: Inkapasitado
       enable: Kapasita
-      enable_hint: Una vez konektado, tu sirvidor se abonara a todas las publikasyones publikas de este relevo, i ampesara a embiar las publikasyones publikas de este sirvidor verso el.
       enabled: Kapasitado
-      inbox_url: URL del relevo
       pending: Asperando la achetasion del relevo
       save_and_enable: Guadra i konekta
       setup: Apareja una koneksyon de relevos
@@ -649,11 +645,7 @@ lad:
       action_taken_by: Aksyon tomada por
       actions:
         mark_as_sensitive_description_html: Las dosyas de multimedia en los mesajes enformados se markaran komo sensivles i se aplikara un amonestamiento para ayudarte kon las futuras infraksyones del mezmo kuento.
-        other_description_html: Ve mas opsiones para kontrolar el komporto del kuento i personalizar la komunikasyon del kuento raportado.
         resolve_description_html: No se tomaran aksyones kontra el kuento denunsiado, no se enrejistrara el amonestamiento, i se serrara el raporto.
-        silence_description_html: El profil sera vizivle solo para akeyos ke ya lo sigan o lo bushken manualmente, limitando seriamente su alkanse. Siempre puede ser revertido.
-        suspend_description_html: El profil i todos sus kontenidos seran inaksesivles asta ke sean enfin supremidos. La enteraksion kon el kuento sera emposivle. Reversivle durante un tiempo de 30 diyas.
-      actions_description_html: Dechide kualas mizuras tomar para rezolver esta denunsia. Si tomas una aksion punitiva kontra el kuento denunsiada, se le embiara a dicho kuento un avizo por posta elektronika, ekseptado kuando se eskoja la kategoria <strong>Spam</strong>.
       actions_description_remote_html: Dechide ke fazer para rezolver este raporto. Esto solo va afektar komo <strong>tu</strong> sirvidor komunike kon este kuento remoto i ke faze kon su kontenido.
       add_to_report: Adjusta mas al raporto
       already_suspended_badges:
@@ -906,48 +898,6 @@ lad:
       appeal_approved: Apelado
       appeal_pending: Apelasyon asperando
       appeal_rejected: Apelasyon refuzada
-    system_checks:
-      database_schema_check:
-        message_html: Ay migrasyones asperando de la baza de datos. Por favor, egzekutalas para asigurarte de ke la aplikasyon fonksiona komo deveria
-      elasticsearch_health_red:
-        message_html: El klaster de Elasticsearch no es sano (estado kolorado), funksyones de bushkeda no estan disponivles
-      elasticsearch_health_yellow:
-        message_html: El klaster de Elasticsearch no es sano (estado amariyo), es posivle ke keras investigar la razon
-      elasticsearch_index_mismatch:
-        message_html: Las mapas de indeksos Elasticsearch estan dezaktualizadas. Por favor, uza <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Ve dokumentasyon
-        message_html: Tu klaster de Elasticsearch tiene mas ke un nodo, ama Mastodon no esta konfigurado para uzarlos.
-      elasticsearch_preset_single_node:
-        action: Ve dokumentasyon
-        message_html: Tu klaster de Elasticsearch solo tyene un nodo, <code>ES_PRESET</code> deve estableserse a <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Tu indekso del sistema Elasticsearch esta dezaktualizado por un trokamyento de konfigurasyon. Por favor uza <code>tootctl search deploy --reset-chewy</code> para aktualizarlo.
-      elasticsearch_running_check:
-        message_html: No se pudo konektar a Elasticsearch. Por favor, averigua ke esta egzekutandose, o dezaktiva la bushkeda de teksto kompleto
-      elasticsearch_version_check:
-        message_html: 'Versyon inkompativle de Elasticsearch: %{value}'
-        version_comparison: Elasticsearch %{running_version} se esta egzekutando ama ay menester de Elasticsearch %{required_version}
-      rules_check:
-        action: Administra reglas del sirvidor
-        message_html: No tienes definido dinguna regla del sirvidor.
-      sidekiq_process_check:
-        message_html: No ay dingun prosedura Sidekiq en egzekusion para la(s) kola(s) %{value}. Por favor, reviza tu konfigurasyon de Sidekiq
-      software_version_check:
-        action: Amostra aktualizasyones desponivles
-        message_html: Una aktualizasyon de Mastodon esta desponivle.
-      software_version_critical_check:
-        action: Amostra aktualizasyones desponivles
-        message_html: Una aktualizasyon kritika de Mastodon esta desponivle. Por favor aktualiza pishin.
-      software_version_patch_check:
-        action: Amostra aktualizasyones desponivles
-        message_html: Una aktualizasyon de Mastodon kon koreksyon de yerros esta desponivle.
-      upload_check_privacy_error:
-        action: Klika aki para mas enformasyon
-        message_html: "<strong>Tu sirvidor de web es mal konfigurado. La privasita de tus utilizadores esta en riziko.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Ve aki para mas enformasyon
-        message_html: "<strong>Tu magazinaje de objektos es mal konfigurado. La privasita de tus utilizadores esta en riziko.</strong>"
     tags:
       moderation:
         not_trendable: No trendavle
@@ -1065,8 +1015,6 @@ lad:
     warning_presets:
       add_new: Adjusta muevo
       delete: Efasa
-      edit_preset: Edita avizo predeterminado
-      empty: Ainda no tienes definido ningun avizo predeterminado.
     webhooks:
       add_new: Adjusta endpoint
       delete: Efasa
@@ -1136,7 +1084,6 @@ lad:
     advanced_settings: Konfigurasyon avansada
     animations_and_accessibility: Animasyones i aksesivilita
     boosting_preferences: Preferensias de repartajar
-    discovery: Diskuvrimiento
     localization:
       body: Mastodon es trezladado por volontarios.
       guide_link: https://crowdin.com/project/mastodon
@@ -2027,5 +1974,4 @@ lad:
     nickname_hint: Introduska el sovrenombre de tu mueva yave de sigurita
     not_enabled: Ainda no tienes aktivado WebAuthn
     not_supported: Este navigador no soporta yaves de sigurita
-    otp_required: Para uzar yaves de sigurita, por favor kapasite primero la autentifikasyon de dos pasos.
     registered_on: Enrejistrado el %{date}

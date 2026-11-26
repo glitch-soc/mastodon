@@ -19,9 +19,6 @@ ms:
       other: Hantaran
     posts_tab_heading: Hantaran
   admin:
-    account_actions:
-      action: Ambil tindakan
-      title: Ambil tindakan penyederhanaan ke atas %{acct}
     account_moderation_notes:
       create: Tinggalkan catatan
       created_msg: Catatan penyederhanaan telah berjaya dicipta!
@@ -534,9 +531,7 @@ ms:
       disable: Nyahdayakan
       disabled: Dinyahdayakan
       enable: Dayakan
-      enable_hint: Apabila didayakan, pelayan anda akan melanggan kesemua hantaran awam daripada geganti ini, dan akan mula menghantar hantaran awam pelayan ini kepadanya.
       enabled: Didayakan
-      inbox_url: URL geganti
       pending: Menunggu kelulusan geganti
       save_and_enable: Simpan dan dayakan
       setup: Tetapkan sambungan geganti
@@ -554,10 +549,7 @@ ms:
       action_taken_by: Tindakan diambil oleh
       actions:
         mark_as_sensitive_description_html: Media di dalam hantaran yang dilaporkan akan ditandakan sebagai sensitif dan pelanggaran itu akan direkodkan bagi membantu anda menguruskan pelanggaran pada akaun yang sama di masa akan datang.
-        other_description_html: Lihat lebih banyak pilihan untuk mengawal tingkah laku akaun dan menyesuaikan komunikasi ke akaun yang dilaporkan.
         resolve_description_html: Tiada tindakan akan diambil terhadap akaun yang dilaporkan, tiada pelanggaran direkodkan dan laporan akan ditutup.
-        silence_description_html: Akaun itu akan kelihatan hanya kepada mereka yang telah mengikutinya atau mencarinya secara manual, mengehadkan capaiannya dengan teruk. Sentiasa boleh dikembalikan. Menutup semua laporan terhadap akaun ini.
-        suspend_description_html: Akaun dan semua kandungannya akan tidak boleh diakses dan akhirnya dipadamkan, dan berinteraksi dengannya adalah mustahil. Boleh diterbalikkan dalam masa 30 hari. Menutup semua laporan terhadap akaun ini.
       actions_description_remote_html: Tentukan tindakan yang perlu diambil untuk menyelesaikan laporan ini. Ini hanya akan menjejaskan cara server<strong>anda</strong> berkomunikasi dengan akaun jauh ini dan mengendalikan kandungannya.
       add_to_report: Tambahkan lebih banyak pada laporan
       are_you_sure: Adakah anda pasti?
@@ -781,45 +773,6 @@ ms:
       appeal_approved: Dirayu
       appeal_pending: Rayuan yang belum selesai
       appeal_rejected: Rayuan ditolak
-    system_checks:
-      database_schema_check:
-        message_html: Terdapat migrasi pangkalan data yang belum selesai. Sila jalankannya untuk memastikan aplikasi berfungsi seperti yang diharapkan
-      elasticsearch_health_red:
-        message_html: Kelompok Elasticsearch tidak sihat (status merah), ciri carian tidak tersedia
-      elasticsearch_health_yellow:
-        message_html: Kelompok Elasticsearch tidak sihat (status kuning), anda mungkin ingin menyiasat sebabnya
-      elasticsearch_index_mismatch:
-        message_html: Pemetaan indeks Elasticsearch sudah lapuk. Sila jalankan <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Lihat pendokumenan
-        message_html: Kelompok Elasticsearch anda mempunyai lebih daripada satu nod, tetapi Mastodon tidak ditatarajah untuk menggunakannya.
-      elasticsearch_preset_single_node:
-        action: Lihat pendokumenan
-        message_html: Kelompok Elasticsearch anda hanya mempunyai satu nod, <code>ES_PRESET</code> hendaklah ditetapkan kepada <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Indeks sistem Elasticsearch anda sudah lapuk kerana perubahan tetapan. Sila jalankan <code>tootctl search deploy --reset-chewy</code> untuk mengemas kininya.
-      elasticsearch_running_check:
-        message_html: Tidak dapat menyambung ke Elasticsearch. Sila semak sama ada ia sedang berjalan atau lumpuhkan carian teks penuh
-      elasticsearch_version_check:
-        message_html: 'Versi Elasticsearch tidak serasi: %{value}'
-        version_comparison: Elasticsearch %{running_version} sedang berjalan manakala %{required_version} diperlukan
-      rules_check:
-        action: Urus peraturan server
-        message_html: Anda belum menentukan sebarang peraturan server.
-      sidekiq_process_check:
-        message_html: Tiada proses Sidekiq berjalan untuk baris gilir %{value}. Sila semak konfigurasi Sidekiq anda
-      software_version_critical_check:
-        action: Lihat kemas kini yang tersedia
-        message_html: Kemas kini kritikal Mastodon telah tersedia, sila kemas kini secepat yang mungkin.
-      software_version_patch_check:
-        action: Lihat kemas kini yang tersedia
-        message_html: Kemas kini pembetulan pepijat Mastodon telah tersedia.
-      upload_check_privacy_error:
-        action: Semak di sini untuk maklumat lanjut
-        message_html: "<strong>Server web anda salah konfigurasi. Privasi pengguna anda berisiko</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Semak di sini untuk maklumat lanjut
-        message_html: "<strong>Ruang objek anda salah konfigurasi. Privasi pengguna anda berisiko</strong>"
     tags:
       review: Semak status
       updated_msg: Tetapan hashtag berjaya dikemas kini
@@ -885,8 +838,6 @@ ms:
     warning_presets:
       add_new: Tambah baharu
       delete: Padam
-      edit_preset: Edit pratetap amaran
-      empty: Anda belum menentukan sebarang pratetap amaran lagi.
     webhooks:
       add_new: Tambah titik akhir
       delete: Padam
@@ -950,7 +901,6 @@ ms:
     remove: Nyahpaut alias
   appearance:
     animations_and_accessibility: Animasi dan kebolehaksesan
-    discovery: Penemuan
     localization:
       body: Mastodon diterjemahkan oleh sukarelawan.
       guide_link: https://crowdin.com/project/mastodon
@@ -1670,5 +1620,4 @@ ms:
     nickname_hint: Masukkan nama panggilan kunci keselamatan baharu anda
     not_enabled: Anda belum mendayakan WebAuthn lagi
     not_supported: Pelayan ini tidak menyokong kunci keselamatan
-    otp_required: Untuk menggunakan kunci keselamatan, sila mengaktifkan pengesahan dua faktor dahulu.
     registered_on: Didaftar pada %{date}

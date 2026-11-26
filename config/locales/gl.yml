@@ -29,10 +29,8 @@ gl:
     self_follow_error: Non está permitido seguir a túa propia conta
   admin:
     account_actions:
-      action: Executar acción
       already_silenced: A conta xa está limitada
       already_suspended: Esta conta xa está suspendida.
-      title: Executar acción de moderación a %{acct}
     account_moderation_notes:
       create: Deixar nota
       created_msg: Nota de moderación creada correctamente!
@@ -768,9 +766,7 @@ gl:
       disable: Desactivar
       disabled: Desactivado
       enable: Activar
-      enable_hint: Unha vez activado, o teu servidor subscribirase a todas as publicacións públicas deste repetidor, e tamén comezará a enviar a el as publicacións públicas do servidor.
       enabled: Activado
-      inbox_url: URL do repetidor
       pending: Agardando pola aprobación do repetidor
       save_and_enable: Gardar e activar
       setup: Configurar unha conexión ó repetidor
@@ -790,11 +786,7 @@ gl:
       actions:
         delete_description_html: As publicacións e/ou coleccións denunciadas van ser eliminadas e gárdase un aviso para axudarche a xestionar futuras infraccións desta conta.
         mark_as_sensitive_description_html: Os multimedia das publicacións denunciadas serán marcados como sensibles e engadirase un aviso para axudarche a xestionar futuras infraccións da mesma conta.
-        other_description_html: Mira máis opcións para controlar o comportamento da conta e personalizar as comunicacións coa conta denunciada.
         resolve_description_html: Non se van tomar accións contra a conta denunciada, nin se gardarán avisos, e pecharase a denuncia.
-        silence_description_html: A conta será visible só para quen xa a está a seguir ou quen a buscou manualmente, limitando moito o seu alcance. Pódese cambiar. Isto pecha tódalas denuncias acerca desta conta.
-        suspend_description_html: A conta e todo o seu contido non serán accesible e finalmente eliminaranse, será imposible interactuar con ela. A decisión é reversible durante 30 días. Isto pecha tódalas denuncias sobre esta conta.
-      actions_description_html: Decide a acción a tomar para resolver esta denuncia. Se tomas accións punitivas contra a conta denunciada enviaráselle un correo, excepto se está indicada a categoría <strong>Spam</strong>.
       actions_description_remote_html: Decide a acción a tomar para resolver a denuncia. Isto só lle afecta ao xeito en que o <strong>teu</strong> servidor se comunica con esta conta remota e xestiona o seu contido.
       actions_no_posts: Esta denuncia non ten publicacións asociadas para eliminar
       add_to_report: Engadir máis á denuncia
@@ -1086,50 +1078,6 @@ gl:
       appeal_approved: Recurrida
       appeal_pending: Apelación pendente
       appeal_rejected: Apelación rexeitada
-    system_checks:
-      database_schema_check:
-        message_html: Existen migracións pendentes na base de datos. Bota man desta tarefa para facer que a aplicación funcione como se agarda dela
-      elasticsearch_analysis_index_mismatch:
-        message_html: Os axustes do analizador do índice Elasticsearch están obsoletos. Por favor executa <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: O grupo Elasticsearch non está ben (en vermello), as ferramentas de busca non están dispoñibles
-      elasticsearch_health_yellow:
-        message_html: O grupo Elasticsearch non está ben (en amarelo), deberías investigar a causa
-      elasticsearch_index_mismatch:
-        message_html: Os índices de mapeo de Elasticsearch están desactualizados. Executa <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Ver a documentación
-        message_html: O teu grupo Elasticsearch ten máis dun nodo, pero Mastodon non está configurado para usalos.
-      elasticsearch_preset_single_node:
-        action: Ver a documentación
-        message_html: O teu grupo Elasticsearch só ten un nodo, <code>ES_PRESET</code> debería configurarse como <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: O teu índice do sistema Elasticsearch está desactualizado debido a un cambio nos axustes. Executa <code>tootctl search deploy --reset-chewy</code> para actualizalo.
-      elasticsearch_running_check:
-        message_html: Non se puido conectar con Elasticsearch. Comproba que está funcionando, ou desactiva a busca por texto completo
-      elasticsearch_version_check:
-        message_html: 'Versión incompatible de Elasticsearch: %{value}'
-        version_comparison: Está executándose Elasticsearch %{running_version} pero requírese a %{required_version}
-      rules_check:
-        action: Xestionar regras do servidor
-        message_html: Non tes definidas regras para o servidor.
-      sidekiq_process_check:
-        message_html: Non hai procesos Sidekiq a funcionar para a cola(s) %{value}. Revisa a túa configuración para Sidekiq
-      software_version_check:
-        action: Ver as actualizacións dispoñibles
-        message_html: Hai dispoñible unha actualización para Mastodon.
-      software_version_critical_check:
-        action: Mira as actualizacións dispoñibles
-        message_html: Hai unha actualización crítica de Mastodon dispoñible, actualiza axiña.
-      software_version_patch_check:
-        action: Mira as actualizacións dispoñibles
-        message_html: Hai unha actualización de arranxo de problemas de Mastodon.
-      upload_check_privacy_error:
-        action: Mira aquí para máis información
-        message_html: "<strong>O teu servidor non está ben configurado. A privacidade das usuarias está en risco.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Mira aquí para máis información
-        message_html: "<strong>A almacenaxe de obxectos está mal configurada. A privacidade das usuarias está en risco.</strong>"
     tags:
       moderation:
         not_trendable: Non permitir en voga
@@ -1282,9 +1230,6 @@ gl:
     warning_presets:
       add_new: Engadir novo
       delete: Eliminar
-      edit_preset: Editar aviso preestablecido
-      empty: Non definiches os avisos prestablecidos.
-      title: Preestablecidos de advertencia
     webhooks:
       add_new: Engadir punto de extremo
       delete: Eliminar
@@ -1364,7 +1309,6 @@ gl:
     animations_and_accessibility: Animacións e accesibilidade
     boosting_preferences: Preferencias das promocións
     boosting_preferences_info_html: "<strong>Info:</strong> Independentemente dos axustes, <kbd>Maiús</kbd> + <kbd>Click</kbd> na icona %{icon} Promover promoverá inmediatamente."
-    discovery: Descubrir
     localization:
       body: Mastodon tradúceno persoas voluntarias.
       guide_link: https://crowdin.com/project/mastodon
@@ -2439,7 +2383,6 @@ gl:
     nickname_hint: Escribe un alcume para a túa nova chave de seguridade
     not_enabled: Aínda non tes activado WebAuthn
     not_supported: Este navegador non ten soporte para chaves de seguridade
-    otp_required: Para usar chaves de seguridade tes que activar primeiro o segundo factor.
     registered_on: Rexistrado o %{date}
   wrapstodon:
     description: Mira como usou %{name} Mastodon este ano!

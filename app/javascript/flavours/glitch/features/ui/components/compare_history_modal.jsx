@@ -8,14 +8,15 @@ import { connect } from 'react-redux';
 
 import escapeTextContentForBrowser from 'escape-html';
 
-import CloseIcon from '@/material-icons/400-24px/close.svg?react';
 import { closeModal } from 'flavours/glitch/actions/modal';
-import { IconButton } from 'flavours/glitch/components/icon_button';
+import { IconButton } from 'flavours/glitch/components/button';
 import InlineAccount from 'flavours/glitch/components/inline_account';
 import MediaAttachments from 'flavours/glitch/components/media_attachments';
 import { RelativeTimestamp } from 'flavours/glitch/components/relative_timestamp';
 import { EmojiHTML } from '@/flavours/glitch/components/emoji/html';
 import { CustomEmojiProvider } from '@/flavours/glitch/components/emoji/context';
+import { XIcon } from '@phosphor-icons/react';
+import { injectIntl } from '@/flavours/glitch/components/intl';
 
 const mapStateToProps = (state, { statusId }) => ({
   language: state.getIn(['statuses', statusId, 'language']),
@@ -40,11 +41,12 @@ class CompareHistoryModal extends PureComponent {
     index: PropTypes.number.isRequired,
     statusId: PropTypes.string.isRequired,
     language: PropTypes.string.isRequired,
+    intl: PropTypes.object.isRequired,
     versions: ImmutablePropTypes.list.isRequired,
   };
 
   render () {
-    const { index, versions, language, onClose } = this.props;
+    const { index, versions, language, onClose, intl } = this.props;
     const currentVersion = versions.get(index);
 
     const content = currentVersion.get('content');
@@ -63,7 +65,7 @@ class CompareHistoryModal extends PureComponent {
       <div className='modal-root__modal compare-history-modal'>
         <CustomEmojiProvider emojis={currentVersion.get('emojis')}>
           <div className='report-modal__target'>
-            <IconButton className='report-modal__close' icon='times' iconComponent={CloseIcon} onClick={onClose} size={20} />
+            <IconButton className='report-modal__close' icon={XIcon} onClick={onClose}variant='ghost'>{intl.formatMessage({ id: 'lightbox.close', defaultMessage: 'Close' })}</IconButton>
             {label}
           </div>
 
@@ -113,4 +115,4 @@ class CompareHistoryModal extends PureComponent {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CompareHistoryModal);
+export default connect(mapStateToProps, mapDispatchToProps)(injectIntl(CompareHistoryModal));

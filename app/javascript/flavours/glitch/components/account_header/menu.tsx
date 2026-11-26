@@ -3,7 +3,14 @@ import type { FC } from 'react';
 
 import { defineMessages, FormattedMessage, useIntl } from 'react-intl';
 
-import { DotsThreeIcon } from '@phosphor-icons/react';
+import {
+  DotsThreeIcon,
+  LinkIcon,
+  ProhibitIcon,
+  ShareNetworkIcon,
+  UserMinusIcon,
+  WarningOctagonIcon,
+} from '@phosphor-icons/react';
 
 import {
   followAccount,
@@ -15,10 +22,7 @@ import {
 import { removeAccountFromFollowers } from '@/flavours/glitch/actions/accounts_typed';
 import { showAlert } from '@/flavours/glitch/actions/alerts';
 import { initBlockModal } from '@/flavours/glitch/actions/blocks';
-import {
-  directCompose,
-  mentionCompose,
-} from '@/flavours/glitch/actions/compose';
+import { directCompose } from '@/flavours/glitch/actions/compose';
 import {
   initDomainBlockModal,
   unblockDomain,
@@ -26,7 +30,8 @@ import {
 import { openModal } from '@/flavours/glitch/actions/modal';
 import { initMuteModal } from '@/flavours/glitch/actions/mutes';
 import { initReport } from '@/flavours/glitch/actions/reports';
-import { IconButton } from '@/flavours/glitch/components/button/redesign';
+import type { ButtonProps } from '@/flavours/glitch/components/button';
+import { IconButton } from '@/flavours/glitch/components/button';
 import {
   Menu,
   MenuList,
@@ -48,19 +53,10 @@ import {
 } from '@/flavours/glitch/permissions';
 import type { AppDispatch } from '@/flavours/glitch/store';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
-import { isRedesignEnabled } from '@/flavours/glitch/utils/environment';
-import BlockIcon from '@/material-icons/400-24px/block.svg?react';
-import LinkIcon from '@/material-icons/400-24px/link_2.svg?react';
-import MoreHorizIcon from '@/material-icons/400-24px/more_horiz.svg?react';
-import PersonRemoveIcon from '@/material-icons/400-24px/person_remove.svg?react';
-import ReportIcon from '@/material-icons/400-24px/report.svg?react';
-import ShareIcon from '@/material-icons/400-24px/share.svg?react';
 
-import { Dropdown } from '../dropdown_menu';
-
-import classes from './styles.module.scss';
-
-export const AccountMenu: FC<{ accountId: string }> = ({ accountId }) => {
+export const AccountMenu: FC<
+  { accountId: string } & Pick<ButtonProps, 'size'>
+> = ({ accountId, size = 'sm' }) => {
   const intl = useIntl();
   const { signedIn, permissions } = useIdentity();
 
@@ -89,36 +85,24 @@ export const AccountMenu: FC<{ accountId: string }> = ({ accountId }) => {
     });
   }, [account, signedIn, isMe, permissions, intl, relationship, dispatch]);
 
-  if (isRedesignEnabled()) {
-    return (
-      <Menu>
-        <MenuTrigger
-          as={IconButton}
-          size='sm'
-          icon={DotsThreeIcon}
-          disabled={menuItems.length === 0}
-        >
-          <FormattedMessage
-            id='account.menu.label'
-            defaultMessage='More account options'
-          />
-        </MenuTrigger>
-        <MenuList>
-          <LegacyDropdownMenuItems items={menuItems} />
-        </MenuList>
-      </Menu>
-    );
-  } else {
-    return (
-      <Dropdown
+  return (
+    <Menu>
+      <MenuTrigger
+        as={IconButton}
+        size={size}
+        icon={DotsThreeIcon}
         disabled={menuItems.length === 0}
-        items={menuItems}
-        icon='ellipsis-v'
-        iconComponent={MoreHorizIcon}
-        className={classes.buttonMenu}
-      />
-    );
-  }
+      >
+        <FormattedMessage
+          id='account.menu.label'
+          defaultMessage='More account options'
+        />
+      </MenuTrigger>
+      <MenuList>
+        <LegacyDropdownMenuItems items={menuItems} />
+      </MenuList>
+    </Menu>
+  );
 };
 
 interface MenuItemsParams {
@@ -178,10 +162,6 @@ const messages = defineMessages({
   showReblogs: {
     id: 'account.menu.show_reblogs',
     defaultMessage: 'Show boosts in timeline',
-  },
-  addToList: {
-    id: 'account.menu.add_to_list',
-    defaultMessage: 'Add to list…',
   },
   addToCustomFeed: {
     id: 'account.menu.add_to_feed',
@@ -273,7 +253,7 @@ function getMenuItems({
             url: account.url,
           });
         },
-        icon: ShareIcon,
+        icon: ShareNetworkIcon,
       });
     }
     items.push({
@@ -301,32 +281,13 @@ function getMenuItems({
   // Mention and direct message options
   if (signedIn && !account.suspended) {
     if (!account.invalid_handle) {
-      if (isRedesignEnabled()) {
-        if (!relationship?.following) {
-          items.push(null, {
-            text: intl.formatMessage(messages.redesignMessage),
-            action: () => {
-              dispatch(directCompose(account));
-            },
-          });
-        }
-      } else {
-        items.push(
-          null,
-          {
-            text: intl.formatMessage(messages.mention),
-            action: () => {
-              dispatch(mentionCompose(account));
-            },
+      if (!relationship?.following) {
+        items.push(null, {
+          text: intl.formatMessage(messages.redesignMessage),
+          action: () => {
+            dispatch(directCompose(account));
           },
-
-          {
-            text: intl.formatMessage(messages.direct),
-            action: () => {
-              dispatch(directCompose(account));
-            },
-          },
-        );
+        });
       }
       items.push(null);
     }
@@ -337,11 +298,9 @@ function getMenuItems({
   }
 
   // Add to list
-  if (relationship?.following) {
+  if (relationship?.following || relationship?.requested) {
     items.push({
-      text: intl.formatMessage(
-        isRedesignEnabled() ? messages.addToCustomFeed : messages.addToList,
-      ),
+      text: intl.formatMessage(messages.addToCustomFeed),
       action: () => {
         dispatch(
           openModal({
@@ -413,8 +372,8 @@ function getMenuItems({
 
   // Timeline options
   if (relationship?.following && !relationship.muting) {
-    if (isRedesignEnabled()) {
-      items.push({
+    items.push(
+      {
         text: intl.formatMessage(
           relationship.notifying
             ? messages.disableNotifications
@@ -425,9 +384,7 @@ function getMenuItems({
             followAccount(account.id, { notify: !relationship.notifying }),
           );
         },
-      });
-    }
-    items.push(
+      },
       {
         text: intl.formatMessage(
           relationship.showing_reblogs
@@ -502,7 +459,7 @@ function getMenuItems({
         );
       },
       dangerous: true,
-      icon: PersonRemoveIcon,
+      icon: UserMinusIcon,
     });
   }
 
@@ -518,7 +475,7 @@ function getMenuItems({
       }
     },
     dangerous: true,
-    icon: BlockIcon,
+    icon: ProhibitIcon,
   });
 
   if (!account.suspended) {
@@ -528,7 +485,7 @@ function getMenuItems({
         dispatch(initReport(account));
       },
       dangerous: true,
-      icon: ReportIcon,
+      icon: WarningOctagonIcon,
     });
   }
 
@@ -550,7 +507,7 @@ function getMenuItems({
         }
       },
       dangerous: true,
-      icon: BlockIcon,
+      icon: ProhibitIcon,
       iconId: 'domain-block',
     });
   }

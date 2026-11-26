@@ -21,9 +21,6 @@ ku:
       other: Şandî
     posts_tab_heading: Şandî
   admin:
-    account_actions:
-      action: Çalakî yê bike
-      title: Li ser %{acct} çalakiyên li hev hatî pêk bîne
     account_moderation_notes:
       create: Nîşeyekê bihêle
       created_msg: Nîşeyê moderator bi awayekî serkeftî hate afirandin!
@@ -524,9 +521,7 @@ ku:
       disable: Neçalak bike
       disabled: Neçalakkirî
       enable: Çalak bike
-      enable_hint: Gava were çalakkirin, rajekara te dê ji hemî şandiyên giştî yên vê guhêrkerê re bibe endam, û dê dest bi şandina şandiyên giştî yên vê rajekarê bike.
       enabled: Çalakkirî
-      inbox_url: Girêdana guhêrker
       pending: Li benda pêjirandina guhêrker e
       save_and_enable: Tomar û çalak bike
       setup: Girêdanekê guhêrker saz bike
@@ -545,7 +540,6 @@ ku:
       action_taken_by: Çalakî hate kirin ji aliyê
       actions:
         mark_as_sensitive_description_html: Şandiyên hatine ragihandin wê werin nîşandan wekî hestyar û were tomarkirin da ku ji te re bibe alîkar ku tu ji hêla heman ajimêrê ve binpêkirinên pêşerojê bêtir bikî.
-        other_description_html: Bêtir vebijêrkên ji bo kontrolkirina tevgera ajimêrê bibîne û pêwendiyê li ser ajimêra ragihandî kesane bike.
         resolve_description_html: Li hemberî ajimêra hatiye ragihandin wê tiştek pêk neyê, binpêkirin nayên tomarkirin û ragihandin wê were girtin.
       add_to_report: Bo ragihandinê bêtir tevlî bike
       are_you_sure: Gelo tu bawerî?
@@ -729,19 +723,6 @@ ku:
         suspend: "%{name} ajimêra %{target} hilda rawestandinê"
       appeal_approved: Îtîraz
       appeal_pending: Îtîraz li benda nirxandinê ye
-    system_checks:
-      database_schema_check:
-        message_html: Koçberiyên databasê yên li bendê hene. Ji kerema xwe wan bişopîne da ku bicîh bikî ku sepan wekî ku tê hêvî kirin tevbigere
-      elasticsearch_running_check:
-        message_html: Bi Elasticsearch re nayê girêdan. Ji kerema xwe kontrol bike ku ew dixebite, an lêgerîna tev-nivîsî neçalak bike
-      elasticsearch_version_check:
-        message_html: 'Guhertoya Elasticsearch a nelihevhatî: %{value}'
-        version_comparison: Elasticsearch %{running_version} dixebite lê %{required_version} pêwîst e
-      rules_check:
-        action: Rêzikên rajekara bi rê ve bibe
-        message_html: Te qet rêzikên rajekara diyar nekiriye.
-      sidekiq_process_check:
-        message_html: Pêvajoyên Sidekiq ên heyî ji bo %{value} di rêz (an) de tune ne. Ji kerema xwe sazkariyên Sidekiq a xwe binirxîne
     tags:
       review: Binêre rewşê
       updated_msg: Sazkariyên hashtag bi awayekî serkeftî hate rojanekirin
@@ -809,8 +790,6 @@ ku:
     warning_presets:
       add_new: Yeka nû tevlî bike
       delete: Jê bibe
-      edit_preset: Hişyariyên pêşsazkirî serrast bike
-      empty: Te hin tu hişyariyên pêşsazkirî destnîşan nekirine.
     webhooks:
       add_new: Xala dawîbûnê tevlî bike
       delete: Jê bibe
@@ -869,7 +848,6 @@ ku:
     remove: Girêdana nûçikê rake
   appearance:
     animations_and_accessibility: Anîmasyon û gihînî
-    discovery: Vedîtin
     localization:
       body: Mastodon ji aliyê xêrxwazan tê wergerandin.
       guide_link: https://crowdin.com/project/mastodon
@@ -1519,5 +1497,4 @@ ku:
     nickname_hint: Bernavka kilîda te ya ewlehiyê a nû têkevê
     not_enabled: Te hê WebAuthn çalak nekiriye
     not_supported: Ev gerok piştgiriya kilîtên ewlehiyê nakê
-    otp_required: Ji bo ku tu kilîtên ewlehiyê bikar bînî, ji kerema xwe re pêşî piştrastkirina du-gavî çalak bike.
     registered_on: Di %{date} dîrokê de tomar bû

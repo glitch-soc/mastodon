@@ -76,7 +76,7 @@
       strong {
         font-size: 15px;
         color: var(--color-text-primary);
-        font-weight: 500;
+        font-weight: bold;
         overflow: hidden;
         text-overflow: ellipsis;
       }
@@ -106,7 +106,7 @@
   .gap {
     font-size: 14px;
     color: var(--color-text-primary);
-    font-weight: 500;
+    font-weight: bold;
     display: inline-block;
     padding: 6px 10px;
     text-decoration: none;
@@ -163,7 +163,7 @@
   color: var(--color-text-secondary);
   background: var(--color-bg-primary);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: bold;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -185,28 +185,31 @@
   &--under-tabs {
     border-radius: 0 0 4px 4px;
   }
-
-  &--flexible {
-    box-sizing: border-box;
-    min-height: 100%;
-  }
 }
 
 .information-badge,
 .simple_form .overridden,
 .simple_form .recommended,
 .simple_form .not_recommended {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 4px 6px;
+  gap: 4px;
   cursor: default;
   border-radius: 4px;
   font-size: 12px;
   line-height: 12px;
-  font-weight: 500;
+  font-weight: bold;
   color: var(--color-text-primary);
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+
+  .icon {
+    width: 12px !important;
+    height: 12px !important;
+    margin: 0 !important;
+  }
 }
 
 .information-badge,
@@ -258,10 +261,6 @@
     .warning-hint {
       font-weight: normal !important;
     }
-  }
-
-  &__body {
-    margin-top: 10px;
   }
 }
 

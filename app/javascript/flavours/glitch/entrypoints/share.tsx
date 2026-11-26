@@ -11,6 +11,7 @@ import { initialState } from '@/flavours/glitch/initial_state';
 import { IntlProvider } from '@/flavours/glitch/locales';
 import { loadPolyfills } from '@/flavours/glitch/polyfills';
 import ready from '@/flavours/glitch/ready';
+import { requestComposerFocus } from '@/flavours/glitch/reducers/slices/composer';
 import { store } from '@/flavours/glitch/store';
 
 async function loaded() {
@@ -26,6 +27,14 @@ async function loaded() {
 
   await store.dispatch(fetchServer());
   await initializeEmoji();
+
+  // Put the caret at the end on load.
+  const caretPosition = initialState?.compose.text.length;
+  if (caretPosition) {
+    store.dispatch(
+      requestComposerFocus({ start: caretPosition, end: caretPosition }),
+    );
+  }
 
   const root = createRoot(mountNode);
 

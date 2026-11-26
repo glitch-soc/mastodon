@@ -6,11 +6,8 @@ import { Helmet } from '@unhead/react/helmet';
 
 import { ImmutablePureComponent } from 'react-immutable-pure-component';
 
-import InfoIcon from '@/material-icons/400-24px/info.svg?react';
 import { Column } from '@/mastodon/components/column';
-import { ColumnHeader as LegacyColumnHeader } from '@/mastodon/components/column/header';
 import { injectIntl } from '@/mastodon/components/intl';
-import { isRedesignEnabled } from '@/mastodon/utils/environment';
 import { ColumnHeader } from '@/mastodon/components/column_header';
 
 const messages = defineMessages({
@@ -29,19 +26,10 @@ class KeyboardShortcuts extends ImmutablePureComponent {
 
     return (
       <Column>
-        {isRedesignEnabled() ? (
-          <ColumnHeader
-            title={intl.formatMessage(messages.heading)}
-            withBackButton='auto'
-          />
-        ) : (
-          <LegacyColumnHeader
-            title={intl.formatMessage(messages.heading)}
-            icon='info-circle'
-            iconComponent={InfoIcon}
-            multiColumn={multiColumn}
-          />
-        )}
+        <ColumnHeader
+          title={intl.formatMessage(messages.heading)}
+          withBackButton='auto'
+        />
 
         <div className='keyboard-shortcuts scrollable optionally-scrollable'>
           <table>
@@ -67,11 +55,7 @@ class KeyboardShortcuts extends ImmutablePureComponent {
               <tr>
                 <td><kbd>f</kbd></td>
                 <td>
-                  {isRedesignEnabled() ? (
-                    <FormattedMessage id='keyboard_shortcuts.like' defaultMessage='Like post' />
-                  ) : (
-                    <FormattedMessage id='keyboard_shortcuts.favourite' defaultMessage='to favorite' />
-                  )}
+                  <FormattedMessage id='keyboard_shortcuts.like' defaultMessage='Like post' />
                 </td>
               </tr>
               <tr>
@@ -131,10 +115,6 @@ class KeyboardShortcuts extends ImmutablePureComponent {
                 <td><FormattedMessage id='keyboard_shortcuts.toot' defaultMessage='to start a brand new post' /></td>
               </tr>
               <tr>
-                <td><FormattedMessage id='keyboard_shortcuts.keys.alt' defaultMessage='Alt' tagName='kbd' />+<kbd>x</kbd></td>
-                <td><FormattedMessage id='keyboard_shortcuts.spoilers' defaultMessage='to show/hide CW field' /></td>
-              </tr>
-              <tr>
                 <td><FormattedMessage id='keyboard_shortcuts.keys.backspace' defaultMessage='Backspace' tagName='kbd' /></td>
                 <td><FormattedMessage id='keyboard_shortcuts.back' defaultMessage='to navigate back' /></td>
               </tr>
@@ -177,11 +157,7 @@ class KeyboardShortcuts extends ImmutablePureComponent {
               <tr>
                 <td><kbd>g</kbd>+<kbd>f</kbd></td>
                 <td>
-                  {isRedesignEnabled() ? (
-                    <FormattedMessage id='keyboard_shortcuts.liked_posts' defaultMessage='Open liked posts' />
-                  ) : (
-                    <FormattedMessage id='keyboard_shortcuts.favourites' defaultMessage='to open favorites list' />
-                  )}
+                  <FormattedMessage id='keyboard_shortcuts.liked_posts' defaultMessage='Open liked posts' />
                 </td>
               </tr>
               <tr>

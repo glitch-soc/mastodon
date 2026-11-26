@@ -13,8 +13,6 @@ ast:
       other: Publicaciones
     posts_tab_heading: Artículos
   admin:
-    account_actions:
-      action: Facer l'aición
     account_moderation_notes:
       create: Dexar la nota
     accounts:
@@ -235,8 +233,6 @@ ast:
         notes:
           one: "%{count} nota"
           other: "%{count} notes"
-      actions:
-        silence_description_html: La cuenta va ser visible namás pa quien yá la siguiere o la buscare manualmente, lo que llenda'l so algame. Esta decisión pue desfacese en cualesquier momentu. Si escueyes esta opción, zárrense tolos informes escontra esta cuenta.
       add_to_report: Amestar más al informe
       are_you_sure: "¿De xuru que quies facer esta aición?"
       category: Categoría
@@ -358,9 +354,6 @@ ast:
         suspend: "%{name} suspendió la cuenta de: %{target}"
       appeal_approved: Apellóse
       appeal_pending: Apellación pendiente
-    system_checks:
-      elasticsearch_running_check:
-        message_html: Nun se pudo conectar con Elasticsearch. Revisa que tea n'execución o desactiva la busca de testos completos
     title: Alministración
     trends:
       allow: Permitir
@@ -429,7 +422,6 @@ ast:
     empty: Nun tienes nengún nomatu.
   appearance:
     animations_and_accessibility: Animaciones y accesibilidá
-    discovery: Descubrimientu
     localization:
       body: Mastodon tradúcenlu voluntarios,
       guide_link: https://crowdin.com/project/mastodon
@@ -878,4 +870,3 @@ ast:
     invalid_credential: La llave de seguranza nun ye válida
     not_enabled: Nun activesti la función WebAuthn
     not_supported: Esti restolador nun ye compatible coles llaves de seguranza
-    otp_required: Pa usar les llaves de seguranza, activa primero l'autenticación en dos pasos.

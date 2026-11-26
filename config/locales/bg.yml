@@ -23,10 +23,8 @@ bg:
     self_follow_error: Не е позволено да следвате собствения си акаунт
   admin:
     account_actions:
-      action: Изпълняване на действие
       already_silenced: Този акаунт вече е ограничен.
       already_suspended: Този акаунт вече е спрян.
-      title: Извършване на модериращо действие за %{acct}
     account_moderation_notes:
       create: Оставяне на бележка
       created_msg: Успешно създадена бележка за модерация!
@@ -621,9 +619,7 @@ bg:
       disable: Изключване
       disabled: Изключено
       enable: Включване
-      enable_hint: Щом бъде включена настройката, вашият сървър ще се запише за всички публични публикации от този предаващ сървър и ще започне да изпраща към него публичните публикации от вашия сървър.
       enabled: Включено
-      inbox_url: URL на предаващия сървър
       pending: Изчакване на одобрение от предаващия сървър
       save_and_enable: Запазване и включване
       setup: Настройка на връзка с предаващия сървър
@@ -642,11 +638,7 @@ bg:
       action_taken_by: Действие, предприето от
       actions:
         mark_as_sensitive_description_html: Мултимедията в докладваните публикации ще се означи като деликатна, за да ви помогне при изострянето на бъдещи нарушения от същия акаунт.
-        other_description_html: Показване на повече възможности за управляване на поведението на акаунта и за персонализиране на комуникацията с докладвания акаунт.
         resolve_description_html: Няма да се предприеме действие срещу докладвания акаунт, няма да се записва нарушение и докладът ще се затвори.
-        silence_description_html: Профилът ще е видим само за последователите му или търсещите го ръчно, което драстично ограничава обсега му. Настройката може да бъде отменена по всяко време. Затваря всички доклади срещу акаунта.
-        suspend_description_html: Акаунтът и неговото съдържание ще бъдат недостъпни и евентуално изтрити и взаимодействието с него ще е невъзможно. Обратимо до 30 дни. Затваря всички доклади срещу този акаунт.
-      actions_description_html: Решете какво действие може да се предприеме, за да се отхвърли докладът. Ако предприемете наказателно действие срещу докладвания акаунт, към лицето ще се изпрати известие по имейл, освен ако не е била избрана категорията <strong>Спам</strong>.
       actions_description_remote_html: Преценете с какво действие да решите този доклад. Това ще има ефект върху това как <strong>вашият</strong> сървър комуникира с този отдалечен акаунт и се справя с неговото съдържание.
       actions_no_posts: Този доклад няма никакви свързани публикации за изтриване
       add_to_report: Добавяне на още към доклада
@@ -908,50 +900,6 @@ bg:
       appeal_approved: Обжалвано
       appeal_pending: Чака се обжалването
       appeal_rejected: Отхвърлено обжалване
-    system_checks:
-      database_schema_check:
-        message_html: Има миграции на базата данни, които чакат да бъдат изпълнени. Моля, изпълнете ги, за да осигурите изправността на приложението
-      elasticsearch_analysis_index_mismatch:
-        message_html: Настройките за анализиращия индекс Elasticsearch са остарели. Пуснете <code>tootctl search deploy --only-mapping --only=%{value}</code>
-      elasticsearch_health_red:
-        message_html: Клъстерът Elasticsearch е нездрав (червено състояние), функциите за търсене не са налични
-      elasticsearch_health_yellow:
-        message_html: Клъстерът Elasticsearch е нездрав (жълто състояние), може да искате да разследвате причината
-      elasticsearch_index_mismatch:
-        message_html: Речниковите съответствия в Elasticsearch са с изтекла давност. Пуснете <code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: Преглед на документацията
-        message_html: Вашият клъстер в Elasticsearch има повече от един възел, но Mastodon не е настроен да ги употребява.
-      elasticsearch_preset_single_node:
-        action: Преглед на документацията
-        message_html: Вашият клъстер в Elasticsearch има само един възел, то <code>ES_PRESET</code> би трябвало да се зададе да е <code>single_node_cluster</code>.
-      elasticsearch_reset_chewy:
-        message_html: Вашият системен показател в Elasticsearch е остарял поради промяна на настройката. Пуснете <code>tootctl search deploy --reset-chewy</code>, за да го осъвремените.
-      elasticsearch_running_check:
-        message_html: Не можа да се свърже с Elasticsearch. Проверете дали работи или изключете пълнотекстовото търсене
-      elasticsearch_version_check:
-        message_html: 'Несъвместима версия на Elasticsearch: %{value}'
-        version_comparison: Работи Elasticsearch на %{running_version}, докато се изисква %{required_version}
-      rules_check:
-        action: Управление на правилата на сървъра
-        message_html: Не сте определили никакви правила на сървъра.
-      sidekiq_process_check:
-        message_html: Не работи процес Sidekiq за %{value} опашка/и. Прегледайте настройките си за Sidekiq
-      software_version_check:
-        action: Преглед на наличните обновявания
-        message_html: Налично е обновяване на Mastodon.
-      software_version_critical_check:
-        action: Преглед на наличните обновявания
-        message_html: Налично e критично обновяване на Mastodon. Обновете възможно най-бързо.
-      software_version_patch_check:
-        action: Преглед на наличните обновявания
-        message_html: Налично е обновяване на Mastodon за оправяне на бъговете.
-      upload_check_privacy_error:
-        action: Щракнете тук за повече информация
-        message_html: "<strong>Вашият уеб сървър е погрешно конфигуриран. Поверителността на потребителите ви е изложена на риск.</strong>"
-      upload_check_privacy_error_object_storage:
-        action: Щракнете тук за повече информация
-        message_html: "<strong>Вашето съхранение на предмети е погрешно конфигурирано. Поверителността на потребителите ви е изложена на риск.</strong>"
     tags:
       moderation:
         not_trendable: Не изгряващо
@@ -1093,9 +1041,6 @@ bg:
     warning_presets:
       add_new: Добавяне на ново
       delete: Изтриване
-      edit_preset: Редакция на предварителните настройки
-      empty: Все още няма предварителни настройки за предупрежденията.
-      title: Предупредителни образци
     webhooks:
       add_new: Добавяне на крайна точка
       delete: Изтриване
@@ -1166,7 +1111,6 @@ bg:
     animations_and_accessibility: Анимация и достъпност
     boosting_preferences: Настройки за подсилване
     boosting_preferences_info_html: "<strong>Съвет:</strong> Без значение от настройките, <kbd>Shift</kbd> + <kbd>Щрак</kbd> върху иконата %{icon} Подсилване веднага ще подсили."
-    discovery: Откриване
     localization:
       body: Mastodon е преведено от доброволци.
       guide_link: https://ru.crowdin.com/project/mastodon
@@ -1882,7 +1826,7 @@ bg:
     pin_errors:
       direct: Публикациите, които са видими само за потребители споменати в тях, не могат да бъдат закачани
       limit: Вече сте закачили максималния брой публикации
-      ownership: Публикация на някого другиго не може да бъде закачена
+      ownership: Чужда публикация не може да бъде закачена
       reblog: Раздуване не може да бъде закачано
     quote_error:
       not_available: Неналична публикация
@@ -2115,5 +2059,4 @@ bg:
     nickname_hint: Въведете прякор на новия си ключ за сигурност
     not_enabled: Още не сте включили WebAuthn
     not_supported: Този браузър не поддържа ключове за сигурност
-    otp_required: Първо включете двуфакторното удостоверяване, за да използвате ключовете за сигурност.
     registered_on: Регистрирано на %{date}

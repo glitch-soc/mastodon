@@ -504,7 +504,7 @@ module Mastodon::CLI
     LONG_DESC
     def prune
       _, deleted = parallelize_with_progress(prunable_accounts) do |account|
-        next if account.bot? || account.group?
+        next if account.group?
         next if account.suspended?
         next if account.silenced?
 
@@ -610,7 +610,7 @@ module Mastodon::CLI
       old_key = account.keypair
       new_key = OpenSSL::PKey::RSA.new(2048)
 
-      account.update(private_key: nil, public_key: '', keypairs: [account.keypairs.build(local_fragment: '#main-key', type: :rsa, public_key: new_key.public_key.to_pem, private_key: new_key.to_pem)])
+      account.update(public_key: '', keypairs: [account.keypairs.build(local_fragment: '#main-key', type: :rsa, public_key: new_key.public_key.to_pem, private_key: new_key.to_pem)])
 
       ActivityPub::UpdateDistributionWorker.perform_in(
         delay,

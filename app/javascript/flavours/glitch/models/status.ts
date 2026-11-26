@@ -22,6 +22,7 @@ import type {
   ApiMentionJSON,
   ApiPreviewCardAuthorJSON,
   ApiPreviewCardJSON,
+  ApiStatusHistoryJSON,
   ApiStatusTranslationJSON,
   ApiTagJSON,
   StatusVisibility,
@@ -85,6 +86,9 @@ export interface StatusShape {
   reblogs_count: number;
   replies_count: number;
   visibility: StatusVisibility;
+
+  // glitch-soc
+  local_only?: boolean;
 }
 export type AccountStatusShape = Omit<StatusShape, 'account'> & {
   account: AccountShapeFull;
@@ -158,4 +162,9 @@ export type FilterResult = Omit<ApiFilterResultJSON, 'filter'> & {
 
 export type StatusTranslation = Omit<ApiStatusTranslationJSON, 'poll'> & {
   isLoading: boolean;
+};
+
+export type StatusHistory = Omit<ApiStatusHistoryJSON, 'account'> & {
+  account: string;
+  original: boolean;
 };

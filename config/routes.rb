@@ -56,6 +56,7 @@ Rails.application.routes.draw do
   get 'intent', to: 'intents#show'
   get 'custom.css', to: 'custom_css#show'
   resources :custom_css, only: :show, path: :css
+  get 'robots.txt', to: 'robots#show'
 
   get 'remote_interaction_helper', to: 'remote_interaction_helper#index'
 
@@ -187,7 +188,7 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :redirect do
+  namespace :redirect, constraints: { format: :html } do
     resources :accounts, only: :show
     resources :statuses, only: :show
     resources :collections, only: :show

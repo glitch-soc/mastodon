@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-ruby '>= 3.3.0', '< 4.1.0'
+ruby file: '.ruby-version'
 
 gem 'propshaft'
 gem 'puma'
@@ -77,7 +77,7 @@ gem 'rack-cors', require: 'rack/cors'
 gem 'rack-proxy', require: 'rack/proxy'
 gem 'rails-i18n', '~> 8.0'
 gem 'redcarpet', '~> 3.6'
-gem 'redis', '~> 5'
+gem 'redis'
 gem 'rqrcode', '~> 3.0'
 gem 'ruby-progressbar', '~> 1.13'
 gem 'sanitize', '~> 7.0'
@@ -91,8 +91,8 @@ gem 'simple-navigation', '~> 4.4'
 gem 'stoplight'
 gem 'strong_migrations'
 gem 'tty-prompt', '~> 0.23', require: false
-gem 'twitter-text', '~> 3.1.0'
 gem 'tzinfo-data', '~> 1.2023'
+gem 'uts58', '~> 0.2.6'
 gem 'webauthn', '~> 3.0'
 gem 'webpush', github: 'mastodon/webpush', ref: '9631ac63045cfabddacc69fc06e919b4c13eb913'
 
@@ -115,9 +115,9 @@ group :opentelemetry do
   gem 'opentelemetry-instrumentation-faraday', '~> 0.33.0', require: false
   gem 'opentelemetry-instrumentation-http', '~> 0.30.0', require: false
   gem 'opentelemetry-instrumentation-http_client', '~> 0.29.0', require: false
-  gem 'opentelemetry-instrumentation-net_http', '~> 0.29.0', require: false
+  gem 'opentelemetry-instrumentation-net_http', '~> 0.30.0', require: false
   gem 'opentelemetry-instrumentation-pg', '~> 0.37.0', require: false
-  gem 'opentelemetry-instrumentation-rack', '~> 0.31.0', require: false
+  gem 'opentelemetry-instrumentation-rack', '~> 0.32.0', require: false
   gem 'opentelemetry-instrumentation-rails', '~> 0.42.0', require: false
   gem 'opentelemetry-instrumentation-redis', '~> 0.29.0', require: false
   gem 'opentelemetry-instrumentation-sidekiq', '~> 0.29.0', require: false

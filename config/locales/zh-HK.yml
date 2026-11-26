@@ -19,9 +19,6 @@ zh-HK:
       other: 文章
     posts_tab_heading: 文章
   admin:
-    account_actions:
-      action: 執行動作
-      title: 在 %{acct} 執行管理操作
     account_moderation_notes:
       create: 加入管理紀錄
       created_msg: 已新增管理紀錄
@@ -546,9 +543,7 @@ zh-HK:
       disable: 停用
       disabled: 已停用
       enable: 啟用
-      enable_hint: 啟用後，你的伺服器將訂閱該中繼的所有公開文章，並將會此伺服器的公開文章發送給它。
       enabled: 已啟用
-      inbox_url: 中繼 URL
       pending: 正在等待中繼許可
       save_and_enable: 儲存並啟用
       setup: 建立中繼通訊
@@ -566,10 +561,7 @@ zh-HK:
       action_taken_by: 操作執行者
       actions:
         mark_as_sensitive_description_html: 被檢舉的帖文中的媒體會被標記為敏感內容，並記錄一次警告，以便日後加快處理同一帳號的違規行為。
-        other_description_html: 查看更多控制帳號行為，以及自訂與被檢舉帳號溝通的選項。
         resolve_description_html: 不會對被檢舉的帳號採取任何動作，也不會記錄警告，檢舉報告將會結案。
-        silence_description_html: 此帳號將會只有追蹤者或手動搜尋它的人才可以看見，大幅限制了它的曝光。你可隨時恢復它。關閉所有對此帳號的檢舉報告。
-        suspend_description_html: 此帳號及其所有內容將不可再被存取，並且最終會被刪除，無法再進行互動。可於 30 天內撤銷此動作。關閉所有對此帳號的檢舉報告。
       actions_description_remote_html: 決定對此檢舉採取哪種動作。這只會影響<strong>你的伺服器</strong>與此遠端帳號的通訊和處理其內容的方式。
       add_to_report: 加入更多到檢舉
       already_suspended_badges:
@@ -804,45 +796,6 @@ zh-HK:
       appeal_approved: 已申訴
       appeal_pending: 申訴待審中
       appeal_rejected: 申訴被駁回
-    system_checks:
-      database_schema_check:
-        message_html: 有待處理的資料庫轉移 (database migration) 。請執行以確保應用程式行為合乎預期
-      elasticsearch_health_red:
-        message_html: Elasticsearch 叢集狀態不健康（紅色狀態），無法使用搜尋功能
-      elasticsearch_health_yellow:
-        message_html: Elasticsearch 叢集狀態不健康（黃色狀態），你可能需要調查其原因
-      elasticsearch_index_mismatch:
-        message_html: Elasticsearch 索引配置已過期。請執行<code>tootctl search deploy --only=%{value}</code>
-      elasticsearch_preset:
-        action: 查看文檔
-        message_html: 你的 Elasticsearch 叢集有多個節點，但 Mastodon 並未配置來使用它們。
-      elasticsearch_preset_single_node:
-        action: 查看文檔
-        message_html: 你的 Elasticsearch 叢集只有一個節點，<code>ES_PRESET</code>應設定為<code>single_node_cluster</code>。
-      elasticsearch_reset_chewy:
-        message_html: 由於設定變更，你的 Elasticsearch 系統索引已過期。請執行<code>tootctl search deploy --reset-chewy</code>來更新它。
-      elasticsearch_running_check:
-        message_html: 無法連接到 Elasticsearch。請檢查它是否運行中，或停用全文搜索。
-      elasticsearch_version_check:
-        message_html: 不相容的 Elasticsearch 版本：%{value}
-        version_comparison: 正在運行 Elasticsearch 版本 %{running_version}，需要版本 %{required_version} 。
-      rules_check:
-        action: 管理伺服器規則
-        message_html: 您尚未定義任何伺服器規則
-      sidekiq_process_check:
-        message_html: 沒有 %{value} 佇列的 Sidekiq 處理程序。請檢查 Sidekiq 設定檔案
-      software_version_critical_check:
-        action: 查看可用的更新
-        message_html: 有重要的 Mastodon 更新可用，請盡快更新。
-      software_version_patch_check:
-        action: 查看可用的更新
-        message_html: 有可用的 Mastodon 除錯更新。
-      upload_check_privacy_error:
-        action: 在此查看更多資訊
-        message_html: "<strong>你的網絡伺服器配置錯誤。你的使用者的私隱有危險。</strong>"
-      upload_check_privacy_error_object_storage:
-        action: 在此查看更多資訊
-        message_html: "<strong>你的對象儲存配置錯誤。你的使用者的私隱有危險。</strong>"
     tags:
       name: 名稱
       newest: 最新
@@ -923,8 +876,6 @@ zh-HK:
     warning_presets:
       add_new: 新增
       delete: 刪除
-      edit_preset: 設定警告預設
-      empty: 您尚未定義任何預設警告
     webhooks:
       add_new: 新增端點
       delete: 刪除
@@ -991,7 +942,6 @@ zh-HK:
     remove: 取消連結別名 (Alias)
   appearance:
     animations_and_accessibility: 動畫和輔助功能
-    discovery: 探索
     localization:
       body: Mastodon 是由志願者翻譯的。
       guide_link: https://crowdin.com/project/mastodon
@@ -1800,5 +1750,4 @@ zh-HK:
     nickname_hint: 請為你的安全密鑰裝置命名
     not_enabled: 你還未啟用 WebAuthn
     not_supported: 這個瀏覽器並不支援安全密鑰裝置
-    otp_required: 請開啟雙重認證以使用安全密鑰裝置
     registered_on: 在 %{date} 注冊
