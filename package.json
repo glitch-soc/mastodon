@@ -1,7 +1,7 @@
 {
   "name": "@mastodon/mastodon",
   "license": "AGPL-3.0-or-later",
-  "packageManager": "yarn@4.18.1",
+  "packageManager": "yarn@4.19.0",
   "engines": {
     "node": ">=24"
   },
@@ -163,7 +163,7 @@
     "eslint-import-resolver-typescript": "4.4.5",
     "eslint-plugin-formatjs": "8.1.4",
     "eslint-plugin-import": "2.32.0",
-    "eslint-plugin-jsdoc": "65.5.2",
+    "eslint-plugin-jsdoc": "65.5.3",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-promise": "7.3.0",
     "eslint-plugin-react": "7.37.5",
