@@ -12,6 +12,7 @@ import { rearrangeComposeAttachments } from '@/flavours/glitch/actions/compose_t
 import { Button, IconButton } from '@/flavours/glitch/components/button';
 import {
   ModalActions,
+  ModalBody,
   ModalShell,
   ModalTitle,
 } from '@/flavours/glitch/components/modal_shell/redesign';
@@ -97,31 +98,33 @@ const ComposerModalRearrange: React.FC<{ onClose: () => void }> = ({
         />
       </ModalTitle>
 
-      <SortableList
-        ids={attachmentIds}
-        onSort={setAttachmentIds}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        messages={messages}
-        messageLabelCb={activeToIndex}
-        overlay={<ComposeOverlay activeId={activeId} ids={attachmentIds} />}
-        dropAnimation={null}
-      >
-        {attachmentIds.map((id) => (
-          <SortableListItem
-            id={id}
-            key={id}
-            noTransition
-            className={classes.attachmentItem}
-            draggingClassName={classes.attachmentGrabbed}
-          >
-            <ComposeRearrangeItemDisplay
+      <ModalBody>
+        <SortableList
+          ids={attachmentIds}
+          onSort={setAttachmentIds}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          messages={messages}
+          messageLabelCb={activeToIndex}
+          overlay={<ComposeOverlay activeId={activeId} ids={attachmentIds} />}
+          dropAnimation={null}
+        >
+          {attachmentIds.map((id) => (
+            <SortableListItem
               id={id}
-              index={attachmentIds.indexOf(id)}
-            />
-          </SortableListItem>
-        ))}
-      </SortableList>
+              key={id}
+              noTransition
+              className={classes.attachmentItem}
+              draggingClassName={classes.attachmentGrabbed}
+            >
+              <ComposeRearrangeItemDisplay
+                id={id}
+                index={attachmentIds.indexOf(id)}
+              />
+            </SortableListItem>
+          ))}
+        </SortableList>
+      </ModalBody>
 
       <ModalActions className={classes.footer}>
         <Button onClick={onClose}>

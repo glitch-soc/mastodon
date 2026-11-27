@@ -15,9 +15,11 @@ import { Avatar } from '../avatar';
 import { Badge } from '../badge';
 import { DisplayName } from '../display_name';
 import { useAccountHandle } from '../display_name/default';
+import { FormattedDateWrapper } from '../formatted_date';
 import { Icon } from '../icon';
 import { RelativeTimestamp } from '../relative_timestamp';
 import { Skeleton } from '../skeleton';
+import { Tooltip } from '../tooltip';
 
 import classes from './header.module.scss';
 import { LocalOnlyIcon } from './local_only_icon';
@@ -26,7 +28,13 @@ import { accountStatusLinkProps, statusLink } from './utils';
 interface StatusHeaderProps {
   status: Pick<
     AccountStatusShape,
-    'id' | 'account' | 'created_at' | 'visibility' | 'mentions' | 'local_only'
+    | 'id'
+    | 'account'
+    | 'created_at'
+    | 'edited_at'
+    | 'visibility'
+    | 'mentions'
+    | 'local_only'
   >;
   className?: string;
   featured?: boolean;
@@ -162,6 +170,33 @@ export const StatusHeaderAuthors: React.FC<
       >
         <RelativeTimestamp timestamp={status.created_at} />
       </Link>
+      {!!status.edited_at && (
+        <Tooltip
+          text={
+            <FormattedMessage
+              id='status.edited'
+              defaultMessage='Edited {date}'
+              values={{
+                date: (
+                  <FormattedDateWrapper
+                    value={status.edited_at}
+                    month='short'
+                    day='2-digit'
+                    hour='2-digit'
+                    minute='2-digit'
+                  />
+                ),
+              }}
+            />
+          }
+        >
+          {({ getTooltipProps }) => (
+            <span {...getTooltipProps()} className={classes.editedIndicator}>
+              *
+            </span>
+          )}
+        </Tooltip>
+      )}
       {status.local_only && <LocalOnlyIcon />}
     </p>
   );

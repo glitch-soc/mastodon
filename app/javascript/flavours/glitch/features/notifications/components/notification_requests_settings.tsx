@@ -9,6 +9,7 @@ import {
   ModalShell,
   ModalActions,
   ModalTitle,
+  ModalBody,
 } from '@/flavours/glitch/components/modal_shell/redesign';
 import { useAppDispatch, useAppSelector } from '@/flavours/glitch/store';
 
@@ -72,7 +73,9 @@ export const NotificationRequestsSettingsModal: React.FC = () => {
           defaultMessage='Notification Settings'
         />
       </ModalTitle>
-      <NotificationRequestsSettings />
+      <ModalBody>
+        <NotificationRequestsSettings />
+      </ModalBody>
       <ModalActions>
         <Button variant='solid' color='accent' onClick={handleCloseModal}>
           <FormattedMessage id='alt_text_modal.done' defaultMessage='Done' />

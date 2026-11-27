@@ -6,6 +6,7 @@ import { closeModal } from '@/flavours/glitch/actions/modal';
 import { Button } from '@/flavours/glitch/components/button';
 import {
   ModalActions,
+  ModalBody,
   ModalShell,
   ModalTitle,
 } from '@/flavours/glitch/components/modal_shell/redesign';
@@ -23,14 +24,16 @@ const NotificationSettingsModal: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <ModalShell>
+    <ModalShell maxWidth={540}>
       <ModalTitle onClose={handleCloseModal}>
         <FormattedMessage
           id='notifications.settings'
           defaultMessage='Notification Settings'
         />
       </ModalTitle>
-      <NotificationSettings />
+      <ModalBody>
+        <NotificationSettings />
+      </ModalBody>
       <ModalActions>
         <Button variant='solid' color='accent' onClick={handleCloseModal}>
           <FormattedMessage id='alt_text_modal.done' defaultMessage='Done' />
