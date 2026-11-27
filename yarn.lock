@@ -2214,16 +2214,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@es-joy/jsdoccomment@npm:^1.1.0, @es-joy/jsdoccomment@npm:~1.2.0":
-  version: 1.2.0
-  resolution: "@es-joy/jsdoccomment@npm:1.2.0"
+"@es-joy/jsdoccomment@npm:^1.1.0, @es-joy/jsdoccomment@npm:~1.2.1":
+  version: 1.2.1
+  resolution: "@es-joy/jsdoccomment@npm:1.2.1"
   dependencies:
     "@types/estree": "npm:^1.0.10"
     "@typescript-eslint/types": "npm:^8.72.2"
     comment-parser: "npm:1.4.9"
     esquery: "npm:^1.7.0"
     jsdoc-type-pratt-parser: "npm:~9.5.0"
-  checksum: 10c0/24863ed0de87943e25e573f893920e2c1de11a17da14aede1549215b6617887c5572efd5e8a33a325bffff84bc6b798f17ed2e5f2a3ce29e676d577850216da5
+  checksum: 10c0/e49528b6829c29690f8eabf5f645173986a6b399bf0fc862e141d25f97d7e3daf00d4c3d65232fc0c544255c1390e4f17803918e1de3bc8907cac147ec7a1f9c
   languageName: node
   linkType: hard
 
@@ -3081,7 +3081,7 @@ __metadata:
     eslint-import-resolver-typescript: "npm:4.4.5"
     eslint-plugin-formatjs: "npm:8.1.4"
     eslint-plugin-import: "npm:2.32.0"
-    eslint-plugin-jsdoc: "npm:65.5.3"
+    eslint-plugin-jsdoc: "npm:65.5.4"
     eslint-plugin-jsx-a11y: "npm:6.10.2"
     eslint-plugin-promise: "npm:7.3.0"
     eslint-plugin-react: "npm:7.37.5"
@@ -3126,7 +3126,7 @@ __metadata:
     redux-immutable: "npm:4.0.0"
     requestidlecallback: "npm:0.3.0"
     rollup-plugin-gzip: "npm:4.2.3"
-    rollup-plugin-visualizer: "npm:7.1.3"
+    rollup-plugin-visualizer: "npm:7.3.0"
     sass: "npm:1.108.2"
     scroll-behavior: "npm:0.11.0"
     stacktrace-js: "npm:2.0.2"
@@ -7850,12 +7850,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-jsdoc@npm:65.5.3":
-  version: 65.5.3
-  resolution: "eslint-plugin-jsdoc@npm:65.5.3"
+"eslint-plugin-jsdoc@npm:65.5.4":
+  version: 65.5.4
+  resolution: "eslint-plugin-jsdoc@npm:65.5.4"
   dependencies:
     "@es-joy/escodegen": "npm:^5.0.1"
-    "@es-joy/jsdoccomment": "npm:~1.2.0"
+    "@es-joy/jsdoccomment": "npm:~1.2.1"
     "@es-joy/resolve.exports": "npm:1.2.0"
     "@typescript-eslint/utils": "npm:^8.72.2"
     are-docs-informative: "npm:^0.1.1"
@@ -7876,7 +7876,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 10c0/8c5fd403e9c1c9ad9efbb857ee5cf7f8aa806270a7d66fd2f4f1ac3d693b3e07fccda9feadac5a8679a28b9587a18339da53dc56e2135fedb00acbd5b877d5a6
+  checksum: 10c0/b40e994a1dfc83b5a05c16cf01eb413ba6fce2eb52608ad0b7bdf574f9b9b79929500402abd485b78bd10c0101e472243d856be9fc58071819cde4b41ca3761d
   languageName: node
   linkType: hard
 
@@ -12259,13 +12259,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rollup-plugin-visualizer@npm:7.1.3":
-  version: 7.1.3
-  resolution: "rollup-plugin-visualizer@npm:7.1.3"
+"rollup-plugin-visualizer@npm:7.3.0":
+  version: 7.3.0
+  resolution: "rollup-plugin-visualizer@npm:7.3.0"
   dependencies:
+    "@jridgewell/trace-mapping": "npm:^0.3.31"
     open: "npm:^11.0.0"
     picomatch: "npm:^4.0.5"
-    source-map: "npm:^0.8.0"
     yargs: "npm:^18.1.0"
   peerDependencies:
     rolldown: 1.x || ^1.0.0-beta || ^1.0.0-rc
@@ -12277,7 +12277,7 @@ __metadata:
       optional: true
   bin:
     rollup-plugin-visualizer: dist/bin/cli.js
-  checksum: 10c0/733ea461f864f6f5edefd69009488bc523190d2d19e42a5208f925e6eb5a6c4fcb9f75b5b48041d49e0716407dfa1da836a432c61df879321c2096ea1a227ff3
+  checksum: 10c0/35d2006ea7896a3256dbbc6e137ba03079c60b5b3a0f0144e00f2b22314256eb43c982fa3be60b76895e80e9d70338dd646630e2462327f8971d6504e6415c73
   languageName: node
   linkType: hard
 
@@ -12655,7 +12655,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map@npm:^0.8.0, source-map@npm:~0.8.0":
+"source-map@npm:~0.8.0":
   version: 0.8.0
   resolution: "source-map@npm:0.8.0"
   checksum: 10c0/fd2a5b81a1bf40f6155592f19c44abb46fc75b0f0f9473dd40c665b6f3866516a26218dad3d76b58b8b3e44560f3ab2191a837e1ce6631987e51a2db2e1cac56
