@@ -7,11 +7,9 @@
   "boost_modal.missing_description": "Mae'r tŵt yma'n cynnwys ychydig gyfryngau heb ddisgrifiad",
   "column.favourited_by": "Wedi'i hoffi gan",
   "column.reblogged_by": "Wedi'i bŵstio gan",
-  "column_header.profile": "Proffil",
   "community.column_settings.allow_local_only": "Dangos tŵtiau lleol yn unig",
   "compose.content-type.html": "HTML",
   "compose.content-type.markdown": "Markdown",
   "compose.content-type.plain": "Testun plaen",
-  "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }

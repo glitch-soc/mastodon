@@ -7,9 +7,7 @@
   "boost_modal.missing_description": "هذا المنشور يحتوي على وسائط بلا وصف",
   "column.favourited_by": "المفضلة من قبل",
   "column.reblogged_by": "المرقى من قبل",
-  "column_header.profile": "الملف الشخصي",
   "community.column_settings.allow_local_only": "إظهار المنشورات المحلية فقط",
-  "compose.attach.doodle": "الرسوم و التخمين",
   "compose.change_federation": "تغيير اعدادات الفيديرالية",
   "compose.content-type.change": "تغيير خيارات التنسيق المتقدمة",
   "compose.content-type.html": "HTML",
@@ -32,8 +30,6 @@
   "keyboard_shortcuts.secondary_toot": "لإرسال التبويق باستخدام إعدادات الخصوصية الثانوية",
   "moved_to_warning": "عُلِّم هذا الحساب بأنه انتقل إلى {moved_to_link}، لذا قد لا يقبل متابعات جديدة.",
   "navigation_bar.app_settings": "إعدادات التطبيق",
-  "settings.always_show_spoilers_field": "تمكين دائما حقل تحذير المحتوى",
   "settings.close": "إغلاق",
-  "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }

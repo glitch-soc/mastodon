@@ -2,9 +2,7 @@
   "home.column_settings.advanced": "Avanceret",
   "home.column_settings.show_direct": "Vis private omtaler",
   "navigation_bar.app_settings": "Appindstillinger",
-  "settings.always_show_spoilers_field": "Vis altid feltet til indholdsadvarsel",
   "settings.close": "Luk",
-  "settings.content_warnings": "Indholdsadvarsler",
   "settings.content_warnings.regexp": "Regulært udtryk",
   "settings.general": "Generelt",
   "settings.media": "Medier",
@@ -13,16 +11,5 @@
   "settings.rewrite_mentions_acct": "Omskriv med brugernavn og domæne (når brugeren ikke er lokal)",
   "settings.rewrite_mentions_no": "Omskriv ikke omtaler",
   "settings.rewrite_mentions_username": "Omskriv med brugernavn",
-  "settings.show_reply_counter": "Vis et estimat over antal svar",
-  "settings.status_icons": "Statusikoner",
-  "settings.status_icons_language": "Sprogindikator",
-  "settings.status_icons_local_only": "Kun lokal-indikator",
-  "settings.status_icons_media": "Medie- og afstemningsindikator",
-  "settings.status_icons_reply": "Svarindikator",
-  "settings.status_icons_visibility": "Statussynlighedsindikator",
-  "settings.tag_misleading_links": "Marker vildledende links",
-  "status.has_audio": "Har vedhæftede lydfiler",
-  "status.has_pictures": "Har vedhæftede billeder",
-  "status.has_preview_card": "Har en vedhæftet linkvisning",
-  "status.has_video": "Har vedhæftede videoer"
+  "settings.tag_misleading_links": "Marker vildledende links"
 }

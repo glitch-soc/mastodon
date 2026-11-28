@@ -6,7 +6,6 @@
   "boost_modal.missing_description": "Bu gönderi açıklaması olmayan medya içerir",
   "column.favourited_by": "Tarafından favorilere eklendi",
   "column.reblogged_by": "Tarafından yükseltildi",
-  "column_header.profile": "Profil",
   "community.column_settings.allow_local_only": "Sadece yerel gönderileri göster",
   "compose.content-type.html": "HTML",
   "compose.content-type.markdown": "Markdown modu",
@@ -15,7 +14,5 @@
   "confirmations.deprecated_settings.confirm": "Mastadon seçimlerini kullan",
   "confirmations.deprecated_settings.message": "Kullanmakta olduğunuz bazı cihaz özgülü glitch-soc {app_settings} Mastadon {preferences} ile değiştirildi ve üzerine yazılacak:",
   "direct.group_by_conversations": "Grup sohbeti",
-  "settings.always_show_spoilers_field": "Her zaman İçerik Uyarısı alanını etkinleştir",
-  "settings.content_warnings": "Content warnings",
   "settings.preferences": "Preferences"
 }
