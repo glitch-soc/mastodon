@@ -40,3 +40,4 @@ es-AR:
     use_this: Usar
   settings:
     flavours: Ediciones
+    flavours_hint_html: Hay disponibles otras variantes de la interface en la sección <a href="%{path}">Sabores</a> de la configuración

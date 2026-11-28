@@ -40,3 +40,4 @@ zh-TW:
     use_this: 使用這個
   settings:
     flavours: 風格
+    flavours_hint_html: 其他介面樣式可在設定的<a href="%{path}">flavours</a>部分中找到

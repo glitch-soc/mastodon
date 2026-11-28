@@ -40,3 +40,4 @@ lt:
     use_this: Nautoti šį
   settings:
     flavours: Atmainos
+    flavours_hint_html: Kiti sąsajos variantai pasiekiami nustatymų skyriuje <a href="%{path}">„Atmainos“</a>.
